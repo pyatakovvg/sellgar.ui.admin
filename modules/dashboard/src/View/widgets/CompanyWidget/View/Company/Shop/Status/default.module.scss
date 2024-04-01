@@ -1,0 +1,14 @@
+
+.status {
+
+  display: block;
+  font-size: var(--font-size-sm);
+}
+
+.active {
+    color: var(--color-green);
+}
+
+.ban {
+    color: var(--color-brown);
+}

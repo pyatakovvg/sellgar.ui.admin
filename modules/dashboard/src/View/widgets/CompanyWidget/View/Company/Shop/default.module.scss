@@ -23,8 +23,25 @@
 .control {
 
   display: block;
-  margin-left: 8px;
+  margin-left: 24px;
   font-size: var(--font-size-sm);
-  color: var(--color-dim-gray);
+  color: var(--color-light-grey);
   cursor: pointer;
+  transition: var(--transition-duration);
+
+  & + & {
+    margin-left: 8px;
+  }
+}
+
+.edit {
+  &:hover {
+    color: var(--color-royal-blue);
+  }
+}
+
+.delete {
+  &:hover {
+    color: var(--color-brown);
+  }
 }

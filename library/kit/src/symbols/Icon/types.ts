@@ -23,6 +23,8 @@ export const icons = [
   'ellipsis',
   'plus',
   'gear',
+  'trash',
+  'ban',
 ] as const;
 
 export type IIcon = (typeof icons)[number];
