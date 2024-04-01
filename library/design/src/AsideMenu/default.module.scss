@@ -1,0 +1,19 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  margin: 24px 0 0;
+}
+
+.item {
+
+  display: block;
+  text-decoration: none;
+
+  & + & {
+
+    margin: 12px 0 0;
+  }
+}

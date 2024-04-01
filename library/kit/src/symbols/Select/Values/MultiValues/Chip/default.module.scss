@@ -1,0 +1,64 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: 5px 5px 5px 10px;
+  background: var(--color-background-select-card);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-duration);
+}
+
+.wrapper:hover {
+  background: var(--color-background-chip-hover);
+}
+
+.wrapper.disabled,
+.wrapper:hover.disabled {
+
+  background: var(--color-background-chip-disabled);
+}
+
+.content {
+
+  display: block;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-body);
+  font-family: var(--font-family-body);
+  color: var(--color-text-input);
+  max-width: 120px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  transition: var(--transition-duration);
+}
+
+.content.disabled {
+
+  color: var(--color-text-input-disabled);
+}
+
+.control {
+
+  display: block;
+  margin: 0 0 0 4px;
+  font-size: var(--font-size-sm);
+  color: var(--color-control-input-danger);
+  transition: var(--transition-duration);
+}
+
+.wrapper:hover .control {
+  color: var(--color-control-input-danger-hover);
+}
+
+.wrapper:hover .control:hover {
+  color: var(--color-control-input-danger-focus);
+}
+
+.wrapper .control.disabled,
+.wrapper .control:hover.disabled:hover {
+  color: var(--color-text-chip-disabled);
+}

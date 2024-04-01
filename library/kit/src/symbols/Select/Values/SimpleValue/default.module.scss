@@ -1,0 +1,36 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  align-items: center;
+  padding: 0 0 0 16px;
+  overflow: hidden;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  overflow: hidden;
+  transition: var(--transition-duration);
+}
+
+.text {
+
+  display: block;
+  color: var(--color-text-input);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-body);
+  font-family: var(--font-family-body);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.text.disabled {
+
+  color: var(--color-text-input-disabled);
+}

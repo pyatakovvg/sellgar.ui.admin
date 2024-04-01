@@ -1,0 +1,27 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "debug": false,
+      "modules": false,
+      "useBuiltIns": false,
+      "forceAllTransforms": true
+    }],
+    "@babel/preset-react",
+    ["@babel/preset-typescript", {
+      "allowDeclareFields": true,
+      "onlyRemoveTypeImports": true,
+      "rewriteImportExtensions": true
+    }]
+  ],
+  "plugins": [
+    ["module-resolver", {
+      "alias": {
+        "@/types": "./src/types.js",
+        "@/base": "./src/base",
+        "@/utils": "./src/utils",
+        "@/symbols": "./src/symbols",
+        "@/typography": "./src/typography"
+      }
+    }]
+  ]
+}

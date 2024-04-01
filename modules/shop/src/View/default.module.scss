@@ -1,0 +1,21 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  padding: 24px;
+}
+
+.header {
+
+  display: block;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  margin-top: 32px;
+}

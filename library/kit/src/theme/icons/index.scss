@@ -1,0 +1,158 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('./files/icomoon.eot?y2ks80');
+  src:  url('./files/icomoon.eot?y2ks80#iefix') format('embedded-opentype'),
+        url('./files/icomoon.ttf?y2ks80') format('truetype'),
+        url('./files/icomoon.woff?y2ks80') format('woff'),
+        url('./files/icomoon.svg?y2ks80#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+:global {
+  [class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .icon-filter:before {
+    content: "\e92a";
+  }
+  .icon-checked:before {
+    content: "\e929";
+  }
+  .icon-accounts:before {
+    content: "\e900";
+  }
+  .icon-add:before {
+    content: "\e901";
+  }
+  .icon-arrow-back:before {
+    content: "\e902";
+  }
+  .icon-arrow-down:before {
+    content: "\e903";
+  }
+  .icon-arrow-next:before {
+    content: "\e904";
+  }
+  .icon-arrow-up:before {
+    content: "\e905";
+  }
+  .icon-card-hide:before {
+    content: "\e906";
+  }
+  .icon-card-reissue:before {
+    content: "\e907";
+  }
+  .icon-card-rename:before {
+    content: "\e908";
+  }
+  .icon-cards:before {
+    content: "\e909";
+  }
+  .icon-card-show:before {
+    content: "\e90a";
+  }
+  .icon-close:before {
+    content: "\e90b";
+  }
+  .icon-collapse:before {
+    content: "\e90c";
+  }
+  .icon-conversation:before {
+    content: "\e90d";
+  }
+  .icon-copy:before {
+    content: "\e90e";
+  }
+  .icon-csv:before {
+    content: "\e90f";
+  }
+  .icon-details-hide:before {
+    content: "\e910";
+  }
+  .icon-details-show:before {
+    content: "\e911";
+  }
+  .icon-download:before {
+    content: "\e912";
+  }
+  .icon-expand:before {
+    content: "\e913";
+  }
+  .icon-favorite:before {
+    content: "\e914";
+  }
+  .icon-feedback:before {
+    content: "\e915";
+  }
+  .icon-info:before {
+    content: "\e916";
+  }
+  .icon-lock:before {
+    content: "\e917";
+  }
+  .icon-logout:before {
+    content: "\e918";
+  }
+  .icon-make-favorite:before {
+    content: "\e919";
+  }
+  .icon-mastercard:before {
+    content: "\e91a";
+  }
+  .icon-menu:before {
+    content: "\e91b";
+  }
+  .icon-more:before {
+    content: "\e91c";
+  }
+  .icon-next:before {
+    content: "\e91d";
+  }
+  .icon-prev:before {
+    content: "\e91e";
+  }
+  .icon-report:before {
+    content: "\e91f";
+  }
+  .icon-search:before {
+    content: "\e920";
+  }
+  .icon-settings:before {
+    content: "\e921";
+  }
+  .icon-shopping:before {
+    content: "\e922";
+  }
+  .icon-star:before {
+    content: "\e923";
+  }
+  .icon-status-error:before {
+    content: "\e924";
+  }
+  .icon-status-fail:before {
+    content: "\e925";
+  }
+  .icon-status-success:before {
+    content: "\e926";
+  }
+  .icon-transactions:before {
+    content: "\e927";
+  }
+  .icon-visa:before {
+    content: "\e928";
+  }
+}

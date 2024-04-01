@@ -1,0 +1,21 @@
+
+.list {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.item {
+
+  display: block;
+
+  & + & {
+    margin: 8px 0 0;
+    padding: 8px 0 0;
+    border-top: 1px solid #ccc;
+  }
+}

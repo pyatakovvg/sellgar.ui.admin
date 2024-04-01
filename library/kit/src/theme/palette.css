@@ -1,0 +1,174 @@
+
+:root {
+
+    /*** серые тона ***/
+
+    --color-gainsboro: #DCDCDC;
+    --color-light-grey:	#D3D3D3;
+    --color-silver: #C0C0C0;
+    --color-dark-gray:	#A9A9A9;
+    --color-gray: #808080;
+    --color-dim-gray: #696969;
+    --color-light-slate-gray: #778899;
+    --color-slate-gray: #708090;
+    --color-dark-slate-gray: #2F4F4F;
+    --color-dark: #37393b;
+    --color-black: #000000;
+
+    /*** белые тона ***/
+
+    --color-white: #FFFFFF;
+    --color-snow: #FFFAFA;
+    --color-honeydew: #F0FFF0;
+    --color-mint-cream: #F5FFFA;
+    --color-azure: #F0FFFF;
+    --color-alice-blue: #F0F8FF;
+    --color-ghost-white: #F8F8FF;
+    --color-white-smoke: #F5F5F5;
+    --color-seashell:	#FFF5EE;
+    --color-beige: #F5F5DC;
+    --color-old-lace: #FDF5E6;
+    --color-floral-white: #FFFAF0;
+    --color-ivory: #FFFFF0;
+    --color-antique-white: #FAEBD7;
+    --color-linen: #FAF0E6;
+    --color-lavender-blush: #FFF0F5;
+    --color-misty-rose: #FFE4E1;
+
+    /*** красные тона ***/
+
+    --color-indian-red: #CD5C5C;
+    --color-light-coral: #F08080;
+    --color-salmon: #FA8072;
+    --color-dark-salmon: #E9967A;
+    --color-crimson: #DC143C;
+    --color-red: #FF0000;
+    --color-fire-brick: #B22222;
+    --color-dark-red: #8B0000;
+
+    /*** розовые тона ***/
+
+    --color-pink: #FFC0CB;
+    --color-light-pink: #FFB6C1;
+    --color-hot-pink: #FF69B4;
+    --color-deep-pink: #FF1493;
+    --color-medium-violet-red: #C71585;
+    --color-pale-violet-red: #DB7093;
+
+    /*** оранжевые тона ***/
+
+    --color-light-salmon: #FFA07A;
+    --color-coral: #FF7F50;
+    --color-tomato: #FF6347;
+    --color-orange-red: #FF4500;
+    --color-dark-orange: #FF8C00;
+    --color-orange: #FFA500;
+
+    /*** желтые тона ***/
+
+    --color-gold: #FFD700;
+    --color-yellow:	#FFFF00;
+    --color-light-yellow: #FFFFE0;
+    --color-lemon-chiffon: #FFFACD;
+    --color-light-goldenrod-yellow: #FAFAD2;
+    --color-papaya-whip: #FFEFD5;
+    --color-moccasin: #FFE4B5;
+    --color-peach-puff: #FFDAB9;
+    --color-pale-goldenrod: #EEE8AA;
+    --color-khaki: #F0E68C;
+    --color-dark-khaki: #BDB76B;
+
+    /*** фиолетовые тона***/
+
+    --color-lavender: #E6E6FA;
+    --color-thistle: #D8BFD8;
+    --color-plum: #DDA0DD;
+    --color-violet: #EE82EE;
+    --color-orchid: #DA70D6;
+    --color-fuchsia: #FF00FF;
+    --color-magenta: #FF00FF;
+    --color-medium-orchid: #BA55D3;
+    --color-medium-purple: #9370DB;
+    --color-blue-violet: #8A2BE2;
+    --color-dark-violet: #9400D3;
+    --color-dark-orchid: #9932CC;
+    --color-dark-magenta: #8B008B;
+    --color-purple: #800080;
+    --color-indigo: #4B0082;
+    --color-slate-blue: #6A5ACD;
+    --color-dark-slate-blue: #483D8B;
+
+    /*** коричневые тона ***/
+
+    --color-cornsilk: #FFF8DC;
+    --color-blanched-almond: #FFEBCD;
+    --color-bisque: #FFE4C4;
+    --color-navajo-white: #FFDEAD;
+    --color-wheat: #F5DEB3;
+    --color-burly-wood: #DEB887;
+    --color-tan: #D2B48C;
+    --color-rosy-brown: #BC8F8F;
+    --color-sandy-brown: #F4A460;
+    --color-goldenrod: #DAA520;
+    --color-dark-golden-rod: #B8860B;
+    --color-peru: #CD853F;
+    --color-chocolate: #D2691E;
+    --color-saddle-brown: #8B4513;
+    --color-sienna: #A0522D;
+    --color-brown: #A52A2A;
+    --color-maroon: #800000;
+
+    /*** зеленые тона ***/
+
+    --color-green-yellow: #ADFF2F;
+    --color-chartreuse: #7FFF00;
+    --color-lawn-green: #7CFC00;
+    --color-lime: #00FF00;
+    --color-lime-green: #32CD32;
+    --color-pale-green: #98FB98;
+    --color-light-green: #90EE90;
+    --color-medium-spring-green: #00FA9A;
+    --color-spring-green: #00FF7F;
+    --color-medium-sea-green: #3CB371;
+    --color-sea-green: #2E8B57;
+    --color-forest-green: #228B22;
+    --color-green: #008000;
+    --color-dark-green: #006400;
+    --color-yellow-green: #9ACD32;
+    --color-olive-drab: #6B8E23;
+    --color-olive: #808000;
+    --color-dark-olive-green: #556B2F;
+    --color-medium-aquamarine: #66CDAA;
+    --color-dark-sea-green: #8FBC8F;
+    --color-light-sea-green: #20B2AA;
+    --color-dark-cyan: #008B8B;
+    --color-teal: #008080;
+
+    /*** синие тона ***/
+
+    --color-aqua: #00FFFF;
+    --color-cyan: #00FFFF;
+    --color-light-cyan: #E0FFFF;
+    --color-pale-turquoise: #AFEEEE;
+    --color-aquamarine: #7FFFD4;
+    --color-turquoise: #40E0D0;
+    --color-medium-turquoise: #48D1CC;
+    --color-dark-turquoise: #00CED1;
+    --color-cadet-blue: #5F9EA0;
+    --color-steel-blue: #4682B4;
+    --color-light-steel-blue: #B0C4DE;
+    --color-powder-blue: #B0E0E6;
+    --color-light-blue: #ADD8E6;
+    --color-sky-blue: #87CEEB;
+    --color-light-sky-blue: #87CEFA;
+    --color-deep-sky-blue: #00BFFF;
+    --color-dodger-blue: #1E90FF;
+    --color-cornflower-blue: #6495ED;
+    --color-medium-slate-blue: #7B68EE;
+    --color-royal-blue: #4169E1;
+    --color-blue: #0000FF;
+    --color-medium-blue: #0000CD;
+    --color-dark-blue: #00008B;
+    --color-navy: #000080;
+    --color-midnight-blue: #191970;
+}

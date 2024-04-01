@@ -1,0 +1,36 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+}
+
+.header {
+
+  display: block;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  margin-top: 8px;
+}
+
+.shop {
+
+  display: block;
+
+  &+&{
+    margin-top: 4px;
+  }
+}
+
+.control {
+
+  display: block;
+  margin-top: 8px;
+  text-align: right;
+}

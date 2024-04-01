@@ -1,0 +1,37 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  background: var(--color-snow);
+}
+
+.header {
+
+  display: block;
+  z-index: 20;
+}
+
+.container {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.footer {
+
+  display: block;
+  background: var(--color-dark);
+  z-index: 20;
+}

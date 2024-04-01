@@ -1,0 +1,23 @@
+
+.content {
+
+  display: block;
+  margin: 4px 0 0;
+  padding: 16px;
+  background: white;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  overflow: auto;
+}
+
+.action {
+
+  display: block;
+
+  white-space: nowrap;
+
+  & + & {
+
+    margin: 8px 0 0;
+  }
+}

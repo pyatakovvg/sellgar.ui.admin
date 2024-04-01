@@ -1,0 +1,20 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "debug": false,
+      "modules": false,
+      "useBuiltIns": false,
+      "forceAllTransforms": true
+    }],
+    "@babel/preset-react",
+    ["@babel/preset-typescript", {
+      "allowDeclareFields": true,
+      "onlyRemoveTypeImports": true
+    }]
+  ],
+  "plugins": [
+    ["module-resolver", {
+      "alias": {}
+    }]
+  ]
+}

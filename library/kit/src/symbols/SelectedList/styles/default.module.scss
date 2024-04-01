@@ -1,0 +1,15 @@
+@import "./tokens.css";
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.option {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}

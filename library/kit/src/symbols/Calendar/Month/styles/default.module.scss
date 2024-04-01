@@ -1,0 +1,77 @@
+@import "./tokens.css";
+
+.wrapper {
+
+  display: inline-flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.row {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+
+  & + & {
+    margin: 2px 0 0;
+  }
+}
+
+.col {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 37px;
+  height: 37px;
+
+  & + & {
+    margin: 0 0 0 2px;
+  }
+}
+
+.date {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  margin: 2px;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-light);
+  font-family: var(--font-family-body);
+  color: var(--color-text-day);
+  transition: var(--transition-duration);
+
+  &:hover {
+    background: var(--color-background-day-hover);
+  }
+}
+
+.date.weekend {
+  color: var(--color-text-day-weekend);
+}
+
+.today {
+  text-decoration: underline;
+}
+
+.prev-month-day,
+.next-month-day {
+  color: lightgrey;
+}
+
+.prev-month-day.weekend,
+.next-month-day.weekend {
+  color: palevioletred;
+  opacity: .5;
+}
+
+.date.selected,
+.date.selected:hover {
+  background: var(--color-background-day-active);
+  color: white;
+}
