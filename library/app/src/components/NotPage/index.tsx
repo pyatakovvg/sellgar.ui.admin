@@ -1,1 +1,1 @@
-export { NotPage } from './bootstrap';
+export { NotPage } from './NotPage';

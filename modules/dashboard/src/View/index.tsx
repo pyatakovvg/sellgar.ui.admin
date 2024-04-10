@@ -6,6 +6,9 @@ import { CompanyWidgetModule } from './widgets/CompanyWidget';
 import s from './default.module.scss';
 
 export const DashboardView = observer(() => {
+  React.useEffect(() => {
+    throw new Error('xcjcxlkxcjlkc');
+  }, []);
   return (
     <div className={s.wrapper}>
       <div className={s.content}>
