@@ -4,8 +4,6 @@ import ReactDOM from 'react-dom';
 import { Container } from './Container';
 import { PushController } from './controller';
 
-import './default.module.scss';
-
 export const controller = new PushController();
 
 export const Push: React.FC = () => {

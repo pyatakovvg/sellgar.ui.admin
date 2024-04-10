@@ -28,10 +28,10 @@ export const AsideMenu = (props: React.PropsWithChildren<IProps>) => {
           </Item>
         )}
       </NavLink>
-      <NavLink className={s.item} to={'/showcase'}>
+      <NavLink className={s.item} to={'/shops'}>
         {({ isActive }) => (
           <Item isActive={isActive} icon={<Icon icon={'shop'} />} isFull={props.isFull}>
-            Витрина
+            Магазины
           </Item>
         )}
       </NavLink>

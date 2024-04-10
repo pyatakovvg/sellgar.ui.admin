@@ -1,6 +1,6 @@
 export { AsideMenu } from './AsideMenu';
 export { Header } from './Header';
 
-export { BaseLayout } from './layouts/Base';
-export { MainLayout } from './layouts/Main';
-export { SecondaryLayout } from './layouts/Secondary';
+export { MainLayout } from './layouts/MainLayout';
+export { NavigateLayout } from './layouts/NavigateLayout';
+export { ShopLayout } from './layouts/ShopLayout';

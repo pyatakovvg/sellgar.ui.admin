@@ -1,19 +1,13 @@
 /** @type { import('@storybook/react-webpack5').StorybookConfig } */
 
 const config = {
-  features: {
-    storyStoreV7: true,
-  },
-  core: {
-    builder: {
-      name: 'webpack5',
-      options: {
-        lazyCompilation: true,
-        fsCache: true,
-      },
+  framework: {
+    name: '@storybook/react-vite',
+    options: {
+      // ...
     },
   },
-  stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(ts|tsx)'],
+  stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-interactions',
@@ -28,10 +22,6 @@ const config = {
       },
     },
   ],
-  framework: {
-    name: '@storybook/react-webpack5',
-    options: {},
-  },
   docs: {
     autodocs: 'tag',
   },

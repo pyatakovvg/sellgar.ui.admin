@@ -1,0 +1,23 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  background: var(--color-white);
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer {
+
+  display: block;
+  text-align: center;
+}

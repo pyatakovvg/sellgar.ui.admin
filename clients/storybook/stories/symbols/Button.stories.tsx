@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, Icon, EMode, ESize, EVariant } from '@library/kit';
+import { Button, EMode, ESize, EVariant, Icon } from '@library/kit';
 
 type Story = StoryObj<typeof Button>;
 

@@ -1,6 +1,6 @@
 import axios, { Axios, AxiosError } from 'axios';
 
-import { emmiter } from '../application.emitter';
+import { emitter } from '../application.emitter';
 import { APPLICATION_ERROR, APPLICATION_UNAUTHORIZED } from '../variables';
 
 import { ForbiddenException } from '../exeptions/forbidden.exception.ts';
@@ -40,7 +40,7 @@ export class Fetch {
           case AxiosError.ERR_NETWORK:
             switch (error.response.status) {
               case 0:
-                emmiter.emit('application', {
+                emitter.emit('application', {
                   type: APPLICATION_ERROR,
                   data: 'Service not available',
                 });
@@ -51,7 +51,7 @@ export class Fetch {
           case AxiosError.ERR_BAD_REQUEST:
             switch (error.response.status) {
               case 401: {
-                emmiter.emit('application', {
+                emitter.emit('application', {
                   type: APPLICATION_UNAUTHORIZED,
                   data: error.response.data,
                 });
@@ -64,7 +64,7 @@ export class Fetch {
       } else {
         switch (error.code) {
           case AxiosError.ERR_NETWORK: {
-            emmiter.emit('application', {
+            emitter.emit('application', {
               type: APPLICATION_UNAUTHORIZED,
               data: 'Service not available',
             });

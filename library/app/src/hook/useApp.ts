@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { context as AppContext } from '../application/Application';
+import { context } from '../application.context.ts';
 
 export const useApp = () => {
-  return React.useContext(AppContext);
+  return React.useContext(context);
 };

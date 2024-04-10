@@ -1,6 +1,6 @@
 import { Controller } from '@library/app';
 
-import { makeObservable, observable, action, computed } from 'mobx';
+import { makeObservable, observable, action } from 'mobx';
 
 import { ShopService } from './shop.service.ts';
 

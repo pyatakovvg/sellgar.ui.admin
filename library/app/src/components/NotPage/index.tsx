@@ -1,0 +1,1 @@
+export { NotPage } from './bootstrap';

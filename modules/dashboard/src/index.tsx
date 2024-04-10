@@ -1,1 +1,1 @@
-export { default } from './dashboard.module';
+export { DashboardModule as default } from './dashboard.module';

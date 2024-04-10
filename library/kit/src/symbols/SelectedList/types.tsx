@@ -2,7 +2,7 @@ import React from 'react';
 
 export type TOptionValue = string | number;
 
-interface ISelectedListProps<O extends Record<string, any>> {
+interface ISelectedListProps<O = {}> {
   className?: string;
   name?: string;
   disabled?: boolean;

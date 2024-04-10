@@ -1,6 +1,10 @@
+import { action, observable } from 'mobx';
+
 import { ApplicationService } from './application.service';
 
 export class ApplicationController {
+  @observable initialized = false;
+
   private readonly _appService = new ApplicationService();
 
   getStarted() {
@@ -16,12 +20,15 @@ export class ApplicationController {
     await this._appService.getProfileByCookie();
   }
 
+  @action.bound
   async checkProfile() {
     try {
       await this._appService.getProfileByCookie();
-
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      this.initialized = true;
       return true;
     } catch (e) {
+      this.initialized = false;
       return false;
     }
   }

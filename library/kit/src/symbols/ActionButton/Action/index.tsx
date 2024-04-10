@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { Icon, type IIcon } from '@/symbols/Icon';
 
 import st from './default.module.scss';

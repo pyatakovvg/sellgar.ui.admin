@@ -2,7 +2,7 @@ import { Icon } from '@library/kit';
 
 import React from 'react';
 
-import type { IPush } from '@/types';
+import type { IPush } from '../../types';
 
 import s from './default.module.scss';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProductController } from './product.controller.ts';
+import { ProductController } from './controller/product.controller.ts';
 
 interface IContext {
   controller: ProductController;

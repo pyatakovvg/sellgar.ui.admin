@@ -7,7 +7,7 @@ import { Success } from './Success';
 
 import { PushController } from '../controller';
 
-import type { IPush } from '@/types';
+import type { IPush } from '../types';
 
 import s from './default.module.scss';
 

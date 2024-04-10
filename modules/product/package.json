@@ -8,7 +8,6 @@
   "homepage": "",
   "license": "ISC",
   "main": "src/index.tsx",
-
   "dependencies": {
     "@library/app": "0.0.1",
     "@library/kit": "0.0.1",
@@ -18,7 +17,7 @@
     "react-router-dom": "6.22.3"
   },
   "devDependencies": {
-    "@types/react": "18.2.73",
-    "@types/react-dom": "18.2.23"
+    "@types/react": "18.2.74",
+    "@types/react-dom": "18.2.24"
   }
 }

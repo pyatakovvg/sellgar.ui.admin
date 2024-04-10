@@ -28,4 +28,15 @@
     overflow: auto;
     z-index: 1;
   }
+
+  #push {
+
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0;
+    z-index: 90000;
+  }
 }

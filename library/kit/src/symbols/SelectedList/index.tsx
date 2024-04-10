@@ -1,4 +1,4 @@
-import { useVirtualizer } from '@tanstack/react-virtual';
+// import { useVirtualizer } from '@tanstack/react-virtual';
 
 import React from 'react';
 
@@ -28,14 +28,12 @@ export const SelectedList = <O extends Record<string, any> = {}>(props: ISelecte
     props.onChange(valueByKey);
   }
 
-  const virtualize = useVirtualizer({
-    count: props.options.length,
-    getScrollElement: () => wrapperRef.current,
-    estimateSize: () => 20,
-    overscan: 5,
-  });
-
-  console.log(virtualize.getVirtualItems());
+  // const virtualize = useVirtualizer({
+  //   count: props.options.length,
+  //   getScrollElement: () => wrapperRef.current,
+  //   estimateSize: () => 20,
+  //   overscan: 5,
+  // });
 
   return (
     <div ref={wrapperRef} className={st.wrapper}>

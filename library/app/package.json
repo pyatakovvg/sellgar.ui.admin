@@ -3,11 +3,11 @@
   "type": "module",
   "name": "@library/app",
   "version": "0.0.1",
-  "description": "users",
+  "description": "application",
   "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
   "homepage": "",
   "license": "ISC",
-  "main": "src/index.tsx",
+  "main": "src/index.ts",
   "dependencies": {
     "@library/push": "0.0.1",
     "axios": "1.6.8",
@@ -24,8 +24,8 @@
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/react": "18.2.73",
-    "@types/react-dom": "18.2.23",
+    "@types/react": "18.2.74",
+    "@types/react-dom": "18.2.24",
     "@types/reflect-metadata": "0.1.0"
   }
 }

@@ -4,7 +4,7 @@ import { DashboardView } from './View';
 import { Provider } from './dashboard.context.ts';
 import { DashboardController } from './dashboard.controller.ts';
 
-export default function DashboardModule() {
+export function DashboardModule() {
   const controller = new DashboardController();
 
   return () => {
