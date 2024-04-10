@@ -3,7 +3,6 @@ import { InputField, TextareaField, SelectField, Button } from '@library/kit';
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Formik, Form } from 'formik';
-import { useBlocker } from 'react-router-dom';
 
 import { Blocker } from './Blocker';
 import { context } from '../../product.context.ts';
@@ -22,6 +21,7 @@ export const FormModify = observer((props: IProps) => {
     <Formik initialValues={props.product} enableReinitialize={true} onSubmit={props.onSubmit}>
       {() => (
         <Form className={s.wrapper}>
+          <Blocker />
           <div className={s.content}>
             <div className={s.row}>
               <InputField name={'title'} label={'Название'} />
@@ -52,7 +52,6 @@ export const FormModify = observer((props: IProps) => {
           <div className={s.control}>
             <Button type={'submit'}>Сохранить</Button>
           </div>
-          <Blocker />
         </Form>
       )}
     </Formik>
