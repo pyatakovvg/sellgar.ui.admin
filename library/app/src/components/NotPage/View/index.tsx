@@ -1,5 +1,7 @@
 import { Icon, Heading } from '@library/kit';
 
+import React from 'react';
+
 import s from './default.module.scss';
 
 export const NotPageView = () => {

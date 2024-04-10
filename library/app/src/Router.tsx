@@ -1,18 +1,8 @@
-import { controller as pushController } from '@library/push';
-
 import React from 'react';
-import { observer } from 'mobx-react';
-import { RouteObject, useNavigate } from 'react-router-dom';
-import { ErrorBoundary } from 'react-error-boundary';
-
-import { useApp } from './hook/useApp';
-
-import { Spinner } from './components/Spinner';
-import { Error } from './components/Error';
-import { emitter } from './application.emitter.ts';
-import { APPLICATION_ERROR, APPLICATION_UNAUTHORIZED } from './variables.ts';
+import { RouteObject } from 'react-router-dom';
 
 import { Route } from './Route.tsx';
+
 import { NotPage } from './components/NotPage';
 
 interface IOptionsRoute {
@@ -26,13 +16,16 @@ export class Router {
     private readonly options?: IOptionsRoute,
   ) {}
 
-  get content() {
-    return this.children;
+  static normalizePath(path: string): string {
+    if (path === '/') {
+      return '/';
+    }
+    return path.replace(/\/$/gi, '') + '/*';
   }
 
   create(): RouteObject {
     return {
-      path: this.path,
+      path: Router.normalizePath(this.path),
       element: this.options?.layout ?? null,
       children: [
         ...this.children.map((route) => route.create()),

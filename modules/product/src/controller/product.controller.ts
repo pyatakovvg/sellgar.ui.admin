@@ -1,12 +1,9 @@
-import { Controller } from '@library/app';
-
 import { makeObservable, observable, action } from 'mobx';
 
 import { BrandService } from '../service/brand.service.ts';
 import { ProductService } from '../service/product.service.ts';
 import { CategoryService } from '../service/category.service.ts';
 
-@Controller()
 export class ProductController {
   @observable brands: any[] = [];
   @observable categories: any[] = [];

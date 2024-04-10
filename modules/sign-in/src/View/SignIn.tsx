@@ -18,7 +18,7 @@ export const SignInView = () => {
     try {
       setProcess(true);
 
-      await app.appController.signIn(values.login.trim(), values.password.trim());
+      await app.controller.signIn(values.login, values.password);
 
       navigate(import.meta.env.VITE_PUBLIC_URL + '/');
     } catch (e) {

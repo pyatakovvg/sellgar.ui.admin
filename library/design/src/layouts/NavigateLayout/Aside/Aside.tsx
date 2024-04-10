@@ -1,4 +1,5 @@
 import { Icon } from '@library/kit';
+import { useApp } from '@library/app';
 
 import React from 'react';
 
@@ -16,6 +17,7 @@ const getFromLocalStorage = (): boolean => {
 };
 
 export const Aside: React.FC = () => {
+  const app = useApp();
   const [isOpen, setOpen] = React.useState(() => getFromLocalStorage());
 
   const wrapperClassName = React.useMemo(() => {
@@ -29,10 +31,19 @@ export const Aside: React.FC = () => {
     saveToLocalStorage(!isOpen);
   };
 
+  const handleLogout = () => {
+    app.controller.signOut();
+  };
+
   return (
     <div className={wrapperClassName}>
       <div className={st.content}>
         <AsideMenu isFull={isOpen} />
+      </div>
+      <div>
+        <div className={st.logout} onClick={handleLogout}>
+          Logout
+        </div>
       </div>
       <div className={st.control}>
         <div className={st.icon} onClick={handleOpen}>

@@ -1,10 +1,7 @@
-import { Controller } from '@library/app';
-
 import { makeObservable, observable, action } from 'mobx';
 
 import { StockService } from './stock.service';
 
-@Controller()
 export class StockController {
   @observable stock: any[] = [];
 

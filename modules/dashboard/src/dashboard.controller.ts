@@ -1,5 +1,3 @@
-import { Controller } from '@library/app';
-
 import { makeObservable, observable, action } from 'mobx';
 
 import { DashboardService } from './dashboard.service';
@@ -9,7 +7,6 @@ export interface IDashboardController {
   getData(): void;
 }
 
-@Controller()
 export class DashboardController implements IDashboardController {
   @observable isLoading: boolean = true;
   @observable company: any = null;

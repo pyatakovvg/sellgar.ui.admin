@@ -8,10 +8,6 @@
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-
-    "paths": {
-      "@/common/*": ["./src/common/*"]
-    }
   },
   "exclude": ["node_modules"],
   "include": ["./src", "./env.d.ts"]

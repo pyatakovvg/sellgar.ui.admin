@@ -1,40 +1,38 @@
 import React from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { Route } from './Route';
-import { Router } from './Router';
+import { Router } from './Router.tsx';
+import { PublicRouter } from './PublicRouter.tsx';
+import { PrivateRouter } from './PrivateRouter.tsx';
 
-import { Error } from './components/Error';
-import { Splash } from './components/Splash';
 import { NotPage } from './components/NotPage';
-
-import { ApplicationController } from './application/application.controller';
+import { Splash } from './components/Splash';
 
 import { Provider } from './application.context.ts';
+import { container } from './application/application.di.ts';
+import { ApplicationController, ApplicationControllerSymbol } from './application/controller/application.controller.ts';
 
 interface IApplicationOption {
   basename?: string;
-  routes: (Router | Route)[];
+  routes: (Router | Route | PublicRouter | PrivateRouter)[];
 }
 
 export class Application {
-  constructor(private readonly options: IApplicationOption) {}
+  private readonly controller = container.get<ApplicationController>(ApplicationControllerSymbol);
 
-  private readonly _controller = new ApplicationController();
+  constructor(private readonly options: IApplicationOption) {}
 
   createView() {
     const routes = createBrowserRouter(
       [
         {
+          id: 'root',
           path: '/',
           loader: async () => {
-            if (!this._controller.initialized) {
-              return await this._controller.checkProfile();
-            }
+            await new Promise((resolve) => setTimeout(resolve, 1000));
             return true;
           },
-          element: <Splash />,
           children: this.options.routes.map((route) => route.create()),
         },
         {
@@ -49,15 +47,13 @@ export class Application {
 
     return () => {
       return (
-        <ErrorBoundary FallbackComponent={Error}>
-          <Provider
-            value={{
-              appController: this._controller,
-            }}
-          >
-            <RouterProvider router={routes} fallbackElement={<Splash />} />
-          </Provider>
-        </ErrorBoundary>
+        <Provider
+          value={{
+            controller: this.controller,
+          }}
+        >
+          <RouterProvider router={routes} fallbackElement={<Splash />} />
+        </Provider>
       );
     };
   }

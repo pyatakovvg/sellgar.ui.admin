@@ -1,10 +1,7 @@
-import { Controller } from '@library/app';
-
 import { makeObservable, observable, action } from 'mobx';
 
 import { UsersService } from './users.service';
 
-@Controller()
 export class UsersController {
   @observable users: { data: any[]; meta: { totalRows: number } } = { data: [], meta: { totalRows: 0 } };
 

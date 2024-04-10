@@ -1,5 +1,3 @@
-import { Controller } from '@library/app';
-
 import { makeObservable, observable, action } from 'mobx';
 
 import { ProductsService } from './products.service.ts';
@@ -11,7 +9,6 @@ interface IProductsResult {
   };
 }
 
-@Controller()
 export class ProductsController {
   @observable products: IProductsResult = { data: [], meta: { totalRows: 0 } };
 

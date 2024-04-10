@@ -1,12 +1,9 @@
-import { Controller } from '@library/app';
-
 import { makeObservable, observable, action } from 'mobx';
 
 import { ShopService } from './shop.service.ts';
 
 import type { ICompany, IShop } from './shop.types.ts';
 
-@Controller()
 export class ShopController {
   @observable company: ICompany[] = [];
   @observable shop: Partial<IShop> = { uuid: null, name: '', address: '', company: { uuid: null } };

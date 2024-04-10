@@ -1,5 +1,3 @@
-import { Controller } from '@library/app';
-
 import { makeObservable, observable, action } from 'mobx';
 
 import { CompanyWidgetService } from './company-widget.service.ts';
@@ -11,7 +9,6 @@ export interface IDashboardController {
   getData(): void;
 }
 
-@Controller()
 export class CompanyWidgetController implements IDashboardController {
   @observable isLoading: boolean = true;
   @observable company: ICompany[] = [];

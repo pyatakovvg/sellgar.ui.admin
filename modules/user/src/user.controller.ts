@@ -1,5 +1,3 @@
-import { Controller } from '@library/app';
-
 import { makeObservable, observable, action } from 'mobx';
 
 import { UserService } from './user.service.ts';
@@ -44,7 +42,6 @@ const initialUser: IUser = {
   },
 };
 
-@Controller()
 export class UserController {
   @observable user: IUser = initialUser;
   @observable roles: any[] = [];
