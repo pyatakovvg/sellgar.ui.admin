@@ -1,3 +1,5 @@
+import { useFloating, autoPlacement, offset } from '@floating-ui/react';
+
 import React from 'react';
 
 import { Event } from '@/utils/Event';
@@ -16,6 +18,7 @@ interface IFind extends React.PropsWithChildren<IFindProps> {}
 
 function Find({ children, type }: IFind) {
   const result: React.ReactNode[] = [];
+
   React.Children.forEach(children, (child) => {
     if (React.isValidElement(child)) {
       if (child.type === type) {
@@ -23,6 +26,7 @@ function Find({ children, type }: IFind) {
       }
     }
   });
+
   if (!result[0]) {
     throw new Error('Not ' + type.name);
   }
@@ -38,42 +42,29 @@ const List = (props: React.PropsWithChildren) => {
 };
 
 export const DropDown = (props: IDropDown) => {
-  const wrapperRef = React.useRef<HTMLDivElement>(null);
-  const controlRef = React.useRef<HTMLDivElement>(null);
   const [isOpen, setOpen] = React.useState(false);
 
-  React.useEffect(() => {
-    if (props.disabled) {
-      setOpen(false);
-    }
-  }, [props.disabled]);
-
-  React.useEffect(() => {
-    const handleClose = () => {
-      setOpen(false);
-    };
-    events.on('close', handleClose);
-    return () => {
-      events.off('close', handleClose);
-    };
-  }, [isOpen]);
-
-  React.useEffect(() => {
-    if (isOpen && props.onFocus) {
-      props.onFocus();
-    }
-    if (!isOpen && props.onBlur) {
-      props.onBlur();
-    }
-  }, [isOpen]);
+  const { refs, floatingStyles } = useFloating({
+    open: isOpen,
+    strategy: 'fixed',
+    middleware: [
+      offset(4),
+      autoPlacement({
+        rootBoundary: 'document',
+        allowedPlacements: ['top-start', 'top-end', 'bottom-start', 'bottom-end'],
+      }),
+    ],
+  });
 
   React.useEffect(() => {
     const handleClose = (event: MouseEvent) => {
-      if (!wrapperRef.current || props.disabled) {
-        return void 0;
-      }
-      if (isOpen && !wrapperRef.current.contains(event.target as Node)) {
-        setOpen(false);
+      if (isOpen) {
+        if (!refs.domReference.current || props.disabled) {
+          return void 0;
+        }
+        if (!refs.domReference.current.contains(event.target as Node)) {
+          setOpen(false);
+        }
       }
     };
 
@@ -81,17 +72,7 @@ export const DropDown = (props: IDropDown) => {
     return () => {
       document.removeEventListener('click', handleClose);
     };
-  }, [isOpen, wrapperRef, props.disabled]);
-
-  // React.useEffect(() => {
-  //   if (!wrapperRef.current || !controlRef.current) {
-  //     return void 0;
-  //   }
-  //   const wrapperRect: DOMRect = wrapperRef.current.getBoundingClientRect();
-  //
-  //   controlRef.current.style.top = wrapperRect.height + 'px';
-  //   controlRef.current.style.left = '0px';
-  // }, [wrapperRef, controlRef, isOpen]);
+  }, [isOpen, refs, props.disabled]);
 
   function handleOpen() {
     if (props.disabled) {
@@ -102,15 +83,13 @@ export const DropDown = (props: IDropDown) => {
 
   return (
     <div className={st.wrapper}>
-      <div ref={wrapperRef} className={st.container}>
+      <div ref={refs.setReference} className={st.container}>
         <div className={st.content} onClick={() => handleOpen()}>
           <Find type={Content}>{props.children}</Find>
         </div>
         {isOpen && (
-          <div ref={controlRef} className={st.control}>
-            <div className={st.list}>
-              <Find type={List}>{props.children}</Find>
-            </div>
+          <div ref={refs.setFloating} className={st.control} style={floatingStyles}>
+            <Find type={List}>{props.children}</Find>
           </div>
         )}
       </div>

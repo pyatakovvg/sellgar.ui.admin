@@ -16,7 +16,7 @@ function checkActive(value: TOptionValue | TOptionValue[] | null, currentValue: 
 export const Multi = (props: IOptionList) => {
   return (
     <div className={st.wrapper}>
-      <Checkbox checked={checkActive(props.value, props.currentValue)} onChange={props.onClick}>
+      <Checkbox value={checkActive(props.value, props.currentValue)} onChange={props.onClick}>
         <div className={st.text}>{props.children}</div>
       </Checkbox>
     </div>

@@ -2,7 +2,7 @@
 :root {
     /*** FONT ***/
 
-    --font-family-body: -apple-system, BlinkMacSystemFont, "Segoe UI Adjusted", "Segoe UI", "Liberation Sans", sans-serif;
+    --font-family-body: Arial, Helvetica, sans-serif;
     --font-family-heading: inherit;
 
     /*** FONT SIZE ***/
@@ -17,8 +17,8 @@
 
     /*** FONT WEIGHT ***/
 
-    --font-weight-light: 200;
-    --font-weight-body: 400;
+    --font-weight-light: 300;
+    --font-weight-body: 600;
     --font-weight-heading: 800;
 
     /*** LINE HEIGHT ***/

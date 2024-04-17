@@ -8,7 +8,7 @@ export class PublicRouter {
 
   create(): RouteObject {
     return {
-      children: this.children.map((route) => route.create()),
+      children: this.children.map((route) => route.create()).filter((route) => route) as RouteObject[],
     };
   }
 }

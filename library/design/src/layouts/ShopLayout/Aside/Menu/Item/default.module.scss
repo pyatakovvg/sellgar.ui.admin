@@ -1,0 +1,25 @@
+
+.wrapper {
+
+  display: inline-block;
+  color: var(--color-dark);
+  cursor: pointer;
+  transition: var(--transition-duration);
+}
+
+.content {
+
+  display: inline-block;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-body);
+}
+
+.active {
+
+  color: var(--color-royal-blue);
+
+  .content {
+
+    font-weight: var(--font-weight-heading);
+  }
+}

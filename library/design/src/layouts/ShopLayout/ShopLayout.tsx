@@ -12,9 +12,7 @@ export const ShopLayout: React.FC = () => {
         <Aside />
       </div>
       <div className={styles.container}>
-        <div className={styles.content}>
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
     </div>
   );

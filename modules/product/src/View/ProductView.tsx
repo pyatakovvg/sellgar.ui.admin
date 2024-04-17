@@ -12,14 +12,18 @@ import s from './default.module.scss';
 
 export const ProductView = observer(() => {
   const params = useParams();
-  const { controller } = React.useContext(context);
+  const { presenter } = React.useContext(context);
 
   React.useEffect(() => {
-    controller.getData(params.uuid);
+    try {
+      presenter.getData(params.uuid);
+    } catch (e) {
+      console.log(e);
+    }
   }, []);
 
   const handleSubmit = (value: any) => {
-    controller.save(value);
+    presenter.save(value);
   };
 
   return (
@@ -28,12 +32,12 @@ export const ProductView = observer(() => {
         <Heading variant={'h2'}>Продукт</Heading>
       </div>
       <div className={s.content}>
-        {controller.isLoading ? (
+        {presenter.isLoading ? (
           <p>Loading...</p>
-        ) : controller.isError ? (
+        ) : presenter.isError ? (
           <p>Error</p>
         ) : (
-          <FormModify product={controller.product} onSubmit={handleSubmit} />
+          <FormModify product={presenter.product} onSubmit={handleSubmit} />
         )}
       </div>
     </div>

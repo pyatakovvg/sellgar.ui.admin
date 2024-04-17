@@ -19,6 +19,7 @@
     "start:watch": "cross-env NODE_ENV=development babel ./src --out-dir ./lib --extensions '.ts,.tsx' --copy-files --watch"
   },
   "dependencies": {
+    "@library/app": "0.0.1",
     "@library/kit": "0.0.1",
     "classnames": "2.5.1",
     "moment": "2.30.1",
@@ -39,6 +40,6 @@
     "rimraf": "5.0.5",
     "tsc": "2.0.4",
     "tsc-watch": "6.2.0",
-    "typescript": "5.4.4"
+    "typescript": "5.4.5"
   }
 }

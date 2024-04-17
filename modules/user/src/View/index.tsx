@@ -7,8 +7,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FormModify } from './Form';
 import { context } from '../user.context.ts';
 
-import type { IUser } from '../user.controller.ts';
-
 import s from './default.module.scss';
 
 type IParams = {
@@ -18,11 +16,11 @@ type IParams = {
 export const UsersView = observer(() => {
   const navigate = useNavigate();
   const params = useParams<IParams>();
-  const { controller } = React.useContext(context);
+  const { presenter } = React.useContext(context);
 
   React.useEffect(() => {
     (async () => {
-      await controller.getData(params.uuid);
+      await presenter.getData(params.uuid);
     })();
   }, []);
 
@@ -37,17 +35,17 @@ export const UsersView = observer(() => {
       </div>
       <div className={s.content}>
         <div className={s.list}>
-          {!controller.isLoadingProcess && (
+          {!presenter.isLoadingProcess && (
             <FormModify
-              user={controller.user}
+              user={presenter.user}
               inProcess={false}
-              onSubmit={async (value: IUser, { setValues }) => {
-                await controller.save(value);
+              onSubmit={async (value, { setValues }) => {
+                await presenter.save(value);
 
                 if (!value.uuid) {
-                  handleRedirectToUser(controller.user.uuid!);
+                  handleRedirectToUser(presenter.user.uuid!);
                 } else {
-                  await setValues(controller.user);
+                  await setValues(presenter.user);
                 }
               }}
             />

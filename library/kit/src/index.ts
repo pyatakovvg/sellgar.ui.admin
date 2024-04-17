@@ -9,6 +9,7 @@ export { Spinner } from './symbols/Spinner';
 export { Input } from './symbols/Input/Base';
 export { Checkbox } from './symbols/Checkbox';
 export { DropDown } from './base/DropDown';
+export { Dialog } from './base/Dialog';
 export { Calendar } from './symbols/Calendar';
 export { Button } from './symbols/Button/Base';
 export { Substrate } from './symbols/Substrate';

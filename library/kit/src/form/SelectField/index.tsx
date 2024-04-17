@@ -20,7 +20,6 @@ export const SelectField = ({ name, ...props }: ISelectFieldProps<any>) => {
   return (
     <Field name={name}>
       {({ field, form, meta: { touched, error } }: FieldProps) => {
-        console.log(props.options);
         const hasError = touched && error;
         return (
           <FieldLabel label={props.label} message={hasError && error}>

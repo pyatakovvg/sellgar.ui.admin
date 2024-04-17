@@ -3,6 +3,8 @@ export const icons = [
   'calendar-days',
   'check',
   'xmark',
+  'circle-user',
+  'right-from-bracket',
   'exclamation',
   'circle-exclamation',
   'lightbulb',

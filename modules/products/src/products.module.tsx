@@ -1,15 +1,16 @@
 import React from 'react';
 
-import { ProductView } from './View';
+import { View } from './View';
+
 import { Provider } from './products.context.ts';
-import { ProductsController } from './products.controller.ts';
+
+import { container } from './classes/classes.di.ts';
+import { ProductPresenter, ProductPresenterSymbol } from './classes/presenter/product.presenter.ts';
 
 export default function ProductsModule() {
-  const controller = new ProductsController();
-
   return () => (
-    <Provider value={{ controller }}>
-      <ProductView />
+    <Provider value={{ presenter: container.get<ProductPresenter>(ProductPresenterSymbol) }}>
+      <View />
     </Provider>
   );
 }

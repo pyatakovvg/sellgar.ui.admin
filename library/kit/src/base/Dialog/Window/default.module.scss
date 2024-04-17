@@ -1,0 +1,11 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  min-width: 256px;
+  min-height: 126px;
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+}

@@ -15,7 +15,7 @@ interface IProps {
 }
 
 export const FormModify = observer((props: IProps) => {
-  const { controller } = React.useContext(context);
+  const { presenter } = React.useContext(context);
 
   return (
     <Formik initialValues={props.product} enableReinitialize={true} onSubmit={props.onSubmit}>
@@ -35,7 +35,7 @@ export const FormModify = observer((props: IProps) => {
                 label={'Категория'}
                 optionKey={'code'}
                 optionValue={'title'}
-                options={controller.categories}
+                options={presenter.categories}
                 isMultiselect={true}
               />
             </div>
@@ -45,7 +45,7 @@ export const FormModify = observer((props: IProps) => {
                 label={'Бренд'}
                 optionKey={'code'}
                 optionValue={'name'}
-                options={controller.brands}
+                options={presenter.brands}
               />
             </div>
           </div>

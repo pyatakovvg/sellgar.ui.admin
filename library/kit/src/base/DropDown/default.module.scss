@@ -24,14 +24,8 @@
 
 .control {
 
-  position: absolute;
-  top: 100%;
-  min-width: 120px;
-  transform-origin: 0 0;
-  z-index: 99999;
-}
-
-.list {
-
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  z-index: 100;
 }

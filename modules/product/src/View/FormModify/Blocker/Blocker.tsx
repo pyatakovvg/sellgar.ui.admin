@@ -18,8 +18,8 @@ export const Blocker = () => {
           <Paragraph>Не сохраненные данные будут утеряны</Paragraph>
         </div>
         <div className={s.control}>
-          <Button variant={EVariant.SECONDARY} onClick={() => blocker.proceed()}>
-            Продолжить
+          <Button variant={EVariant.SECONDARY} mode={EMode.DANGER} onClick={() => blocker.proceed()}>
+            Уйти
           </Button>
           <Button variant={EVariant.PRIMARY} mode={EMode.SUCCESS} onClick={() => blocker.reset()}>
             Остаться

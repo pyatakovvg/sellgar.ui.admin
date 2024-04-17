@@ -1,14 +1,14 @@
 import React from 'react';
 
 import { UsersView } from './View';
+
 import { Provider } from './user.context.ts';
-import { UserController } from './user.controller.ts';
+import { container } from './classes/classes.di.ts';
+import { UserPresenter, UserPresenterSymbol } from './classes/presenter/user.presenter.ts';
 
 export default function UserModule() {
-  const controller = new UserController();
-
   return () => (
-    <Provider value={{ controller }}>
+    <Provider value={{ presenter: container.get<UserPresenter>(UserPresenterSymbol) }}>
       <UsersView />
     </Provider>
   );

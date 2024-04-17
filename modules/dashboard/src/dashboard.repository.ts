@@ -1,13 +1,11 @@
-import { Fetch } from '@library/app';
+import { HttpClient } from '@library/infra';
 
 export class DashboardRepository {
-  private readonly fetch: Fetch = new Fetch({
-    baseURL: import.meta.env.VITE_GATEWAY_API,
-  });
+  private readonly fetch: HttpClient = new HttpClient();
 
   async getCompany() {
     return await this.fetch.send({
-      url: '/company',
+      url: import.meta.env.VITE_GATEWAY_API + '/company',
     });
   }
 }

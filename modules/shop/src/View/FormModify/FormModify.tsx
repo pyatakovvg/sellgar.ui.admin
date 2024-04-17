@@ -15,8 +15,8 @@ interface IProps {
 }
 
 export const FormModify: React.FC<IProps> = observer((props) => {
-  const { controller } = React.useContext(context);
-  const companyList = controller.company;
+  const { presenter } = React.useContext(context);
+  const companyList = presenter.company;
 
   return (
     <Formik enableReinitialize={true} initialValues={props.shop} onSubmit={props.onSubmit}>

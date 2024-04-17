@@ -1,9 +1,7 @@
-import { Fetch } from '@library/app';
+import { HttpClient } from '@library/infra';
 
 export class StockRepository {
-  private readonly fetch: Fetch = new Fetch({
-    baseURL: 'http://localhost:4020',
-  });
+  private readonly fetch: HttpClient = new HttpClient();
 
   async getUsers(): Promise<any[]> {
     // const users = await this.fetch.send({

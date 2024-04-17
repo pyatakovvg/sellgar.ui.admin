@@ -25,6 +25,7 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
+    "strictPropertyInitialization": false,
     "inlineSources": false,
     "downlevelIteration": false,
     "sourceMap": false,

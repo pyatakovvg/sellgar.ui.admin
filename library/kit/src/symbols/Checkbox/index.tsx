@@ -19,7 +19,7 @@ export const Checkbox = ({ className, children, ...rest }: ICheckbox) => {
   return (
     <label className={wrapperClassName}>
       <div className={st.container}>
-        <input className={st.checkbox} type={'checkbox'} {...rest} checked={rest.value === 'true'} />
+        <input className={st.checkbox} type={'checkbox'} {...rest} checked={rest.value} value={undefined} />
         <div className={st.mark}>
           <Icon icon={'check'} />
         </div>

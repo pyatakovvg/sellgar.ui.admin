@@ -2,11 +2,19 @@ import React from 'react';
 import { RouteObject } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { useProfile } from './hook/useProfile.ts';
+
 import { Error } from './components/Error';
 import { Spinner } from './components/Spinner';
+import { Forbidden } from './components/Forbidden';
 
 export interface IPropsWithAppRoute {
   route: Route;
+}
+
+interface IRouteOptions {
+  roles?: string[];
+  permissions?: string[];
 }
 
 async function loadModule<T>(content: () => Promise<{ default: T }>) {
@@ -20,8 +28,7 @@ const LoadView: React.FC<IPropsWithAppRoute> = (props) => {
   React.useEffect(() => {
     (async () => {
       const ViewModule = await loadModule<typeof props.route.content>(props.route.content);
-
-      setTimeout(() => setModule(ViewModule), 1000);
+      setTimeout(() => setModule(ViewModule), 400);
     })();
     return () => {
       setModule(null);
@@ -38,20 +45,49 @@ const LoadView: React.FC<IPropsWithAppRoute> = (props) => {
   );
 };
 
+const CheckCredentials: React.FC<IPropsWithAppRoute> = (props) => {
+  const profile = useProfile();
+
+  const hasRoles = profile.checkRoles(props.route.roles);
+  const hasPermissions = profile.checkPermissions(props.route.permissions);
+
+  if (!hasRoles || !hasPermissions) {
+    return <Forbidden />;
+  }
+
+  return <LoadView {...props} />;
+};
+
 export class Route<T = any> {
   constructor(
     private readonly path: string,
     private readonly module: () => Promise<{ default: T }>,
+    private readonly options?: IRouteOptions,
   ) {}
+
+  static normalizePath(path: string): string {
+    if (path === '/') {
+      return '';
+    }
+    return path.replace(/^\//gi, '');
+  }
+
+  get roles() {
+    return this.options?.roles ?? [];
+  }
+
+  get permissions() {
+    return this.options?.permissions ?? [];
+  }
 
   get content() {
     return this.module;
   }
 
-  create(): RouteObject {
+  create(): RouteObject | null {
     return {
-      path: this.path,
-      element: <LoadView route={this} />,
+      path: Route.normalizePath(this.path),
+      element: <CheckCredentials route={this} />,
     };
   }
 }

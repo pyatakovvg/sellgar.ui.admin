@@ -1,0 +1,36 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  background: var(--color-white);
+  border: 1px solid var(--color-gainsboro);
+  border-radius: var(--border-radius-md);
+  padding: 8px 16px 10px;
+}
+
+.item {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  align-items: center;
+  text-decoration: none;
+
+  & + & {
+
+    margin-left: 16px;
+
+    &:before {
+
+      display: block;
+      width: 0;
+      height: 0;
+      border: 2px solid var(--color-light-grey);
+      border-radius: 50%;
+      content: '';
+      margin-right: 16px;
+    }
+  }
+}

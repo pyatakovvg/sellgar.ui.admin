@@ -1,3 +1,4 @@
+import { UserEntity } from '@library/infra';
 import { InputField, SelectField, DatepickerField, Button, EVariant, EMode } from '@library/kit';
 
 import React from 'react';
@@ -8,29 +9,16 @@ import { context } from '../../user.context.ts';
 
 import s from './default.module.scss';
 
-export interface IPerson {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-}
-
-export interface IUser {
-  uuid?: string;
-  email?: string;
-  isBlocked?: boolean;
-  person?: IPerson;
-}
-
 interface IFormProps {
-  user?: IUser;
+  user?: Partial<UserEntity>;
   inProcess: boolean;
-  onSubmit(event: IUser, helpers: FormikHelpers<IUser>): void;
+  onSubmit(event: Partial<UserEntity>, helpers: FormikHelpers<Partial<UserEntity>>): void;
 }
 
 export const FormModify: React.FC<IFormProps> = observer((props) => {
-  const { controller } = React.useContext(context);
+  const { presenter } = React.useContext(context);
 
-  const inProcess = controller.isUpsertProcess;
+  const inProcess = presenter.isUpsertProcess;
 
   return (
     <Formik enableReinitialize={true} initialValues={props.user ?? {}} onSubmit={props.onSubmit}>
@@ -71,7 +59,7 @@ export const FormModify: React.FC<IFormProps> = observer((props) => {
                 label={'Роль'}
                 optionKey={'code'}
                 optionValue={'displayName'}
-                options={controller.roles}
+                options={presenter.roles}
               />
             </div>
           </div>

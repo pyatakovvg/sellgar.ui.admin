@@ -18,9 +18,10 @@ export const SignInView = () => {
     try {
       setProcess(true);
 
-      await app.controller.signIn(values.login, values.password);
+      const profile = await app.presenter.signIn(values.login, values.password);
+      app.profile.setProfile(profile);
 
-      navigate(import.meta.env.VITE_PUBLIC_URL + '/');
+      navigate('/');
     } catch (e) {
       push.add({
         variant: 'danger',

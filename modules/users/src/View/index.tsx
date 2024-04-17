@@ -1,20 +1,25 @@
+import { useAuthInterceptor } from '@library/app';
 import { Heading, Icon, Paragraph } from '@library/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
 import { useNavigate } from 'react-router-dom';
 
-import { User, type IUser } from './User';
+import { User } from './User';
 import { context } from '../users.context.ts';
 
 import s from './default.module.scss';
 
 export const UsersView = observer(() => {
   const navigate = useNavigate();
-  const { controller } = React.useContext(context);
+  const { presenter } = React.useContext(context);
+
+  const interceptor = useAuthInterceptor(async () => {
+    await presenter.getData();
+  });
 
   React.useEffect(() => {
-    controller.getData();
+    interceptor.intercept();
   }, []);
 
   const handleCreateUser = () => {
@@ -28,10 +33,10 @@ export const UsersView = observer(() => {
       </div>
       <div className={s.content}>
         <div className={s.aside}>
-          <Paragraph>Всего {controller.users.meta.totalRows}</Paragraph>
+          <Paragraph>Всего {presenter.count}</Paragraph>
         </div>
         <div className={s.list}>
-          {controller.users.data.map((user: IUser) => {
+          {presenter.users.map((user) => {
             return (
               <div key={user.uuid} className={s.item}>
                 <User user={user} />

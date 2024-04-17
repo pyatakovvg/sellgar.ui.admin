@@ -14,7 +14,6 @@ function checkActive(value: TOptionValue | TOptionValue[] | null, currentValue: 
 }
 
 export const Multi = (props: IOptionList) => {
-  console.log(props.value, props.currentValue, checkActive(props.value, props.currentValue));
   return (
     <div className={st.wrapper}>
       {props.isShowControl ? (

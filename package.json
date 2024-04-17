@@ -12,7 +12,7 @@
     "build:storybook": "yarn workspaces foreach -tR --from '@client/storybook' -R run build"
   },
   "devDependencies": {
-    "@types/node": "20.12.5",
+    "@types/node": "20.12.7",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",
     "eslint": "9.0.0",

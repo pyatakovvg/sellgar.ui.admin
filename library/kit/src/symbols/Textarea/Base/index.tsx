@@ -33,7 +33,6 @@ export const Textarea: React.FC<ITextarea> = ({ className, mode, placeholder, ..
 
   React.useEffect(() => {
     const resize = (event: any) => {
-      console.log(Math.max(event.target.scrollHeight, event.target.offsetHeight));
       event.target.style.height = Math.max(event.target.scrollHeight, event.target.offsetHeight) + 'px';
     };
     elementRef.current?.addEventListener('input', resize);

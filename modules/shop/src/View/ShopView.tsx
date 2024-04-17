@@ -15,21 +15,21 @@ import s from './default.module.scss';
 export const ShopView = observer(() => {
   const params = useParams();
   const navigate = useNavigate();
-  const { controller } = React.useContext(context);
+  const { presenter } = React.useContext(context);
 
   React.useEffect(() => {
     (async () => {
-      await controller.getCompany();
+      await presenter.getCompany();
       if (params.uuid) {
-        await controller.getData(params.uuid);
+        await presenter.getData(params.uuid);
       }
     })();
   }, []);
 
   const handleSubmit = async (value: IShop) => {
-    await controller.save(value);
+    await presenter.save(value);
     if (!value.uuid) {
-      navigate('/shops/' + controller.shop.uuid);
+      navigate('/shops/' + presenter.shop.uuid);
     }
   };
 
@@ -39,7 +39,7 @@ export const ShopView = observer(() => {
         <Heading variant={'h2'}>Магазин</Heading>
       </div>
       <div className={s.content}>
-        <FormModify shop={controller.shop} onSubmit={handleSubmit} />
+        <FormModify shop={presenter.shop} onSubmit={handleSubmit} />
       </div>
     </div>
   );

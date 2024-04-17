@@ -1,3 +1,3 @@
-import { Event } from './common/Event';
+import { Event } from './helper/Event';
 
 export const emitter = new Event();
