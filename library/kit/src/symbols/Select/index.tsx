@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { EMode } from '@/types';
-import { DropDown, events as dropDownEvents } from '@/base/DropDown';
+import { DropDown } from '@/base/DropDown';
 
 import { Icon } from '../Icon';
 import { Values } from './Values';
@@ -100,16 +100,13 @@ export const Select = <O extends Record<string, any> = {}>({ name, ...props }: I
   }, [props]);
 
   const handleChange = (value: TOptionValue | TOptionValue[]) => {
-    if (!props.isMultiselect) {
-      dropDownEvents.emit('close');
-    }
     props.onChange(value);
   };
 
   const handleRemove = (key: TOptionValue) => {
     if (props.isMultiselect) {
       if (props.value instanceof Array) {
-        const index = props.value.indexOf(key);
+        const index = props.value.indexOf(key as any);
         if (index >= 0) {
           props.onChange([...props.value.slice(0, index), ...props.value.slice(index + 1)]);
         }

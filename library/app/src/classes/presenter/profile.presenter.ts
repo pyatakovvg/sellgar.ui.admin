@@ -9,12 +9,14 @@ export const ProfilePresenterSymbol = Symbol.for('ProfilePresenter');
 
 const initialize: ProfileEntity = {
   person: {
+    uuid: '',
     firstName: '',
     middleName: '',
     lastName: '',
+    birthday: '',
+    sex: 'MALE',
   },
   roles: [],
-  permissions: [],
 };
 
 @injectable()
@@ -25,18 +27,27 @@ export class ProfilePresenter {
 
   @observable profile: ProfileEntity = initialize;
 
+  @action.bound
+  setProfile(profile: any) {
+    this.profile = profile;
+  }
+
   checkRoles(targetRoles: string[]): boolean {
     if (!targetRoles.length) {
       return true;
     }
-    return targetRoles.some((targetRole) => this.profile.roles.includes(targetRole));
+    return targetRoles.some((targetRole) => this.profile.roles.map((role) => role.code).includes(targetRole));
   }
 
   checkPermissions(targetPermissions: string[]): boolean {
     if (!targetPermissions.length) {
       return true;
     }
-    return targetPermissions.some((targetPermission) => this.profile.permissions.includes(targetPermission));
+    return targetPermissions.some((targetPermission) =>
+      this.profile.roles.some((targetRole) =>
+        targetRole.permissions.map((permission) => permission.code).includes(targetPermission),
+      ),
+    );
   }
 
   @action.bound
@@ -44,11 +55,6 @@ export class ProfilePresenter {
     const profile = await this.getUserCase.execute();
 
     this.setProfile(profile);
-  }
-
-  @action.bound
-  setProfile(profile: any) {
-    this.profile = profile;
   }
 
   @action.bound

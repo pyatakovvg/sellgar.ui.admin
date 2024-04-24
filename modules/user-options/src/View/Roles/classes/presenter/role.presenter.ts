@@ -1,4 +1,4 @@
-import { RoleService, RoleServiceSymbol, RoleEntity } from '@library/infra';
+import { RoleService, RoleServiceSymbol, RoleEntity } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable } from 'mobx';

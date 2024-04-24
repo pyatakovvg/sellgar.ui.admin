@@ -5,7 +5,7 @@ import {
   PermissionGatewaySymbols,
   PermissionService,
   PermissionServiceSymbol,
-} from '@library/infra';
+} from '@library/domain';
 
 import { Container } from 'inversify';
 

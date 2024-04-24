@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { makeObservable, observable, action } from 'mobx';
 
-import { BrandEntity, ProductEntity, CategoryEntity } from '@library/infra';
+import { BrandEntity, ProductEntity, CategoryEntity } from '@library/domain';
 
 import { CreateProductCase, CreateProductCaseSymbol } from '../case/create-product.case.ts';
 import { UpdateProductCase, UpdateProductCaseSymbol } from '../case/update-product.case.ts';

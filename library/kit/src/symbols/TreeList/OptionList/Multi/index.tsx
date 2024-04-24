@@ -8,9 +8,9 @@ import st from './styles/default.module.scss';
 
 function checkActive(value: TOptionValue | TOptionValue[] | null, currentValue: TOptionValue) {
   if (value instanceof Array) {
-    return value.some((item) => item === currentValue).toString();
+    return value.some((item) => item === currentValue);
   }
-  return (value === currentValue).toString();
+  return value === currentValue;
 }
 
 export const Multi = (props: IOptionList) => {

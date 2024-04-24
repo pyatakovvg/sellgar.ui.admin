@@ -1,4 +1,4 @@
-import { ProductService, ProductServiceSymbol } from '@library/infra';
+import { ProductService, ProductServiceSymbol } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
 

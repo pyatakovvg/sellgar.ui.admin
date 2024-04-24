@@ -1,71 +1,99 @@
 import { inject, injectable } from 'inversify';
 import { makeObservable, observable, action } from 'mobx';
 
-import { UserEntity, RoleEntity, UserService, UserServiceSymbol, RoleService, RoleServiceSymbol } from '@library/infra';
+import { CreateUserDto, UpdateUserDto, RoleEntity, UserEntity } from '@library/domain';
+
+import { GetUserCase, GetUserCaseSymbol } from '../case/get-user.case.ts';
+import { CreateUserCase, CreateUserCaseSymbol } from '../case/create-user.case.ts';
+import { UpdateUserCase, UpdateUserCaseSymbol } from '../case/update-user.case.ts';
+import { GetOptionsCase, GetOptionsCaseSymbol } from '../case/get-options.case.ts';
 
 export const UserPresenterSymbol = Symbol.for('UserPresenter');
 
-const initialize: Partial<UserEntity> = {
+const defaultUser: UserEntity = {
+  uuid: '',
+  email: '',
   person: {
+    uuid: '',
     firstName: '',
     middleName: '',
     lastName: '',
+    sex: 'MALE',
+    birthday: '',
   },
-  roles: [],
   isBlocked: false,
-  claims: [],
+  roles: [],
+  createdAt: '',
+  updatedAt: '',
 };
 
 @injectable()
 export class UserPresenter {
   @observable roles: RoleEntity[] = [];
-  @observable user: Partial<UserEntity> = initialize;
+  @observable user: UserEntity = defaultUser;
 
-  @observable isLoadingProcess = false;
-  @observable isUpsertProcess = false;
+  @observable isLoading: boolean = true;
+  @observable isProcess: boolean = false;
 
   constructor(
-    @inject(RoleServiceSymbol) private readonly roleService: RoleService,
-    @inject(UserServiceSymbol) private readonly userService: UserService,
+    @inject(GetUserCaseSymbol) private readonly getUserCase: GetUserCase,
+    @inject(UpdateUserCaseSymbol) private readonly updateUserCase: UpdateUserCase,
+    @inject(CreateUserCaseSymbol) private readonly createUserCase: CreateUserCase,
+    @inject(GetOptionsCaseSymbol) private readonly getOptionsCase: GetOptionsCase,
   ) {
     makeObservable(this);
   }
 
   @action
-  setRoles(roles: RoleEntity[]) {
+  private setLoading(state: boolean) {
+    this.isLoading = state;
+  }
+
+  @action
+  private setProcess(state: boolean) {
+    this.isProcess = state;
+  }
+
+  @action
+  private setRoles(roles: RoleEntity[]) {
     this.roles = roles;
   }
 
+  @action
+  private setUser(user: UserEntity) {
+    this.user = user;
+  }
+
   @action.bound
-  async getData(uuid?: string) {
-    this.isLoadingProcess = true;
+  async getUserByUuid(uuid?: string) {
+    this.setLoading(true);
 
-    const rolesResult = await this.roleService.getAll();
+    const options = await this.getOptionsCase.execute();
 
-    this.setRoles(rolesResult.data);
+    this.setRoles(options.roles);
 
     if (uuid) {
-      this.user = await this.userService.getByUuid(uuid, true);
+      this.setUser(await this.getUserCase.execute(uuid));
     }
 
-    this.isLoadingProcess = false;
+    this.setLoading(false);
   }
 
-  async updateUser(body: any) {
-    return await this.userService.update(body);
+  @action.bound
+  async updateUser(user: UpdateUserDto) {
+    this.setProcess(true);
+
+    this.setUser(await this.updateUserCase.execute(user));
+
+    this.setProcess(false);
   }
 
-  async createUser(body: any) {
-    return await this.userService.create(body);
-  }
+  @action.bound
+  async createUser(user: CreateUserDto) {
+    this.setProcess(true);
 
-  async save(data: any) {
-    this.isUpsertProcess = true;
-    if (data.uuid) {
-      this.user = await this.updateUser(data);
-    } else {
-      this.user = await this.createUser(data);
-    }
-    this.isUpsertProcess = false;
+    await this.createUserCase.execute(user);
+
+    this.setProcess(false);
   }
 }

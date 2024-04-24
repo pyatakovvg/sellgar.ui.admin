@@ -1,0 +1,112 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  min-height: 37px;
+  align-items: center;
+  border: 1px solid var(--color-border-input);
+  background: var(--color-background-input);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  overflow: hidden;
+  transition: var(--transition-duration);
+
+  &:hover {
+
+    border-color: var(--color-border-input-hover);
+  }
+}
+
+.wrapper.focus {
+
+  border-color: var(--color-border-input-focus);
+}
+
+.wrapper.disabled {
+
+  border-color: var(--color-border-input-disabled);
+  background: var(--color-background-input-disabled);
+}
+
+.content {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+}
+
+.control {
+
+  display: block;
+  padding: 8px;
+  color: var(--color-control-input-primary);
+  font-size: var(--font-size-sm);
+  transition: var(--transition-duration);
+}
+
+.wrapper:hover .control {
+  color: var(--color-control-input-primary-hover);
+}
+
+.control.focus,
+.wrapper:hover .control.focus {
+
+  color: var(--color-control-input-primary-focus);
+}
+
+.wrapper.disabled .control {
+
+  color: var(--color-control-input-primary-disabled);
+}
+
+.reset {
+
+  display: block;
+  padding: 8px 4px;
+  color: var(--color-control-input-danger);
+  font-size: var(--font-size-sm);
+  transition: var(--transition-duration);
+}
+
+.wrapper:hover .reset {
+  color: var(--color-control-input-danger-hover);
+}
+
+.reset.focus,
+.wrapper:hover .reset.focus {
+
+  color: var(--color-control-input-danger-hover);
+}
+
+.wrapper:hover .reset:hover {
+  color: var(--color-control-input-danger-focus);
+}
+
+.wrapper.disabled .reset,
+.wrapper.disabled .reset:hover {
+
+  color: var(--color-control-input-danger-disabled);
+}
+
+.mode {
+  &--danger,
+  &--danger:hover,
+  &--danger.focus {
+    color: var(--color-text-input-danger);
+    border-color: var(--color-border-input-danger);
+  }
+}
+
+.readonly,
+.readonly:hover,
+.readonly.focus {
+  border-color: var(--color-border-input-readonly);
+  background: var(--color-background-input-readonly);
+  cursor: default;
+}
+
+.wrapper .control.readonly {
+  color: var(--color-control-input-primary-disabled);
+}

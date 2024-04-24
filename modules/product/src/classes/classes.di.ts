@@ -13,7 +13,7 @@ import {
   ProductGatewaySymbol,
   CategoryGateway,
   CategoryGatewaySymbol,
-} from '@library/infra';
+} from '@library/domain';
 
 import { Container } from 'inversify';
 

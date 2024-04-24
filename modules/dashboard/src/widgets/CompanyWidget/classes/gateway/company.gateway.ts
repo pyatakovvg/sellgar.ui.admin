@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientSymbol } from '@library/infra';
+import { HttpClient, HttpClientSymbol } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
 

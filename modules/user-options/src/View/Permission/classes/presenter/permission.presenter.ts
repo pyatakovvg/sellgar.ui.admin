@@ -1,4 +1,4 @@
-import { PermissionService, PermissionServiceSymbol, PermissionEntity } from '@library/infra';
+import { PermissionService, PermissionServiceSymbol, PermissionEntity } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable } from 'mobx';

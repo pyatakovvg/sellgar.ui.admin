@@ -1,5 +1,5 @@
 import { useApp } from '@library/app';
-import { Icon, Paragraph } from '@library/kit';
+import { DropDownContext, Icon, Paragraph } from '@library/kit';
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -10,11 +10,14 @@ export const SignOut: React.FC = () => {
   const app = useApp();
   const navigate = useNavigate();
 
+  const context = React.useContext(DropDownContext);
+
   const handleSignOut = async () => {
     await app.presenter.signOut();
     app.profile.resetProfile();
 
     navigate('/sign-in');
+    context.close();
   };
 
   return (

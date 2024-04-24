@@ -1,14 +1,12 @@
-import { PersonEntity } from '@library/infra';
+import { PersonEntity, RoleEntity } from '@library/domain';
 
 import { Type } from 'class-transformer';
-import { IsString, ValidateNested } from 'class-validator';
+import { ValidateNested } from 'class-validator';
 
 export class ProfileEntity {
-  @IsString({ each: true })
-  roles: string[];
-
-  @IsString({ each: true })
-  permissions: string[];
+  @Type(() => RoleEntity)
+  @ValidateNested({ each: true })
+  roles: RoleEntity[];
 
   @ValidateNested()
   @Type(() => PersonEntity)

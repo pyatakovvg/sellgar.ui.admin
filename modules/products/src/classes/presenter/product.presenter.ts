@@ -3,7 +3,7 @@ import { makeObservable, observable, action } from 'mobx';
 
 import { GetProductsCase, GetProductsCaseSymbol } from '../case/get-products.case.ts';
 
-import { ProductEntity } from '@library/infra';
+import { ProductEntity } from '@library/domain';
 
 export const ProductPresenterSymbol = Symbol.for('ProductPresenter');
 

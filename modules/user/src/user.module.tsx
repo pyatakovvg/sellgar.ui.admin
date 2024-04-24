@@ -1,15 +1,18 @@
 import React from 'react';
 
-import { UsersView } from './View';
+import { Module } from './components';
 
 import { Provider } from './user.context.ts';
+
 import { container } from './classes/classes.di.ts';
 import { UserPresenter, UserPresenterSymbol } from './classes/presenter/user.presenter.ts';
 
 export default function UserModule() {
+  const presenter = container.get<UserPresenter>(UserPresenterSymbol);
+
   return () => (
-    <Provider value={{ presenter: container.get<UserPresenter>(UserPresenterSymbol) }}>
-      <UsersView />
+    <Provider value={{ presenter }}>
+      <Module />
     </Provider>
   );
 }

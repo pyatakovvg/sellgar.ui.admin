@@ -1,4 +1,4 @@
-import { InputField, TextareaField, SelectField, Button } from '@library/kit';
+import { InputField, TextareaField, SelectSimpleField, Button } from '@library/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -30,17 +30,16 @@ export const FormModify = observer((props: IProps) => {
               <TextareaField name={'description'} label={'Описание'} />
             </div>
             <div className={s.row}>
-              <SelectField
+              <SelectSimpleField
                 name={'categoryOnProduct'}
                 label={'Категория'}
                 optionKey={'code'}
                 optionValue={'title'}
                 options={presenter.categories}
-                isMultiselect={true}
               />
             </div>
             <div className={s.row}>
-              <SelectField
+              <SelectSimpleField
                 name={'brand.code'}
                 label={'Бренд'}
                 optionKey={'code'}

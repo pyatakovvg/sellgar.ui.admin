@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 
-import { BrandService, BrandServiceSymbol } from '@library/infra';
-import { CategoryService, CategoryServiceSymbol } from '@library/infra';
+import { BrandService, BrandServiceSymbol } from '@library/domain';
+import { CategoryService, CategoryServiceSymbol } from '@library/domain';
 
 export const GetOptionalDataCaseSymbol = Symbol.for('GetOptionalDataCase');
 

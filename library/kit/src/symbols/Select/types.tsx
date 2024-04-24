@@ -8,14 +8,14 @@ export interface ISelectedValue {
   value: TOptionValue;
 }
 
-export interface ISelect<O> extends React.PropsWithChildren {
+export interface ISelect<O = any> extends React.PropsWithChildren {
   mode?: (typeof EMode)[keyof typeof EMode];
   name?: string;
   readOnly?: boolean;
   disabled?: boolean;
   optionKey: keyof O;
   optionValue: keyof O;
-  value: TOptionValue | TOptionValue[] | null;
+  value: O[keyof O] | O[keyof O][] | null;
   options: readonly O[];
   isMultiselect?: boolean;
   isClearable?: boolean;

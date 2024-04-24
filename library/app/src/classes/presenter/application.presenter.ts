@@ -24,7 +24,7 @@ export class ApplicationPresenter {
 
   @action.bound
   async signIn(login: string, password: string) {
-    return await this.signInCase.execute(login, password);
+    await this.signInCase.execute(login, password);
   }
 
   @action.bound

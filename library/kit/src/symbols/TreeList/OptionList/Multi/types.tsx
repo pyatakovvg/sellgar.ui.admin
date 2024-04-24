@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type TOptionValue = string | number;
+export type TOptionValue = string | number | boolean;
 
 interface IOptionProps {
   isShowControl: boolean;

@@ -10,6 +10,5 @@ export class SignInCase {
 
   async execute(login: string, password: string) {
     await this.authService.signInByCredential(login, password);
-    return await this.authService.getUserByCookie();
   }
 }

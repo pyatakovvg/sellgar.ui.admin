@@ -5,7 +5,7 @@ import { Values } from './Values';
 
 import { EMode } from '@/types';
 import { Calendar } from '@/symbols/Calendar';
-import { DropDown, events as dropDownEvents } from '@/base/DropDown';
+import { DropDown } from '@/base/DropDown';
 
 import type { IDatepicker } from './types';
 
@@ -64,7 +64,6 @@ export const Datepicker = React.forwardRef<HTMLDivElement, IDatepicker>((props, 
 
   const handleChange = (value: string | null) => {
     props.onChange(value);
-    dropDownEvents.emit('close');
   };
 
   return (

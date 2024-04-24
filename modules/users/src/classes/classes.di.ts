@@ -7,7 +7,7 @@ import {
   UserGatewaySymbols,
   UserService,
   UserServiceSymbol,
-} from '@library/infra';
+} from '@library/domain';
 
 import { UserPresenter, UserPresenterSymbol } from './presenter/user.presenter.ts';
 

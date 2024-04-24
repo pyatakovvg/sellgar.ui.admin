@@ -1,6 +1,6 @@
 import { inject, injectable } from 'inversify';
 
-import { ProductService, ProductServiceSymbol } from '@library/infra';
+import { ProductService, ProductServiceSymbol } from '@library/domain';
 
 export const GetProductByUuidCaseSymbol = Symbol.for('GetProductByUuidCase');
 

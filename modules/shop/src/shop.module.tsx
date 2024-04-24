@@ -8,8 +8,10 @@ import { container } from './classes/classes.di.ts';
 import { ShopPresenter, ShopPresenterSymbol } from './classes/presenter/shop.presenter.ts';
 
 export default function ShopModule() {
+  const presenter = container.get<ShopPresenter>(ShopPresenterSymbol);
+
   return () => (
-    <Provider value={{ presenter: container.get<ShopPresenter>(ShopPresenterSymbol) }}>
+    <Provider value={{ presenter }}>
       <ShopView />
     </Provider>
   );

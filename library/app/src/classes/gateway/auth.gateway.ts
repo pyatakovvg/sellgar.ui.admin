@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientSymbol } from '@library/infra';
+import { HttpClient, HttpClientSymbol } from '@library/domain';
 
 import { injectable, inject } from 'inversify';
 import { validateOrReject } from 'class-validator';

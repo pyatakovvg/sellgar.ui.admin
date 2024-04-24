@@ -5,7 +5,7 @@ import {
   RoleGatewaySymbols,
   RoleService,
   RoleServiceSymbol,
-} from '@library/infra';
+} from '@library/domain';
 
 import { Container } from 'inversify';
 

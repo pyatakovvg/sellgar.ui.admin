@@ -24,13 +24,16 @@ const app = new Application({
                 [
                   new Route('/', () => import('@module/users')),
                   new Route('/options', () => import('@module/user-options')),
-                  new Route('/create', () => import('@module/user')),
-                  new Route('/:uuid', () => import('@module/user')),
                 ],
                 {
                   layout: <UserLayout />,
                 },
               ),
+
+              new Router('/users', [
+                new Route('/create', () => import('@module/user')),
+                new Route('/:uuid', () => import('@module/user')),
+              ]),
 
               new Router(
                 '/products',
@@ -46,15 +49,16 @@ const app = new Application({
 
               new Router(
                 '/shops',
-                [
-                  new Route('/', () => import('@module/shops')),
-                  new Route('/create', () => import('@module/shop')),
-                  new Route('/:uuid', () => import('@module/shop')),
-                ],
+                [new Route('/', () => import('@module/shops')), new Route('/options', () => import('@module/shops'))],
                 {
                   layout: <ShopLayout />,
                 },
               ),
+
+              new Router('/shops', [
+                new Route('/create', () => import('@module/shop')),
+                new Route('/:uuid', () => import('@module/shop')),
+              ]),
             ],
             {
               layout: <NavigateLayout />,

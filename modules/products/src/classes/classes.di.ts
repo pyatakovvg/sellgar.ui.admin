@@ -5,7 +5,7 @@ import {
   ProductGatewaySymbol,
   ProductService,
   ProductServiceSymbol,
-} from '@library/infra';
+} from '@library/domain';
 
 import { Container } from 'inversify';
 

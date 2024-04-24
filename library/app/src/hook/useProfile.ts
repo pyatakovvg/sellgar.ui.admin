@@ -15,7 +15,6 @@ export const useProfile = () => {
   return {
     person: app.profile.profile.person,
     roles: app.profile.profile.roles,
-    permissions: app.profile.profile.permissions,
     checkRoles,
     checkPermissions,
   };

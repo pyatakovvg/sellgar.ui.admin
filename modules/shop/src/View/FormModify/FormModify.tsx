@@ -1,4 +1,4 @@
-import { InputField, SelectField, Button, CheckboxField, Paragraph, EMode, EVariant } from '@library/kit';
+import { InputField, SelectSimpleField, Button, CheckboxField, Paragraph, EMode, EVariant } from '@library/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -23,7 +23,7 @@ export const FormModify: React.FC<IProps> = observer((props) => {
       {({ dirty, values }) => (
         <Form className={s.wrapper}>
           <div className={s.row}>
-            <SelectField
+            <SelectSimpleField
               label={'Компания'}
               name={'company.uuid'}
               optionKey={'uuid'}

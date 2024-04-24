@@ -1,4 +1,4 @@
-import { HttpClient } from '@library/infra';
+import { HttpClient } from '@library/domain';
 
 export class DashboardRepository {
   private readonly fetch: HttpClient = new HttpClient();
