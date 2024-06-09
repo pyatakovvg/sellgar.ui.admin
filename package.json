@@ -7,15 +7,18 @@
     "lint": "eslint \"**/{src,test}/**/*.{ts,tsx}\" --fix",
     "dev:admin_ui": "yarn workspace @client/admin start",
     "dev:storybook": "yarn workspace @client/storybook start",
+    "dev:kit": "yarn workspace @library/kit start",
+    "dev:design": "yarn workspace @library/design start",
     "start:storybook": "yarn workspace @client/storybook start",
     "build:admin_ui": "yarn workspaces foreach --all -tR --from '@client/admin' -R run build",
     "build:storybook": "yarn workspaces foreach -tR --from '@client/storybook' -R run build"
   },
   "devDependencies": {
-    "@types/node": "20.12.7",
-    "@typescript-eslint/eslint-plugin": "7.7.0",
-    "@typescript-eslint/parser": "7.7.0",
-    "eslint": "9.0.0",
+    "@eslint/js": "9.3.0",
+    "@types/node": "20.12.13",
+    "@typescript-eslint/eslint-plugin": "7.11.0",
+    "@typescript-eslint/parser": "7.11.0",
+    "eslint": "9.3.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.3",
     "prettier": "3.2.5"
@@ -26,5 +29,8 @@
     "library/*",
     "modules/*"
   ],
+  "engines": {
+    "node": "20"
+  },
   "packageManager": "yarn@3.6.1"
 }

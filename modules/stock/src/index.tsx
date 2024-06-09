@@ -1,1 +1,1 @@
-export { default } from './stock.module';
+export { default } from './products.module.tsx';

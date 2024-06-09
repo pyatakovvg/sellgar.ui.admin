@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { context } from '../user.context';
+import { context } from '@/root/user.context';
 
 export const useIsLoading = () => {
   const { presenter } = React.useContext(context);

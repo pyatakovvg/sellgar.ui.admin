@@ -7,6 +7,7 @@ import { Options } from './Options';
 
 interface IProps<T = any> {
   readOnly?: boolean;
+  isSimplify?: boolean;
   isClearable?: boolean;
   disabled?: boolean;
   mode?: string;
@@ -24,7 +25,7 @@ export const SelectMultiple: React.FC<IProps> = (props) => {
   };
 
   const handleRemove = (key: any) => {
-    const index = props.value.findIndex((item) => item[props.optionKey] === key);
+    const index = props.value.findIndex((item) => (props.isSimplify ? item : item[props.optionKey]) === key);
     if (index >= 0) {
       props.onChange([...props.value.slice(0, index), ...props.value.slice(index + 1)]);
     }
@@ -36,6 +37,7 @@ export const SelectMultiple: React.FC<IProps> = (props) => {
         <Input
           mode={props.mode}
           readOnly={props.readOnly}
+          isSimplify={props.isSimplify}
           isClearable={props.isClearable}
           disabled={props.disabled}
           placeholder={props.placeholder}
@@ -49,6 +51,7 @@ export const SelectMultiple: React.FC<IProps> = (props) => {
       </DropDown.Content>
       <DropDown.List>
         <Options
+          isSimplify={props.isSimplify}
           optionKey={props.optionKey}
           optionValue={props.optionValue}
           options={props.options}

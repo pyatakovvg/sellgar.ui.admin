@@ -6,7 +6,12 @@
     "declarationDir": "./types",
     "isolatedModules": false,
 
-    "paths": {},
+    "paths": {
+      "@/root/*": ["./src/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/classes/*": ["./src/classes/*"],
+      "@/components/*": ["./src/components/*"]
+    },
     "jsx": "react"
   },
   "exclude": ["node_modules"],

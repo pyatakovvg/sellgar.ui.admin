@@ -15,6 +15,8 @@ interface ImportMetaEnv {
   readonly VITE_GATEWAY_API: string;
 
   readonly VITE_USE_SERVICE_WORKER: 'true' | 'false';
+
+  readonly VITE_TAKE: number;
 }
 
 interface ImportMeta {

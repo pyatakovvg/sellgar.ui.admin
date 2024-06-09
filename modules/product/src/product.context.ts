@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ProductPresenter } from './classes/presenter/product.presenter.ts';
+import { ProductPresenter } from '@/classes/presenter/product.presenter.ts';
 
 interface IContext {
   presenter: ProductPresenter;

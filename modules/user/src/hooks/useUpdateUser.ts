@@ -3,7 +3,7 @@ import { UpdateUserDto } from '@library/domain';
 
 import React from 'react';
 
-import { context } from '../user.context';
+import { context } from '@/root/user.context';
 
 export const useUpdateUser = () => {
   const { presenter } = React.useContext(context);

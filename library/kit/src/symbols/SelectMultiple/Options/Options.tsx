@@ -8,6 +8,7 @@ import { Empty } from './Empty';
 import s from './default.module.scss';
 
 interface IProps<T = any> {
+  isSimplify?: boolean;
   optionKey: keyof T;
   optionValue: any;
   options: T[];
@@ -22,6 +23,7 @@ export const Options: React.FC<IProps> = (props) => {
     <div className={s.wrapper}>
       {props.options.length ? (
         <ListMultiple
+          isSimplify={props.isSimplify ?? false}
           optionKey={props.optionKey}
           optionValue={props.optionValue}
           value={props.value}

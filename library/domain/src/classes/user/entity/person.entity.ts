@@ -18,4 +18,8 @@ export class PersonEntity {
 
   @IsString()
   birthday: string;
+
+  get fullName() {
+    return this.lastName + ' ' + this.firstName + ' ' + this.middleName;
+  }
 }

@@ -12,9 +12,14 @@ export interface IPropsWithAppRoute {
   route: Route;
 }
 
+interface IBreadcrumb {
+  label: string;
+}
+
 interface IRouteOptions {
   roles?: string[];
   permissions?: string[];
+  breadcrumb?: IBreadcrumb;
 }
 
 async function loadModule<T>(content: () => Promise<{ default: T }>) {
@@ -86,6 +91,15 @@ export class Route<T = any> {
 
   create(): RouteObject | null {
     return {
+      handle: {
+        crumb: (title?: string) =>
+          title ?? this.options?.breadcrumb
+            ? {
+                label: title ?? this.options?.breadcrumb?.label,
+                href: this.path,
+              }
+            : null,
+      },
       path: Route.normalizePath(this.path),
       element: <CheckCredentials route={this} />,
     };

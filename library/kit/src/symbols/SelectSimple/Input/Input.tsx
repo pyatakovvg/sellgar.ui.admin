@@ -10,6 +10,7 @@ import type { TOptionValue } from '@/symbols/SelectedList/types.tsx';
 
 import cn from 'classnames';
 import s from './default.module.scss';
+import st from '@/symbols/SelectMultiple/Input/default.module.scss';
 
 interface IProps {
   readOnly?: boolean;
@@ -44,6 +45,12 @@ const getSimpleValue = <O extends Record<string, any> = {}>(
 
 export const Input: React.FC<IProps> = (props) => {
   const [isFocus, setFocus] = React.useState(false);
+  const hasReset = React.useMemo(() => {
+    if (!props.isClearable || props.readOnly) {
+      return false;
+    }
+    return !!props.value;
+  }, [props.value, props.isClearable, props.readOnly]);
 
   const wrapperClassName = React.useMemo(
     () =>
@@ -60,7 +67,14 @@ export const Input: React.FC<IProps> = (props) => {
       ),
     [props.disabled, props.readOnly, props.mode, isFocus],
   );
-
+  const resetClassName = React.useMemo(
+    () =>
+      cn(st.reset, {
+        [st.focus]: isFocus,
+        [st.disabled]: props.disabled,
+      }),
+    [props.disabled, isFocus],
+  );
   const controlClassName = React.useMemo(
     () =>
       cn(s.control, {
@@ -95,6 +109,11 @@ export const Input: React.FC<IProps> = (props) => {
           onReset={props.onReset}
         />
       </div>
+      {hasReset && (
+        <div className={resetClassName} onClick={props.onReset}>
+          <Icon icon={'xmark'} />
+        </div>
+      )}
       <div className={controlClassName}>
         <Icon icon={'chevron-down'} />
       </div>

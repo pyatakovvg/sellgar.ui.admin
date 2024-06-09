@@ -8,10 +8,15 @@ import { useProfile } from './hook/useProfile.ts';
 import { NotPage } from './components/NotPage';
 import { Forbidden } from './components/Forbidden';
 
+interface IBreadcrumb {
+  label: string;
+}
+
 interface IOptionsRoute {
   layout?: React.ReactNode;
   roles?: string[];
   permissions?: string[];
+  breadcrumb?: IBreadcrumb;
 }
 
 export interface IPropsWithAppRouter {
@@ -59,6 +64,15 @@ export class Router {
 
   create(): RouteObject {
     return {
+      handle: {
+        crumb: (title?: string) =>
+          title ?? this.options?.breadcrumb
+            ? {
+                label: title ?? this.options?.breadcrumb?.label,
+                href: this.path,
+              }
+            : null,
+      },
       path: Router.normalizePath(this.path),
       element: <CheckCredentials route={this}>{this.options?.layout}</CheckCredentials>,
       children: [
@@ -66,6 +80,11 @@ export class Router {
         {
           path: '*',
           element: <NotPage />,
+          handle: {
+            crumb: () => ({
+              label: 'Страница не найдена',
+            }),
+          },
         },
       ],
     };

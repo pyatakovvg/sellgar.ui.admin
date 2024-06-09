@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { context } from '../user.context';
+import { context } from '@/root/user.context';
 
 export const useRoles = () => {
   const { presenter } = React.useContext(context);
 
-  return presenter.roles;
+  return presenter.filterStore.roles;
 };

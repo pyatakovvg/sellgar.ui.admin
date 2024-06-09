@@ -20,7 +20,7 @@ export const InputField = ({ name, ...props }: IInputFieldProps) => {
         const hasError = touched && error;
         return (
           <FieldLabel label={props.label} message={hasError && error}>
-            <Input {...props} {...field} mode={hasError ? EMode.DANGER : EMode.DEFAULT} />
+            <Input {...props} {...field} mode={hasError ? EMode.DANGER : undefined} />
           </FieldLabel>
         );
       }}

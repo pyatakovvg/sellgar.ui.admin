@@ -1,4 +1,4 @@
-import { CreateUserDto, UpdateUserDto } from '@library/domain';
+import { CreateUserDto, UpdateUserDto, UserEntity } from '@library/domain';
 import {
   InputField,
   SelectSimpleField,
@@ -15,15 +15,17 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { Formik, Form, type FormikHelpers } from 'formik';
 
-import { useRoles } from '../../../../hooks/useRoles.ts';
-import { useIsProcess } from '../../../../hooks/useIsProcess.ts';
+import { useRoles } from '@/hooks/useRoles.ts';
+import { useIsProcess } from '@/hooks/useIsProcess.ts';
 
 import s from './default.module.scss';
 
+type UserEntityOmit = Omit<UserEntity, 'createdAt' | 'updatedAt'>;
+
 interface IFormProps {
-  user: UpdateUserDto | CreateUserDto;
+  user: UserEntityOmit;
   inProcess: boolean;
-  onSubmit(event: UpdateUserDto | CreateUserDto, helpers: FormikHelpers<UpdateUserDto | CreateUserDto>): void;
+  onSubmit(event: UserEntityOmit, helpers: FormikHelpers<UserEntityOmit>): void;
 }
 
 export const FormModify: React.FC<IFormProps> = observer((props) => {

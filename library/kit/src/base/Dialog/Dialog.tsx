@@ -1,8 +1,16 @@
 import React from 'react';
-import { FloatingPortal, FloatingOverlay } from '@floating-ui/react';
+import {
+  FloatingOverlay,
+  FloatingFocusManager,
+  useFloating,
+  useRole,
+  useDismiss,
+  useClick,
+  useId,
+  useInteractions,
+} from '@floating-ui/react';
 
 import { Window } from './Window';
-import { Header } from './Header';
 
 import s from './default.module.scss';
 
@@ -11,24 +19,32 @@ interface IDialogProps {
   onClose: () => void;
 }
 
-const ModalDialog: React.FC<React.PropsWithChildren<IDialogProps>> = (props) => {
-  const handleClose = React.useCallback(() => {
-    props.onClose();
-  }, [props]);
+export const Dialog: React.FC<React.PropsWithChildren<IDialogProps>> = (props) => {
+  const { refs, context } = useFloating({
+    open: props.isOpen,
+    onOpenChange: props.onClose,
+  });
 
-  if (!props.isOpen) {
-    return null;
-  }
+  const click = useClick(context);
+  const role = useRole(context);
+  const dismiss = useDismiss(context, { outsidePressEvent: 'click' });
+
+  const { getFloatingProps } = useInteractions([click, role, dismiss]);
+
+  const headingId = useId();
+  const descriptionId = useId();
 
   return (
-    <FloatingPortal root={document.body.querySelector('#dialog') as HTMLElement}>
-      <FloatingOverlay lockScroll={true} className={s.wrapper} onClick={handleClose}>
-        <Window>{props.children}</Window>
-      </FloatingOverlay>
-    </FloatingPortal>
+    <Window
+      ref={refs.setFloating}
+      aria-labelledby={headingId}
+      aria-describedby={descriptionId}
+      {...getFloatingProps()}
+      onClose={() => {
+        props.onClose();
+      }}
+    >
+      {props.children}
+    </Window>
   );
 };
-
-export const Dialog = Object.assign(ModalDialog, {
-  Header,
-});

@@ -23,13 +23,6 @@ export const SelectSimple: React.FC<IProps> = (props) => {
   const handleReset = () => {
     props.onChange(null);
   };
-  //
-  // const handleChange = (value: any) => {
-  //   if (props.isSimplify) {
-  //     return props.onChange(value[props.optionKey]);
-  //   }
-  //   props.onChange(value);
-  // };
 
   return (
     <DropDown>

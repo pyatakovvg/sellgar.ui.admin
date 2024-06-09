@@ -10,11 +10,6 @@ import type { IActionButton } from './types';
 import st from './default.module.scss';
 
 export const ActionButton = (props: IActionButton) => {
-  // const handleChange = (value: string | null) => {
-  //   props.onChange(value);
-  //   dropDownEvents.emit('close');
-  // };Button
-
   return (
     <DropDown disabled={props.disabled}>
       <DropDown.Content>

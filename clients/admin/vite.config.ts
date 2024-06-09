@@ -1,7 +1,7 @@
+import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
-import { defineConfig, PluginOption } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
-import react from '@vitejs/plugin-react-swc';
 // import federation from '@originjs/vite-plugin-federation';
 
 // import { visualizer } from 'rollup-plugin-visualizer';
@@ -14,9 +14,7 @@ export default defineConfig({
     sourcemap: process.env.SOURCE_MAP === 'true',
   },
   plugins: [
-    react({
-      tsDecorators: true,
-    }),
+    tsconfigPaths(),
     chunkSplitPlugin({
       strategy: 'default',
       customSplitting: {

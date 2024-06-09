@@ -3,43 +3,19 @@ import { makeObservable, observable, action } from 'mobx';
 
 import { CreateUserDto, UpdateUserDto, RoleEntity, UserEntity } from '@library/domain';
 
-import { GetUserCase, GetUserCaseSymbol } from '../case/get-user.case.ts';
-import { CreateUserCase, CreateUserCaseSymbol } from '../case/create-user.case.ts';
-import { UpdateUserCase, UpdateUserCaseSymbol } from '../case/update-user.case.ts';
-import { GetOptionsCase, GetOptionsCaseSymbol } from '../case/get-options.case.ts';
+import { UserStore, UserStoreSymbol } from '@/classes/store/user.store.ts';
+import { FilterStore, FilterStoreSymbol } from '@/classes/store/filter.store.ts';
 
 export const UserPresenterSymbol = Symbol.for('UserPresenter');
 
-const defaultUser: UserEntity = {
-  uuid: '',
-  email: '',
-  person: {
-    uuid: '',
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    sex: 'MALE',
-    birthday: '',
-  },
-  isBlocked: false,
-  roles: [],
-  createdAt: '',
-  updatedAt: '',
-};
-
 @injectable()
 export class UserPresenter {
-  @observable roles: RoleEntity[] = [];
-  @observable user: UserEntity = defaultUser;
-
   @observable isLoading: boolean = true;
   @observable isProcess: boolean = false;
 
   constructor(
-    @inject(GetUserCaseSymbol) private readonly getUserCase: GetUserCase,
-    @inject(UpdateUserCaseSymbol) private readonly updateUserCase: UpdateUserCase,
-    @inject(CreateUserCaseSymbol) private readonly createUserCase: CreateUserCase,
-    @inject(GetOptionsCaseSymbol) private readonly getOptionsCase: GetOptionsCase,
+    @inject(UserStoreSymbol) readonly userStore: UserStore,
+    @inject(FilterStoreSymbol) readonly filterStore: FilterStore,
   ) {
     makeObservable(this);
   }
@@ -54,26 +30,14 @@ export class UserPresenter {
     this.isProcess = state;
   }
 
-  @action
-  private setRoles(roles: RoleEntity[]) {
-    this.roles = roles;
-  }
-
-  @action
-  private setUser(user: UserEntity) {
-    this.user = user;
-  }
-
   @action.bound
-  async getUserByUuid(uuid?: string) {
+  async getData(uuid?: string) {
     this.setLoading(true);
 
-    const options = await this.getOptionsCase.execute();
-
-    this.setRoles(options.roles);
+    await this.filterStore.getData();
 
     if (uuid) {
-      this.setUser(await this.getUserCase.execute(uuid));
+      await this.userStore.getData(uuid);
     }
 
     this.setLoading(false);
@@ -83,16 +47,16 @@ export class UserPresenter {
   async updateUser(user: UpdateUserDto) {
     this.setProcess(true);
 
-    this.setUser(await this.updateUserCase.execute(user));
+    await this.userStore.updateUser(user);
 
     this.setProcess(false);
   }
 
   @action.bound
-  async createUser(user: CreateUserDto) {
+  async createUser(userDto: CreateUserDto) {
     this.setProcess(true);
 
-    await this.createUserCase.execute(user);
+    await this.userStore.createUser(userDto);
 
     this.setProcess(false);
   }

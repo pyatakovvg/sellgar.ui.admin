@@ -11,9 +11,9 @@
 .content {
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex: 1 0;
-  justify-content: center;
+  align-items: center;
 }
 
 .logotype {
@@ -28,4 +28,10 @@
   height: 22px;
   line-height: 1;
   background: url("./logo.svg") center/100% no-repeat;
+}
+
+.breadcrumbs {
+
+  display: block;
+  margin-left: 32px;
 }

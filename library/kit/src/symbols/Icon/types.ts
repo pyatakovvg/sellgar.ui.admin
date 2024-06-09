@@ -27,6 +27,12 @@ export const icons = [
   'gear',
   'trash',
   'ban',
+  'database',
+  'file',
+  'folder-open',
+  'box-archive',
+  'cloud-arrow-up',
+  'house',
 ] as const;
 
 export type IIcon = (typeof icons)[number];

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { context } from '../user.context';
+import { context } from '@/root/user.context';
 
 export const useUser = () => {
   const { presenter } = React.useContext(context);
 
-  return presenter.user;
+  return presenter.userStore.user;
 };

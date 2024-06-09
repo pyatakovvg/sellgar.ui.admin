@@ -5,6 +5,7 @@ import { Option } from './Option';
 import st from './styles/default.module.scss';
 
 interface IProps<T = any> {
+  isSimplify: boolean;
   disabled?: boolean;
   optionKey: keyof T;
   optionValue: keyof T;
@@ -16,13 +17,15 @@ interface IProps<T = any> {
 export const ListMultiple: React.FC<React.PropsWithChildren<IProps>> = (props) => {
   function handleChange(value: any) {
     let currentValue = props.value;
-    const index = currentValue.findIndex((item) => item[props.optionKey] === value[props.optionKey]);
+    const index = currentValue.findIndex(
+      (item) => (props.isSimplify ? item : item[props.optionKey]) === value[props.optionKey],
+    );
 
     if (index >= 0) {
       props.onChange([...currentValue.slice(0, index), ...currentValue.slice(index + 1)]);
       return void 0;
     }
-    props.onChange([...currentValue, value]);
+    props.onChange([...currentValue, props.isSimplify ? value[props.optionKey] : value]);
   }
 
   return (
@@ -37,6 +40,7 @@ export const ListMultiple: React.FC<React.PropsWithChildren<IProps>> = (props) =
               React.cloneElement(props.children, { ...option, onClick: () => handleChange(option) })
             ) : (
               <Option
+                isSimplify={props.isSimplify}
                 value={props.value}
                 currentValue={valueByKey}
                 optionKey={props.optionKey}

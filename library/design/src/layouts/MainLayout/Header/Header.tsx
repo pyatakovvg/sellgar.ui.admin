@@ -1,3 +1,5 @@
+import { Breadcrumbs } from '@library/kit';
+
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -13,6 +15,9 @@ export const Header: React.FC = () => {
           <NavLink to={'/'}>
             <span className={s.logo} />
           </NavLink>
+        </div>
+        <div className={s.breadcrumbs}>
+          <Breadcrumbs />
         </div>
       </div>
       <div>

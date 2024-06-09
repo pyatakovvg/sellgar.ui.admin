@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
+import { FilterUserDto } from './dto/filter-user.dto.ts';
 import { CreateUserDto } from './dto/create-user.dto.ts';
 import { UpdateUserDto } from './dto/update-user.dto.ts';
 
@@ -16,8 +17,10 @@ export const UserGatewaySymbols = Symbol.for('UserGateway');
 export class UserGateway {
   constructor(@inject(HttpClientSymbol) private readonly httpClient: HttpClient) {}
 
-  async getAll() {
-    const result = await this.httpClient.get<ResultEntity>(import.meta.env.VITE_GATEWAY_API + '/users');
+  async getAll(filter: FilterUserDto) {
+    const result = await this.httpClient.get<ResultEntity>(import.meta.env.VITE_GATEWAY_API + '/users', {
+      params: filter,
+    });
     const resultInstance = plainToInstance(ResultEntity, result);
 
     await validateOrReject(resultInstance);

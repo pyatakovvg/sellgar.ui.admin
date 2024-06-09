@@ -1,44 +1,73 @@
-import { UserService, UserServiceSymbol, UserEntity } from '@library/domain';
-
 import { inject, injectable } from 'inversify';
 import { makeObservable, observable, action } from 'mobx';
+
+import { UserStore, UserStoreSymbol } from '@/classes/store/user.store.ts';
+import { FilterStore, FilterStoreSymbol } from '@/classes/store/filter.store.ts';
 
 export const UserPresenterSymbol = Symbol.for('UserPresenter');
 
 @injectable()
 export class UserPresenter {
-  @observable isLoading: boolean = true;
-  @observable count: number = 0;
-  @observable users: UserEntity[] = [];
+  @observable inProcess: boolean = true;
+  @observable inUpdateProcess: boolean = false;
 
-  constructor(@inject(UserServiceSymbol) private readonly userService: UserService) {
+  constructor(
+    @inject(UserStoreSymbol) readonly userStore: UserStore,
+    @inject(FilterStoreSymbol) readonly filterStore: FilterStore,
+  ) {
     makeObservable(this);
   }
 
-  @action
-  private setLoading(isLoading: boolean) {
-    this.isLoading = isLoading;
-  }
+  static normalizeFilter(values: any) {
+    const resultFilter: any = {};
 
-  @action
-  private setUsers(users: UserEntity[]) {
-    this.users = users;
-  }
+    if (values.roles && values.roles.length) {
+      resultFilter['roles'] = values.roles;
+    }
 
-  @action
-  private setCount(count: number) {
-    this.count = count;
+    if (values.isBlocked) {
+      resultFilter['isBlocked'] = values.isBlocked !== 'ACTIVE';
+    }
+
+    if (values.page > 0) {
+      resultFilter.take = import.meta.env.VITE_TAKE;
+      resultFilter.skip = import.meta.env.VITE_TAKE * (values.page - 1);
+    } else {
+      resultFilter.skip = 0;
+      resultFilter.take = import.meta.env.VITE_TAKE;
+    }
+
+    return resultFilter;
   }
 
   @action.bound
-  async getData() {
-    this.setLoading(true);
+  private setProcess(process: boolean) {
+    this.inProcess = process;
+  }
 
-    const result = await this.userService.getAll();
+  @action.bound
+  private setUpdateProcess(process: boolean) {
+    this.inUpdateProcess = process;
+  }
 
-    this.setUsers(result.data);
-    this.setCount(result.meta.totalRows);
+  @action.bound
+  async getData(filter: any) {
+    this.setProcess(true);
 
-    this.setLoading(false);
+    await this.filterStore.getFilterData();
+    await this.userStore.getUsers(UserPresenter.normalizeFilter(filter));
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    this.setProcess(false);
+  }
+
+  @action.bound
+  async refreshData(filter: any) {
+    this.setUpdateProcess(true);
+
+    await this.userStore.getUsers(UserPresenter.normalizeFilter(filter));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    this.setUpdateProcess(false);
   }
 }

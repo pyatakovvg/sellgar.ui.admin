@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface IContext {
+  isOpen: boolean;
   open: () => void;
   close: () => void;
 }

@@ -23,7 +23,7 @@ export const DatepickerField = React.memo(({ name, ...props }: IDatepickerFieldP
             <Datepicker
               {...props}
               value={field.value}
-              mode={hasError ? EMode.DANGER : EMode.DEFAULT}
+              mode={hasError ? EMode.DANGER : undefined}
               onChange={(e) => {
                 return form.setFieldValue(name, e);
               }}

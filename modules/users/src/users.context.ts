@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { UserPresenter } from './classes/presenter/user.presenter.ts';
+import { UserPresenter } from '@/root/classes/presenter/user.presenter.ts';
 
 interface IContext {
   presenter: UserPresenter;

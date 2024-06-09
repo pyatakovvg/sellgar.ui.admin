@@ -11,22 +11,22 @@
   "dependencies": {
     "@library/domain": "0.0.1",
     "@library/push": "0.0.1",
-    "axios": "1.6.8",
+    "axios": "1.7.2",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.1",
     "inversify": "6.0.2",
     "inversify-inject-decorators": "3.1.0",
     "mobx": "6.12.3",
     "mobx-react": "9.1.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-error-boundary": "4.0.13",
-    "react-router-dom": "6.22.3",
+    "react-router-dom": "6.23.1",
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/react": "18.2.79",
-    "@types/react-dom": "18.2.25",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
     "@types/reflect-metadata": "0.1.0"
   }
 }

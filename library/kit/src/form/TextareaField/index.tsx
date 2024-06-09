@@ -20,7 +20,7 @@ export const TextareaField = ({ name, ...props }: IInputFieldProps) => {
         const hasError = touched && error;
         return (
           <FieldLabel label={props.label} message={hasError && error}>
-            <Textarea {...props} {...field} mode={hasError ? EMode.DANGER : EMode.DEFAULT} />
+            <Textarea {...props} {...field} mode={hasError ? EMode.DANGER : undefined} />
           </FieldLabel>
         );
       }}

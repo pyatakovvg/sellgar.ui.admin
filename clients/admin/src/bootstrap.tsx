@@ -1,5 +1,5 @@
 import { Push } from '@library/push';
-import { useTheme } from '@library/kit';
+import { useTheme, DialogProvider, BreadcrumbsProvider } from '@library/kit';
 import { NavigateLayout, MainLayout, ShopLayout, UserLayout } from '@library/design';
 import { Application, Route, Router, PublicRouter, PrivateRouter } from '@library/app';
 
@@ -15,50 +15,105 @@ const app = new Application({
           new Router(
             '/',
             [
-              new Route('/', () => import('@module/dashboard')),
-
-              new Route('/stock', () => import('@module/stock')),
+              new Route('/', () => import('@module/dashboard'), {
+                roles: [],
+                permissions: [],
+                breadcrumb: {
+                  label: 'Dashboard',
+                },
+              }),
 
               new Router(
                 '/users',
                 [
                   new Route('/', () => import('@module/users')),
-                  new Route('/options', () => import('@module/user-options')),
+                  new Route('/options', () => import('@module/user-options'), {
+                    breadcrumb: {
+                      label: 'Настройки',
+                    },
+                  }),
                 ],
                 {
                   layout: <UserLayout />,
+                  breadcrumb: {
+                    label: 'Пользователи',
+                  },
                 },
               ),
 
-              new Router('/users', [
-                new Route('/create', () => import('@module/user')),
-                new Route('/:uuid', () => import('@module/user')),
-              ]),
+              new Router(
+                '/users',
+                [new Route('/create', () => import('@module/user')), new Route('/:uuid', () => import('@module/user'))],
+                {
+                  breadcrumb: {
+                    label: 'Пользователи',
+                  },
+                },
+              ),
 
               new Router(
-                '/products',
+                '/stock',
                 [
-                  new Route('/', () => import('@module/products')),
-                  new Route('/create', () => import('@module/product')),
+                  new Route('/', () => import('@module/stock')),
+                  new Route('/create', () => import('@module/product'), {
+                    breadcrumb: {
+                      label: 'Новый товар',
+                    },
+                  }),
                   new Route('/:uuid', () => import('@module/product')),
                 ],
                 {
                   roles: ['ADMIN'],
+                  breadcrumb: {
+                    label: 'Склад',
+                  },
                 },
               ),
 
               new Router(
                 '/shops',
-                [new Route('/', () => import('@module/shops')), new Route('/options', () => import('@module/shops'))],
+                [
+                  new Route('/', () => import('@module/shops')),
+                  new Route('/options', () => import('@module/shops'), {
+                    breadcrumb: {
+                      label: 'Настройки',
+                    },
+                  }),
+                ],
                 {
                   layout: <ShopLayout />,
+                  breadcrumb: {
+                    label: 'Магазины',
+                  },
                 },
               ),
 
-              new Router('/shops', [
-                new Route('/create', () => import('@module/shop')),
-                new Route('/:uuid', () => import('@module/shop')),
-              ]),
+              new Router(
+                '/shops',
+                [new Route('/create', () => import('@module/shop')), new Route('/:uuid', () => import('@module/shop'))],
+                {
+                  breadcrumb: {
+                    label: 'Магазины',
+                  },
+                },
+              ),
+
+              new Router(
+                '/buckets',
+                [
+                  new Route('/:bucketName', () => import('@module/files'), {
+                    breadcrumb: {
+                      label: 'Файлы',
+                    },
+                  }),
+                  new Route('/', () => import('@module/buckets')),
+                ],
+                {
+                  breadcrumb: {
+                    label: 'Хранилище',
+                  },
+                },
+              ),
             ],
             {
               layout: <NavigateLayout />,
@@ -90,8 +145,9 @@ const App = () => {
 };
 
 root.render(
-  <>
+  <BreadcrumbsProvider>
     <App />
+    <DialogProvider />
     <Push />
-  </>,
+  </BreadcrumbsProvider>,
 );

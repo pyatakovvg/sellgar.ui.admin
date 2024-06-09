@@ -1,10 +1,13 @@
-import { HttpClient, HttpClientSymbol } from '@library/domain';
+import {
+  HttpClient,
+  HttpClientSymbol,
+  ShopGateway,
+  ShopGatewaySymbol,
+  ShopService,
+  ShopServiceSymbol,
+} from '@library/domain';
 
 import { Container } from 'inversify';
-
-import { ShopGateway, ShopGatewaySymbol } from './gateway/shop.gateway.ts';
-
-import { ShopService, ShopServiceSymbol } from './service/shop.service.ts';
 
 import { ShopPresenter, ShopPresenterSymbol } from './presenter/shop.presenter.ts';
 

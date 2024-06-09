@@ -1,0 +1,12 @@
+.wrapper {
+
+  display: block;
+  color: var(--color-dodger-blue);
+  font-size: var(--font-size-md);
+  white-space: nowrap;
+  transition: color var(--transition-duration);
+
+  &:hover {
+    color: var(--color-royal-blue);
+  }
+}

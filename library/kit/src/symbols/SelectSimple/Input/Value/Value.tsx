@@ -21,5 +21,5 @@ export const Value = (props: IProps) => {
   if (props.value) {
     return <Text>{props.value.value}</Text>;
   }
-  return <Placeholder />;
+  return <Placeholder>{props.placeholder ?? 'Select value'}</Placeholder>;
 };

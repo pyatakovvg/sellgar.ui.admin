@@ -7,7 +7,7 @@ import styles from './default.module.scss';
 
 export const UserLayout: React.FC = () => {
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} role={'users.layout'}>
       <div className={styles.aside}>
         <Aside />
       </div>

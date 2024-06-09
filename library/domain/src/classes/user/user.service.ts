@@ -1,9 +1,11 @@
+import { omit, omitBy, isUndefined } from 'lodash';
 import { inject, injectable } from 'inversify';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
 import { UserGateway, UserGatewaySymbols } from './user.gateway.ts';
 
+import { FilterUserDto } from './dto/filter-user.dto.ts';
 import { CreateUserDto } from './dto/create-user.dto.ts';
 import { UpdateUserDto } from './dto/update-user.dto.ts';
 
@@ -13,8 +15,12 @@ export const UserServiceSymbol = Symbol.for('UserService');
 export class UserService {
   constructor(@inject(UserGatewaySymbols) private readonly userGateway: UserGateway) {}
 
-  getAll() {
-    return this.userGateway.getAll();
+  getAll(filter: FilterUserDto) {
+    const filterInstance = plainToInstance(FilterUserDto, filter, {
+      exposeUnsetFields: false,
+    });
+
+    return this.userGateway.getAll(omitBy(filterInstance, isUndefined));
   }
 
   getByUuid(uuid: string) {

@@ -11,7 +11,6 @@ export enum EVariant {
 }
 
 export enum EMode {
-  DEFAULT = 'default',
   SUCCESS = 'success',
   DANGER = 'danger',
 }
@@ -21,3 +20,5 @@ export enum EAlign {
   RIGHT = 'right',
   CENTER = 'center',
 }
+
+export type Mode = 'success' | 'danger' | 'info' | 'warning';

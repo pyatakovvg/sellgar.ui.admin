@@ -10,9 +10,8 @@ export const useAuthInterceptor = <T extends Function>(callback: T) => {
       try {
         await callback(...args);
       } catch (e) {
-        if (Array.isArray(e)) {
-          console.log(e);
-        } else if ((e as HttpException).getStatus() === 401) {
+        console.log(e);
+        if ((e as HttpException).getStatus && (e as HttpException).getStatus() === 401) {
           navigate('/sign-in');
         }
       }

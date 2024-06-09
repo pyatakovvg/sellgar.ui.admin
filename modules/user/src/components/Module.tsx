@@ -1,12 +1,12 @@
 import { Heading } from '@library/kit';
-import { useAuthInterceptor } from '@library/app';
 
 import React from 'react';
 import { observer } from 'mobx-react';
 import { useParams } from 'react-router-dom';
 
 import { Content } from './Content';
-import { useGetUserByUuid } from '../hooks/useGetUserByUuid.ts';
+
+import { useGetData } from '@/hooks/useGetData.ts';
 
 import s from './default.module.scss';
 
@@ -16,13 +16,11 @@ type IParams = {
 
 export const Module = observer(() => {
   const params = useParams<IParams>();
-  const getUserByUuid = useGetUserByUuid();
+  const getData = useGetData();
 
   React.useEffect(() => {
     (async () => {
-      if (params.uuid) {
-        await getUserByUuid(params.uuid);
-      }
+      await getData(params.uuid);
     })();
   }, []);
 

@@ -8,7 +8,7 @@ import s from './default.module.scss';
 
 export const MainLayout: React.FC<React.PropsWithChildren> = () => {
   return (
-    <section className={s.wrapper}>
+    <section className={s.wrapper} role={'main.layout'}>
       <header className={s.header}>
         <Header />
       </header>

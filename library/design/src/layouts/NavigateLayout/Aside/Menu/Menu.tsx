@@ -17,10 +17,10 @@ export const Menu: React.FC<React.PropsWithChildren> = () => {
           </Item>
         )}
       </NavLink>
-      <NavLink className={s.item} to={'/products'}>
+      <NavLink className={s.item} to={'/showcase'}>
         {({ isActive }) => (
           <Item isActive={isActive} icon={<Icon icon={'box'} />}>
-            Товары
+            Витрина
           </Item>
         )}
       </NavLink>
@@ -35,6 +35,13 @@ export const Menu: React.FC<React.PropsWithChildren> = () => {
         {({ isActive }) => (
           <Item isActive={isActive} icon={<Icon icon={'users'} />}>
             Пользователи
+          </Item>
+        )}
+      </NavLink>
+      <NavLink className={s.item} to={'/buckets'}>
+        {({ isActive }) => (
+          <Item isActive={isActive} icon={<Icon icon={'box-archive'} />}>
+            Хранилище
           </Item>
         )}
       </NavLink>

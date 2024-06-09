@@ -1,0 +1,17 @@
+.wrapper {
+
+  display: inline-flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--color-white);
+  background: var(--color-dark-gray);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-heading);
+  cursor: default;
+}

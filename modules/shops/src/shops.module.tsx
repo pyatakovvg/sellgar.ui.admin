@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ProductView } from './View';
+import { Module } from './components';
 
 import { Provider } from './shops.context.ts';
 import { container } from './classes/classes.di.ts';
@@ -11,7 +11,7 @@ export default function ShopsModule() {
 
   return () => (
     <Provider value={{ presenter }}>
-      <ProductView />
+      <Module />
     </Provider>
   );
 }

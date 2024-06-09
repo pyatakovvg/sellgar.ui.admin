@@ -48,6 +48,7 @@ export const DropDown = (props: IDropDown) => {
     middleware: [
       offset(4),
       autoPlacement({
+        alignment: props?.alignStart ?? 'start',
         rootBoundary: 'document',
         allowedPlacements: ['top-start', 'top-end', 'bottom-start', 'bottom-end'],
       }),
@@ -82,6 +83,7 @@ export const DropDown = (props: IDropDown) => {
   return (
     <Provider
       value={{
+        isOpen,
         open: () => setOpen(true),
         close: () => setOpen(false),
       }}

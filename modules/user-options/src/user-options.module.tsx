@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { UserOptionsView } from './View';
+import { Module } from '@/components/Module.tsx';
 
 export default function UserOptionsModule() {
-  return () => <UserOptionsView />;
+  return () => <Module />;
 }

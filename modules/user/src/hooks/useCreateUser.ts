@@ -3,14 +3,14 @@ import { CreateUserDto } from '@library/domain';
 
 import React from 'react';
 
-import { context } from '../user.context';
+import { context } from '@/root/user.context';
 
 export const useCreateUser = () => {
   const { presenter } = React.useContext(context);
 
-  const interceptor = useAuthInterceptor(async (user: CreateUserDto) => {
-    await presenter.createUser(user);
+  const interceptor = useAuthInterceptor(async (userDto: CreateUserDto) => {
+    await presenter.createUser(userDto);
   });
 
-  return React.useCallback(interceptor.intercept, []);
+  return interceptor.intercept;
 };

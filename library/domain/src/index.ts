@@ -1,3 +1,11 @@
+export { BucketEntity } from './classes/bucket/entity/bucket.entity.ts';
+export { BucketGateway, BucketGatewaySymbols } from './classes/bucket/bucket.gateway.ts';
+export { BucketService, BucketServiceSymbol } from './classes/bucket/bucket.service.ts';
+
+export { FileEntity } from './classes/file/entity/file.entity.ts';
+export { FileGateway, FileGatewaySymbols } from './classes/file/file.gateway.ts';
+export { FileService, FileServiceSymbol } from './classes/file/file.service.ts';
+
 export { CreateRoleDto } from './classes/role/dto/create-role.dto.ts';
 export { UpdateRoleDto } from './classes/role/dto/update-role.dto.ts';
 export { RoleEntity } from './classes/role/entity/role.entity.ts';
@@ -26,6 +34,10 @@ export { ProductGateway, ProductGatewaySymbol } from './classes/product/product.
 export { BrandEntity } from './classes/brand/entity/brand.entity.ts';
 export { BrandService, BrandServiceSymbol } from './classes/brand/brand.service.ts';
 export { BrandGateway, BrandGatewaySymbol } from './classes/brand/brand.gateway.ts';
+
+export { ShopEntity } from './classes/shop/entity/shop.entity.ts';
+export { ShopService, ShopServiceSymbol } from './classes/shop/shop.service.ts';
+export { ShopGateway, ShopGatewaySymbol } from './classes/shop/shop.gateway.ts';
 
 export { CategoryEntity } from './classes/category/entity/category.entity.ts';
 export { CategoryGateway, CategoryGatewaySymbol } from './classes/category/category.gateway.ts';

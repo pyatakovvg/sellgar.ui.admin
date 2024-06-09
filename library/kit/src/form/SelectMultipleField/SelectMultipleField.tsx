@@ -7,8 +7,9 @@ import { Field as FieldLabel } from '@/symbols/Field';
 
 interface ISelectSimpleFieldProps {
   name: string;
-  label: string;
+  label?: string;
   readOnly?: boolean;
+  isSimplify?: boolean;
   isClearable?: boolean;
   disabled?: boolean;
   mode?: string;
@@ -28,7 +29,7 @@ export const SelectMultipleField = ({ name, ...props }: ISelectSimpleFieldProps)
             <SelectMultiple
               {...props}
               {...field}
-              mode={hasError ? EMode.DANGER : EMode.DEFAULT}
+              mode={hasError ? EMode.DANGER : undefined}
               onChange={(e: any) => {
                 return form.setFieldValue(name, e);
               }}

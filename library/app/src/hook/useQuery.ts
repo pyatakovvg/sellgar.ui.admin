@@ -12,8 +12,8 @@ const normalizeStringToPrimitive = (value: string) => {
 type Obj = { [key: string]: any | any[] };
 
 export const useQuery = <T = {}>(): [T, SetURLSearchParams] => {
-  const [filter, setFilter] = useSearchParams();
   const searchParams: Obj = {};
+  const [filter, setFilter] = useSearchParams();
 
   filter.forEach((_, key, parent) => {
     searchParams[key] = parent.getAll(key).map(normalizeStringToPrimitive);
