@@ -12,7 +12,6 @@ export { useAuthInterceptor } from './hook/useAuthInterceptor.ts';
 
 export { Event } from './helper/Event.tsx';
 
-export { emitter } from './application.emitter';
 export { context } from './application.context.ts';
 
 export type { TEventCallback, IEvent, IEventStore, IEventData } from './helper/Event.tsx';

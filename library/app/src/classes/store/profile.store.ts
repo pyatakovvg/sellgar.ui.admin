@@ -5,7 +5,7 @@ import { GetUserCase, GetUserCaseSymbol } from '../case/get-user.case.ts';
 
 import { ProfileEntity } from '../gateway/entity/profile.entity.ts';
 
-export const ProfilePresenterSymbol = Symbol.for('ProfilePresenter');
+export const ProfileStoreSymbol = Symbol.for('ProfileStore');
 
 const initialize: ProfileEntity = {
   person: {
@@ -15,12 +15,13 @@ const initialize: ProfileEntity = {
     lastName: '',
     birthday: '',
     sex: 'MALE',
+    fullName: '',
   },
   roles: [],
 };
 
 @injectable()
-export class ProfilePresenter {
+export class ProfileStore {
   constructor(@inject(GetUserCaseSymbol) private readonly getUserCase: GetUserCase) {
     makeObservable(this);
   }

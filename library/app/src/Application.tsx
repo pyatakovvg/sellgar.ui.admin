@@ -14,7 +14,6 @@ import { Splash } from './components/Splash';
 import { container } from './classes/classes.di.ts';
 import { Provider } from './application.context.ts';
 
-import { ProfilePresenter, ProfilePresenterSymbol } from './classes/presenter/profile.presenter.ts';
 import { ApplicationPresenter, ApplicationPresenterSymbol } from './classes/presenter/application.presenter.ts';
 
 interface IApplicationOption {
@@ -51,7 +50,6 @@ export class Application {
       return (
         <Provider
           value={{
-            profile: container.get<ProfilePresenter>(ProfilePresenterSymbol),
             presenter: container.get<ApplicationPresenter>(ApplicationPresenterSymbol),
           }}
         >

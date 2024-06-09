@@ -2,8 +2,9 @@ import { HttpClient, HttpClientSymbol } from '@library/domain';
 
 import { Container } from 'inversify';
 
-import { ProfilePresenter, ProfilePresenterSymbol } from './presenter/profile.presenter.ts';
 import { ApplicationPresenter, ApplicationPresenterSymbol } from './presenter/application.presenter.ts';
+import { ProfileStore, ProfileStoreSymbol } from './store/profile.store.ts';
+import { ApplicationStore, ApplicationStoreSymbol } from './store/application.store.ts';
 
 import { GetUserCase, GetUserCaseSymbol } from './case/get-user.case.ts';
 import { SignInCase, SignInUserCaseSymbol } from './case/sign-in.case.ts';
@@ -17,8 +18,10 @@ const container = new Container();
 
 container.bind<HttpClient>(HttpClientSymbol).to(HttpClient);
 
-container.bind<ProfilePresenter>(ProfilePresenterSymbol).to(ProfilePresenter);
 container.bind<ApplicationPresenter>(ApplicationPresenterSymbol).to(ApplicationPresenter);
+
+container.bind<ProfileStore>(ProfileStoreSymbol).to(ProfileStore);
+container.bind<ApplicationStore>(ApplicationStoreSymbol).to(ApplicationStore);
 
 container.bind<GetUserCase>(GetUserCaseSymbol).to(GetUserCase);
 container.bind<SignInCase>(SignInUserCaseSymbol).to(SignInCase);

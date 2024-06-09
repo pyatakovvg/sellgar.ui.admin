@@ -1,13 +1,14 @@
 import { useProfile } from '@library/app';
-import { DropDown, Icon, Link, Paragraph } from '@library/kit';
+import { Icon, Paragraph } from '@library/kit';
 
 import React from 'react';
+import { observer } from 'mobx-react';
 
 import s from './default.module.scss';
 
-export const Person: React.FC = () => {
+export const Person: React.FC = observer(() => {
   const profile = useProfile();
-
+  console.log(123, profile);
   return (
     <div className={s.wrapper}>
       <div className={s.icon}>
@@ -21,4 +22,4 @@ export const Person: React.FC = () => {
       </div>
     </div>
   );
-};
+});

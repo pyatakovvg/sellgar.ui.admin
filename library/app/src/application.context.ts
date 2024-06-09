@@ -1,10 +1,8 @@
 import React from 'react';
 
-import { ProfilePresenter } from './classes/presenter/profile.presenter.ts';
 import { ApplicationPresenter } from './classes/presenter/application.presenter.ts';
 
 export interface IApplicationContext {
-  profile: ProfilePresenter;
   presenter: ApplicationPresenter;
 }
 

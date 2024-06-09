@@ -14,7 +14,6 @@ export const SignOut: React.FC = () => {
 
   const handleSignOut = async () => {
     await app.presenter.signOut();
-    app.profile.resetProfile();
 
     navigate('/sign-in');
     context.close();

@@ -11,20 +11,20 @@ import { useAuthInterceptor } from './hook/useAuthInterceptor.ts';
 import { Splash } from './components/Splash';
 
 const CheckAuth: React.FC = observer(() => {
-  const { profile, presenter } = useApp();
+  const { presenter } = useApp();
 
   const interceptor = useAuthInterceptor(async () => {
-    await profile.getProfile();
+    await presenter.getProfile();
+    presenter.setApplicationInitialized();
   });
 
   React.useEffect(() => {
     (async () => {
       if (!presenter.initialized) {
         await interceptor.intercept();
-        presenter.setApplicationInitialized();
       }
     })();
-  }, [presenter.initialized]);
+  }, []);
 
   if (!presenter.initialized) {
     return <Splash />;
