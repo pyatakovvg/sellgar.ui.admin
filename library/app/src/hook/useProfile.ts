@@ -2,6 +2,8 @@ import React from 'react';
 
 import { useApp } from './useApp';
 
+interface IProfile {}
+
 export const useProfile = () => {
   const app = useApp();
 
@@ -16,8 +18,11 @@ export const useProfile = () => {
   );
 
   return {
-    person: app.presenter.profile.person,
+    uuid: app.presenter.profile.uuid,
+    login: app.presenter.profile.login,
+    user: app.presenter.profile.user,
     roles: app.presenter.profile.roles,
+    permissions: app.presenter.profile.permissions,
     checkRoles,
     checkPermissions,
   };

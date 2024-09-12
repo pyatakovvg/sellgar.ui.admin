@@ -1,31 +1,27 @@
-import { Type } from 'class-transformer';
-import { IsUUID, IsString, IsBoolean, IsEmail, ValidateNested } from 'class-validator';
-
-import { PersonEntity } from './person.entity.ts';
-import { RoleEntity } from '../../role/entity/role.entity.ts';
+import { IsString, IsUUID, IsOptional, IsDateString } from 'class-validator';
 
 export class UserEntity {
   @IsUUID()
   uuid: string;
 
   @IsString()
-  @IsEmail()
-  email: string;
-
-  @IsBoolean()
-  isBlocked: boolean;
-
-  @ValidateNested()
-  @Type(() => PersonEntity)
-  person: PersonEntity;
-
-  @ValidateNested({ each: true })
-  @Type(() => RoleEntity)
-  roles: RoleEntity[];
+  name: string;
 
   @IsString()
-  createdAt: string;
+  surname: string;
 
   @IsString()
-  updatedAt: string;
+  patronymic: string | null;
+
+  @IsString()
+  sex: 'MALE' | 'FEMALE' | null;
+
+  @IsDateString()
+  birthday: Date | null;
+
+  @IsDateString()
+  createdAt?: Date;
+
+  @IsDateString()
+  updatedAt?: Date;
 }

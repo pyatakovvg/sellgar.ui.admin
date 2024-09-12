@@ -21,9 +21,12 @@ export { PermissionGateway, PermissionGatewaySymbols } from './classes/permissio
 export { CreateUserDto } from './classes/user/dto/create-user.dto.ts';
 export { UpdateUserDto } from './classes/user/dto/update-user.dto.ts';
 export { UserEntity } from './classes/user/entity/user.entity.ts';
-export { PersonEntity } from './classes/user/entity/person.entity.ts';
 export { UserGateway, UserGatewaySymbols } from './classes/user/user.gateway.ts';
 export { UserService, UserServiceSymbol } from './classes/user/user.service.ts';
+
+export { ProfileEntity } from './classes/profile/entity/profile.entity.ts';
+export { ProfileGateway, ProfileGatewaySymbols } from './classes/profile/profile.gateway.ts';
+export { ProfileService, ProfileServiceSymbol } from './classes/profile/profile.service.ts';
 
 export { PriceEntity } from './classes/product/entity/price.entity.ts';
 export { ProductEntity } from './classes/product/entity/product.entity.ts';

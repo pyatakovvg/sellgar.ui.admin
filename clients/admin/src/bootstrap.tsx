@@ -6,6 +6,13 @@ import { Application, Route, Router, PublicRouter, PrivateRouter } from '@librar
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import { signInRoute } from './routes/public/sign-in.route.ts';
+
+import { usersRoute } from './routes/private/users/users.route.ts';
+import { userOptionsRoute } from './routes/private/users/user-options.route.ts';
+import { createUserRoute } from './routes/private/users/create-user.route.ts';
+import { updateUserRoute } from './routes/private/users/update-user.route.ts';
+
 const app = new Application({
   routes: [
     new PrivateRouter([
@@ -15,7 +22,7 @@ const app = new Application({
           new Router(
             '/',
             [
-              new Route('/', () => import('@module/dashboard'), {
+              new Route('/', () => import('@admin/dashboard'), {
                 roles: [],
                 permissions: [],
                 breadcrumb: {
@@ -23,44 +30,29 @@ const app = new Application({
                 },
               }),
 
-              new Router(
-                '/users',
-                [
-                  new Route('/', () => import('@module/users')),
-                  new Route('/options', () => import('@module/user-options'), {
-                    breadcrumb: {
-                      label: 'Настройки',
-                    },
-                  }),
-                ],
-                {
-                  layout: <UserLayout />,
-                  breadcrumb: {
-                    label: 'Пользователи',
-                  },
+              new Router('/users', [usersRoute, userOptionsRoute], {
+                layout: <UserLayout />,
+                breadcrumb: {
+                  label: 'Пользователи',
                 },
-              ),
+              }),
 
-              new Router(
-                '/users',
-                [new Route('/create', () => import('@module/user')), new Route('/:uuid', () => import('@module/user'))],
-                {
-                  breadcrumb: {
-                    label: 'Пользователи',
-                  },
+              new Router('/users', [createUserRoute, updateUserRoute], {
+                breadcrumb: {
+                  label: 'Пользователи',
                 },
-              ),
+              }),
 
               new Router(
                 '/stock',
                 [
-                  new Route('/', () => import('@module/stock')),
-                  new Route('/create', () => import('@module/product'), {
+                  new Route('/', () => import('@admin/stock')),
+                  new Route('/create', () => import('@admin/product'), {
                     breadcrumb: {
                       label: 'Новый товар',
                     },
                   }),
-                  new Route('/:uuid', () => import('@module/product')),
+                  new Route('/:uuid', () => import('@admin/product')),
                 ],
                 {
                   roles: ['ADMIN'],
@@ -73,8 +65,8 @@ const app = new Application({
               new Router(
                 '/shops',
                 [
-                  new Route('/', () => import('@module/shops')),
-                  new Route('/options', () => import('@module/shops'), {
+                  new Route('/', () => import('@admin/shops')),
+                  new Route('/options', () => import('@admin/shops'), {
                     breadcrumb: {
                       label: 'Настройки',
                     },
@@ -90,7 +82,7 @@ const app = new Application({
 
               new Router(
                 '/shops',
-                [new Route('/create', () => import('@module/shop')), new Route('/:uuid', () => import('@module/shop'))],
+                [new Route('/create', () => import('@admin/shop')), new Route('/:uuid', () => import('@admin/shop'))],
                 {
                   breadcrumb: {
                     label: 'Магазины',
@@ -101,12 +93,12 @@ const app = new Application({
               new Router(
                 '/buckets',
                 [
-                  new Route('/:bucketName', () => import('@module/files'), {
+                  new Route('/:bucketName', () => import('@admin/files'), {
                     breadcrumb: {
                       label: 'Файлы',
                     },
                   }),
-                  new Route('/', () => import('@module/buckets')),
+                  new Route('/', () => import('@admin/buckets')),
                 ],
                 {
                   breadcrumb: {
@@ -126,7 +118,16 @@ const app = new Application({
       ),
     ]),
 
-    new PublicRouter([new Route('/sign-in', () => import('@module/sign-in'))]),
+    new PublicRouter([
+      signInRoute,
+      new Route('/dashboard', () => import('@admin/dashboard2'), {
+        roles: [],
+        permissions: [],
+        breadcrumb: {
+          label: 'Dashboard',
+        },
+      }),
+    ]),
   ],
 });
 

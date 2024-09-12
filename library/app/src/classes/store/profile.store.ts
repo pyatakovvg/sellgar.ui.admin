@@ -1,23 +1,26 @@
+import { ProfileEntity } from '@library/domain';
+
 import { inject, injectable } from 'inversify';
 import { action, observable, makeObservable } from 'mobx';
 
 import { GetUserCase, GetUserCaseSymbol } from '../case/get-user.case.ts';
 
-import { ProfileEntity } from '../gateway/entity/profile.entity.ts';
-
 export const ProfileStoreSymbol = Symbol.for('ProfileStore');
 
 const initialize: ProfileEntity = {
-  person: {
-    uuid: '',
-    firstName: '',
-    middleName: '',
-    lastName: '',
-    birthday: '',
-    sex: 'MALE',
-    fullName: '',
-  },
+  uuid: '',
+  login: '',
+  isBlocked: false,
   roles: [],
+  permissions: [],
+  user: {
+    uuid: '',
+    name: '',
+    surname: '',
+    patronymic: '',
+    birthday: null,
+    sex: null,
+  },
 };
 
 @injectable()
@@ -37,25 +40,21 @@ export class ProfileStore {
     if (!targetRoles.length) {
       return true;
     }
-    return targetRoles.some((targetRole) => this.profile.roles.map((role) => role.code).includes(targetRole));
+    return targetRoles.some((targetRole) => this.profile.roles.includes(targetRole));
   }
 
   checkPermissions(targetPermissions: string[]): boolean {
     if (!targetPermissions.length) {
       return true;
     }
-    return targetPermissions.some((targetPermission) =>
-      this.profile.roles.some((targetRole) =>
-        targetRole.permissions.map((permission) => permission.code).includes(targetPermission),
-      ),
-    );
+    return targetPermissions.some((targetPermission) => this.profile.permissions.includes(targetPermission));
   }
 
   @action.bound
   async getProfile() {
     const profile = await this.getUserCase.execute();
 
-    this.setProfile(profile);
+    this.setProfile(profile.data);
   }
 
   @action.bound

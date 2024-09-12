@@ -43,6 +43,7 @@ const LoadView: React.FC<IPropsWithAppRoute> = (props) => {
   if (!View) {
     return <Spinner />;
   }
+
   return (
     <ErrorBoundary FallbackComponent={Error}>
       <View />

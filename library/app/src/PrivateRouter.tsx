@@ -1,6 +1,8 @@
+import { controller as push } from '@library/push';
+
 import React from 'react';
 import { observer } from 'mobx-react';
-import { Outlet, RouteObject } from 'react-router-dom';
+import { useNavigate, Outlet, RouteObject } from 'react-router-dom';
 
 import { Route } from './Route.tsx';
 import { Router } from './Router.tsx';
@@ -11,11 +13,24 @@ import { useAuthInterceptor } from './hook/useAuthInterceptor.ts';
 import { Splash } from './components/Splash';
 
 const CheckAuth: React.FC = observer(() => {
+  const navigate = useNavigate();
   const { presenter } = useApp();
 
   const interceptor = useAuthInterceptor(async () => {
-    await presenter.getProfile();
-    presenter.setApplicationInitialized();
+    try {
+      await presenter.getProfile();
+    } catch (e) {
+      const error = e as any;
+      console.log(error);
+
+      navigate('/sign-in');
+
+      if (error.status !== 401) {
+        push.add({ title: 'Ошибка авторизации', variant: 'danger', content: error.message });
+      }
+    } finally {
+      setTimeout(() => presenter.setApplicationInitialized(), 100);
+    }
   });
 
   React.useEffect(() => {

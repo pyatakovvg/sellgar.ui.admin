@@ -1,0 +1,19 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "./types",
+    "isolatedModules": false,
+
+    "paths": {
+      "@/root/*": ["./src/*"],
+      "@/hooks/*": ["./src/hooks/*"],
+      "@/classes/*": ["./src/classes/*"],
+      "@/components/*": ["./src/components/*"],
+    },
+    "jsx": "react"
+  },
+  "exclude": ["node_modules"],
+  "include": ["./src", "./env.d.ts"]
+}

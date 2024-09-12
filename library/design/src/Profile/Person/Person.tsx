@@ -8,7 +8,7 @@ import s from './default.module.scss';
 
 export const Person: React.FC = observer(() => {
   const profile = useProfile();
-  console.log(123, profile);
+  console.log(profile);
   return (
     <div className={s.wrapper}>
       <div className={s.icon}>
@@ -16,8 +16,8 @@ export const Person: React.FC = observer(() => {
       </div>
       <div className={s.name}>
         <Paragraph>
-          {profile.person.lastName} {profile.person.firstName.slice(0, 1).toUpperCase()}.{' '}
-          {profile.person.middleName.slice(0, 1).toUpperCase()}.
+          {profile.user.surname} {profile.user.name.slice(0, 1).toUpperCase()}.{' '}
+          {profile.user?.patronymic?.slice(0, 1).toUpperCase() ?? ''}.
         </Paragraph>
       </div>
     </div>

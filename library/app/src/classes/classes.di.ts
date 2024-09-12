@@ -1,4 +1,11 @@
-import { HttpClient, HttpClientSymbol } from '@library/domain';
+import {
+  HttpClient,
+  HttpClientSymbol,
+  ProfileService,
+  ProfileServiceSymbol,
+  ProfileGateway,
+  ProfileGatewaySymbols,
+} from '@library/domain';
 
 import { Container } from 'inversify';
 
@@ -11,7 +18,6 @@ import { SignInCase, SignInUserCaseSymbol } from './case/sign-in.case.ts';
 import { SignOutCase, SignOutUserCaseSymbol } from './case/sign-out.case.ts';
 
 import { AuthService, AuthServiceSymbol } from './service/auth.service.ts';
-
 import { AuthGateway, AuthGatewaySymbol } from './gateway/auth.gateway.ts';
 
 const container = new Container();
@@ -28,7 +34,9 @@ container.bind<SignInCase>(SignInUserCaseSymbol).to(SignInCase);
 container.bind<SignOutCase>(SignOutUserCaseSymbol).to(SignOutCase);
 
 container.bind<AuthService>(AuthServiceSymbol).to(AuthService);
-
 container.bind<AuthGateway>(AuthGatewaySymbol).to(AuthGateway);
+
+container.bind<ProfileService>(ProfileServiceSymbol).to(ProfileService);
+container.bind<ProfileGateway>(ProfileGatewaySymbols).to(ProfileGateway);
 
 export { container };

@@ -11,7 +11,7 @@
   "dependencies": {
     "@library/kit": "0.0.1",
     "classnames": "2.5.1",
-    "mobx": "6.12.3",
+    "mobx": "6.12.4",
     "mobx-react": "9.1.1",
     "react": "18.3.1"
   },

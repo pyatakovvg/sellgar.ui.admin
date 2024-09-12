@@ -1,34 +1,28 @@
-import { HttpClient, HttpClientSymbol } from '@library/domain';
+import { HttpClient, HttpClientSymbol, ProfileService, ProfileServiceSymbol } from '@library/domain';
 
 import { injectable, inject } from 'inversify';
-import { validateOrReject } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-
-import { ProfileEntity } from './entity/profile.entity.ts';
 
 export const AuthGatewaySymbol = Symbol.for('AuthGateway');
 
 @injectable()
 export class AuthGateway {
-  constructor(@inject(HttpClientSymbol) private readonly httpClient: HttpClient) {}
+  constructor(
+    @inject(HttpClientSymbol) private readonly httpClient: HttpClient,
+    @inject(ProfileServiceSymbol) private readonly profileService: ProfileService,
+  ) {}
 
   signOut() {
-    return this.httpClient.post(import.meta.env.VITE_GATEWAY_API + '/auth/logout');
+    return this.httpClient.post(import.meta.env.VITE_GATEWAY_API + '/v1/auth/sign-out');
   }
 
   signInByCredentials(login: string, password: string) {
-    return this.httpClient.post(import.meta.env.VITE_GATEWAY_API + '/auth/login', {
+    return this.httpClient.post(import.meta.env.VITE_GATEWAY_API + '/v1/auth/sign-in', {
       email: login.trim(),
       password: password.trim(),
     });
   }
 
   async getUserByCookie() {
-    const result = await this.httpClient.get(import.meta.env.VITE_GATEWAY_API + '/auth/profile');
-    const resultInstance = plainToInstance(ProfileEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+    return await this.profileService.get();
   }
 }
