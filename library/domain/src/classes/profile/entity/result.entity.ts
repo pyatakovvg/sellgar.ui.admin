@@ -1,9 +1,8 @@
 import { Type } from 'class-transformer';
-import { IsNumber, ValidateNested } from 'class-validator';
+import { ValidateNested } from 'class-validator';
 
 import { ProfileEntity } from './profile.entity.ts';
-
-class MetaEntity {}
+import { MetaEntity } from '../../../meta.entity.ts';
 
 export class ResultEntity {
   @Type(() => ProfileEntity)

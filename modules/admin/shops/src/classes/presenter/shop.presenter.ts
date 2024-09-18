@@ -1,27 +1,33 @@
 import { inject, injectable } from 'inversify';
 import { makeObservable, observable, action } from 'mobx';
 
-import { ShopService, ShopServiceSymbol } from '../service/shop.service.ts';
-
-interface IProductsResult {
-  data: any[];
-  meta: {
-    totalRows: number;
-  };
-}
+import { ShopsStore, ShopsStoreSymbol } from '../store/shops.store.ts';
 
 export const ShopPresenterSymbol = Symbol.for('ShopPresenter');
 
 @injectable()
 export class ShopPresenter {
-  @observable products: IProductsResult = { data: [], meta: { totalRows: 0 } };
+  @observable isLoading: boolean = true;
 
-  constructor(@inject(ShopServiceSymbol) private readonly shopService: ShopService) {
+  constructor(@inject(ShopsStoreSymbol) private readonly shopStore: ShopsStore) {
     makeObservable(this);
   }
 
-  @action
+  @action.bound
+  private setLoading(state: boolean) {
+    this.isLoading = state;
+  }
+
+  @action.bound
   async getData() {
-    this.products = await this.shopService.getData();
+    this.setLoading(true);
+
+    await this.shopStore.getShops();
+
+    this.setLoading(false);
+  }
+
+  get shopsStore() {
+    return this.shopStore;
   }
 }

@@ -5,11 +5,14 @@ import { observer } from 'mobx-react';
 
 import { Shop } from './Shop';
 
-import type { ICompany } from '../../company-widget.types.ts';
-
 import s from './default.module.scss';
 
-export const Company = observer((props: ICompany) => {
+interface IProps {
+  name: string;
+  shops: any[];
+}
+
+export const Company = observer((props: IProps) => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>

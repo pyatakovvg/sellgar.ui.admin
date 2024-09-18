@@ -8,7 +8,7 @@ import s from './default.module.scss';
 
 export const Person: React.FC = observer(() => {
   const profile = useProfile();
-  console.log(profile);
+
   return (
     <div className={s.wrapper}>
       <div className={s.icon}>

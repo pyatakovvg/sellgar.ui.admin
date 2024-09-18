@@ -24,6 +24,7 @@
     "@admin/user-options": "0.0.1",
     "@admin/users": "0.0.1",
     "@library/app": "0.0.1",
+    "@library/breadcrumbs": "0.0.1",
     "@library/design": "0.0.1",
     "@library/kit": "0.0.1",
     "@library/push": "0.0.1",

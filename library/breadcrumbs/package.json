@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@library/breadcrumbs",
+  "version": "0.0.1",
+  "description": "List components",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@library/kit": "0.0.1",
+    "classnames": "2.5.1",
+    "mobx": "6.12.4",
+    "mobx-react": "9.1.1",
+    "react": "18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@types/reflect-metadata": "0.1.0"
+  }
+}

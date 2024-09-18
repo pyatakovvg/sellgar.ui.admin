@@ -2,8 +2,7 @@ import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
 import { FileEntity } from './file.entity.ts';
-
-class MetaEntity {}
+import { MetaEntity } from '../../../meta.entity.ts';
 
 export class ResultEntity {
   @ValidateNested({ each: true })

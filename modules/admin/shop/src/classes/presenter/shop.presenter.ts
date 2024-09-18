@@ -1,17 +1,21 @@
 import { inject, injectable } from 'inversify';
 import { makeObservable, observable, action } from 'mobx';
 
-import { ShopEntity, ShopService, ShopServiceSymbol } from '@library/domain';
+import { ShopEntity } from '@library/domain';
+
+import { ShopStore, ShopStoreSymbol } from '../store/shop.store.ts';
+import { CompanyStore, CompanyStoreSymbol } from '../store/company.store.ts';
 
 export const ShopPresenterSymbol = Symbol.for('ShopPresenter');
 
 @injectable()
 export class ShopPresenter {
-  @observable company: any[] = [];
-  @observable shop: Partial<ShopEntity> = {};
-  @observable isLoading: boolean = true;
+  @observable private isLoading: boolean = true;
 
-  constructor(@inject(ShopServiceSymbol) private readonly shopService: ShopService) {
+  constructor(
+    @inject(ShopStoreSymbol) private readonly shopStore: ShopStore,
+    @inject(CompanyStoreSymbol) private readonly companyStore: CompanyStore,
+  ) {
     makeObservable(this);
   }
 
@@ -21,33 +25,32 @@ export class ShopPresenter {
   }
 
   @action.bound
-  setShop(shop: ShopEntity) {
-    this.shop = shop;
-  }
-
-  @action.bound
   async getData(uuid: string) {
     this.setLoading(true);
 
-    await this.getCompany();
+    await this.companyStore.getCompanies();
 
     if (uuid) {
-      this.setShop(await this.shopService.getData(uuid));
+      await this.shopStore.getShopByUUID(uuid);
     }
 
     this.setLoading(false);
   }
 
-  @action.bound
-  async getCompany() {
-    this.company = await this.shopService.getCompany();
+  async upsert(data: ShopEntity) {
+    console.log(123, !!data.uuid);
+    if (!!data.uuid) {
+      await this.shopStore.update(data);
+    } else {
+      await this.shopStore.create(data);
+    }
   }
 
-  async save(data: ShopEntity) {
-    if (data.uuid) {
-      this.shop = await this.shopService.updateShop(data);
-    } else {
-      this.shop = await this.shopService.createShop(data);
-    }
+  getShopStore() {
+    return this.shopStore;
+  }
+
+  getCompanyStore() {
+    return this.companyStore;
   }
 }

@@ -21,7 +21,6 @@ const CheckAuth: React.FC = observer(() => {
       await presenter.getProfile();
     } catch (e) {
       const error = e as any;
-      console.log(error);
 
       navigate('/sign-in');
 

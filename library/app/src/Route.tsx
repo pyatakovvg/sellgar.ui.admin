@@ -8,12 +8,15 @@ import { Error } from './components/Error';
 import { Spinner } from './components/Spinner';
 import { Forbidden } from './components/Forbidden';
 
+import { uuid } from './utils/uuid.utils.ts';
+
 export interface IPropsWithAppRoute {
   route: Route;
 }
 
 interface IBreadcrumb {
-  label: string;
+  id?: string;
+  label?: string;
 }
 
 interface IRouteOptions {
@@ -65,6 +68,8 @@ const CheckCredentials: React.FC<IPropsWithAppRoute> = (props) => {
 };
 
 export class Route<T = any> {
+  readonly uuid = uuid();
+
   constructor(
     private readonly path: string,
     private readonly module: () => Promise<{ default: T }>,
@@ -86,6 +91,10 @@ export class Route<T = any> {
     return this.options?.permissions ?? [];
   }
 
+  get breadcrumbs() {
+    return this.options?.breadcrumb ?? null;
+  }
+
   get content() {
     return this.module;
   }
@@ -93,13 +102,16 @@ export class Route<T = any> {
   create(): RouteObject | null {
     return {
       handle: {
-        crumb: (title?: string) =>
-          title ?? this.options?.breadcrumb
+        uuid: this.uuid,
+        crumb: () => {
+          return this.options?.breadcrumb
             ? {
-                label: title ?? this.options?.breadcrumb?.label,
+                id: this.options?.breadcrumb?.id ?? undefined,
+                label: this.options?.breadcrumb?.label,
                 href: this.path,
               }
-            : null,
+            : null;
+        },
       },
       path: Route.normalizePath(this.path),
       element: <CheckCredentials route={this} />,

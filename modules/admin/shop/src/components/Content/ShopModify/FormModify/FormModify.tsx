@@ -1,75 +1,62 @@
-import {
-  InputField,
-  SelectSimpleField,
-  Button,
-  CheckboxField,
-  Paragraph,
-  EMode,
-  EVariant,
-  useAddBreadcrumb,
-} from '@library/kit';
+import { InputField, SelectSimpleField, Button, CheckboxField, Paragraph, EMode, EVariant } from '@library/kit';
+import { ShopEntity } from '@library/domain';
 
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Formik, Form, FormikHelpers } from 'formik';
 
-import { IShop } from '@/root/shop.types.ts';
-import { context } from '@/root/shop.context.ts';
+import { useCompanyList } from '@/root/hooks/useCompanyList';
 
 import s from './default.module.scss';
 
 interface IProps {
-  shop: any;
-  onSubmit(value: IShop, helper: FormikHelpers<IShop>): void;
+  shop: ShopEntity;
+  onSubmit(value: ShopEntity, helper: FormikHelpers<ShopEntity>): void;
 }
 
 export const FormModify: React.FC<IProps> = observer((props) => {
-  const { presenter } = React.useContext(context);
-  const companyList = presenter.company;
-
-  useAddBreadcrumb({
-    label: props.shop.uuid ? props.shop.name : 'Нывый магазин',
-  });
+  const companyList = useCompanyList();
 
   return (
     <Formik enableReinitialize={true} initialValues={props.shop} onSubmit={props.onSubmit}>
-      {({ dirty, values }) => (
-        <Form className={s.wrapper}>
-          <div className={s.row}>
-            <SelectSimpleField
-              isSimplify
-              label={'Компания'}
-              name={'company.uuid'}
-              optionKey={'uuid'}
-              optionValue={'name'}
-              options={companyList}
-            />
-          </div>
-          <div className={s.row}>
-            <InputField label={'Название'} name={'name'} />
-          </div>
-          <div className={s.row}>
-            <InputField label={'Адрес'} name={'address'} />
-          </div>
-          {values.uuid && (
+      {({ dirty }) => {
+        return (
+          <Form className={s.wrapper}>
+            <div className={s.row}>
+              <SelectSimpleField
+                isSimplify
+                label={'Компания'}
+                name={'company.uuid'}
+                optionKey={'uuid'}
+                optionValue={'name'}
+                options={companyList}
+              />
+            </div>
+            <div className={s.row}>
+              <InputField label={'Название'} name={'name'} />
+            </div>
+            <div className={s.row}>
+              <InputField label={'Адрес'} name={'address'} />
+            </div>
             <div className={s.row}>
               <CheckboxField name={'isActive'}>
                 <Paragraph>вктивный</Paragraph>
               </CheckboxField>
             </div>
-          )}
-          <div className={s.row}>
-            {dirty && (
-              <Button type={'reset'} variant={EVariant.SECONDARY} disabled={!dirty}>
-                Сбросить
+
+            <div className={s.row}>
+              {dirty && (
+                <Button type={'reset'} variant={EVariant.SECONDARY} disabled={!dirty}>
+                  Сбросить
+                </Button>
+              )}
+              <Button type={'submit'} mode={EMode.SUCCESS} disabled={!dirty}>
+                Сохранить
               </Button>
-            )}
-            <Button type={'submit'} mode={EMode.SUCCESS} disabled={!dirty}>
-              Сохранить
-            </Button>
-          </div>
-        </Form>
-      )}
+            </div>
+          </Form>
+        );
+      }}
     </Formik>
   );
 });

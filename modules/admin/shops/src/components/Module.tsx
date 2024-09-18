@@ -1,10 +1,11 @@
-import { Heading, Paragraph } from '@library/kit';
+import { Heading } from '@library/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
 
 import { context } from '../shops.context';
-import { Product, type IProduct } from './Product';
+
+import { Content } from './Content';
 
 import s from './default.module.scss';
 
@@ -21,16 +22,7 @@ export const Module = observer(() => {
         <Heading variant={'h2'}>Магазины</Heading>
       </div>
       <div className={s.content}>
-        <div className={s.aside}>
-          <Paragraph>Всего {presenter.products.meta.totalRows}</Paragraph>
-        </div>
-        <div className={s.list}>
-          {presenter.products.data.map((product: IProduct) => (
-            <div key={product.uuid} className={s.item}>
-              <Product product={product} />
-            </div>
-          ))}
-        </div>
+        <Content />
       </div>
     </div>
   );

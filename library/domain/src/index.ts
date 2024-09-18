@@ -1,6 +1,12 @@
+export { MetaEntity } from './meta.entity.ts';
+
 export { BucketEntity } from './classes/bucket/entity/bucket.entity.ts';
 export { BucketGateway, BucketGatewaySymbols } from './classes/bucket/bucket.gateway.ts';
 export { BucketService, BucketServiceSymbol } from './classes/bucket/bucket.service.ts';
+
+export { CompanyEntity } from './classes/company/entity/company.entity.ts';
+export { CompanyGateway, CompanyGatewaySymbol } from './classes/company/company.gateway.ts';
+export { CompanyService, CompanyServiceSymbol } from './classes/company/company.service.ts';
 
 export { FileEntity } from './classes/file/entity/file.entity.ts';
 export { FileGateway, FileGatewaySymbols } from './classes/file/file.gateway.ts';

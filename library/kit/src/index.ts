@@ -2,8 +2,6 @@ export * from './types';
 
 export { useTheme } from './theme/ThemeProvider';
 
-export { Breadcrumbs, BreadcrumbsProvider, useSetBreadcrumbs, useAddBreadcrumb } from './symbols/Breadcrumbs';
-
 export { Editor } from './symbols/Editor';
 export { Icon } from './symbols/Icon';
 export { IconBox } from './symbols/IconBox';

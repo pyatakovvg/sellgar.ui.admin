@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 
 import { ShopEntity } from './entity/shop.entity.ts';
+import { ResultEntity } from './entity/result.entity.ts';
 
 import { HttpClient, HttpClientSymbol } from '../../helpers/HttpClient';
 
@@ -10,22 +11,23 @@ export const ShopGatewaySymbol = Symbol.for('ShopGateway');
 export class ShopGateway {
   constructor(@inject(HttpClientSymbol) private readonly httpClient: HttpClient) {}
 
-  getShopById(uuid: string): Promise<ShopEntity> {
+  getAll(): Promise<ResultEntity> {
     return this.httpClient.send({
-      url: import.meta.env.VITE_GATEWAY_API + '/shops/' + uuid,
+      url: import.meta.env.VITE_GATEWAY_API + '/v1/shops',
       method: 'get',
     });
   }
 
-  getCompany(): Promise<any[]> {
+  getShopById(uuid: string): Promise<ShopEntity> {
     return this.httpClient.send({
-      url: import.meta.env.VITE_GATEWAY_API + '/company',
+      url: import.meta.env.VITE_GATEWAY_API + '/v1/shops/' + uuid,
+      method: 'get',
     });
   }
 
   createShop(data: ShopEntity): Promise<ShopEntity> {
     return this.httpClient.send({
-      url: import.meta.env.VITE_GATEWAY_API + '/shops',
+      url: import.meta.env.VITE_GATEWAY_API + '/v1/shops',
       method: 'post',
       data,
     });
@@ -33,7 +35,7 @@ export class ShopGateway {
 
   updateShop(data: ShopEntity): Promise<ShopEntity> {
     return this.httpClient.send({
-      url: import.meta.env.VITE_GATEWAY_API + '/shops/' + data.uuid,
+      url: import.meta.env.VITE_GATEWAY_API + '/v1/shops/' + data.uuid,
       method: 'put',
       data,
     });

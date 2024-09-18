@@ -10,12 +10,12 @@ export const ShopServiceSymbol = Symbol.for('ShopService');
 export class ShopService {
   constructor(@inject(ShopGatewaySymbol) private readonly shopGateway: ShopGateway) {}
 
-  getData(uuid: string) {
-    return this.shopGateway.getShopById(uuid);
+  getAll() {
+    return this.shopGateway.getAll();
   }
 
-  getCompany() {
-    return this.shopGateway.getCompany();
+  getData(uuid: string) {
+    return this.shopGateway.getShopById(uuid);
   }
 
   createShop(data: ShopEntity) {

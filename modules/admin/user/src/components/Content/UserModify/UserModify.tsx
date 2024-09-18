@@ -1,5 +1,4 @@
-import { useAddBreadcrumb } from '@library/kit';
-import { CreateUserDto, UpdateUserDto } from '@library/domain';
+import { CreateUserDto } from '@library/domain';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -20,10 +19,6 @@ export const UserModify = observer(() => {
   const updateUser = useUpdateUser();
   const createUser = useCreateUser();
 
-  useAddBreadcrumb({
-    label: user.uuid ? user.person.fullName : 'Новый поьзователь',
-  });
-
   const handleRedirectToUsersList = () => {
     navigate('/users');
   };
@@ -34,11 +29,11 @@ export const UserModify = observer(() => {
         user={user}
         inProcess={false}
         onSubmit={async (value, { setValues }) => {
-          if (!(value as UpdateUserDto).uuid) {
+          if (!value.uuid) {
             await createUser(value as unknown as CreateUserDto);
             handleRedirectToUsersList();
           } else {
-            await updateUser(value as UpdateUserDto);
+            await updateUser(value);
             await setValues(user);
           }
         }}

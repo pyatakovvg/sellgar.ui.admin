@@ -8,8 +8,11 @@ import { useProfile } from './hook/useProfile.ts';
 import { NotPage } from './components/NotPage';
 import { Forbidden } from './components/Forbidden';
 
+import { uuid } from './utils/uuid.utils.ts';
+
 interface IBreadcrumb {
-  label: string;
+  id?: string;
+  label?: string;
 }
 
 interface IOptionsRoute {
@@ -20,14 +23,14 @@ interface IOptionsRoute {
 }
 
 export interface IPropsWithAppRouter {
-  route: Router;
+  router: Router;
 }
 
 const CheckCredentials: React.FC<React.PropsWithChildren<IPropsWithAppRouter>> = (props) => {
   const profile = useProfile();
 
-  const hasRoles = profile.checkRoles(props.route.roles);
-  const hasPermissions = profile.checkPermissions(props.route.permissions);
+  const hasRoles = profile.checkRoles(props.router.roles);
+  const hasPermissions = profile.checkPermissions(props.router.permissions);
 
   if (!hasRoles || !hasPermissions) {
     return <Forbidden />;
@@ -41,6 +44,8 @@ const CheckCredentials: React.FC<React.PropsWithChildren<IPropsWithAppRouter>> =
 };
 
 export class Router {
+  readonly uuid = uuid();
+
   constructor(
     private readonly path: string,
     private readonly children: (Route | Router)[],
@@ -62,19 +67,24 @@ export class Router {
     return this.options?.permissions ?? [];
   }
 
+  get breadcrumbs() {
+    return this.options?.breadcrumb ?? null;
+  }
+
   create(): RouteObject {
     return {
       handle: {
         crumb: (title?: string) =>
           title ?? this.options?.breadcrumb
             ? {
+                id: this.options?.breadcrumb?.id ?? undefined,
                 label: title ?? this.options?.breadcrumb?.label,
                 href: this.path,
               }
             : null,
       },
       path: Router.normalizePath(this.path),
-      element: <CheckCredentials route={this}>{this.options?.layout}</CheckCredentials>,
+      element: <CheckCredentials router={this}>{this.options?.layout}</CheckCredentials>,
       children: [
         ...(this.children.map((route) => route.create()).filter((route) => route) as RouteObject[]),
         {

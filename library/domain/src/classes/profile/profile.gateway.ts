@@ -13,7 +13,7 @@ export class ProfileGateway {
   constructor(@inject(HttpClientSymbol) private readonly httpClient: HttpClient) {}
 
   async get() {
-    const result = await this.httpClient.get<ResultEntity>(import.meta.env.VITE_GATEWAY_API + '/v1/profile');
+    const result = await this.httpClient.get<ResultEntity>(import.meta.env.VITE_GATEWAY_API + '/v1/auth/profile');
     const resultInstance = plainToInstance(ResultEntity, result);
 
     await validateOrReject(resultInstance);

@@ -1,12 +1,8 @@
 import { Type } from 'class-transformer';
-import { IsNumber, IsObject, ValidateNested } from 'class-validator';
+import { IsObject, ValidateNested } from 'class-validator';
 
 import { ProductEntity } from './product.entity.ts';
-
-class MetaEntity {
-  @IsNumber()
-  totalRows: number;
-}
+import { MetaEntity } from '../../../meta.entity.ts';
 
 export class ResultEntity {
   @ValidateNested()

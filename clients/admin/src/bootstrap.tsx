@@ -1,5 +1,6 @@
 import { Push } from '@library/push';
-import { useTheme, DialogProvider, BreadcrumbsProvider } from '@library/kit';
+import { useTheme, DialogProvider } from '@library/kit';
+import { BreadcrumbsProvider } from '@library/breadcrumbs';
 import { NavigateLayout, MainLayout, ShopLayout, UserLayout } from '@library/design';
 import { Application, Route, Router, PublicRouter, PrivateRouter } from '@library/app';
 
@@ -81,8 +82,35 @@ const app = new Application({
               ),
 
               new Router(
-                '/shops',
-                [new Route('/create', () => import('@admin/shop')), new Route('/:uuid', () => import('@admin/shop'))],
+                'shops',
+                [
+                  new Route('create', () => import('@admin/shop'), {
+                    breadcrumb: {
+                      label: 'Новый магазин',
+                    },
+                  }),
+                  new Router(
+                    ':uuid',
+                    [
+                      new Route('/', () => import('@admin/shop'), {
+                        breadcrumb: {
+                          label: 'Имформация',
+                        },
+                      }),
+                      new Route('options', () => import('@admin/shop'), {
+                        breadcrumb: {
+                          label: 'Настройки',
+                        },
+                      }),
+                    ],
+                    {
+                      layout: <ShopLayout />,
+                      breadcrumb: {
+                        id: 'SHOP_INFORMATION',
+                      },
+                    },
+                  ),
+                ],
                 {
                   breadcrumb: {
                     label: 'Магазины',

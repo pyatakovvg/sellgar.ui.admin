@@ -15,7 +15,7 @@ export const CompanyWidget = observer(() => {
     return <Loading />;
   }
 
-  return presenter.company.map((company: any) => {
+  return presenter.getCompanies().map((company: any) => {
     return (
       <div key={company.uuid} className={s.wrapper}>
         <Company {...company} />

@@ -10,6 +10,7 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@library/app": "0.0.1",
+    "@library/domain": "0.0.1",
     "@library/kit": "0.0.1",
     "classnames": "2.5.1",
     "formik": "2.4.6",

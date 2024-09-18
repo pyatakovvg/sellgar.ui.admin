@@ -1,4 +1,4 @@
-import { Breadcrumbs } from '@library/kit';
+import { Breadcrumbs } from '@library/breadcrumbs';
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';

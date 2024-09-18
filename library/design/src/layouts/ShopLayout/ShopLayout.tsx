@@ -1,19 +1,20 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 
-import { Aside } from './Aside';
+import { Layout } from './View';
 
-import styles from './default.module.scss';
+import { container } from './classes/classes.di';
+
+import { Provider } from './shop-layout.context';
+import { ShopPresenter, ShopPresenterSymbol } from './classes/presenter/shop.presenter.ts';
 
 export const ShopLayout: React.FC = () => {
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.aside}>
-        <Aside />
-      </div>
-      <div className={styles.container}>
-        <Outlet />
-      </div>
-    </div>
+    <Provider
+      value={{
+        presenter: container.get<ShopPresenter>(ShopPresenterSymbol),
+      }}
+    >
+      <Layout />
+    </Provider>
   );
 };
