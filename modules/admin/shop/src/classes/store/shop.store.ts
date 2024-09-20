@@ -5,18 +5,9 @@ import { makeObservable, observable, action } from 'mobx';
 
 export const ShopStoreSymbol = Symbol.for('ShopStore');
 
-const defaultShop: ShopEntity = {
-  uuid: '',
-  name: '',
-  company: {
-    uuid: '',
-    name: '',
-  },
-};
-
 @injectable()
 export class ShopStore {
-  @observable private data: ShopEntity = defaultShop;
+  @observable private data: ShopEntity | undefined;
 
   constructor(@inject(ShopServiceSymbol) private readonly shopService: ShopService) {
     makeObservable(this);

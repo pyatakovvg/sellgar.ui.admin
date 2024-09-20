@@ -5,7 +5,6 @@ import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
 import { ResultEntity } from './entity/result.entity.ts';
-import { BrandEntity } from './entity/brand.entity.ts';
 
 export const BrandGatewaySymbol = Symbol.for('BrandGateway');
 

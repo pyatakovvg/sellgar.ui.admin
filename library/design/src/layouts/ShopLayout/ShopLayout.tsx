@@ -1,20 +1,20 @@
 import React from 'react';
+import { observer } from 'mobx-react';
+import { Outlet } from 'react-router-dom';
 
-import { Layout } from './View';
+import { Aside } from './Aside';
 
-import { container } from './classes/classes.di';
+import styles from './default.module.scss';
 
-import { Provider } from './shop-layout.context';
-import { ShopPresenter, ShopPresenterSymbol } from './classes/presenter/shop.presenter.ts';
-
-export const ShopLayout: React.FC = () => {
+export const ShopLayout: React.FC = observer(() => {
   return (
-    <Provider
-      value={{
-        presenter: container.get<ShopPresenter>(ShopPresenterSymbol),
-      }}
-    >
-      <Layout />
-    </Provider>
+    <div className={styles.wrapper}>
+      <div className={styles.aside}>
+        <Aside />
+      </div>
+      <div className={styles.container}>
+        <Outlet />
+      </div>
+    </div>
   );
-};
+});

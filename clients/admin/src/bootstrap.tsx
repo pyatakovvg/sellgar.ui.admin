@@ -89,27 +89,11 @@ const app = new Application({
                       label: 'Новый магазин',
                     },
                   }),
-                  new Router(
-                    ':uuid',
-                    [
-                      new Route('/', () => import('@admin/shop'), {
-                        breadcrumb: {
-                          label: 'Имформация',
-                        },
-                      }),
-                      new Route('options', () => import('@admin/shop'), {
-                        breadcrumb: {
-                          label: 'Настройки',
-                        },
-                      }),
-                    ],
-                    {
-                      layout: <ShopLayout />,
-                      breadcrumb: {
-                        id: 'SHOP_INFORMATION',
-                      },
+                  new Route(':uuid', () => import('@admin/shop'), {
+                    breadcrumb: {
+                      id: 'EDIT_SHOP_CRUMB',
                     },
-                  ),
+                  }),
                 ],
                 {
                   breadcrumb: {

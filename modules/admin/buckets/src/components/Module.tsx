@@ -3,20 +3,34 @@ import { Heading } from '@library/kit';
 import React from 'react';
 import { observer } from 'mobx-react';
 
-import { useGetData } from '@/hooks/useGetData.ts';
-
-import { Page } from './Page';
-
 import s from './default.module.scss';
 
 export const Module = observer(() => {
-  const getData = useGetData();
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const input = form.querySelector('[name="file"]');
+    const formData = new FormData(form);
 
-  React.useEffect(() => {
-    (async () => {
-      await getData();
-    })();
-  }, []);
+    fetch(import.meta.env.VITE_GATEWAY_API + '/v1/files/upload', {
+      // Your POST endpoint
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        contentType: 'multipart/form-data',
+      },
+      body: formData,
+    })
+      .then(
+        (response) => response.json(), // if the response is a JSON object
+      )
+      .then(
+        (success) => console.log(success), // Handle the success response object
+      )
+      .catch(
+        (error) => console.log(error), // Handle the error response object
+      );
+  }
 
   return (
     <div className={s.wrapper}>
@@ -24,7 +38,10 @@ export const Module = observer(() => {
         <Heading variant={'h2'}>Хранилище</Heading>
       </div>
       <div className={s.content}>
-        <Page />
+        <form onSubmit={handleSubmit}>
+          <input type={'file'} name={'file'} />
+          <button type="submit">Отправить</button>
+        </form>
       </div>
     </div>
   );

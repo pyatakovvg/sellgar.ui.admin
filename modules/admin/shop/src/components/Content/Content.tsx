@@ -1,3 +1,5 @@
+import { useChangeBreadcrumb } from '@library/breadcrumbs';
+
 import React from 'react';
 import { observer } from 'mobx-react';
 
@@ -10,11 +12,19 @@ import { Loading } from './Loading';
 import { FormModify } from './ShopModify/FormModify';
 
 export const Content = observer(() => {
+  const changeBreadcrumb = useChangeBreadcrumb();
   const isLoading = useIsLoading();
   const shop = useShop();
+
   const { presenter } = React.useContext(context);
 
-  if (isLoading) {
+  React.useEffect(() => {
+    if (shop) {
+      changeBreadcrumb('EDIT_SHOP_CRUMB', shop.name);
+    }
+  }, [shop]);
+
+  if (isLoading || !shop) {
     return <Loading />;
   }
 
