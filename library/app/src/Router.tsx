@@ -1,3 +1,5 @@
+import { uuid } from '@utils/generate';
+
 import React from 'react';
 import { Outlet, RouteObject } from 'react-router-dom';
 
@@ -7,8 +9,6 @@ import { useProfile } from './hook/useProfile.ts';
 
 import { NotPage } from './components/NotPage';
 import { Forbidden } from './components/Forbidden';
-
-import { uuid } from './utils/uuid.utils.ts';
 
 interface IBreadcrumb {
   id?: string;
@@ -54,9 +54,9 @@ export class Router {
 
   static normalizePath(path: string): string {
     if (path === '/') {
-      return '/';
+      return '';
     }
-    return path.replace(/\/$/gi, '') + '/*';
+    return path.replace(/^\/$/gi, '');
   }
 
   get roles() {
@@ -75,7 +75,7 @@ export class Router {
     return {
       handle: {
         crumb: (title?: string) =>
-          title ?? this.options?.breadcrumb
+          (title ?? this.options?.breadcrumb)
             ? {
                 id: this.options?.breadcrumb?.id ?? undefined,
                 label: title ?? this.options?.breadcrumb?.label,

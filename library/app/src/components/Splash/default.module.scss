@@ -4,20 +4,43 @@
   display: flex;
   flex-direction: column;
   flex: 1 0;
-  background: var(--color-white);
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .content {
 
   display: flex;
   flex-direction: column;
-  flex: 1 0;
-  align-items: center;
-  justify-content: center;
+  flex: 0 0 auto;
 }
 
-.footer {
+.spinner {
 
-  display: block;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  align-items: center;
+}
+
+.logotype {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  margin-top: 64px;
+  justify-content: center;
+  animation: transformation 400ms 1 ease-in;
+}
+
+@keyframes transformation {
+  0% {
+    opacity: 0;
+    transform: scale(3);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

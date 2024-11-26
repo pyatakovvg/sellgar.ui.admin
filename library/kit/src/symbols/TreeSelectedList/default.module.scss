@@ -1,0 +1,32 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  & + & {
+    margin: 8px 0 0;
+  }
+}
+
+.option {
+
+  display: block;
+  cursor: pointer;
+}
+
+.children {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  margin: 8px 0 0 24px;
+}

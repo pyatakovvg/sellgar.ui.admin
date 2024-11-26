@@ -9,7 +9,7 @@ export const NotPage = () => {
     <div className={s.wrapper}>
       <div className={s.content}>
         <div className={s.description}>
-          <Heading variant={'h2'}>Страница не найдена</Heading>
+          <Heading variant={'H2'}>Страница не найдена</Heading>
         </div>
       </div>
     </div>

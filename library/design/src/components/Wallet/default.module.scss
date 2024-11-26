@@ -1,0 +1,24 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+
+  & + & {
+    margin: 8px 0 0;
+  }
+}
+
+.amount {
+
+  display: block;
+  color: var(--color-black);
+}
+
+.currency {
+
+  display: block;
+  margin: 0 0 0 8px;
+  color: var(--color-gray-10);
+}

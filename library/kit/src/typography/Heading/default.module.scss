@@ -1,32 +1,29 @@
-
 .heading {
 
-  display: block;
-  line-height: 1.6;
-  font-family: var(--font-family-body);
-  font-weight: var(--font-weight-heading);
-}
+  color: inherit;
 
-h1.heading {
-  font-size: var(--font-size-3xl);
-}
+  &-2 {
+    font-weight: var(--font-weight-xxl);
+    font-size: var(--heading-font-size-xl);
+  }
 
-h2.heading {
-  font-size: var(--font-size-2xl);
-}
+  &-3 {
+    font-weight: var(--font-weight-xl);
+    font-size: var(--heading-font-size-lg);
+  }
 
-h3.heading {
-  font-size: var(--font-size-xl);
-}
+  &-4 {
+    font-weight: var(--font-weight-xl);
+    font-size: var(--heading-font-size-md);
+  }
 
-h4.heading {
-  font-size: var(--font-size-lg);
-}
+  &-5 {
+    font-weight: var(--font-weight-xl);
+    font-size: var(--heading-font-size-sm);
+  }
 
-h5.heading {
-  font-size: var(--font-size-md);
-}
-
-h6.heading {
-  font-size: var(--font-size-sm);
+  &-6 {
+    font-weight: var(--font-weight-xl);
+    font-size: var(--heading-font-size-xsm);
+  }
 }

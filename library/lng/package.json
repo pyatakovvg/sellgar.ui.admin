@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@library/lng",
+  "version": "0.0.1",
+  "description": "List components",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "i18next": "24.0.0",
+    "i18next-browser-languagedetector": "8.0.0",
+    "i18next-http-backend": "3.0.1",
+    "i18next-resources-to-backend": "1.2.1",
+    "inversify": "6.1.4",
+    "mobx": "6.13.5",
+    "react-i18next": "15.1.1"
+  }
+}

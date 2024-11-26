@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "name": "@utils/generate",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src/index.ts",
+  "dependencies": {
+    "moment": "2.30.1",
+    "moment-timezone": "0.5.46",
+    "numeral": "2.0.6"
+  },
+  "devDependencies": {
+    "@types/moment": "2.13.0",
+    "@types/moment-timezone": "0.5.30",
+    "@types/numeral": "2.0.5"
+  }
+}

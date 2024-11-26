@@ -1,18 +1,8 @@
-import { Push } from '@library/push';
-import { useTheme, DialogProvider } from '@library/kit';
-import { BreadcrumbsProvider } from '@library/breadcrumbs';
-import { NavigateLayout, MainLayout, ShopLayout, UserLayout } from '@library/design';
+import { NavigateLayout } from '@library/layouts';
 import { Application, Route, Router, PublicRouter, PrivateRouter } from '@library/app';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-
-import { signInRoute } from './routes/public/sign-in.route.ts';
-
-import { usersRoute } from './routes/private/users/users.route.ts';
-import { userOptionsRoute } from './routes/private/users/user-options.route.ts';
-import { createUserRoute } from './routes/private/users/create-user.route.ts';
-import { updateUserRoute } from './routes/private/users/update-user.route.ts';
 
 const app = new Application({
   routes: [
@@ -20,126 +10,40 @@ const app = new Application({
       new Router(
         '/',
         [
+          new Route('/', () => import('@admin/dashboard')),
           new Router(
-            '/',
+            'category',
             [
-              new Route('/', () => import('@admin/dashboard'), {
-                roles: [],
-                permissions: [],
+              new Route('/', () => import('@admin/categories')),
+              new Route('/create', () => import('@admin/category'), {
                 breadcrumb: {
-                  label: 'Dashboard',
+                  label: 'Создать категорию',
                 },
               }),
-
-              new Router('/users', [usersRoute, userOptionsRoute], {
-                layout: <UserLayout />,
+              new Route('/:uuid', () => import('@admin/category'), {
                 breadcrumb: {
-                  label: 'Пользователи',
+                  id: 'CATEGORY_MODIFY',
                 },
               }),
-
-              new Router('/users', [createUserRoute, updateUserRoute], {
-                breadcrumb: {
-                  label: 'Пользователи',
-                },
-              }),
-
-              new Router(
-                '/stock',
-                [
-                  new Route('/', () => import('@admin/stock')),
-                  new Route('/create', () => import('@admin/product'), {
-                    breadcrumb: {
-                      label: 'Новый товар',
-                    },
-                  }),
-                  new Route('/:uuid', () => import('@admin/product')),
-                ],
-                {
-                  roles: ['ADMIN'],
-                  breadcrumb: {
-                    label: 'Склад',
-                  },
-                },
-              ),
-
-              new Router(
-                '/shops',
-                [
-                  new Route('/', () => import('@admin/shops')),
-                  new Route('/options', () => import('@admin/shops'), {
-                    breadcrumb: {
-                      label: 'Настройки',
-                    },
-                  }),
-                ],
-                {
-                  layout: <ShopLayout />,
-                  breadcrumb: {
-                    label: 'Магазины',
-                  },
-                },
-              ),
-
-              new Router(
-                'shops',
-                [
-                  new Route('create', () => import('@admin/shop'), {
-                    breadcrumb: {
-                      label: 'Новый магазин',
-                    },
-                  }),
-                  new Route(':uuid', () => import('@admin/shop'), {
-                    breadcrumb: {
-                      id: 'EDIT_SHOP_CRUMB',
-                    },
-                  }),
-                ],
-                {
-                  breadcrumb: {
-                    label: 'Магазины',
-                  },
-                },
-              ),
-
-              new Router(
-                '/buckets',
-                [
-                  new Route('/:bucketName', () => import('@admin/files'), {
-                    breadcrumb: {
-                      label: 'Файлы',
-                    },
-                  }),
-                  new Route('/', () => import('@admin/buckets')),
-                ],
-                {
-                  breadcrumb: {
-                    label: 'Хранилище',
-                  },
-                },
-              ),
             ],
             {
-              layout: <NavigateLayout />,
+              breadcrumb: {
+                label: 'Категории',
+              },
             },
           ),
+          new Router('files', [new Route('/', () => import('@admin/files'))], {
+            breadcrumb: {
+              label: 'Файлы',
+            },
+          }),
         ],
         {
-          layout: <MainLayout />,
+          layout: <NavigateLayout />,
         },
       ),
     ]),
-
-    new PublicRouter([
-      signInRoute,
-      new Route('/dashboard', () => import('@admin/dashboard2'), {
-        roles: [],
-        permissions: [],
-        breadcrumb: {
-          label: 'Dashboard',
-        },
-      }),
-    ]),
+    new PublicRouter([new Route('sign-in', () => import('@admin/sign-in'))]),
   ],
 });
 
@@ -147,20 +51,4 @@ const AppView = app.createView();
 
 const root = ReactDOM.createRoot(document.querySelector('#root')!);
 
-const App = () => {
-  const theme = useTheme();
-
-  React.useEffect(() => {
-    theme.setTheme('LIGHT');
-  }, []);
-
-  return <AppView />;
-};
-
-root.render(
-  <BreadcrumbsProvider>
-    <App />
-    <DialogProvider />
-    <Push />
-  </BreadcrumbsProvider>,
-);
+root.render(<AppView />);

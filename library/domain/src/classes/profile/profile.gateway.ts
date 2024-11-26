@@ -6,7 +6,7 @@ import { ResultEntity } from './entity/result.entity.ts';
 
 import { HttpClient, HttpClientSymbol } from '../../helpers/HttpClient';
 
-export const ProfileGatewaySymbols = Symbol.for('ProfileGateway');
+export const ProfileGatewaySymbol = Symbol.for('ProfileGateway');
 
 @injectable()
 export class ProfileGateway {

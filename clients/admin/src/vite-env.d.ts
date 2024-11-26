@@ -7,13 +7,6 @@
 /// <reference lib="webworker" />
 
 interface ImportMetaEnv {
-  readonly NODE_ENV: 'development';
-
-  readonly VITE_PUBLIC_URL: string;
-
-  readonly VITE_WEBSITE_NAME: string;
-  readonly VITE_GATEWAY_API: string;
-
   readonly VITE_USE_SERVICE_WORKER: 'true' | 'false';
 
   readonly VITE_TAKE: number;
@@ -21,4 +14,12 @@ interface ImportMetaEnv {
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;
+}
+
+declare interface Window {
+  env: {
+    NODE_ENV: 'development' | 'production' | 'test';
+
+    GATEWAY_API: string;
+  };
 }

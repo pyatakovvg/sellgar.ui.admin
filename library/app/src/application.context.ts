@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ApplicationPresenter } from './classes/presenter/application.presenter.ts';
+import { ApplicationPresenter } from './classes/presenters/application.presenter.ts';
 
 export interface IApplicationContext {
   presenter: ApplicationPresenter;

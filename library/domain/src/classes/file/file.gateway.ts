@@ -1,29 +1,22 @@
 import { inject, injectable } from 'inversify';
-import { validateOrReject } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
 
+import { Config, ConfigSymbol } from '../../helpers/Config';
 import { HttpClient, HttpClientSymbol } from '../../helpers/HttpClient';
 
-import { ResultEntity } from './entity/result.entity.ts';
+import { GetAllFileFilterDto } from './dto/get-all-file-filter.dto.ts';
 
-export const FileGatewaySymbols = Symbol.for('FileGateway');
+export const FileGatewaySymbol = Symbol.for('FileGateway');
 
 @injectable()
 export class FileGateway {
-  constructor(@inject(HttpClientSymbol) private readonly httpClient: HttpClient) {}
+  constructor(
+    @inject(ConfigSymbol) private readonly config: Config,
+    @inject(HttpClientSymbol) private readonly httpClient: HttpClient,
+  ) {}
 
-  async getAll(bucketName: string): Promise<ResultEntity> {
-    const result = await this.httpClient.get<ResultEntity>(import.meta.env.VITE_GATEWAY_API + '/files/' + bucketName);
-    const resultInstance = plainToInstance(ResultEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
-  }
-
-  async remove(bucketName: string, fileName: string) {
-    return await this.httpClient.get<ResultEntity>(
-      import.meta.env.VITE_GATEWAY_API + '/files/' + bucketName + '/' + fileName,
-    );
+  findAll(filter: GetAllFileFilterDto) {
+    return this.httpClient.get(this.config.get('GATEWAY_API') + '/v1/files', {
+      params: filter,
+    });
   }
 }

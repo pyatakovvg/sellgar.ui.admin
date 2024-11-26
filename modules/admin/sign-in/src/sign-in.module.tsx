@@ -1,7 +1,12 @@
 import React from 'react';
 
 import { SignInView } from './components';
+import { ModuleProvider } from './ModuleProvider.tsx';
 
-export default function SignInModule() {
-  return () => <SignInView />;
+export function Module() {
+  return (
+    <ModuleProvider>
+      <SignInView />
+    </ModuleProvider>
+  );
 }

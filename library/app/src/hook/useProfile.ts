@@ -1,28 +1,31 @@
+import { ProfileEntity } from '@library/domain';
+
 import React from 'react';
 
 import { useApp } from './useApp';
 
-interface IProfile {}
+interface IUseProfileHook {
+  data: ProfileEntity;
+  roles: string[];
+  permissions: string[];
+  checkRoles(roles: string[]): boolean;
+  checkPermissions(permissions: string[]): boolean;
+}
 
-export const useProfile = () => {
+export const useProfile = (): IUseProfileHook => {
   const app = useApp();
 
-  const checkRoles = React.useCallback(
-    (roles: string[]): boolean => app.presenter.checkRoles(roles),
-    [app.presenter.profile],
-  );
+  const checkRoles = React.useCallback((roles: string[]): boolean => app.checkRoles(roles), [app.profile]);
 
   const checkPermissions = React.useCallback(
-    (permissions: string[]): boolean => app.presenter.checkPermissions(permissions),
-    [app.presenter.profile],
+    (permissions: string[]): boolean => app.checkPermissions(permissions),
+    [app.profile],
   );
 
   return {
-    uuid: app.presenter.profile.uuid,
-    login: app.presenter.profile.login,
-    user: app.presenter.profile.user,
-    roles: app.presenter.profile.roles,
-    permissions: app.presenter.profile.permissions,
+    data: app.profile,
+    roles: [],
+    permissions: [],
     checkRoles,
     checkPermissions,
   };

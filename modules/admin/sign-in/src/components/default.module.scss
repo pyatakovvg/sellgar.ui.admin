@@ -9,14 +9,18 @@
   background: var(--color-background-home-primary);
 }
 
-.content {
+.container {
 
   display: block;
-  background: var(--color-white);
-  padding: 42px 72px;
-  border-radius: var(--border-radius-xl);
   width: 380px;
-  box-shadow: var(--shadow-2xl);
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  padding: 24px 36px 48px;
 }
 
 .header {

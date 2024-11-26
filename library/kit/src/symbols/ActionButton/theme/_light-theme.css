@@ -1,0 +1,19 @@
+@media (prefers-color-scheme: light) {
+  [data-theme="action-button"] {
+
+    --text-color: var(--color-white);
+    --background-color: var(--color-blue-25);
+
+    /** disabled **/
+    --text-color--disabled: var(--color-gray-25);
+    --background-color--disabled: var(--color-gray-10);
+
+    /** mode success */
+    --text-color--success: var(--color-white);
+    --background-color--success: var(--color-green-light-20);
+
+    /** mode danger */
+    --text-color--danger: var(--color-white);
+    --background-color--danger: var(--color-red-25);
+  }
+}

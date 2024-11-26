@@ -86,6 +86,10 @@ export class HttpClient {
     return this._axios.put<T, R, D>(url, data, config);
   }
 
+  patch<T = any, R = T, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
+    return this._axios.patch<T, R, D>(url, data, config);
+  }
+
   delete<T = any, R = T, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
     return this._axios.delete<T, R, D>(url, config);
   }

@@ -1,0 +1,21 @@
+@media (prefers-color-scheme: dark) {
+  [data-theme="field-wrapper"] {
+
+    --border-color: var(--color-violet-10);
+    --background-color: var(--color-white);
+
+    /** disabled **/
+
+    --background-color--disabled: var(--color-gray-0);
+
+    /** mode success **/
+
+    --border-color--success: var(--color-green-25);
+    --background-color--success: var(--color-white);
+
+    /** mode danger **/
+
+    --border-color--danger: var(--color-red-25);
+    --background-color--danger: var(--color-white);
+  }
+}

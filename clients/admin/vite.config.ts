@@ -13,6 +13,13 @@ export default defineConfig({
     outDir: 'build',
     sourcemap: process.env.SOURCE_MAP === 'true',
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler', // Указываем использовать современный компилятор
+      },
+    },
+  },
   plugins: [
     tsconfigPaths(),
     chunkSplitPlugin({

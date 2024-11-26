@@ -1,0 +1,32 @@
+.wrapper {
+
+  display: inline-flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  color: var(--color-black);
+}
+
+.value {
+
+  display: block;
+  font-size: var(--heading-font-size-sm);
+  font-weight: var(--font-weight-xxl);
+}
+
+.currency {
+
+  display: block;
+  margin: 0 0 0 6px;
+  font-size: var(--heading-font-size-sm);
+  font-weight: var(--font-weight-xxl);
+}
+
+.mode {
+  &--danger {
+    color: var(--color-red-25);
+  }
+
+  &--success {
+    color: var(--color-green-25);
+  }
+}

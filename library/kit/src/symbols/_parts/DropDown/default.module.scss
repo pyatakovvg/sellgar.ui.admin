@@ -1,0 +1,30 @@
+.wrapper {
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  width: 100%;
+}
+
+.container {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+}
+
+.control {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  z-index: 100;
+}

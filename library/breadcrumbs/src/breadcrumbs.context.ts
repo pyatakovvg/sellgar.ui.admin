@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { BreadcrumbPresenter } from './classes/breadcrumb.presenter.ts';
+import { BreadcrumbPresenter } from './classes/presenters/breadcrumb.presenter.ts';
 
 interface IContext {
   presenter: BreadcrumbPresenter;

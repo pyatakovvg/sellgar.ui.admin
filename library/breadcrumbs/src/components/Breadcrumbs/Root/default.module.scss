@@ -1,0 +1,12 @@
+.wrapper {
+
+  display: block;
+  color: var(--color-blue-25);
+  font-size: var(--font-size-md);
+  white-space: nowrap;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--color-blue-20);
+  }
+}

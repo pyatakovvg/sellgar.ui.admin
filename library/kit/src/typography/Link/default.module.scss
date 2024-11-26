@@ -1,16 +1,7 @@
+.text {
 
-.link {
-
-  display: inline-block;
-  color: var(--color-dodger-blue);
-  text-decoration: underline;
-  line-height: 1.6;
-  font-size: var(--font-size-md);
-  font-family: var(--font-family-body);
-  font-weight: var(--font-weight-body);
-  transition: color var(--transition-duration);
-
-  &:hover {
-    color: var(--color-royal-blue);
-  }
+  display: inline;
+  color: var(--color-blue-20);
+  font-weight: var(--font-weight-m);
+  font-size: var(--text-font-size);
 }

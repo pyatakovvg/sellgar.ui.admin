@@ -1,0 +1,31 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  padding: 16px;
+  width: 120px;
+  height: 120px;
+  background: var(--color-white);
+  border-radius: var(--border-radius-md);
+  text-decoration: none;
+}
+
+.icon {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-10);
+}
+
+.name {
+
+  display: block;
+  margin: 8px 0 0;
+  text-align: center;
+  color: var(--color-black);
+}

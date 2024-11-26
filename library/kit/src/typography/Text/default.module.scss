@@ -1,0 +1,15 @@
+.text {
+
+  display: block;
+  color: inherit;
+  font-weight: var(--font-weight-m);
+  font-size: var(--text-font-size);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.variant {
+  &--compact {
+    font-size: var(--text-compact-font-size);
+  }
+}

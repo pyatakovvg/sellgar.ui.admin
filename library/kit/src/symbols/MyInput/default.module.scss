@@ -1,0 +1,45 @@
+.wrapper {
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+}
+
+.field {
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  &.focus {
+    border: 1px solid red;
+  }
+}
+
+.line {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+}
+
+.char {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  font-size: 14px;
+  color: black;
+}
+
+.carret {
+
+  position: absolute;
+  display: block;
+  width: 1px;
+  height: 100%;
+  background: black;
+}

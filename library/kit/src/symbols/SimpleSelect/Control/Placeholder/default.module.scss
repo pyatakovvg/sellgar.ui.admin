@@ -1,0 +1,31 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  align-items: center;
+  padding: 0 0 0 16px;
+  overflow: hidden;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  overflow: hidden;
+}
+
+.text {
+
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-text-input-placeholder);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-light);
+  font-style: italic;
+  line-height: 1.4;
+  overflow: hidden;
+}

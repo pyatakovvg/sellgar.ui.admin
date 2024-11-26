@@ -1,0 +1,18 @@
+@media (prefers-color-scheme: light) {
+  [data-theme="input"] {
+
+    --text-color: var(--color-black);
+
+    /** disabled **/
+
+    --text-color--disabled: var(--color-gray-10);
+
+    /** mode success **/
+
+    --text-color--success: var(--color-green-25);
+
+    /** mode danger **/
+
+    --text-color--danger: var(--color-red-25);
+  }
+}

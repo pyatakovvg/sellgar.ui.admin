@@ -1,0 +1,25 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  padding: 8px;
+  width: 320px;
+  align-items: center;
+  background: var(--color-white);
+  border-radius: var(--border-radius-md);
+}
+
+.icon {
+
+  display: block;
+  color: var(--color-gray-10);
+}
+
+.name {
+
+  display: block;
+  margin: 0 0 0 16px;
+  color: var(--color-black);
+}

@@ -1,4 +1,4 @@
-import { omit, omitBy, isUndefined } from 'lodash';
+import { omitBy, isUndefined } from 'lodash';
 import { inject, injectable } from 'inversify';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';

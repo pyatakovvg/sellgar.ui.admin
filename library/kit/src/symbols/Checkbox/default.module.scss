@@ -1,0 +1,81 @@
+@import "./theme/themes.css";
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0 auto;
+}
+
+.checkbox {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+.marker {
+
+  display: none;
+  flex-direction: column;
+  flex: 1 0 auto;
+  align-items: center;
+  justify-content: center;
+  color: var(--mark-color);
+}
+
+.element {
+
+  display: block;
+  width: 0;
+  height: 0;
+
+  &:checked + .marker {
+
+    display: flex;
+  }
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  justify-content: center;
+  margin: 0 0 0 16px;
+}
+
+.disabled {
+  .checkbox {
+    border-color: var(--border-color--disabled);
+  }
+  .marker {
+    color: var(--mark-color--disabled);
+  }
+}
+
+.mode {
+
+  &--danger {
+    .checkbox {
+      border-color: var(--border-color--danger);
+    }
+    .marker {
+      color: var(--mark-color--danger);
+    }
+  }
+
+  &--success {
+    .checkbox {
+      border-color: var(--border-color--success);
+    }
+    .marker {
+      color: var(--mark-color--success);
+    }
+  }
+}

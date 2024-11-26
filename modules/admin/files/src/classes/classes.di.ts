@@ -1,35 +1,39 @@
-import { Container } from 'inversify';
-
 import {
+  Config,
+  ConfigSymbol,
   HttpClient,
   HttpClientSymbol,
+  FolderGateway,
+  FolderGatewaySymbol,
+  FolderService,
+  FolderServiceSymbol,
+  FileGateway,
+  FileGatewaySymbol,
   FileService,
   FileServiceSymbol,
-  FileGateway,
-  FileGatewaySymbols,
-  BucketService,
-  BucketServiceSymbol,
-  BucketGateway,
-  BucketGatewaySymbols,
 } from '@library/domain';
 
-import { FileStore, FileStoreSymbol } from './store/file.store.ts';
-import { BucketStore, BucketStoreSymbol } from './store/bucket.store.ts';
-import { FilePresenter, FilePresenterSymbol } from './presenter/file.presenter.ts';
+import { Container } from 'inversify';
 
-const container = new Container();
+import { FilesStore, FilesStoreSymbol } from './store/files.store.ts';
+import { FindAllUseCase, FindAllUseCaseSymbol } from './usecase/find-all.usecase.ts';
+import { FilesPresenter, FilesPresenterSymbol } from './presenter/files.presenter.ts';
 
+const container = new Container({ defaultScope: 'Singleton' });
+
+container.bind<Config>(ConfigSymbol).to(Config);
 container.bind<HttpClient>(HttpClientSymbol).to(HttpClient);
 
-container.bind<FileGateway>(FileGatewaySymbols).to(FileGateway);
-container.bind<BucketGateway>(BucketGatewaySymbols).to(BucketGateway);
+container.bind<FolderGateway>(FolderGatewaySymbol).to(FolderGateway);
+container.bind<FolderService>(FolderServiceSymbol).to(FolderService);
 
+container.bind<FileGateway>(FileGatewaySymbol).to(FileGateway);
 container.bind<FileService>(FileServiceSymbol).to(FileService);
-container.bind<BucketService>(BucketServiceSymbol).to(BucketService);
 
-container.bind<FileStore>(FileStoreSymbol).to(FileStore);
-container.bind<BucketStore>(BucketStoreSymbol).to(BucketStore);
+container.bind<FilesStore>(FilesStoreSymbol).to(FilesStore);
 
-container.bind<FilePresenter>(FilePresenterSymbol).to(FilePresenter);
+container.bind<FindAllUseCase>(FindAllUseCaseSymbol).to(FindAllUseCase);
+
+container.bind<FilesPresenter>(FilesPresenterSymbol).to(FilesPresenter);
 
 export { container };

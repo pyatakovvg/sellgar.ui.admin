@@ -1,24 +1,37 @@
+import { inject, injectable } from 'inversify';
+
+import { CreateCategoryDto } from './dto/create-category.dto.ts';
+import { UpdateCategoryDto } from './dto/update-category.dto.ts';
+
+import { Config, ConfigSymbol } from '../../helpers/Config';
 import { HttpClient, HttpClientSymbol } from '../../helpers/HttpClient';
-
-import { injectable, inject } from 'inversify';
-import { validateOrReject } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-
-import { ResultEntity } from './entity/result.entity.ts';
-import { CategoryEntity } from './entity/category.entity.ts';
 
 export const CategoryGatewaySymbol = Symbol.for('CategoryGateway');
 
 @injectable()
 export class CategoryGateway {
-  constructor(@inject(HttpClientSymbol) private readonly httpClient: HttpClient) {}
+  constructor(
+    @inject(ConfigSymbol) private readonly config: Config,
+    @inject(HttpClientSymbol) private readonly httpClient: HttpClient,
+  ) {}
 
-  async getAll(): Promise<ResultEntity> {
-    const result = await this.httpClient.get<ResultEntity>(import.meta.env.VITE_GATEWAY_API + '/categories');
-    const resultInstance = plainToInstance(ResultEntity, result);
+  update(uuid: string, dto: UpdateCategoryDto) {
+    return this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/categories/' + uuid, {
+      ...dto,
+    });
+  }
 
-    await validateOrReject(resultInstance);
+  create(dto: CreateCategoryDto) {
+    return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/categories', {
+      ...dto,
+    });
+  }
 
-    return resultInstance;
+  findByUuid(uuid: string) {
+    return this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/categories/' + uuid);
+  }
+
+  findAll() {
+    return this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/categories');
   }
 }

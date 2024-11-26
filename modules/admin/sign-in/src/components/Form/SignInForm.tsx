@@ -1,12 +1,15 @@
-import { Button, InputField, Paragraph, Description, Link } from '@library/kit';
+import { Button, Input, Icon, Text, Description, Field } from '@library/kit';
 
 import React from 'react';
-import { Formik, Form, type FormikErrors } from 'formik';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import { schema } from './schema.ts';
 
 import s from './default.module.scss';
 
 export interface IFormValues {
-  login: string;
+  email: string;
   password: string;
 }
 
@@ -15,47 +18,53 @@ interface IFormProps {
   onSubmit(event: IFormValues): void;
 }
 
-const validate = (values: IFormValues) => {
-  const errors: FormikErrors<IFormValues> = {};
-
-  if (!values.login) {
-    errors.login = 'Необходимо заполнить';
-  }
-
-  if (!values.password) {
-    errors.password = 'Необходимо заполнить2';
-  }
-
-  return errors;
-};
-
 export const SignInForm: React.FC<IFormProps> = (props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormValues>({
+    resolver: yupResolver<IFormValues>(schema, { abortEarly: false }),
+  });
+
+  const onSubmit = handleSubmit(props.onSubmit);
+
   return (
-    <Formik initialValues={{ login: '', password: '' }} validate={validate} onSubmit={props.onSubmit}>
-      <Form className={s.wrapper}>
-        <div className={s.content}>
-          <div className={s.head}>
-            <Paragraph>Введите данные выданные вашим админестрацией или полученные по почте</Paragraph>
-          </div>
-          <div className={s.row}>
-            <InputField autoFocus type={'email'} label={'Логин'} name={'login'} />
-          </div>
-          <div className={s.row}>
-            <InputField type={'password'} label={'Пароль'} name={'password'} />
-          </div>
+    <form className={s.wrapper} onSubmit={onSubmit}>
+      <div className={s.content}>
+        <div className={s.head}>
+          <Text>Введите данные выданные вашим администрацией или полученные по почте</Text>
         </div>
-        <div className={s.description}>
-          <Description>Убедитесь в правильности введенных данных и держите их в полном секрете</Description>
+        <div className={s.row}>
+          <Field error={errors.email?.message}>
+            <Input
+              {...register('email')}
+              leftIcon={<Icon icon={'alternate_email'} size={20} />}
+              autoFocus
+              type={'email'}
+              name={'email'}
+              placeholder={'Email'}
+            />
+          </Field>
         </div>
-        <div className={s.control}>
-          <Button type={'submit'} inProcess={props.inProcess}>
-            Войти
-          </Button>
+        <div className={s.row}>
+          <Field error={errors.password?.message}>
+            <Input
+              {...register('password')}
+              leftIcon={<Icon icon={'lock_outline'} size={20} />}
+              type={'password'}
+              name={'password'}
+              placeholder={'Пароль'}
+            />
+          </Field>
         </div>
-        <div className={s.registry}>
-          <Link href={import.meta.env.VITE_PUBLIC_URL + '/sign-up'}>Регистрация</Link>
-        </div>
-      </Form>
-    </Formik>
+      </div>
+      <div className={s.description}>
+        <Description>Убедитесь в правильности введенных данных и держите их в полном секрете</Description>
+      </div>
+      <div className={s.control}>
+        <Button inProcess={props.inProcess}>Войти</Button>
+      </div>
+    </form>
   );
 };

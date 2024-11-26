@@ -1,23 +1,56 @@
+@import "./theme/themes.css";
 
-.content {
+.element {
 
-  display: block;
-  margin: 4px 0 0;
-  padding: 16px;
-  background: white;
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  padding: 24px;
+  border-radius: var(--border-radius-lg);
+  background: var(--background-color);
+  color: var(--text-color);
+  border: none;
+  cursor: pointer;
+
+  &:active {
+    transform: scale(.98);
+  }
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:active {
+
+    background: var(--background-color--disabled);
+    color: var(--text-color--disabled);
+    cursor: default;
+  }
+
 }
 
-.action {
+.mode {
+
+  &--danger {
+    background: var(--background-color--danger);
+    color: var(--text-color--danger);
+  }
+
+  &--success {
+    background: var(--background-color--success);
+    color: var(--text-color--success);
+  }
+}
+
+.icon {
 
   display: block;
+  width: 48px;
+  height: 48px;
+}
 
-  white-space: nowrap;
+.text {
 
-  & + & {
-
-    margin: 8px 0 0;
-  }
+  display: block;
+  margin: 8px 0 0;
+  font-size: var(--heading-font-size-md);
+  font-weight: var(--font-weight-xl);
 }

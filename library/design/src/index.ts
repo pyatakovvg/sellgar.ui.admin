@@ -1,6 +1,4 @@
-export { Actions } from './Actions';
+export { Logotype } from './components/Logotype';
 
-export { MainLayout } from './layouts/MainLayout';
-export { NavigateLayout } from './layouts/NavigateLayout';
-export { ShopLayout } from './layouts/ShopLayout';
-export { UserLayout } from './layouts/UserLayout';
+export { Wallet } from './components/Wallet';
+export { Operation } from './components/Operation';

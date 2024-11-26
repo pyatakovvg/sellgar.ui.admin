@@ -2,9 +2,9 @@ import React from 'react';
 
 import { context } from '../breadcrumbs.context.ts';
 
-import type { IBreadcrumb } from '../classes/breadcrumbs.store.ts';
+import { BreadcrumbEntity } from '../classes/breadcrumb.entity.ts';
 
-export const useGetBreadcrumb = (): IBreadcrumb[] => {
+export const useGetBreadcrumb = (): BreadcrumbEntity[] => {
   const { presenter } = React.useContext(context);
 
   return presenter.getAll();

@@ -1,3 +1,8 @@
+import { LngProvider } from '@library/lng';
+import { PushProvider } from '@library/push';
+import { BreadcrumbsProvider } from '@library/breadcrumbs';
+import { Message, MessageProvider } from '@library/message';
+
 import 'reflect-metadata';
 
 import React from 'react';
@@ -8,13 +13,10 @@ import { Router } from './Router.tsx';
 import { PublicRouter } from './PublicRouter.tsx';
 import { PrivateRouter } from './PrivateRouter.tsx';
 
-import { NotPage } from './components/NotPage';
 import { Splash } from './components/Splash';
+import { NotPage } from './components/NotPage';
 
-import { container } from './classes/classes.di.ts';
-import { Provider } from './application.context.ts';
-
-import { ApplicationPresenter, ApplicationPresenterSymbol } from './classes/presenter/application.presenter.ts';
+import { ApplicationProvider } from './ApplicationProvider.tsx';
 
 interface IApplicationOption {
   basename?: string;
@@ -29,9 +31,8 @@ export class Application {
       [
         {
           id: 'root',
-          path: '/',
           loader: async () => {
-            await new Promise((resolve) => setTimeout(resolve, 400));
+            await new Promise((resolve) => setTimeout(resolve, Number(import.meta.env.VITE_SPLASH_TIMEOUT) * 1000));
             return true;
           },
           children: this.options.routes.map((route) => route.create()).filter((route) => route) as RouteObject[],
@@ -42,19 +43,32 @@ export class Application {
         },
       ],
       {
+        window: window,
+        future: {
+          v7_fetcherPersist: true,
+          v7_relativeSplatPath: true,
+          v7_normalizeFormMethod: true,
+          v7_partialHydration: true,
+          v7_skipActionErrorRevalidation: true,
+        },
         basename: this.options.basename ?? '/',
       },
     );
 
     return () => {
       return (
-        <Provider
-          value={{
-            presenter: container.get<ApplicationPresenter>(ApplicationPresenterSymbol),
-          }}
-        >
-          <RouterProvider router={routes} fallbackElement={<Splash />} />
-        </Provider>
+        <LngProvider>
+          <ApplicationProvider>
+            <PushProvider>
+              <MessageProvider>
+                <BreadcrumbsProvider>
+                  <Message />
+                  <RouterProvider router={routes} fallbackElement={<Splash />} />
+                </BreadcrumbsProvider>
+              </MessageProvider>
+            </PushProvider>
+          </ApplicationProvider>
+        </LngProvider>
       );
     };
   }

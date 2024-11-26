@@ -1,5 +1,3 @@
-import { Paragraph, Heading, Button } from '@library/kit';
-
 import React from 'react';
 
 import type { FallbackProps } from 'react-error-boundary';
@@ -10,18 +8,18 @@ export const Error: React.FC<FallbackProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <Heading variant={'h3'}>Что-то пошло не так!</Heading>
+        <h3>Что-то пошло не так!</h3>
       </div>
       <div className={s.message}>
-        <Heading variant={'h4'}>{props.error.message}</Heading>
+        <h4>{props.error.message}</h4>
       </div>
       <div className={s.stack}>
-        <Paragraph>
+        <p>
           <code className={s.code}>{props.error.stack}</code>
-        </Paragraph>
+        </p>
       </div>
       <div className={s.control}>
-        <Button onClick={props.resetErrorBoundary}>Обновить</Button>
+        <button onClick={props.resetErrorBoundary}>Обновить</button>
       </div>
     </div>
   );

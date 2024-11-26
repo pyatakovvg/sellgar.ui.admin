@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@admin/category",
+  "version": "0.0.1",
+  "description": "List components",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@hookform/resolvers": "3.9.1",
+    "@library/app": "0.0.1",
+    "@library/design": "0.0.1",
+    "@library/domain": "0.0.1",
+    "@library/kit": "0.0.1",
+    "classnames": "2.5.1",
+    "react": "18.3.1",
+    "react-hook-form": "7.53.2",
+    "react-router-dom": "7.0.1",
+    "yup": "1.4.0"
+  },
+  "devDependencies": {
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1"
+  }
+}

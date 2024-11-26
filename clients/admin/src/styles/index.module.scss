@@ -1,26 +1,14 @@
-
-//@import "./fontawesome-free-6.5.2-web/scss/fontawesome";
-//@import "./fontawesome-free-6.5.2-web/scss/regular";
-//@import "./fontawesome-free-6.5.2-web/scss/brands";
-//@import "./fontawesome-free-6.5.2-web/scss/solid";
-
 :global {
 
   html,
   body {
 
+    position: relative;
     display: flex;
     flex-direction: column;
     flex: 1 0;
     height: 100%;
     overflow: auto;
-  }
-
-  body {
-
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-tap-highlight-color: transparent;
   }
 
   #root {
@@ -32,15 +20,5 @@
     overflow: auto;
     z-index: 10;
   }
-
-  #push {
-
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    display: flex;
-    flex-direction: column;
-    flex: 1 0;
-    z-index: 30;
-  }
 }
+

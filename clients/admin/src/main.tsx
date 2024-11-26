@@ -1,8 +1,9 @@
 import 'reflect-metadata';
 import { registerSW } from 'virtual:pwa-register';
 
-import('./bootstrap');
+import('@library/kit/src/theme/themes.scss');
 
+import('./bootstrap');
 import('./styles/index.module.scss');
 
 const intervalMS = 60 * 60 * 1000;
@@ -25,11 +26,5 @@ registerSW({
 
         if (resp?.status === 200) await r.update();
       }, intervalMS);
-  },
-  onOfflineReady() {
-    console.log('offline ready');
-  },
-  onRegisterError(e) {
-    console.log(e);
   },
 });

@@ -1,0 +1,31 @@
+@import "./theme/themes.css";
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  align-items: center;
+
+  &:active {
+    transform: scale(.98);
+  }
+}
+
+.icon {
+
+  display: block;
+  margin: 0 12px 0 0;
+  width: 24px;
+  height: 24px;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}

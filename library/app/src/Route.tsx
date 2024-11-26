@@ -1,3 +1,5 @@
+import { uuid } from '@utils/generate';
+
 import React from 'react';
 import { RouteObject } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -5,10 +7,8 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useProfile } from './hook/useProfile.ts';
 
 import { Error } from './components/Error';
-import { Spinner } from './components/Spinner';
 import { Forbidden } from './components/Forbidden';
-
-import { uuid } from './utils/uuid.utils.ts';
+import { ModuleLoader } from './components/ModuleLoader';
 
 export interface IPropsWithAppRoute {
   route: Route;
@@ -25,33 +25,28 @@ interface IRouteOptions {
   breadcrumb?: IBreadcrumb;
 }
 
-async function loadModule<T>(content: () => Promise<{ default: T }>) {
-  const module = await content();
-  return module.default;
-}
-
 const LoadView: React.FC<IPropsWithAppRoute> = (props) => {
-  const [View, setModule] = React.useState<any>(null);
+  const [Module, setModule] = React.useState<any | null>(null);
 
-  React.useEffect(() => {
-    (async () => {
-      const ViewModule = await loadModule<typeof props.route.content>(props.route.content);
-      setTimeout(() => setModule(ViewModule), 400);
-    })();
+  React.useLayoutEffect(() => {
     return () => {
       setModule(null);
     };
   }, [props.route]);
 
-  if (!View) {
-    return <Spinner />;
+  React.useEffect(() => {
+    (async () => {
+      const { Module } = await props.route.content();
+
+      setTimeout(() => setModule(Module), 200);
+    })();
+  }, [props.route]);
+
+  if (!Module) {
+    return <ModuleLoader />;
   }
 
-  return (
-    <ErrorBoundary FallbackComponent={Error}>
-      <View />
-    </ErrorBoundary>
-  );
+  return <ErrorBoundary FallbackComponent={Error}>{Module}</ErrorBoundary>;
 };
 
 const CheckCredentials: React.FC<IPropsWithAppRoute> = (props) => {
@@ -67,12 +62,12 @@ const CheckCredentials: React.FC<IPropsWithAppRoute> = (props) => {
   return <LoadView {...props} />;
 };
 
-export class Route<T = any> {
+export class Route {
   readonly uuid = uuid();
 
   constructor(
     private readonly path: string,
-    private readonly module: () => Promise<{ default: T }>,
+    private readonly module: () => Promise<{ Module: React.FC }>,
     private readonly options?: IRouteOptions,
   ) {}
 

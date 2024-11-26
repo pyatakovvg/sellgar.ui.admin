@@ -1,9 +1,13 @@
-
 .description {
 
   display: block;
-  line-height: 1.4;
-  font-size: var(--font-size-sm);
-  font-family: var(--font-family-body);
-  font-weight: var(--font-weight-body);
+  color: inherit;
+  font-weight: var(--font-weight-m);
+  font-size: var(--description-font-size);
+}
+
+.variant {
+  &--compact {
+    font-size: var(--description-compact-font-size);
+  }
 }

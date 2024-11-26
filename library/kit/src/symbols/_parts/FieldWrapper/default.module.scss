@@ -1,0 +1,31 @@
+@import "./theme/themes.css";
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  border: 1px solid var(--border-color);
+  background: var(--background-color);
+  border-radius: var(--border-radius-lg);
+
+  &.disabled {
+
+    background: var(--background-color--disabled);
+  }
+}
+
+.mode {
+
+  &--danger {
+
+    border-color: var(--border-color--danger);
+    background: var(--background-color--danger);
+  }
+
+  &--success {
+
+    border-color: var(--border-color--success);
+    background: var(--background-color--success);
+  }
+}

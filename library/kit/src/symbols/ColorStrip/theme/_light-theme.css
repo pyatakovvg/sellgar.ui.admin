@@ -1,0 +1,7 @@
+@media (prefers-color-scheme: light) {
+  [data-theme="color-strip"] {
+
+    --background-color: var(--color-gray-10);
+    --text-color: var(--color-black);
+  }
+}

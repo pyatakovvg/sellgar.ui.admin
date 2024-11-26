@@ -1,0 +1,22 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 208px;
+  height: 208px;
+  background: var(--color-white);
+  border-radius: 16px;
+  align-items: center;
+  justify-content: center;
+}

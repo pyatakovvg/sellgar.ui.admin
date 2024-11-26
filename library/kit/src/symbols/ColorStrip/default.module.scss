@@ -1,0 +1,29 @@
+@import "./theme/themes.css";
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  border-radius: var(--border-radius-xl);
+  background: var(--background-color);
+  padding: 8px;
+  min-height: 40px;
+  align-items: center;
+}
+
+.icon {
+
+  display: block;
+  margin: 0 8px 0 0;
+  width: 24px;
+  height: 24px;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  color: var(--text-color);
+}

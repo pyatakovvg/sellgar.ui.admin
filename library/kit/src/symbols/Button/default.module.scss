@@ -1,0 +1,56 @@
+@import "./theme/themes.css";
+
+.element {
+
+  position: relative;
+  display: block;
+  text-align: center;
+  padding: 20px 24px;
+  border-radius: var(--border-radius-xl);
+  border: 1px solid var(--border-color);
+  background: var(--background-color);
+  color: var(--text-color);
+  cursor: pointer;
+
+  &:disabled {
+
+    border-color: var(--border-color--disabled);
+    background: var(--background-color---disabled);
+    color: var(--text-color--disabled);
+    cursor: default;
+  }
+}
+
+.mode {
+
+  &--danger {
+    border: 1px solid var(--border-color--danger);
+    background: var(--background-color--danger);
+    color: var(--text-color--danger);
+  }
+
+  &--success {
+    border: 1px solid var(--border-color--success);
+    background: var(--background-color--success);
+    color: var(--text-color--success);
+  }
+}
+
+.in-process {
+
+  color: transparent;
+}
+
+.spinner {
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  justify-content: center;
+  align-items: center;
+}

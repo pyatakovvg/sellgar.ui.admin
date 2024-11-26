@@ -1,0 +1,84 @@
+@import "./theme/themes.css";
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0 auto;
+}
+
+.radio {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+}
+
+.marker {
+
+  display: none;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--mark-color);
+}
+
+.element {
+
+  display: block;
+  width: 0;
+  height: 0;
+
+  &:checked + .marker {
+
+    display: flex;
+  }
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  justify-content: center;
+  margin: 0 0 0 16px;
+}
+
+.disabled {
+  .radio {
+    border-color: var(--border-color--disabled);
+  }
+  .marker {
+    background: var(--mark-color--disabled);
+  }
+}
+
+.mode {
+
+  &--danger {
+    .radio {
+      border-color: var(--border-color--danger);
+    }
+    .marker {
+      background: var(--mark-color--danger);
+    }
+  }
+
+  &--success {
+    .radio {
+      border-color: var(--border-color--success);
+    }
+    .marker {
+      background: var(--mark-color--success);
+    }
+  }
+}

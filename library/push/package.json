@@ -7,17 +7,16 @@
   "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
   "homepage": "",
   "license": "ISC",
-  "main": "src/index.tsx",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "esbuild @library/push/src/workers/push/push.worker.ts --outfile=../../clients/mobile/public/push.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
+    "start": "esbuild @library/push/src/workers/push/push.worker.ts --outfile=../../clients/mobile/public/push.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch"
+  },
   "dependencies": {
-    "@library/kit": "0.0.1",
-    "classnames": "2.5.1",
-    "mobx": "6.12.4",
-    "mobx-react": "9.1.1",
-    "react": "18.3.1"
+    "inversify": "6.1.4"
   },
   "devDependencies": {
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
-    "@types/reflect-metadata": "0.1.0"
+    "@types/reflect-metadata": "0.1.0",
+    "esbuild": "0.24.0"
   }
 }
