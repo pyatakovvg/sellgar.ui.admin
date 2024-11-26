@@ -50,3 +50,4 @@ storybook-static/
 # next.js
 /.next/
 /out/
+/clients/mobile/public/push.worker.js
