@@ -1,15 +1,15 @@
+'use client';
+
 import React from 'react';
 
-import { EMode } from '../../kit.types.ts';
+import { EMode, ESize } from '../../kit.types.ts';
+
+import { Underlay } from '../Underlay';
 import { DropDown } from '../_parts/DropDown';
-import { FieldWrapper } from '../_parts/FieldWrapper';
 import { SimpleSelectField } from '../_parts/SimpleSelectField';
 
-import { Icon } from '../Icon';
-import { Control } from './Control';
-import { SimpleSelectedList } from '../SimpleSelectedList';
+import { List } from './List';
 
-import cn from 'classnames';
 import st from './default.module.scss';
 
 export interface ISelectedValue<TOptionValue = any> {
@@ -26,10 +26,10 @@ export interface ISelect<O, TOptionValue>
   readonly name?: string;
   readonly optionKey: keyof O;
   readonly optionValue: keyof O;
-  readonly options: readonly O[];
+  readonly options: O[];
   value: TOptionValue | null;
   onFocus?(value: TOptionValue | null): void;
-  onChange(value: TOptionValue | null): void;
+  onChange?(value: TOptionValue | null): void;
   onBlur?(value: TOptionValue | null): void;
 }
 
@@ -51,78 +51,47 @@ const getValue = <O, TOptionValue>(
 
 export const SimpleSelect = <O, TOptionValue>(props: ISelect<O, TOptionValue>) => {
   const [isFocus, setFocus] = React.useState(false);
-  const hasReset = React.useMemo(() => {
-    if (!props.isClearable || props.readOnly) {
-      return false;
-    }
-    return !!props.value;
-  }, [props.value, props.isClearable, props.readOnly]);
-
-  const wrapperClassName = React.useMemo(
-    () =>
-      cn(
-        st.wrapper,
-        {
-          [st.focus]: isFocus,
-          [st.disabled]: props.disabled,
-          [st.readonly]: props.readOnly,
-        },
-        {
-          [st['mode--danger']]: props.mode === EMode.DANGER,
-        },
-      ),
-    [props.disabled, props.readOnly, props.mode, isFocus],
-  );
-  const resetClassName = React.useMemo(
-    () =>
-      cn(st.reset, {
-        [st.focus]: isFocus,
-        [st.disabled]: props.disabled,
-      }),
-    [props.disabled, isFocus],
-  );
-  const controlClassName = React.useMemo(
-    () =>
-      cn(st.control, {
-        [st.focus]: isFocus,
-        [st.disabled]: props.disabled,
-        [st.readonly]: props.readOnly,
-      }),
-    [props.disabled, props.readOnly, isFocus],
-  );
 
   const selectedValue = React.useMemo(() => {
     return getValue<O, TOptionValue>(props.options, props.value, props.optionKey, props.optionValue);
   }, [props.options, props.value]);
 
   const handleChange = (value: TOptionValue | null) => {
-    props.onChange(value);
+    props.onChange && props.onChange(value);
   };
 
-  const handleReset = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleReset = () => {
     if (props.disabled) {
       return void 0;
     }
-
-    event.stopPropagation();
-    props.onChange(null);
+    props.onChange && props.onChange(null);
   };
 
   return (
     <DropDown disabled={props.disabled || props.readOnly} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}>
       <DropDown.Content>
-        <SimpleSelectField value={selectedValue?.value} onChange={props.onChange} />
+        <SimpleSelectField
+          mode={props.mode}
+          disabled={props.disabled}
+          isClearable={props.isClearable}
+          placeholder={props.placeholder}
+          isFocus={isFocus}
+          value={selectedValue?.value as string}
+          onReset={() => handleReset()}
+        />
       </DropDown.Content>
       <DropDown.List>
-        <div className={st.content}>
-          <SimpleSelectedList
-            value={props.value}
-            optionKey={props.optionKey}
-            optionValue={props.optionValue}
-            options={props.options}
-            onChange={handleChange}
-          />
-        </div>
+        <Underlay size={ESize.MD}>
+          <div className={st.content}>
+            <List
+              value={props.value}
+              optionKey={props.optionKey}
+              optionValue={props.optionValue}
+              options={props.options}
+              onChange={handleChange}
+            />
+          </div>
+        </Underlay>
       </DropDown.List>
     </DropDown>
   );

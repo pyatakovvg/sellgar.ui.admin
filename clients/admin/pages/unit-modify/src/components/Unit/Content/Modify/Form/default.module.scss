@@ -1,0 +1,39 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0;
+  width: 480px;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.fields {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.field {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  & + & {
+    margin: 24px 0 0;
+  }
+}
+
+.control {
+
+  display: block;
+  margin: 24px 0 0;
+}

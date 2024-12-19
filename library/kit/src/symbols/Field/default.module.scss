@@ -5,6 +5,13 @@
   flex: 0 0 auto;
 }
 
+.label {
+
+  display: block;
+  color: var(--color-gray-40);
+  margin: 0 0 2px 13px;
+}
+
 .content {
 
   display: flex;

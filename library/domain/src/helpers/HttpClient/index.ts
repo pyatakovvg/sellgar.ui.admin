@@ -1,1 +1,2 @@
-export { HttpClient, HttpClientSymbol } from './HttpClient.ts';
+export { HttpClient } from './HttpClient.ts';
+export { HttpClientInterface } from './http-client.interface.ts';

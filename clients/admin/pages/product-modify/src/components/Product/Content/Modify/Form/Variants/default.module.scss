@@ -1,0 +1,35 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0;
+}
+
+.header {
+
+  display: block;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  margin: 24px 0 0;
+}
+
+.control {
+
+  display: block;
+  margin: 24px 0 0;
+}
+
+.variant {
+
+  display: block;
+
+  & + & {
+    margin: 16px 0 0;
+  }
+}

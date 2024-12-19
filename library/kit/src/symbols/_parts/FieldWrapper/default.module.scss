@@ -1,4 +1,46 @@
-@import "./theme/themes.css";
+@media (prefers-color-scheme: dark) {
+  .wrapper {
+
+    --border-color: var(--color-gray-15);
+    --background-color: var(--color-white);
+
+    /** disabled **/
+
+    --background-color--disabled: var(--color-gray-5);
+
+    /** mode success **/
+
+    --border-color--success: var(--color-green-50);
+    --background-color--success: var(--color-white);
+
+    /** mode danger **/
+
+    --border-color--danger: var(--color-red-50);
+    --background-color--danger: var(--color-white);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .wrapper {
+
+    --border-color: var(--color-gray-15);
+    --background-color: var(--color-white);
+
+    /** disabled **/
+
+    --background-color--disabled: var(--color-gray-5);
+
+    /** mode success **/
+
+    --border-color--success: var(--color-green-50);
+    --background-color--success: var(--color-white);
+
+    /** mode danger **/
+
+    --border-color--danger: var(--color-red-50);
+    --background-color--danger: var(--color-white);
+  }
+}
 
 .wrapper {
 
@@ -7,7 +49,9 @@
   flex: 1 0;
   border: 1px solid var(--border-color);
   background: var(--background-color);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-md);
+  min-height: 42px;
+  box-sizing: border-box;
 
   &.disabled {
 

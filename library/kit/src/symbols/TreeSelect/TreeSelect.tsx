@@ -75,14 +75,7 @@ export const TreeSelect = <O, TOptionValue>(props: ISelect<O, TOptionValue>) => 
   };
 
   return (
-    <DropDown
-      disabled={props.disabled || props.readOnly}
-      onFocus={() => {
-        console.log(123);
-        setFocus(true);
-      }}
-      onBlur={() => setFocus(false)}
-    >
+    <DropDown disabled={props.disabled || props.readOnly} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}>
       <DropDown.Content>
         <SimpleSelectField
           mode={props.mode}

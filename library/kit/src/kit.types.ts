@@ -1,14 +1,15 @@
 export enum ESize {
-  XL,
-  LG,
-  MD,
-  SM,
-  XS,
+  XL = 'XL',
+  LG = 'LG',
+  MD = 'MD',
+  SM = 'SM',
+  XS = 'XS',
 }
 
 export enum EMode {
-  PRIMARY,
-  DANGER,
-  SUCCESS,
-  WARNING,
+  PRIMARY = 'PRIMARY',
+  DANGER = 'DANGER',
+  SUCCESS = 'SUCCESS',
+  WARNING = 'WARNING',
+  INFO = 'INFO',
 }

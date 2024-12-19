@@ -1,5 +1,5 @@
 import { Spinner } from '@library/kit';
-import { Logotype } from '@library/design';
+import { Logotype } from '@admin/design';
 
 import React from 'react';
 

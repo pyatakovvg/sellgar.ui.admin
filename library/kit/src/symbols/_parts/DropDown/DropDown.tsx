@@ -1,3 +1,5 @@
+'use client';
+
 import { useFloating, autoPlacement, offset } from '@floating-ui/react';
 
 import React from 'react';

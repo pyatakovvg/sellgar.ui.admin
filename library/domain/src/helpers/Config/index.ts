@@ -1,1 +1,2 @@
-export { Config, ConfigSymbol } from './config.ts';
+export { Config } from './config.ts';
+export { ConfigInterface } from './config.interface.ts';

@@ -8,28 +8,27 @@
     "dev:admin_ui": "yarn workspace @client/admin start",
     "dev:storybook": "yarn workspace @client/storybook start",
     "dev:kit": "yarn workspace @library/kit start",
-    "dev:design": "yarn workspace @library/design start",
+    "dev:design": "yarn workspace @admin/design start",
     "start:storybook": "yarn workspace @client/storybook start",
     "build:admin_ui": "yarn workspaces foreach --all -tR --from '@client/admin' -R run build",
     "build:storybook": "yarn workspaces foreach -tR --from '@client/storybook' -R run build"
   },
   "devDependencies": {
-    "@eslint/js": "9.15.0",
-    "@types/node": "22.9.3",
-    "@types/react": "18.3.12",
-    "@types/react-dom": "18.3.1",
-    "@typescript-eslint/eslint-plugin": "8.15.0",
-    "@typescript-eslint/parser": "8.15.0",
-    "eslint": "9.15.0",
+    "@eslint/js": "9.17.0",
+    "@types/node": "22.10.2",
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.2",
+    "@typescript-eslint/eslint-plugin": "8.18.1",
+    "@typescript-eslint/parser": "8.18.1",
+    "eslint": "9.17.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",
-    "prettier": "3.3.3"
+    "prettier": "3.4.2"
   },
   "workspaces": [
-    "clients/*",
+    "clients/**/*",
     "helpers/*",
     "library/*",
-    "modules/**/*",
     "utils/**/*"
   ],
   "engines": {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button, EMode, ESize, EVariant, Icon } from '@library/kit';
+import { Button, EMode } from '@library/kit';
 
 type Story = StoryObj<typeof Button>;
 
@@ -8,91 +8,35 @@ export default {
   component: Button,
   tags: ['autodocs'],
   argTypes: {
-    children: {
-      description: 'Контент',
-    },
-    size: {
-      description: 'Размер',
-      defaultValue: ESize.MEDIUM,
-      table: {
-        type: {
-          defaultValue: ESize.MEDIUM,
-        },
-      },
-      options: [ESize.SMALL, ESize.MEDIUM, ESize.LARGE],
-      control: { type: 'select' },
-    },
-    variant: {
-      description: 'Вариант',
-      defaultValue: EVariant.PRIMARY,
-      table: {
-        type: {
-          defaultValue: EVariant.PRIMARY,
-        },
-      },
-      options: [EVariant.PRIMARY, EVariant.SECONDARY, EVariant.GHOST],
-      control: { type: 'select' },
-    },
     mode: {
-      description: 'Цвет',
-      defaultValue: EMode.DEFAULT,
-      table: {
-        type: {
-          defaultValue: EMode.DEFAULT,
-        },
+      control: {
+        type: 'select',
       },
-      options: [EMode.DEFAULT, EMode.SUCCESS, EMode.DANGER],
-      control: { type: 'select' },
+      options: [EMode.PRIMARY, EMode.DANGER, EMode.SUCCESS],
     },
     disabled: {
-      description: 'Заблокирован',
-      table: {
-        type: {
-          defaultValue: false,
-        },
+      control: {
+        type: 'boolean',
       },
-      control: 'boolean',
     },
     inProcess: {
-      description: 'Процессинг',
-      table: {
-        type: {
-          defaultValue: false,
-        },
+      control: {
+        type: 'boolean',
       },
-      control: 'boolean',
     },
+  },
+  args: {
+    children: 'Button', // Set a default label for the button
   },
   decorators: [],
 } satisfies Meta<typeof Button>;
 
-export const BaseButton: Story = {
+export const DefaultButton: Story = {
   name: 'Base button',
   args: {
-    size: ESize.MEDIUM,
-    variant: EVariant.PRIMARY,
-    mode: EMode.DEFAULT,
+    mode: EMode.PRIMARY,
     disabled: false,
     children: 'Сохранить',
-    leftIcon: undefined,
-    rightIcon: undefined,
     inProcess: false,
-  },
-  render: (props) => {
-    return (
-      <>
-        <div>
-          <Button {...props}>Войти</Button>
-        </div>
-        <div style={{ margin: '16px 0 0' }}>
-          <Button {...props} leftIcon={<Icon icon={'floppy-disk'} weight={'regular'} />} />
-        </div>
-        <div style={{ margin: '16px 0 0' }}>
-          <Button {...props} mode={EMode.SUCCESS} rightIcon={<Icon icon={'chevron-right'} />}>
-            Далее
-          </Button>
-        </div>
-      </>
-    );
   },
 };

@@ -1,0 +1,47 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0;
+}
+
+.price {
+
+  display: inline-block;
+}
+
+.currency {
+
+  display: inline-block;
+  color: var(--color-gray-60);
+  margin: 0 0 0 4px;
+}
+
+.date {
+
+  display: inline-block;
+  color: var(--color-gray-35);
+  margin: 0 0 0 12px;
+}
+
+.direction {
+
+  display: block;
+  margin: 0 0 0 12px;
+}
+
+.up {
+
+  color: var(--color-green-50);
+}
+
+.down {
+
+  color: var(--color-red-50);
+}
+
+.same {
+
+  color: var(--color-blue-30);
+}

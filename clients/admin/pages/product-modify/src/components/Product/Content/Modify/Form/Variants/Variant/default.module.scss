@@ -1,0 +1,46 @@
+
+.wrapper {
+
+  position: relative;
+  display: block;
+  padding: 24px;
+}
+
+.delete {
+
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: block;
+  color: var(--color-red-50);
+  cursor: pointer;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.fields {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+}
+
+.field {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  & + & {
+    margin: 12px 0 0;
+  }
+}
+
+.fields .field + .field {
+    margin: 0 0 0 16px;
+}

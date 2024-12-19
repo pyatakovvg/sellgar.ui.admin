@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@page-admin/brands",
+  "version": "0.0.1",
+  "description": "List components",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@admin/design": "0.0.1",
+    "@library/app": "0.0.1",
+    "@library/domain": "0.0.1",
+    "@library/kit": "0.0.1",
+    "classnames": "2.5.1",
+    "react": "19.0.0",
+    "react-router-dom": "7.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.2"
+  }
+}

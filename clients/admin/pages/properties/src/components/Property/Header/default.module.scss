@@ -1,0 +1,29 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  align-items: flex-end;
+}
+
+.header {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.content {
+
+  display: block;
+}
+
+.link {
+
+  display: block;
+
+  & + & {
+    margin: 0 0 0 16px;
+  }
+}

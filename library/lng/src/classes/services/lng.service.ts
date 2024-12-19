@@ -1,4 +1,4 @@
-import { Config, ConfigSymbol } from '@library/domain';
+import { ConfigInterface } from '@library/domain';
 
 import * as i18n from 'i18next';
 import { inject, injectable } from 'inversify';
@@ -11,7 +11,7 @@ export const LngServiceSymbol = Symbol.for('LngService');
 export class LngService {
   private readonly _instance;
 
-  constructor(@inject(ConfigSymbol) private readonly config: Config) {
+  constructor(@inject(ConfigInterface) private readonly config: ConfigInterface) {
     this._instance = i18n.createInstance();
 
     this._initLanguageDetector();

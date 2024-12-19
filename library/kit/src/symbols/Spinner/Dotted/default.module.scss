@@ -1,39 +1,29 @@
 .loader {
-  width: 20px;
-  height: 6px;
-  display: block;
-  margin: auto;
-  position: relative;
-  border-radius: 4px;
-  color: var(--color-white);
-  background: currentColor;
-  box-sizing: border-box;
-  animation: animloader 0.6s 0.3s ease infinite alternate;
-}
-.loader::after,
-.loader::before {
-  content: '';
-  box-sizing: border-box;
-  width: 20px;
-  height: 6px;
-  background: currentColor;
-  position: absolute;
-  border-radius: 4px;
-  top: 0;
-  right: 110%;
-  animation: animloader  0.6s ease infinite alternate;
-}
-.loader::after {
-  left: 110%;
-  right: auto;
-  animation-delay: 0.6s;
+  width: 40px;
+  height: 19.2px;
+  background:
+          radial-gradient(circle closest-side, var(--color-white) 90%, #0000) 0    50%,
+          radial-gradient(circle closest-side, var(--color-white) 90%, #0000) 50%  50%,
+          radial-gradient(circle closest-side, var(--color-white) 90%, #0000) 100% 50%;
+  background-size: calc(100%/3) 9.6px;
+  background-repeat: no-repeat;
+  animation: dots-7ar3yq 0.6s infinite linear;
 }
 
-@keyframes animloader {
-  0% {
-    width: 20px;
+@keyframes dots-7ar3yq {
+  20% {
+    background-position: 0 0, 50% 50%, 100% 50%;
   }
-  100% {
-    width: 48px;
+
+  40% {
+    background-position: 0 100%, 50% 0, 100% 50%;
+  }
+
+  60% {
+    background-position: 0 50%, 50% 100%, 100% 0;
+  }
+
+  80% {
+    background-position: 0 50%, 50% 50%, 100% 100%;
   }
 }

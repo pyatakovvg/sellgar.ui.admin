@@ -2,7 +2,7 @@
 
 import { useEffect, useGlobals } from '@storybook/addons';
 
-import '@library/kit/lib/theme/reset.css';
+import '@library/kit/src/theme/themes.scss';
 
 export const decorators = [
   (StoryFn: any) => {

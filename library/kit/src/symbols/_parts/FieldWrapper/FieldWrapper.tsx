@@ -28,9 +28,5 @@ export const FieldWrapper: React.FC<React.PropsWithChildren<IProps>> = (props) =
     [props.className, props.mode],
   );
 
-  return (
-    <div className={className} data-theme="field-wrapper">
-      {props.children}
-    </div>
-  );
+  return <div className={className}>{props.children}</div>;
 };

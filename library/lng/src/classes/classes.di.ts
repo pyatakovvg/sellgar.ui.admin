@@ -1,4 +1,4 @@
-import { Config, ConfigSymbol } from '@library/domain';
+import { Config, ConfigInterface } from '@library/domain';
 
 import { Container } from 'inversify';
 
@@ -8,7 +8,7 @@ import { LngPresenter, LngPresenterSymbol } from './presenters/lng.presenter.ts'
 
 const container = new Container();
 
-container.bind<Config>(ConfigSymbol).to(Config);
+container.bind<ConfigInterface>(ConfigInterface).to(Config);
 
 container.bind<LngStore>(LngStoreSymbol).to(LngStore);
 container.bind<LngService>(LngServiceSymbol).to(LngService);

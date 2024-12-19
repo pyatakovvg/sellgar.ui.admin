@@ -1,0 +1,128 @@
+import { PropertyEntity } from '@library/domain';
+import { Field, Input, Button, SimpleSelect } from '@library/kit';
+
+import React from 'react';
+import { observer } from 'mobx-react';
+import { useForm, Controller } from 'react-hook-form';
+
+import { useGetUnits } from '../../../../../hooks/get-units.hook.ts';
+import { useGetGroups } from '../../../../../hooks/get-groups.hook.ts';
+import { useGetBrandInProcess } from '../../../../../hooks/get-brand-in-process.hook.ts';
+
+import s from './default.module.scss';
+
+interface IProps {
+  inProcess: boolean;
+  defaultValues: Partial<PropertyEntity>;
+  onSubmit(data: PropertyEntity): void;
+}
+
+const types = [
+  { code: 'TEXT', name: 'Текст' },
+  { code: 'CHECKBOX', name: 'Чекбокс' },
+  { code: 'RADIO', name: 'Радио кнопка' },
+  { code: 'DATE', name: 'Дата' },
+  { code: 'RANGE', name: 'Диапазон' },
+];
+
+export const Form: React.FC<IProps> = observer((props) => {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<PropertyEntity>({ defaultValues: props.defaultValues });
+
+  const units = useGetUnits();
+  const groups = useGetGroups();
+  const inProcess = useGetBrandInProcess();
+
+  const onSubmit = handleSubmit(props.onSubmit);
+
+  return (
+    <form className={s.wrapper} onSubmit={onSubmit}>
+      <div className={s.fields}>
+        <div className={s.field}>
+          <Controller
+            name={'groupUuid'}
+            control={control}
+            render={({ field }) => {
+              return (
+                <Field error={errors.groupUuid?.message}>
+                  <SimpleSelect
+                    optionKey={'uuid'}
+                    optionValue={'name'}
+                    options={groups}
+                    value={field.value}
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
+                  />
+                </Field>
+              );
+            }}
+          />
+        </div>
+        <div className={s.field}>
+          <Field error={errors.name?.message}>
+            <Input {...register('code')} placeholder={'Код'} />
+          </Field>
+        </div>
+        <div className={s.field}>
+          <Field error={errors.name?.message}>
+            <Input {...register('name')} placeholder={'Наименование'} />
+          </Field>
+        </div>
+        <div className={s.field}>
+          <Field error={errors.description?.message}>
+            <Input {...register('description')} placeholder={'Описание'} />
+          </Field>
+        </div>
+        <div className={s.field}>
+          <Controller
+            name={'type'}
+            control={control}
+            render={({ field }) => {
+              return (
+                <Field error={errors.type?.message}>
+                  <SimpleSelect
+                    optionKey={'code'}
+                    optionValue={'name'}
+                    options={types}
+                    value={field.value}
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
+                  />
+                </Field>
+              );
+            }}
+          />
+        </div>
+        <div className={s.field}>
+          <Controller
+            name={'unitUuid'}
+            control={control}
+            render={({ field }) => {
+              return (
+                <Field error={errors.unitUuid?.message}>
+                  <SimpleSelect
+                    optionKey={'uuid'}
+                    optionValue={'name'}
+                    options={units}
+                    value={field.value}
+                    onBlur={field.onBlur}
+                    onChange={field.onChange}
+                  />
+                </Field>
+              );
+            }}
+          />
+        </div>
+      </div>
+      <div className={s.control}>
+        <Button type={'submit'} inProcess={inProcess}>
+          Сохранить
+        </Button>
+      </div>
+    </form>
+  );
+});

@@ -31,7 +31,7 @@ export const Button: React.FC<React.PropsWithChildren<IProps>> = ({ mode, inProc
   );
 
   return (
-    <button {...props} className={className} data-theme="button">
+    <button {...props} className={className}>
       <Text>{props.children}</Text>
       {inProcess && (
         <div className={s.spinner}>

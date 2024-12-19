@@ -7,10 +7,10 @@ import { UnauthorizedException } from './exeptions/unauthorized.exception.ts';
 import { ServiceUnavailableException } from './exeptions/service-unavailable.exception.ts';
 import { InternalServerErrorException } from './exeptions/internal-server-error.exception.ts';
 
-export const HttpClientSymbol = Symbol.for('HttpClient');
+import { HttpClientInterface } from './http-client.interface.ts';
 
 @injectable()
-export class HttpClient {
+export class HttpClient implements HttpClientInterface {
   private readonly _axios: AxiosInstance;
   private readonly _controller = new AbortController();
 

@@ -1,4 +1,4 @@
-import { ProfileEntity, ProfileService, ProfileServiceSymbol } from '@library/domain';
+import { ProfileEntity, ProfileServiceInterface } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
 import { action, observable, makeObservable } from 'mobx';
@@ -9,7 +9,7 @@ export const ProfileStoreSymbol = Symbol.for('ProfileStore');
 export class ProfileStore {
   @observable profile: ProfileEntity;
 
-  constructor(@inject(ProfileServiceSymbol) private readonly profileService: ProfileService) {
+  constructor(@inject(ProfileServiceInterface) private readonly profileService: ProfileServiceInterface) {
     makeObservable(this);
   }
 

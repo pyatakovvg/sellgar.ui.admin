@@ -1,0 +1,37 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  padding: 24px;
+
+}
+
+.header {
+
+  display: block;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  margin: 24px 0 0;
+}
+
+.control {
+
+  display: block;
+  margin: 24px 0 0;
+}
+
+.property {
+
+  display: block;
+
+  & + & {
+    margin: 16px 0 0;
+  }
+}

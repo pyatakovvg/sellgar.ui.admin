@@ -1,10 +1,55 @@
-@import "./theme/themes.css";
+@media (prefers-color-scheme: dark) {
+  .wrapper[data-theme="checkbox"] {
+
+    --border-color: var(--color-gray-15);
+    --mark-color: var(--color-blue-40);
+
+    /** disabled **/
+
+    --border-color--disabled: var(--color-gray-25);
+    --mark-color--disabled: var(--color-gray-25);
+
+    /** mode success **/
+
+    --border-color--success: var(--color-green-50);
+    --mark-color--success: var(--color-green-50);
+
+    /** mode danger **/
+
+    --border-color--danger: var(--color-red-50);
+    --mark-color--danger: var(--color-red-50);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .wrapper[data-theme="checkbox"] {
+
+    --border-color: var(--color-gray-15);
+    --mark-color: var(--color-blue-40);
+
+    /** disabled **/
+
+    --border-color--disabled: var(--color-gray-25);
+    --mark-color--disabled: var(--color-gray-25);
+
+    /** mode success **/
+
+    --border-color--success: var(--color-green-50);
+    --mark-color--success: var(--color-green-50);
+
+    /** mode danger **/
+
+    --border-color--danger: var(--color-red-50);
+    --mark-color--danger: var(--color-red-50);
+  }
+}
 
 .wrapper {
 
   display: flex;
   flex-direction: row;
   flex: 1 0 auto;
+  cursor: pointer;
 }
 
 .checkbox {
@@ -51,6 +96,8 @@
 }
 
 .disabled {
+  cursor: default;
+
   .checkbox {
     border-color: var(--border-color--disabled);
   }

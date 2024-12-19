@@ -1,4 +1,40 @@
-@import "./theme/themes.css";
+@media (prefers-color-scheme: dark) {
+  .wrapper {
+
+    --text-color: var(--color-black);
+
+    /** disabled **/
+
+    --text-color--disabled: var(--color-gray-10);
+
+    /** mode success **/
+
+    --text-color--success: var(--color-green-25);
+
+    /** mode danger **/
+
+    --text-color--danger: var(--color-red-25);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .wrapper {
+
+    --text-color: var(--color-black);
+
+    /** disabled **/
+
+    --text-color--disabled: var(--color-gray-10);
+
+    /** mode success **/
+
+    --text-color--success: var(--color-green-25);
+
+    /** mode danger **/
+
+    --text-color--danger: var(--color-red-25);
+  }
+}
 
 .wrapper {
 
@@ -14,7 +50,8 @@
   display: flex;
   flex-direction: column;
   flex: 1 0;
-  padding: 16px;
+  padding: 12px;
+  height: 100%;
   border: none;
   background: transparent;
   color: inherit;
@@ -47,10 +84,12 @@
 
 .icon {
 
-  display: block;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
   width: 32px;
   height: 32px;
-  margin: 0 12px 0 16px;
+  margin: 0 8px 0 10px;
   color: inherit;
 }
 

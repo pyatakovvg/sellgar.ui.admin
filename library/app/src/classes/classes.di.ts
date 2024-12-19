@@ -1,12 +1,12 @@
 import {
   Config,
-  ConfigSymbol,
+  ConfigInterface,
   HttpClient,
-  HttpClientSymbol,
+  HttpClientInterface,
   ProfileService,
-  ProfileServiceSymbol,
+  ProfileServiceInterface,
   ProfileGateway,
-  ProfileGatewaySymbol,
+  ProfileGatewayInterface,
 } from '@library/domain';
 
 import { Container } from 'inversify';
@@ -18,15 +18,15 @@ import { ApplicationPresenter, ApplicationPresenterSymbol } from './presenters/a
 
 const container = new Container();
 
-container.bind<Config>(ConfigSymbol).to(Config);
-container.bind<HttpClient>(HttpClientSymbol).to(HttpClient);
+container.bind<ConfigInterface>(ConfigInterface).to(Config);
+container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
 
 container.bind<ApplicationPresenter>(ApplicationPresenterSymbol).to(ApplicationPresenter);
 
 container.bind<ProfileStore>(ProfileStoreSymbol).to(ProfileStore);
 container.bind<ApplicationStore>(ApplicationStoreSymbol).to(ApplicationStore);
 
-container.bind<ProfileService>(ProfileServiceSymbol).to(ProfileService);
-container.bind<ProfileGateway>(ProfileGatewaySymbol).to(ProfileGateway);
+container.bind<ProfileServiceInterface>(ProfileServiceInterface).to(ProfileService);
+container.bind<ProfileGatewayInterface>(ProfileGatewayInterface).to(ProfileGateway);
 
 export { container };

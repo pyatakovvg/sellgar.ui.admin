@@ -4,7 +4,6 @@
   display: flex;
   flex-direction: row;
   flex: 1 0;
-  min-height: 48px;
 }
 
 .wrapper.focus {
@@ -23,10 +22,7 @@
   display: block;
   min-width: 320px;
   max-height: 300px;
-  padding: 4px 0 0;
-  background: white;
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
+  padding: 16px;
   overflow: auto;
 }
 

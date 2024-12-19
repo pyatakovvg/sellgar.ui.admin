@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  useTable,
+  useReactTable,
   RowData,
   ColumnResizeMode,
   getExpandedRowModel,
@@ -18,8 +18,10 @@ import s from './default.module.scss';
 
 interface IExpanded<TData> {
   state?: ExpandedState;
+  colSpan?: number;
   getRowCanExpand?: ((row: Row<TData>) => boolean) | undefined;
   getSubRows?: (originalRow: TData, index: number) => TData[] | undefined;
+  renderSubComponent?: (props: { row: Row<TData> }) => React.ReactElement;
   onExpandedChange?: OnChangeFn<ExpandedState>;
 }
 
@@ -39,7 +41,7 @@ interface IProps<TData> {
 }
 
 export const Table = <TData extends RowData>(props: React.PropsWithChildren<IProps<TData>>) => {
-  const table = useTable<TData>({
+  const table = useReactTable<TData>({
     data: props.data,
     columns: props.columns,
     debugTable: props.debugTable,

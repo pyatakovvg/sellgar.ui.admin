@@ -1,0 +1,42 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 520px;
+}
+
+.header {
+
+  display: block;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  margin: 24px 0 0;
+}
+
+.fields {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  padding: 24px;
+}
+
+.field {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0;
+
+  & + & {
+    margin: 8px 0 0;
+    padding: 8px 0 0;
+    border-top: 1px solid var(--color-gray-10);
+  }
+}

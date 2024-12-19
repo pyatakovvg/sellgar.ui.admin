@@ -91,6 +91,7 @@ interface IProps {
     | 'keyboard_control'
     | 'more_vert'
     | 'input'
+    | 'create'
     | 'dangerous'
     | 'home_filled'
     | 'arrow_drop_down'
@@ -101,7 +102,8 @@ interface IProps {
     | 'keyboard_arrow_up'
     | 'keyboard_arrow_left'
     | 'keyboard_arrow_right'
-    | 'drive_file_rename_outline';
+    | 'drive_file_rename_outline'
+    | 'horizontal_rule';
   size?: number;
 }
 
