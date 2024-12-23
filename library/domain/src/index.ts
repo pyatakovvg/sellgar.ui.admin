@@ -12,6 +12,7 @@ export * from './classes/profile';
 export * from './classes/user';
 export * from './classes/product';
 export * from './classes/price';
+export * from './classes/currency';
 
 export { Config, ConfigInterface } from './helpers/Config';
 export { HttpClient, HttpClientInterface } from './helpers/HttpClient';

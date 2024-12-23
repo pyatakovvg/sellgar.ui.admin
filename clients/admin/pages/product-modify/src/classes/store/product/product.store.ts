@@ -1,14 +1,13 @@
 import {
   HttpException,
   BrandEntity,
-  ProductEntity,
   CategoryEntity,
-  ProductServiceInterface,
+  CurrencyEntity,
+  PropertyEntity,
   BrandServiceInterface,
   CategoryServiceInterface,
-  PropertyEntity,
   PropertyServiceInterface,
-  NotFoundException,
+  CurrencyServiceInterface,
 } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
@@ -24,11 +23,13 @@ export class ProductStore implements ProductStoreInterface {
   @observable brands: BrandEntity[] = [];
   @observable categories: CategoryEntity[] = [];
   @observable properties: PropertyEntity[] = [];
+  @observable currencies: CurrencyEntity[] = [];
 
   constructor(
     @inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface,
     @inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface,
     @inject(PropertyServiceInterface) private readonly propertyService: PropertyServiceInterface,
+    @inject(CurrencyServiceInterface) private readonly currencyService: CurrencyServiceInterface,
   ) {
     makeObservable(this);
   }
@@ -59,19 +60,26 @@ export class ProductStore implements ProductStoreInterface {
   }
 
   @action.bound
+  setCurrencies(data: CurrencyEntity[]) {
+    this.currencies = data;
+  }
+
+  @action.bound
   async findProperties() {
     this.setInProcess(true);
 
     try {
-      const [brandResult, categoryResult, propertyResult] = await Promise.all([
+      const [brandResult, categoryResult, propertyResult, currencyResult] = await Promise.all([
         this.brandService.findAll(),
         this.categoryService.findAll(),
         this.propertyService.findAll(),
+        this.currencyService.findAll(),
       ]);
 
       this.setBrand(brandResult.data);
       this.setCategories(categoryResult.data);
       this.setProperty(propertyResult.data);
+      this.setCurrencies(currencyResult.data);
     } catch (error) {
       this.setError(error as HttpException);
     } finally {

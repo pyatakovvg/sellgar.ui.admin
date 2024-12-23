@@ -1,6 +1,7 @@
 export { Field } from './symbols/Field';
 export { Logo } from './symbols/Logo';
 export { Input } from './symbols/Input';
+export { AmountInput } from './symbols/AmountInput';
 export { Radio } from './symbols/Radio';
 export { MyInput } from './symbols/MyInput';
 export { PhoneInput } from './symbols/PhoneInput';

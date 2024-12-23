@@ -1,7 +1,7 @@
-export { CurrencyEntity, BrandResultEntity } from './currency.entity.ts';
+export { CurrencyEntity, CurrencyResultEntity } from './currency.entity.ts';
 
-export { BrandGateway } from './gateway/brand.gateway.ts';
-export { BrandGatewayInterface } from './gateway/brand-gateway.interface.ts';
+export { CurrencyGateway } from './gateway/currency.gateway.ts';
+export { CurrencyGatewayInterface } from './gateway/currency-gateway.interface.ts';
 
-export { BrandService } from './service/brand.service.ts';
-export { BrandServiceInterface } from './service/brand-service.interface.ts';
+export { CurrencyService } from './service/currency.service.ts';
+export { CurrencyServiceInterface } from './service/currency-service.interface.ts';

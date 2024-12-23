@@ -1,7 +1,7 @@
-import { Field, Icon, Input, Text } from '@library/kit';
+import { Field, Icon, AmountInput } from '@library/kit';
 
 import React from 'react';
-import { useFormContext, useFormState } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { CreateProductDto } from '../../../../../../../../../classes/store/form/dto/create-product.dto.ts';
 import { UpdateProductDto } from '../../../../../../../../../classes/store/form/dto/update-product.dto.ts';
@@ -10,27 +10,36 @@ import s from './default.module.scss';
 
 interface IProps {
   value: number;
-  onReset(): void;
+  onReset?(): void;
 }
 
 export const EditPrice: React.FC<IProps> = (props) => {
-  const { control, register } = useFormContext<CreateProductDto | UpdateProductDto>();
-  const { errors } = useFormState({ control });
+  const { control } = useFormContext<CreateProductDto | UpdateProductDto>();
 
   return (
     <div className={s.wrapper}>
       <div className={s.content}>
-        <Field error={errors.name?.message}>
-          <Input
-            {...register('price', { value: props.value })}
-            autoFocus={true}
-            rightIcon={
-              <div className={s.reset} onClick={props.onReset}>
-                <Icon icon={'clear'} size={18} />
-              </div>
-            }
-          />
-        </Field>
+        <Controller
+          name={'price'}
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <Field error={error?.message}>
+              <AmountInput
+                ref={field.ref}
+                defaultValue={props.value}
+                rightIcon={
+                  props.onReset && (
+                    <div className={s.reset} onClick={props.onReset}>
+                      <Icon icon={'clear'} size={18} />
+                    </div>
+                  )
+                }
+                onBlur={() => field.onBlur()}
+                onChange={(event) => field.onChange(AmountInput.unformat(event.target.value))}
+              />
+            </Field>
+          )}
+        ></Controller>
       </div>
     </div>
   );

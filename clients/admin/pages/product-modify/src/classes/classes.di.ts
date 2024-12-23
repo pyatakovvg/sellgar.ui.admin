@@ -23,6 +23,10 @@ import {
   PriceGatewayInterface,
   PriceService,
   PriceServiceInterface,
+  CurrencyGateway,
+  CurrencyGatewayInterface,
+  CurrencyService,
+  CurrencyServiceInterface,
 } from '@library/domain';
 
 import { Container } from 'inversify';
@@ -53,6 +57,8 @@ export const createContainer = () => {
   container.bind<PropertyServiceInterface>(PropertyServiceInterface).to(PropertyService);
   container.bind<PriceGatewayInterface>(PriceGatewayInterface).to(PriceGateway);
   container.bind<PriceServiceInterface>(PriceServiceInterface).to(PriceService);
+  container.bind<CurrencyGatewayInterface>(CurrencyGatewayInterface).to(CurrencyGateway);
+  container.bind<CurrencyServiceInterface>(CurrencyServiceInterface).to(CurrencyService);
 
   container.bind<ProductGatewayInterface>(ProductGatewayInterface).to(ProductGateway);
   container.bind<ProductServiceInterface>(ProductServiceInterface).to(ProductService);

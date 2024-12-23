@@ -27,7 +27,7 @@ export const Common: React.FC = () => {
         <div className={s.fields}>
           <div className={s['field-v']}>
             <Field label={'Название'} error={errors.name?.message}>
-              <Input {...register('name')} placeholder={'Наименование'} />
+              <Input {...register('name')} autoFocus={true} placeholder={'Наименование'} />
             </Field>
           </div>
           <div className={s['field-v']}>

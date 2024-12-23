@@ -1,5 +1,5 @@
 import { PriceEntity } from '@library/domain';
-import { Text, Description, Icon } from '@library/kit';
+import { Text, Description, Icon, AmountInput } from '@library/kit';
 
 import React from 'react';
 import { format } from 'date-fns';
@@ -37,7 +37,7 @@ export const Price: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <div className={s.price}>
-        <Text variant={'compact'}>{props.data.value}</Text>
+        <Text variant={'compact'}>{AmountInput.format(props.data.value)}</Text>
       </div>
       <div className={s.currency}>
         <Text variant={'compact'}>{props.data.currency.name}</Text>
