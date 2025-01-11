@@ -1,5 +1,5 @@
 import { PropertyGroupEntity } from '@library/domain';
-import { Field, Input, Button } from '@library/kit';
+import { Field, Input, Textarea, Button } from '@library/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -30,13 +30,13 @@ export const Form: React.FC<IProps> = observer((props) => {
     <form className={s.wrapper} onSubmit={onSubmit}>
       <div className={s.fields}>
         <div className={s.field}>
-          <Field error={errors.name?.message}>
+          <Field label={'Название'} error={errors.name?.message}>
             <Input {...register('name')} placeholder={'Наименование'} />
           </Field>
         </div>
         <div className={s.field}>
-          <Field error={errors.description?.message}>
-            <Input {...register('description')} placeholder={'Описание'} />
+          <Field label={'Описание'} error={errors.description?.message}>
+            <Textarea {...register('description')} placeholder={'Описание'} />
           </Field>
         </div>
       </div>

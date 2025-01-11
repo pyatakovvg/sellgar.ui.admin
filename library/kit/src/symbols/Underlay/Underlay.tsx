@@ -6,6 +6,7 @@ import cn from 'classnames';
 import s from './default.module.scss';
 
 interface IProps {
+  ref?: React.RefObject<HTMLDivElement> | React.RefCallback<HTMLDivElement>;
   className?: string;
   variant?: 'top' | 'bottom';
   size?: ESize;
@@ -30,5 +31,9 @@ export const Underlay: React.FC<React.PropsWithChildren<IProps>> = (props) => {
     [props.className, props.variant, props.size],
   );
 
-  return <div className={className}>{props.children}</div>;
+  return (
+    <div ref={props.ref} className={className}>
+      {props.children}
+    </div>
+  );
 };

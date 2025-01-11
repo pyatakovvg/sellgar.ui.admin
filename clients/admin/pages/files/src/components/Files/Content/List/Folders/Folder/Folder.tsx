@@ -13,7 +13,7 @@ export const Folder: React.FC<IProps> = (props) => {
   return (
     <Link className={s.wrapper} href={'/files' + '?dirUuid=' + props.data.uuid}>
       <div className={s.icon}>
-        <Icon icon={'folder'} size={40} />
+        <Icon icon={'folder'} size={100} />
       </div>
       <div className={s.name}>
         <Text>{props.data.name}</Text>

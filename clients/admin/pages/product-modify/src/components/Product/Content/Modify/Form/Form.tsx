@@ -1,8 +1,9 @@
 import { useNavigate } from '@library/app';
-import { Field, Input, Button } from '@library/kit';
+import { Field, Textarea, Button } from '@library/kit';
 import { useChangeBreadcrumb } from '@library/breadcrumbs';
 
 import React from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Common } from './Common';
@@ -15,6 +16,8 @@ import { UpdateProductDto } from '../../../../../classes/store/form/dto/update-p
 
 import { useCreateProductRequest } from '../../../../../hooks/create-product-request.hook.ts';
 import { useUpdateProductRequest } from '../../../../../hooks/update-product-request.hook.ts';
+
+import { schema } from './schema.ts';
 
 import s from './default.module.scss';
 
@@ -30,7 +33,10 @@ export const Form: React.FC<IProps> = (props) => {
   const createRequest = useCreateProductRequest();
   const updateRequest = useUpdateProductRequest();
 
-  const methods = useForm<CreateProductDto | UpdateProductDto>({ defaultValues: props.defaultValues });
+  const methods = useForm<UpdateProductDto | CreateProductDto>({
+    resolver: yupResolver<UpdateProductDto | CreateProductDto>(schema),
+    defaultValues: props.defaultValues,
+  });
 
   const values = methods.getValues();
 
@@ -78,7 +84,7 @@ export const Form: React.FC<IProps> = (props) => {
 
           <div className={s.field}>
             <Field error={methods.formState.errors.description?.message}>
-              <Input {...methods.register('description')} placeholder={'Описание'} />
+              <Textarea {...methods.register('description')} placeholder={'Описание'} />
             </Field>
           </div>
         </div>

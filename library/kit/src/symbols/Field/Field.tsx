@@ -18,7 +18,14 @@ export const Field: React.FC<React.PropsWithChildren<IProps>> = (props) => {
           <Label>{props.label}</Label>
         </div>
       )}
-      <div className={s.content}>{props.children}</div>
+      <div className={s.content}>
+        {React.Children.map(props.children, (child) => {
+          if (React.isValidElement(child)) {
+            return React.cloneElement(child);
+          }
+          return child;
+        })}
+      </div>
       {props.error && (
         <div className={s.error}>
           <ErrorMessage>{props.error}</ErrorMessage>

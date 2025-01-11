@@ -15,8 +15,15 @@ import {
 
 import { Container } from 'inversify';
 
-import { FilesStore, FilesStoreSymbol } from './store/files.store.ts';
-import { FindAllUseCase, FindAllUseCaseSymbol } from './usecase/find-all.usecase.ts';
+import { FileStore } from './store/file/file.store.ts';
+import { FileStoreInterface } from './store/file/file-store.interface.ts';
+
+import { FolderStore } from './store/folder/folder.store.ts';
+import { FolderStoreInterface } from './store/folder/folder-store.interface.ts';
+
+import { UploadStore } from './store/upload/upload.store.ts';
+import { UploadStoreInterface } from './store/upload/upload-store.interface.ts';
+
 import { FilesPresenter, FilesPresenterSymbol } from './presenter/files.presenter.ts';
 
 const container = new Container({ defaultScope: 'Singleton' });
@@ -30,9 +37,9 @@ container.bind<FolderServiceInterface>(FolderServiceInterface).to(FolderService)
 container.bind<FileGatewayInterface>(FileGatewayInterface).to(FileGateway);
 container.bind<FileServiceInterface>(FileServiceInterface).to(FileService);
 
-container.bind<FilesStore>(FilesStoreSymbol).to(FilesStore);
-
-container.bind<FindAllUseCase>(FindAllUseCaseSymbol).to(FindAllUseCase);
+container.bind<FileStoreInterface>(FileStoreInterface).to(FileStore);
+container.bind<FolderStoreInterface>(FolderStoreInterface).to(FolderStore);
+container.bind<UploadStoreInterface>(UploadStoreInterface).to(UploadStore);
 
 container.bind<FilesPresenter>(FilesPresenterSymbol).to(FilesPresenter);
 

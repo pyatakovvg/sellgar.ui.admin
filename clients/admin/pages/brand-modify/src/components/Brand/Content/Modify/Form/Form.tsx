@@ -1,5 +1,5 @@
 import { BrandEntity } from '@library/domain';
-import { Field, Input, Button } from '@library/kit';
+import { Field, Input, Textarea, Button } from '@library/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -41,7 +41,7 @@ export const Form: React.FC<IProps> = observer((props) => {
         </div>
         <div className={s.field}>
           <Field error={errors.description?.message}>
-            <Input {...register('description')} placeholder={'Описание'} />
+            <Textarea {...register('description')} placeholder={'Описание'} />
           </Field>
         </div>
       </div>

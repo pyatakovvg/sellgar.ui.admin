@@ -15,7 +15,7 @@ export const Folders: React.FC<IProps> = (props) => {
     <div className={s.wrapper}>
       {props.data.map((folder) => {
         return (
-          <div key={folder.uuid} className={s.folder}>
+          <div key={folder.uuid} className={s.content}>
             <Folder data={folder} />
           </div>
         );

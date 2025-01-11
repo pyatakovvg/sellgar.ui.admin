@@ -103,7 +103,8 @@ interface IProps {
     | 'keyboard_arrow_left'
     | 'keyboard_arrow_right'
     | 'drive_file_rename_outline'
-    | 'horizontal_rule';
+    | 'horizontal_rule'
+    | 'collections';
   size?: number;
 }
 

@@ -1,6 +1,7 @@
 export { Field } from './symbols/Field';
 export { Logo } from './symbols/Logo';
 export { Input } from './symbols/Input';
+export { Textarea } from './symbols/Textarea';
 export { AmountInput } from './symbols/AmountInput';
 export { Radio } from './symbols/Radio';
 export { MyInput } from './symbols/MyInput';
@@ -17,8 +18,12 @@ export { SimpleSelect } from './symbols/SimpleSelect';
 export { TreeSelect } from './symbols/TreeSelect';
 export { Underlay } from './symbols/Underlay';
 export { Actions } from './symbols/Actions';
+export { Image } from './symbols/Image';
+export { InputFiles } from './symbols/InputFiles';
 
 export { Table } from './table';
+
+export { Dialog } from './dialog';
 
 export { Label } from './typography/Label';
 export { Link } from './typography/Link';

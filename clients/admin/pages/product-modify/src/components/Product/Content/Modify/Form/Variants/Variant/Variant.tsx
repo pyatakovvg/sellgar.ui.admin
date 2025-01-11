@@ -1,7 +1,7 @@
-import { Field, Icon, Input, Underlay } from '@library/kit';
+import { Field, Icon, Input, Textarea, Underlay } from '@library/kit';
 
 import React from 'react';
-import { useFormState, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { CreateProductDto } from '../../../../../../../classes/store/form/dto/create-product.dto.ts';
 import { UpdateProductDto } from '../../../../../../../classes/store/form/dto/update-product.dto.ts';
@@ -16,10 +16,10 @@ interface IProps {
 }
 
 export const Variant: React.FC<IProps> = (props) => {
-  const { control, register } = useFormContext<CreateProductDto | UpdateProductDto>();
-  const state = useFormState({
-    control,
-  });
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<CreateProductDto | UpdateProductDto>();
 
   return (
     <Underlay>
@@ -33,20 +33,20 @@ export const Variant: React.FC<IProps> = (props) => {
           <div className={s.field}>
             <div className={s.fields}>
               <div className={s.field}>
-                <Field label={'Артикул'} error={state.errors.variants?.[props.index]?.message}>
+                <Field label={'Артикул'} error={errors?.variants?.[props.index]?.article?.message ?? ''}>
                   <Input {...register(`variants.${props.index}.article`)} placeholder={'Артикул'} />
                 </Field>
               </div>
               <div className={s.field}>
-                <Field label={'Название'} error={state.errors.variants?.[props.index]?.message}>
+                <Field label={'Название'} error={errors?.variants?.[props.index]?.name?.message ?? ''}>
                   <Input {...register(`variants.${props.index}.name`)} placeholder={'Наименование'} />
                 </Field>
               </div>
             </div>
           </div>
           <div className={s.field}>
-            <Field label={'Описание'} error={''}>
-              <Input {...register(`variants.${props.index}.description`)} placeholder={'Описание'} />
+            <Field label={'Описание'} error={errors?.variants?.[props.index]?.description?.message ?? ''}>
+              <Textarea {...register(`variants.${props.index}.description`)} placeholder={'Описание'} />
             </Field>
           </div>
         </div>

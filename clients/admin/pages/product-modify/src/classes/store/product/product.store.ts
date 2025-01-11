@@ -69,17 +69,17 @@ export class ProductStore implements ProductStoreInterface {
     this.setInProcess(true);
 
     try {
-      const [brandResult, categoryResult, propertyResult, currencyResult] = await Promise.all([
+      const [brandResult, categoryResult, propertyResult] = await Promise.all([
         this.brandService.findAll(),
         this.categoryService.findAll(),
         this.propertyService.findAll(),
-        this.currencyService.findAll(),
+        // this.currencyService.findAll(),
       ]);
 
       this.setBrand(brandResult.data);
       this.setCategories(categoryResult.data);
       this.setProperty(propertyResult.data);
-      this.setCurrencies(currencyResult.data);
+      // this.setCurrencies(currencyResult.data);
     } catch (error) {
       this.setError(error as HttpException);
     } finally {

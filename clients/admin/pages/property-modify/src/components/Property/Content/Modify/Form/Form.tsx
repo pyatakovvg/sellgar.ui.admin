@@ -1,5 +1,5 @@
 import { PropertyEntity } from '@library/domain';
-import { Field, Input, Button, SimpleSelect } from '@library/kit';
+import { Field, Input, Textarea, Button, SimpleSelect } from '@library/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -48,7 +48,7 @@ export const Form: React.FC<IProps> = observer((props) => {
             control={control}
             render={({ field }) => {
               return (
-                <Field error={errors.groupUuid?.message}>
+                <Field label={'Группа'} error={errors.groupUuid?.message}>
                   <SimpleSelect
                     optionKey={'uuid'}
                     optionValue={'name'}
@@ -63,18 +63,18 @@ export const Form: React.FC<IProps> = observer((props) => {
           />
         </div>
         <div className={s.field}>
-          <Field error={errors.name?.message}>
+          <Field label={'Коде'} error={errors.code?.message}>
             <Input {...register('code')} placeholder={'Код'} />
           </Field>
         </div>
         <div className={s.field}>
-          <Field error={errors.name?.message}>
+          <Field label={'Название'} error={errors.name?.message}>
             <Input {...register('name')} placeholder={'Наименование'} />
           </Field>
         </div>
         <div className={s.field}>
-          <Field error={errors.description?.message}>
-            <Input {...register('description')} placeholder={'Описание'} />
+          <Field label={'Описание'} error={errors.description?.message}>
+            <Textarea {...register('description')} placeholder={'Описание'} />
           </Field>
         </div>
         <div className={s.field}>
@@ -83,7 +83,7 @@ export const Form: React.FC<IProps> = observer((props) => {
             control={control}
             render={({ field }) => {
               return (
-                <Field error={errors.type?.message}>
+                <Field label={'Тип'} error={errors.type?.message}>
                   <SimpleSelect
                     optionKey={'code'}
                     optionValue={'name'}
@@ -103,8 +103,9 @@ export const Form: React.FC<IProps> = observer((props) => {
             control={control}
             render={({ field }) => {
               return (
-                <Field error={errors.unitUuid?.message}>
+                <Field label={'Размерность'} error={errors.unitUuid?.message}>
                   <SimpleSelect
+                    isClearable={true}
                     optionKey={'uuid'}
                     optionValue={'name'}
                     options={units}

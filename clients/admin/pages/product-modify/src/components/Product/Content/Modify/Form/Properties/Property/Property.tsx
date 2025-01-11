@@ -2,7 +2,7 @@ import { PropertyEntity } from '@library/domain';
 import { Field, Icon, Input, Text, SimpleSelect } from '@library/kit';
 
 import React from 'react';
-import { Control, Controller, useFormContext, UseFormRegister, useFormState, useWatch } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import { CreateProductDto } from '../../../../../../../classes/store/form/dto/create-product.dto.ts';
 import { UpdateProductDto } from '../../../../../../../classes/store/form/dto/update-product.dto.ts';
@@ -35,10 +35,11 @@ const useGetProperty = (index: number) => {
 };
 
 export const Property: React.FC<IProps> = (props) => {
-  const { control, register } = useFormContext<UpdateProductDto | CreateProductDto>();
-  const state = useFormState({
+  const {
     control,
-  });
+    register,
+    formState: { errors },
+  } = useFormContext<UpdateProductDto | CreateProductDto>();
 
   const selectedProperty = useGetProperty(props.index);
   const properties = useGetPropertiesData();
@@ -53,7 +54,7 @@ export const Property: React.FC<IProps> = (props) => {
             control={control}
             render={({ field }) => {
               return (
-                <Field error={''}>
+                <Field error={errors?.properties?.[props.index]?.propertyUuid?.message ?? ''}>
                   <SimpleSelect
                     isClearable={true}
                     placeholder={'Свойство'}
@@ -72,7 +73,7 @@ export const Property: React.FC<IProps> = (props) => {
           />
         </div>
         <div className={s.field}>
-          <Field error={state.errors.variants?.[props.index]?.message}>
+          <Field error={errors?.properties?.[props.index]?.value?.message ?? ''}>
             <Input {...register(`properties.${props.index}.value`)} placeholder={'Значение'} />
           </Field>
         </div>

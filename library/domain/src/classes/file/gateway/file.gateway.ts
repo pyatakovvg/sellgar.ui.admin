@@ -19,4 +19,12 @@ export class FileGateway implements FileGatewayInterface {
       params: filter,
     });
   }
+
+  upload(formData: FormData) {
+    return this.httpClient.post(this.config.get('GATEWAY_API') + '/v1/files/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
 }

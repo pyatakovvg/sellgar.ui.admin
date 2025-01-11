@@ -1,8 +1,8 @@
-import { Heading } from '@library/kit';
 import { useQuery } from '@library/app';
 
 import React from 'react';
 
+import { Header } from './Header';
 import { Content } from './Content';
 
 import { useFindAllRequest } from '../../hooks/find-all-request.hook.ts';
@@ -24,7 +24,7 @@ export const Files = () => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <Heading variant={'H3'}>Файлы</Heading>
+        <Header />
       </div>
       <div className={s.content}>
         <Content />
