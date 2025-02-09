@@ -9,12 +9,12 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
-    "i18next": "24.2.1",
+    "i18next": "24.2.2",
     "i18next-browser-languagedetector": "8.0.2",
-    "i18next-http-backend": "3.0.1",
+    "i18next-http-backend": "3.0.2",
     "i18next-resources-to-backend": "1.2.1",
-    "inversify": "6.2.1",
-    "mobx": "6.13.5",
+    "inversify": "6.2.2",
+    "mobx": "6.13.6",
     "react-i18next": "15.4.0"
   }
 }

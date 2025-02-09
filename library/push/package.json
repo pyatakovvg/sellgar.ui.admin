@@ -13,10 +13,10 @@
     "start": "esbuild @library/push/src/workers/push/push.worker.ts --outfile=../../clients/mobile/public/push.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch"
   },
   "dependencies": {
-    "inversify": "6.2.1"
+    "inversify": "6.2.2"
   },
   "devDependencies": {
     "@types/reflect-metadata": "0.1.0",
-    "esbuild": "0.24.2"
+    "esbuild": "0.25.0"
   }
 }

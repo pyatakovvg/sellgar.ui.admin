@@ -1,0 +1,62 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0;
+}
+
+.content {
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  min-height: 220px;
+  border: 1px solid var(--color-gray-5);
+  border-radius: var(--border-radius-md);
+  padding: 8px;
+}
+
+.files {
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex: 1 0;
+  margin: -8px;
+}
+
+.item {
+
+  display: block;
+  padding: 8px;
+}
+
+.fields {
+
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  margin: 16px 0 0;
+}
+
+.field {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  & + & {
+    margin: 24px 0 0;
+  }
+}
+
+.control {
+
+  display: block;
+  margin: 24px 0 0;
+}

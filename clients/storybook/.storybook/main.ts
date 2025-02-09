@@ -1,26 +1,19 @@
-/** @type { import('@storybook/react-webpack5').StorybookConfig } */
+import type { StorybookConfig } from '@storybook/react-vite';
 
-const config = {
+const config: StorybookConfig = {
   framework: {
     name: '@storybook/react-vite',
-    options: {
-      // ...
-    },
+    options: {},
   },
-  stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  core: {
+    builder: '@storybook/builder-vite',
+  },
+  stories: ['../stories/**/*.mdx', '../stories/**/*.stories.@(ts|tsx)'],
   addons: [
     '@storybook/addon-links',
-    '@storybook/addon-interactions',
     '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
     'storybook-css-modules',
-    {
-      name: '@storybook/addon-styling',
-      options: {
-        sass: {
-          implementation: require('sass'),
-        },
-      },
-    },
   ],
   docs: {
     autodocs: 'tag',
@@ -36,4 +29,5 @@ const config = {
     },
   },
 };
+
 export default config;

@@ -13,18 +13,16 @@ export class FileService implements FileServiceInterface {
     return this.fileGateway.findAll(filter);
   }
 
-  upload(files: FileList, folderUuid?: string) {
+  upload(files: File[], folderUuid?: string) {
     const formData = new FormData();
 
     if (folderUuid) {
       formData.append('folderUuid', folderUuid);
     }
 
-    for (let key in files) {
-      const fileList = files[key] as unknown as File[];
-      for (let index in fileList) {
-        formData.append(`files`, fileList[index]);
-      }
+    for (let index in files) {
+      const file = files[index];
+      formData.append(`files`, file);
     }
 
     return this.fileGateway.upload(formData);

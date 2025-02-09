@@ -17,7 +17,7 @@ type SingleFile = IProps & {
   onChange(file: File): void;
 };
 
-export const InputFiles: React.FC<SingleFile | MultipleFiles> = (props) => {
+export const InputFiles: React.FC<React.PropsWithChildren<SingleFile | MultipleFiles>> = (props) => {
   const handleChooseFiles = () => {
     const input = document.createElement('input');
 
@@ -41,6 +41,16 @@ export const InputFiles: React.FC<SingleFile | MultipleFiles> = (props) => {
 
     input.click();
   };
+
+  if (props.children) {
+    return React.Children.map(props.children, (child) => {
+      if (React.isValidElement<React.HTMLProps<HTMLElement>>(child)) {
+        return React.cloneElement(child, {
+          onClick: handleChooseFiles,
+        });
+      }
+    });
+  }
 
   return (
     <ButtonContext onClick={handleChooseFiles} disabled={props.disabled}>

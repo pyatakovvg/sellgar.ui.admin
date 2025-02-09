@@ -3,7 +3,9 @@ import { UnauthorizedException } from '@library/domain';
 
 import { useNavigate } from './useNavigate';
 
-export const useRequest = <T, R>(callback: (...args: T[]) => Promise<R>): ((...args: T[]) => Promise<R>) => {
+export const useRequest = <T extends any, R>(
+  callback: (...args: T[]) => Promise<R>,
+): ((...args: T[]) => Promise<R>) => {
   const navigate = useNavigate();
 
   return async (...args: any[]) => {

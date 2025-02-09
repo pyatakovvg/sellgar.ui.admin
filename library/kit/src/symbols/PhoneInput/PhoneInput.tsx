@@ -5,10 +5,10 @@ import { Input } from '../Input';
 import { EMode } from '../../kit.types.ts';
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  ref?: React.RefObject<HTMLInputElement> | React.RefCallback<HTMLInputElement>;
   mode?: EMode.PRIMARY | EMode.DANGER | EMode.SUCCESS;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  defaultValue?: string;
 }
 
 const defaultOptions = {
@@ -16,15 +16,21 @@ const defaultOptions = {
   replacement: { _: /\d/ },
 };
 
-const PhoneInputComponent = React.forwardRef<HTMLInputElement, IProps>((props, ref) => {
+const PhoneInputComponent: React.FC<IProps> = (props) => {
   const inputRef = useMask({
     ...defaultOptions,
   });
 
-  React.useImperativeHandle(ref, () => inputRef.current!);
+  React.useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.value = format(inputRef.current?.value, defaultOptions);
+    }
+  }, [inputRef]);
 
-  return <Input ref={inputRef} {...props} />;
-});
+  React.useImperativeHandle(props.ref, () => inputRef.current);
+
+  return <Input {...props} ref={inputRef} />;
+};
 
 type TPhoneInput = typeof PhoneInputComponent & {
   format(value: string): string;

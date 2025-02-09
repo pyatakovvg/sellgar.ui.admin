@@ -1,20 +1,6 @@
 /** @type { import('@storybook/react').Preview } */
 
-import { useEffect, useGlobals } from '@storybook/addons';
-
 import '@library/kit/src/theme/themes.scss';
-
-export const decorators = [
-  (StoryFn: any) => {
-    const [{ theme }] = useGlobals();
-
-    useEffect(() => {
-      document.querySelector('html')!.dataset.theme = theme || 'light';
-    }, [theme]);
-
-    return StoryFn();
-  },
-];
 
 export const globalTypes = {
   theme: {

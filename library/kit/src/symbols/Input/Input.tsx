@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 
 import { FieldWrapper } from '../_parts/FieldWrapper';
@@ -15,7 +13,7 @@ interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   rightIcon?: React.ReactNode;
 }
 
-export const Input: React.FC<IProps> = ({ ref, mode, leftIcon, rightIcon, ...props }) => {
+export const Input: React.FC<IProps> = ({ mode, leftIcon, rightIcon, ...props }) => {
   const className = React.useMemo(
     () =>
       cn(s.wrapper, props.className, {
@@ -37,7 +35,7 @@ export const Input: React.FC<IProps> = ({ ref, mode, leftIcon, rightIcon, ...pro
     <FieldWrapper mode={mode} disabled={props.disabled}>
       <div className={className} data-theme="input">
         {leftIcon && <div className={s.icon}>{leftIcon}</div>}
-        <input ref={ref} {...props} className={elementClassName} />
+        <input {...props} className={elementClassName} />
         {rightIcon && <div className={s.icon}>{rightIcon}</div>}
       </div>
     </FieldWrapper>

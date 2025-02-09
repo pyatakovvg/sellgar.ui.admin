@@ -11,6 +11,7 @@ export { ButtonContext } from './symbols/ButtonContext';
 export { Spinner } from './symbols/Spinner';
 export { Skeleton } from './symbols/Skeleton';
 export { Icon } from './symbols/Icon';
+export { IconBox } from './symbols/IconBox';
 export { Checkbox } from './symbols/Checkbox';
 export { ErrorMessage } from './symbols/ErrorMessage';
 export { Scroller } from './symbols/Scroller';

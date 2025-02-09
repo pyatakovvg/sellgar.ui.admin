@@ -4,5 +4,5 @@ import { FileEntity, FileResultEntity } from '../file.entity.ts';
 
 export abstract class FileServiceInterface {
   abstract findAll(filter: GetAllFileFilterDto): Promise<FileResultEntity>;
-  abstract upload(files: FileList, folderUuid?: string): Promise<FileEntity>;
+  abstract upload(files: File[], folderUuid?: string): Promise<FileEntity[]>;
 }
