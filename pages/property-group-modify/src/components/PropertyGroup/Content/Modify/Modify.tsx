@@ -13,7 +13,6 @@ import { useCreateBrandRequest } from '../../../../hooks/create-brand-request.ho
 import { useUpdateBrandRequest } from '../../../../hooks/update-brand-request.hook.ts';
 
 export const Modify = observer(() => {
-  const navigate = useNavigate();
   const changeBreadcrumb = useChangeBreadcrumb();
 
   const data = useGetBrandData();

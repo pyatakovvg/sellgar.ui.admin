@@ -1,7 +1,4 @@
-import { Button } from '@library/kit';
-
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 
 import { Table } from './Table';
 

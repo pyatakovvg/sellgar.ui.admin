@@ -1,5 +1,5 @@
 import { Logo, Text } from '@library/kit';
-import { useLoadLanguageDictionary, Trans, useTranslation } from '@library/lng';
+import { Trans, useTranslation } from '@library/lng';
 
 import React from 'react';
 

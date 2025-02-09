@@ -1,4 +1,4 @@
-import { BrandEntity, CategoryEntity, PriceEntity, ProductEntity, PropertyEntity } from '@library/domain';
+import { BrandEntity, CategoryEntity, PriceEntity, PropertyEntity } from '@library/domain';
 
 import { CreateProductDto } from '../store/form/dto/create-product.dto.ts';
 import { UpdateProductDto } from '../store/form/dto/update-product.dto.ts';

@@ -12,7 +12,7 @@ import { ProductVariantDto } from '../../../../../../classes/store/form/dto/prod
 import s from './default.module.scss';
 
 export const Variants: React.FC = () => {
-  const { control, register } = useFormContext<CreateProductDto | UpdateProductDto>();
+  const { control } = useFormContext<CreateProductDto | UpdateProductDto>();
   const { fields, append, remove } = useFieldArray({
     name: 'variants',
     control,

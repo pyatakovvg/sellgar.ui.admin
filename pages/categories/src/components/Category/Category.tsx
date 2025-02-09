@@ -1,7 +1,4 @@
-import { Button, Heading } from '@library/kit';
-
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 
 import { Proxy } from './Proxy';
 import { Header } from './Header';

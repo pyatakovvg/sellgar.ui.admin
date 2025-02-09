@@ -1,4 +1,4 @@
-import { HttpException, ProductEntity, ProductServiceInterface } from '@library/domain';
+import { HttpException, ProductServiceInterface } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
 import { makeObservable, observable, action } from 'mobx';

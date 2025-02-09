@@ -1,4 +1,4 @@
-import { Heading, Spinner } from '@library/kit';
+import { Spinner } from '@library/kit';
 
 import React from 'react';
 

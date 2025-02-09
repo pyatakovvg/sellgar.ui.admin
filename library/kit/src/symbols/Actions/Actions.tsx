@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export const Actions: React.FC<React.PropsWithChildren<IProps>> = (props) => {
-  const [isFocus, setFocus] = React.useState(false);
+  const [_, setFocus] = React.useState(false);
 
   return (
     <div className={s.wrapper}>

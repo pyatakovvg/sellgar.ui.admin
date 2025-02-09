@@ -1,3 +1,5 @@
+import { PriceEntity } from '@library/domain';
+
 import { inject, injectable } from 'inversify';
 
 import { FormStoreInterface } from '../store/form/form-store.interface.ts';
@@ -7,7 +9,6 @@ import { ProductStoreInterface } from '../store/product/product-store.interface.
 
 import { CreateProductDto } from '../store/form/dto/create-product.dto.ts';
 import { UpdateProductDto } from '../store/form/dto/update-product.dto.ts';
-import { PriceEntity, ProductEntity } from '@library/domain';
 
 @injectable()
 export class ProductPresenter implements ProductPresenterInterface {

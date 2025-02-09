@@ -4,7 +4,6 @@ import { observer } from 'mobx-react';
 import { Form } from './Form';
 
 import { CreateProductDto } from '../../../../classes/store/form/dto/create-product.dto.ts';
-import { UpdateProductDto } from '../../../../classes/store/form/dto/update-product.dto.ts';
 
 import { useGetParams } from '../../../../hooks/get-params.hook.ts';
 import { useGetFormInProcess } from '../../../../hooks/get-form-in-process.hook.ts';

@@ -1,4 +1,4 @@
-import { HttpException, ProductEntity } from '@library/domain';
+import { HttpException } from '@library/domain';
 
 import { CreateProductDto } from './dto/create-product.dto.ts';
 import { UpdateProductDto } from './dto/update-product.dto.ts';

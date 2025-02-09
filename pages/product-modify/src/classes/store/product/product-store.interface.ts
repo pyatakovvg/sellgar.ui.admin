@@ -1,4 +1,4 @@
-import { HttpException, BrandEntity, ProductEntity, CategoryEntity, PropertyEntity } from '@library/domain';
+import { HttpException, BrandEntity, CategoryEntity, PropertyEntity } from '@library/domain';
 
 export abstract class ProductStoreInterface {
   abstract inProcess: boolean;

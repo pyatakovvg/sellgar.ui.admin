@@ -31,9 +31,6 @@ export const ShowPrice: React.FC<IProps> = (props) => {
   const direction = React.useMemo(() => {
     return directionPriceStatus(props.data.value, props.prevPrice?.value);
   }, [props.data, props.prevPrice]);
-  const difference = React.useMemo(() => {
-    return props.prevPrice?.value ? Math.abs(props.data.value - props.prevPrice.value) : 0;
-  }, [props.data, props.prevPrice]);
 
   return (
     <div className={s.wrapper}>
