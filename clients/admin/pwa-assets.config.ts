@@ -2,9 +2,9 @@ import { defineConfig } from '@vite-pwa/assets-generator/config';
 
 export default defineConfig({
   headLinkOptions: {
-    preset: '2023',
+    preset: 'default',
   },
   manifestIconsEntry: true,
   preset: 'minimal-2023',
-  images: ['public/SVG_Logo.svg.png'],
+  images: ['public/pwa/SVG_Logo.svg.png'],
 });

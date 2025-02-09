@@ -7,7 +7,6 @@
   "scripts": {
     "start": "vite --force --port=3000",
     "build": "echo '>-Start build \"@client/admin\"->' && tsc && vite build && echo '<-Finished build \"@client/admin\"-<'",
-    "lint": "eslint vite --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "generate-pwa-assets": "pwa-assets-generator"
   },
