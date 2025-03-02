@@ -1,3 +1,5 @@
+import { FieldWrapper, LabelField, CaptionField } from '@sellgar/kit';
+
 import React from 'react';
 
 import { Label } from '../../typography/Label';
@@ -12,25 +14,25 @@ interface IProps {
 
 export const Field: React.FC<React.PropsWithChildren<IProps>> = (props) => {
   return (
-    <div className={s.wrapper}>
+    <FieldWrapper>
       {props.label && (
-        <div className={s.label}>
-          <Label>{props.label}</Label>
-        </div>
+        <FieldWrapper.Label>
+          <LabelField label={props.label} />
+        </FieldWrapper.Label>
       )}
-      <div className={s.content}>
+      <FieldWrapper.Content>
         {React.Children.map(props.children, (child) => {
           if (React.isValidElement(child)) {
             return React.cloneElement(child);
           }
           return child;
         })}
-      </div>
+      </FieldWrapper.Content>
       {props.error && (
-        <div className={s.error}>
-          <ErrorMessage>{props.error}</ErrorMessage>
-        </div>
+        <FieldWrapper.Caption>
+          <CaptionField leadicon={'error-warning-line'} caption={props.error} state={'destructive'} />
+        </FieldWrapper.Caption>
       )}
-    </div>
+    </FieldWrapper>
   );
 };

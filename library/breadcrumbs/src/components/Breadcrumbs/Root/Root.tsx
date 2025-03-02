@@ -1,4 +1,4 @@
-import { Icon } from '@library/kit';
+import { Breadcrumb } from '@sellgar/kit';
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -10,7 +10,7 @@ interface IProps {}
 export const Root: React.FC<React.PropsWithChildren<IProps>> = () => {
   return (
     <NavLink className={s.wrapper} to={'/'}>
-      <Icon icon={'house'} size={20} />
+      <Breadcrumb leadicon={'home-line'} label={'Главная'} showdivider={true} />
     </NavLink>
   );
 };

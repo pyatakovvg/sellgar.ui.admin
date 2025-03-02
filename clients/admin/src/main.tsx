@@ -1,7 +1,8 @@
+import '@sellgar/kit/font.css';
+import '@sellgar/kit/theme.css';
+
 import 'reflect-metadata';
 import { registerSW } from 'virtual:pwa-register';
-
-import('@library/kit/src/theme/themes.scss');
 
 import('./bootstrap');
 import('./styles/index.module.scss');

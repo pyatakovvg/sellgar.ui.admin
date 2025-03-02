@@ -1,3 +1,4 @@
-export { Logotype } from './components/logotype';
+export * from './components/logotype';
+export * from './components/underlay';
 
-export { Upload } from './forms/upload';
+export * from './forms/upload';

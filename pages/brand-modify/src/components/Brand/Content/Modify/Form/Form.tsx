@@ -1,5 +1,6 @@
 import { BrandEntity } from '@library/domain';
-import { Field, Input, Textarea, Button } from '@library/kit';
+import { Field, Textarea } from '@library/kit';
+import { Input, Button } from '@sellgar/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -30,23 +31,23 @@ export const Form: React.FC<IProps> = observer((props) => {
     <form className={s.wrapper} onSubmit={onSubmit}>
       <div className={s.fields}>
         <div className={s.field}>
-          <Field error={errors.name?.message}>
-            <Input {...register('code')} placeholder={'Код'} />
+          <Field label={'Код'} error={errors.name?.message}>
+            <Input {...register('code')} size={'md'} placeholder={'Код'} />
           </Field>
         </div>
         <div className={s.field}>
-          <Field error={errors.name?.message}>
-            <Input {...register('name')} placeholder={'Наименование'} />
+          <Field label={'Наименование'} error={errors.name?.message}>
+            <Input {...register('name')} size={'md'} placeholder={'Наименование'} />
           </Field>
         </div>
         <div className={s.field}>
-          <Field error={errors.description?.message}>
+          <Field label={'Описание'} error={errors.description?.message}>
             <Textarea {...register('description')} placeholder={'Описание'} />
           </Field>
         </div>
       </div>
       <div className={s.control}>
-        <Button type={'submit'} inProcess={inProcess}>
+        <Button type={'submit'} disabled={inProcess}>
           Сохранить
         </Button>
       </div>

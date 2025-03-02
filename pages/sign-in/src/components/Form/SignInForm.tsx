@@ -1,4 +1,5 @@
-import { Button, Input, Icon, Text, Description, Field } from '@library/kit';
+import { Field } from '@library/kit';
+import { Button, Input } from '@sellgar/kit';
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -32,14 +33,12 @@ export const SignInForm: React.FC<IFormProps> = (props) => {
   return (
     <form className={s.wrapper} onSubmit={onSubmit}>
       <div className={s.content}>
-        <div className={s.head}>
-          <Text>Введите данные выданные вашим администрацией или полученные по почте</Text>
-        </div>
         <div className={s.row}>
           <Field error={errors.email?.message}>
             <Input
               {...register('email')}
-              leftIcon={<Icon icon={'alternate_email'} size={20} />}
+              leadicon={'at-line'}
+              size={'md'}
               autoFocus
               type={'phone'}
               name={'email'}
@@ -52,7 +51,8 @@ export const SignInForm: React.FC<IFormProps> = (props) => {
           <Field error={errors.password?.message}>
             <Input
               {...register('password')}
-              leftIcon={<Icon icon={'lock_outline'} size={20} />}
+              leadicon={'lock-2-line'}
+              size={'md'}
               type={'password'}
               name={'password'}
               placeholder={'Пароль'}
@@ -61,11 +61,10 @@ export const SignInForm: React.FC<IFormProps> = (props) => {
           </Field>
         </div>
       </div>
-      <div className={s.description}>
-        <Description>Убедитесь в правильности введенных данных и держите их в полном секрете</Description>
-      </div>
       <div className={s.control}>
-        <Button inProcess={props.inProcess}>Войти</Button>
+        <Button style={'primary'} size={'md'}>
+          Войти
+        </Button>
       </div>
     </form>
   );

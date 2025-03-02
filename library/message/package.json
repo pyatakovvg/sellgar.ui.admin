@@ -12,14 +12,14 @@
     "@library/kit": "0.0.1",
     "@utils/generate": "0.0.1",
     "classnames": "2.5.1",
-    "inversify": "6.2.2",
+    "inversify": "7.0.1",
     "mobx": "6.13.6",
     "mobx-react": "9.2.0",
     "react": "19.0.0"
   },
   "devDependencies": {
-    "@types/react": "19.0.8",
-    "@types/react-dom": "19.0.3",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
     "@types/reflect-metadata": "0.1.0"
   }
 }

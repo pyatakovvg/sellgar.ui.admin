@@ -16,41 +16,35 @@ interface IProps {
 export const Table: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
-      <Underlay>
-        <div className={s.container}>
-          <TableComponent
-            data={props.data}
-            columns={[
-              {
-                id: 'name',
-                header: 'Наименование',
-                cell: (cell) => <Name deps={cell.row.depth}>{cell.getValue()}</Name>,
-                accessorKey: 'name',
-                size: 320,
-              },
-              {
-                id: 'description',
-                accessorKey: 'description',
-                header: 'Описание',
-                size: 480,
-                enableResizing: false,
-                cell: (cell) => <Info>{cell.getValue()}</Info>,
-              },
-              {
-                id: 'actions',
-                size: 40,
-                enableResizing: false,
-                header: () => false,
-                cell: ({ row }) => <CrudActions data={row.original} />,
-              },
-            ]}
-            resizing={{
-              enableColumnResizing: true,
-              columnResizeMode: 'onChange',
-            }}
-          />
-        </div>
-      </Underlay>
+      <div className={s.container}>
+        <TableComponent
+          data={props.data}
+          columns={[
+            {
+              id: 'name',
+              size: 280,
+              header: 'Наименование',
+              cell: (cell) => <Name deps={cell.row.depth}>{cell.getValue()}</Name>,
+              accessorKey: 'name',
+            },
+            {
+              id: 'description',
+              size: 420,
+              accessorKey: 'description',
+              header: 'Описание',
+              enableResizing: false,
+              cell: (cell) => <Info>{cell.getValue()}</Info>,
+            },
+            {
+              id: 'actions',
+              size: 48,
+              enableResizing: false,
+              header: () => false,
+              cell: ({ row }) => <CrudActions data={row.original} />,
+            },
+          ]}
+        />
+      </div>
     </div>
   );
 };

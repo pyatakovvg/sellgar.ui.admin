@@ -1,4 +1,4 @@
-import { Heading } from '@library/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -24,7 +24,9 @@ export const Brand = () => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <Heading variant={'H3'}>{params.uuid ? 'Редактировать' : 'Создать'}</Heading>
+        <Typography size={'h6'} weight={'semi-bold'}>
+          <h6>{params.uuid ? 'Редактировать' : 'Создать'}</h6>
+        </Typography>
       </div>
       <div className={s.content}>
         <Content />

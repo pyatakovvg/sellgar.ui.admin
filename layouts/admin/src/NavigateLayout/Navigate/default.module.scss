@@ -1,27 +1,4 @@
-.wrapper {
-
-  display: flex;
-  flex-direction: column;
-  flex: 1 0;
-  height: 100%;
-  padding: 24px;
-  background: var(--color-white);
-}
-
-.menu {
-
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 auto;
-}
-
 .link {
 
-  display: flex;
-  flex-direction: column;
-  flex: 1 0;
-
-  & + & {
-    margin: 16px 0 0;
-  }
+  text-decoration: none;
 }

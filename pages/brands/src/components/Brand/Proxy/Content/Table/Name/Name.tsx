@@ -1,4 +1,4 @@
-import { Text } from '@library/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -11,7 +11,9 @@ interface IProps {
 export const Name: React.FC<React.PropsWithChildren<IProps>> = (props) => {
   return (
     <div className={s.wrapper} style={{ marginLeft: props.deps * 24 }}>
-      <Text>{props.children}</Text>
+      <Typography size={'caption-l'} weight={'semi-bold'}>
+        <p>{props.children}</p>
+      </Typography>
     </div>
   );
 };

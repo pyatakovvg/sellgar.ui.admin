@@ -66,29 +66,31 @@ export const Table = <TData extends RowData>(props: React.PropsWithChildren<IPro
   }, []);
 
   return (
-    <table className={s.wrapper}>
-      <thead className={s.header}>
-        {table.getHeaderGroups().map((headerGroup) => {
-          return (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return <Header key={header.id} header={header} />;
-              })}
-            </tr>
-          );
-        })}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => {
-          return (
-            <tr key={row.id} className={s.row}>
-              {row.getVisibleCells().map((cell) => {
-                return <Cell key={cell.id} cell={cell} />;
-              })}
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <div className={s.wrapper}>
+      <table className={s.table}>
+        <thead className={s.header}>
+          {table.getHeaderGroups().map((headerGroup) => {
+            return (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return <Header key={header.id} header={header} />;
+                })}
+              </tr>
+            );
+          })}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <tr key={row.id} className={s.row}>
+                {row.getVisibleCells().map((cell) => {
+                  return <Cell key={cell.id} cell={cell} />;
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 };

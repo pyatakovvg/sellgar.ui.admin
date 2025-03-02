@@ -1,4 +1,5 @@
-import { Heading, Underlay } from '@library/kit';
+import { Underlay } from '@admin/design';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -25,12 +26,14 @@ export const SignInView = observer(() => {
   };
 
   return (
-    <div className={s.wrapper}>
+    <div className={s.wrapper} data-page={'sign-in'}>
       <div className={s.container}>
         <Underlay>
           <div className={s.content}>
             <div className={s.header}>
-              <Heading variant={'H3'}>Авторизация</Heading>
+              <Typography size={'h6'} weight={'semi-bold'}>
+                <h6>Авторизация</h6>
+              </Typography>
             </div>
             <div className={s.form}>
               <SignInForm inProcess={inProcess} onSubmit={handleSubmit} />

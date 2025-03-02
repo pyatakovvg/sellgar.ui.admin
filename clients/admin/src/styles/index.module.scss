@@ -1,23 +1,15 @@
 :global {
 
-  html,
-  body {
-
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    flex: 1 0;
-    height: 100%;
-    overflow: auto;
-  }
-
   #root {
 
     position: relative;
     display: flex;
-    flex: 1 0;
     flex-direction: column;
-    overflow: auto;
+    flex: 1 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: var(--background-surface-neutral);
     z-index: 10;
   }
 }

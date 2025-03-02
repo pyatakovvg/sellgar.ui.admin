@@ -49,11 +49,13 @@ export const Breadcrumbs = observer(() => {
         return (
           <div key={index} className={s.item}>
             {index < breadcrumbs.length - 1 ? (
-              <NavLabel href={breadcrumb.params.href!} inProcess={breadcrumb.inProcess}>
-                {breadcrumb.params.label}
-              </NavLabel>
+              <NavLabel
+                href={breadcrumb.params.href!}
+                label={breadcrumb.params.label}
+                inProcess={breadcrumb.inProcess}
+              />
             ) : (
-              <Label inProcess={breadcrumb.inProcess}>{breadcrumb.params.label}</Label>
+              <Label label={breadcrumb.params.label} inProcess={breadcrumb.inProcess} />
             )}
           </div>
         );

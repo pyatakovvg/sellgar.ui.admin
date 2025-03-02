@@ -1,7 +1,7 @@
 import React from 'react';
 import { Header as IHeader, RowData, Column, flexRender } from '@tanstack/react-table';
 
-import { Text } from '../../../typography/Text';
+import { Typography } from '@sellgar/kit';
 
 import { getCommonPinningStyles } from '../table.utils.ts';
 
@@ -28,7 +28,9 @@ export const Header = <TData extends RowData, TValue>(props: IProps<TData, TValu
             [s['mode--left']]: true,
           })}
         >
-          <Text variant={'compact'}>{flexRender(props.header.column.columnDef.header, props.header.getContext())}</Text>
+          <Typography size={'caption-l'} weight={'medium'}>
+            <p>{flexRender(props.header.column.columnDef.header, props.header.getContext())}</p>
+          </Typography>
         </div>
       )}
       {props.header.column.getCanResize() && (

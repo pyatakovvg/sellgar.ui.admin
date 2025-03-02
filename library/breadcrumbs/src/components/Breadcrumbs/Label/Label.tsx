@@ -1,4 +1,4 @@
-import { Text } from '@library/kit';
+import { Breadcrumb } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -6,6 +6,7 @@ import s from './default.module.scss';
 
 interface IProps {
   inProcess: boolean;
+  label: string;
 }
 
 export const Label: React.FC<React.PropsWithChildren<IProps>> = (props) => {
@@ -14,7 +15,7 @@ export const Label: React.FC<React.PropsWithChildren<IProps>> = (props) => {
   }
   return (
     <div className={s.wrapper}>
-      <Text>{props.children}</Text>
+      <Breadcrumb active={true} label={props.label} showdivider={false} />
     </div>
   );
 };

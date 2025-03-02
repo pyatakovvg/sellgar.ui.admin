@@ -1,0 +1,10 @@
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  border-radius: var(--measurements-radius-xxxl);
+  border: var(--numbers-1) solid var(--border-base-alpha);
+  background: var(--background-surface-default);
+  box-shadow: var(--measurements-shadow-xs);
+}
