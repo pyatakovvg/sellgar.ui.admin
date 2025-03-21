@@ -1,5 +1,6 @@
 import { CategoryEntity } from '@library/domain';
-import { Field, Input, Textarea, TreeSelect, Button } from '@library/kit';
+import { Input, Textarea, Button } from '@sellgar/kit';
+import { Field, TreeSelect } from '@library/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';

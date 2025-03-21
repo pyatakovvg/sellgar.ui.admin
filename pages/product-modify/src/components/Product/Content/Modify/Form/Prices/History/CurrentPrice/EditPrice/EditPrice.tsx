@@ -1,4 +1,5 @@
 import { Field, Icon, AmountInput } from '@library/kit';
+import { Input } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -24,10 +25,10 @@ export const EditPrice: React.FC<IProps> = (props) => {
           control={control}
           render={({ field, fieldState: { error } }) => (
             <Field error={error?.message}>
-              <AmountInput
+              <Input
                 ref={field.ref}
                 defaultValue={props.value}
-                rightIcon={
+                tailIcon={
                   props.onReset && (
                     <div className={s.reset} onClick={props.onReset}>
                       <Icon icon={'clear'} size={18} />

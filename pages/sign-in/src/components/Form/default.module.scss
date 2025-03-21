@@ -11,32 +11,19 @@
   display: block;
 }
 
-.control {
-
-  display: flex;
-  flex-direction: column;
-  flex: 1 0;
-  margin: 32px 0 0;
-}
-
 .row {
 
   display: block;
 
   & + & {
-    margin: 24px 0 0;
+    margin: var(--numbers-16) 0 0;
   }
 }
 
-.description {
+.control {
 
-  display: block;
-  margin: 24px 0 0;
-}
-
-.registry {
-
-  display: block;
-  margin: 24px 0 0;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  margin: var(--numbers-16) 0 0;
 }

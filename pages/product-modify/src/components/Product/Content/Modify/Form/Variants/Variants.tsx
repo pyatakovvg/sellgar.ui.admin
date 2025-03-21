@@ -1,4 +1,4 @@
-import { ButtonContext, EMode, ESize, Heading, Text } from '@library/kit';
+import { Typography, Button, Icon } from '@sellgar/kit';
 
 import React from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
@@ -20,11 +20,12 @@ export const Variants: React.FC = () => {
 
   return (
     <div className={s.wrapper}>
-      <div className={s.header}>
-        <Heading variant={'H4'}>Варианты</Heading>
-      </div>
       <div className={s.content}>
-        {!fields.length && <Text>У товара нет вариантов</Text>}
+        {!fields.length && (
+          <Typography size={'body-m'} weight={'medium'}>
+            <p>У товара нет вариантов</p>
+          </Typography>
+        )}
         {fields.map((field, index) => {
           return (
             <div key={field?.uuid ?? index} className={s.variant}>
@@ -34,9 +35,14 @@ export const Variants: React.FC = () => {
         })}
       </div>
       <div className={s.control}>
-        <ButtonContext size={ESize.SM} mode={EMode.SUCCESS} onClick={() => append(new ProductVariantDto())}>
+        <Button
+          size={'sm'}
+          style={'tertiary'}
+          leadIcon={<Icon icon={'add-fill'} />}
+          onClick={() => append(new ProductVariantDto())}
+        >
           Добавить вариант
-        </ButtonContext>
+        </Button>
       </div>
     </div>
   );

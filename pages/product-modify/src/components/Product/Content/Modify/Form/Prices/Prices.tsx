@@ -6,6 +6,7 @@ import { History } from './History';
 
 export const Prices: React.FC = () => {
   const { uuid } = useParams();
+
   const [isEdit, setEdit] = React.useState(!uuid);
 
   if (isEdit) {

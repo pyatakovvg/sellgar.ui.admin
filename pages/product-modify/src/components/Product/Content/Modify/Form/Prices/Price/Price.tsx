@@ -1,4 +1,4 @@
-import { Heading } from '@library/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -10,7 +10,9 @@ export const Price: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <Heading variant={'H4'}>Цена</Heading>
+        <Typography size={'body-m'} weight={'semi-bold'}>
+          <p>Цена</p>
+        </Typography>
       </div>
       <div className={s.content}>
         <EditPrice value={0} />

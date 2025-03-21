@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Spinner } from '../Spinner';
+import { Spinner } from '@sellgar/kit';
 import { Text } from '../../typography/Text';
 
 import { EMode } from '../../kit.types.ts';
@@ -35,7 +35,7 @@ export const Button: React.FC<React.PropsWithChildren<IProps>> = ({ mode, inProc
       <Text>{props.children}</Text>
       {inProcess && (
         <div className={s.spinner}>
-          <Spinner variant={'DOTTED'} />
+          <Spinner />
         </div>
       )}
     </button>

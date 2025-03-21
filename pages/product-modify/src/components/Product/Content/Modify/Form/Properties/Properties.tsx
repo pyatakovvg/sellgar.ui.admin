@@ -1,4 +1,5 @@
-import { ButtonContext, EMode, ESize, Heading, Text, Underlay } from '@library/kit';
+import { Heading, Text, Underlay } from '@library/kit';
+import { Button, Icon, Card } from '@sellgar/kit';
 
 import React from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
@@ -20,11 +21,8 @@ export const Properties: React.FC = () => {
   });
 
   return (
-    <Underlay>
+    <Card target={'inverted'}>
       <div className={s.wrapper}>
-        <div className={s.header}>
-          <Heading variant={'H4'}>Свойства</Heading>
-        </div>
         <div className={s.content}>
           {!fields.length && <Text>У товара нет свойств</Text>}
           {fields.map((field, index) => {
@@ -36,11 +34,16 @@ export const Properties: React.FC = () => {
           })}
         </div>
         <div className={s.control}>
-          <ButtonContext size={ESize.SM} mode={EMode.SUCCESS} onClick={() => append(new ProductPropertyDto())}>
+          <Button
+            style={'secondary'}
+            size={'sm'}
+            leadIcon={<Icon icon={'add-fill'} />}
+            onClick={() => append(new ProductPropertyDto())}
+          >
             Добавить свойство
-          </ButtonContext>
+          </Button>
         </div>
       </div>
-    </Underlay>
+    </Card>
   );
 };

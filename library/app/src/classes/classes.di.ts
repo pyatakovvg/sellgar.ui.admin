@@ -29,4 +29,4 @@ container.bind<ApplicationStore>(ApplicationStoreSymbol).to(ApplicationStore);
 container.bind<ProfileServiceInterface>(ProfileServiceInterface).to(ProfileService);
 container.bind<ProfileGatewayInterface>(ProfileGatewayInterface).to(ProfileGateway);
 
-export { container };
+export const controller = container.get<ApplicationPresenter>(ApplicationPresenterSymbol);

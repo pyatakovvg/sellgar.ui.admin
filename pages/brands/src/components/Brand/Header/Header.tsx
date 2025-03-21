@@ -1,4 +1,4 @@
-import { Typography, Button } from '@sellgar/kit';
+import { Typography, Icon, Button } from '@sellgar/kit';
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -15,7 +15,7 @@ export const Header = () => {
       </div>
       <div>
         <NavLink to={'/brands/create'}>
-          <Button leadicon={'add-fill'} size={'sm'}>
+          <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'}>
             Добавить бренд
           </Button>
         </NavLink>

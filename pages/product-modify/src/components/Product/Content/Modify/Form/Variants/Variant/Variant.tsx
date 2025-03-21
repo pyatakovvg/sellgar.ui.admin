@@ -1,4 +1,5 @@
-import { Field, Icon, Input, Textarea, Underlay } from '@library/kit';
+import { Field } from '@library/kit';
+import { Icon, Input, Textarea, Card } from '@sellgar/kit';
 
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -22,11 +23,11 @@ export const Variant: React.FC<IProps> = (props) => {
   } = useFormContext<CreateProductDto | UpdateProductDto>();
 
   return (
-    <Underlay>
+    <Card target={'inverted'}>
       <div className={s.wrapper}>
         <div className={s.delete}>
           <span onClick={props.onDelete}>
-            <Icon icon={'clear'} size={18} />
+            <Icon icon={'close-line'} />
           </span>
         </div>
         <div className={s.content}>
@@ -51,6 +52,6 @@ export const Variant: React.FC<IProps> = (props) => {
           </div>
         </div>
       </div>
-    </Underlay>
+    </Card>
   );
 };

@@ -1,4 +1,3 @@
-import { useNavigate } from '@library/app';
 import { PropertyGroupEntity } from '@library/domain';
 import { useChangeBreadcrumb } from '@library/breadcrumbs';
 

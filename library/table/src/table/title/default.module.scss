@@ -1,0 +1,31 @@
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  justify-content: center;
+  padding: 0 var(--numbers-12);
+  color: var(--text-base-secondary);
+  min-height: 40px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.mode {
+  &--left {
+    text-align: left;
+  }
+}
+
+.resize {
+
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 5px;
+  background: var(--color-gray-10);
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+}

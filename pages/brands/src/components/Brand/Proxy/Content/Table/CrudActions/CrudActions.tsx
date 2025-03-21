@@ -1,4 +1,4 @@
-import { ButtonIcon } from '@sellgar/kit';
+import { ButtonIcon, Icon } from '@sellgar/kit';
 import { BrandEntity } from '@library/domain';
 
 import React from 'react';
@@ -23,7 +23,12 @@ export const CrudActions: React.FC<IProps> = (props) => {
 
   return (
     <div className={s.wrapper}>
-      <ButtonIcon style={'ghost'} size={'sm'} icon={'more-2-fill'} onClick={() => handleClick('edit')} />
+      <ButtonIcon
+        style={'ghost'}
+        size={'sm'}
+        icon={<Icon icon={'more-2-fill'} />}
+        onClick={() => handleClick('edit')}
+      />
     </div>
   );
 };

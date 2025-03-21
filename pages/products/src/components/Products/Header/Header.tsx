@@ -1,6 +1,7 @@
-import { Heading, Link } from '@library/kit';
+import { Typography, Button, Icon } from '@sellgar/kit';
 
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 import s from './default.module.scss';
 
@@ -8,10 +9,16 @@ export const Header = () => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <Heading variant={'H3'}>Товары</Heading>
+        <Typography size={'h6'} weight={'semi-bold'}>
+          <h6>Товары</h6>
+        </Typography>
       </div>
-      <div>
-        <Link href={'/products/create'}>Добавить товар</Link>
+      <div className={s.content}>
+        <NavLink to={'/products/create'}>
+          <Button size={'sm'} leadIcon={<Icon icon={'add-line'} />}>
+            Добавить товар
+          </Button>
+        </NavLink>
       </div>
     </div>
   );

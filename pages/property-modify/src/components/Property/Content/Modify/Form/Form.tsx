@@ -1,5 +1,6 @@
 import { PropertyEntity } from '@library/domain';
-import { Field, Input, Textarea, Button, SimpleSelect } from '@library/kit';
+import { Field } from '@library/kit';
+import { Input, Textarea, Button, Select } from '@sellgar/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -49,7 +50,7 @@ export const Form: React.FC<IProps> = observer((props) => {
             render={({ field }) => {
               return (
                 <Field label={'Группа'} error={errors.groupUuid?.message}>
-                  <SimpleSelect
+                  <Select
                     optionKey={'uuid'}
                     optionValue={'name'}
                     options={groups}
@@ -84,7 +85,7 @@ export const Form: React.FC<IProps> = observer((props) => {
             render={({ field }) => {
               return (
                 <Field label={'Тип'} error={errors.type?.message}>
-                  <SimpleSelect
+                  <Select
                     optionKey={'code'}
                     optionValue={'name'}
                     options={types}
@@ -104,12 +105,12 @@ export const Form: React.FC<IProps> = observer((props) => {
             render={({ field }) => {
               return (
                 <Field label={'Размерность'} error={errors.unitUuid?.message}>
-                  <SimpleSelect
+                  <Select
                     isClearable={true}
                     optionKey={'uuid'}
                     optionValue={'name'}
                     options={units}
-                    value={field.value}
+                    value={field.value ?? undefined}
                     onBlur={field.onBlur}
                     onChange={field.onChange}
                   />
@@ -120,7 +121,7 @@ export const Form: React.FC<IProps> = observer((props) => {
         </div>
       </div>
       <div className={s.control}>
-        <Button type={'submit'} inProcess={inProcess}>
+        <Button type={'submit'} disabled={inProcess}>
           Сохранить
         </Button>
       </div>

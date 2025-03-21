@@ -9,14 +9,15 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
-    "@sellgar/kit": "0.0.32",
+    "@sellgar/kit": "0.0.96",
     "classnames": "2.5.1",
-    "mobx": "6.13.6",
+    "mobx": "6.13.7",
     "mobx-react": "9.2.0",
-    "react": "19.0.0"
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   },
   "devDependencies": {
-    "@types/react": "19.0.10",
+    "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
     "@types/reflect-metadata": "0.1.0"
   }

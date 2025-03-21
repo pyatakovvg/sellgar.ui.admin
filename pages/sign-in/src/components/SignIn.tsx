@@ -1,4 +1,4 @@
-import { Underlay } from '@admin/design';
+import { Underlay } from '@library/design';
 import { Typography } from '@sellgar/kit';
 
 import React from 'react';
@@ -28,18 +28,16 @@ export const SignInView = observer(() => {
   return (
     <div className={s.wrapper} data-page={'sign-in'}>
       <div className={s.container}>
-        <Underlay>
-          <div className={s.content}>
-            <div className={s.header}>
-              <Typography size={'h6'} weight={'semi-bold'}>
-                <h6>Авторизация</h6>
-              </Typography>
-            </div>
-            <div className={s.form}>
-              <SignInForm inProcess={inProcess} onSubmit={handleSubmit} />
-            </div>
+        <div className={s.content}>
+          <div className={s.header}>
+            <Typography size={'h6'} weight={'semi-bold'}>
+              <h6>Авторизация</h6>
+            </Typography>
           </div>
-        </Underlay>
+          <div className={s.form}>
+            <SignInForm inProcess={inProcess} onSubmit={handleSubmit} />
+          </div>
+        </div>
       </div>
     </div>
   );

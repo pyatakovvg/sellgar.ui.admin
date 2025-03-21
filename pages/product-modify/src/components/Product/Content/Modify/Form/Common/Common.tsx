@@ -1,4 +1,5 @@
-import { Field, Heading, Input, SimpleSelect, TreeSelect } from '@library/kit';
+import { Field, TreeSelect } from '@library/kit';
+import { Typography, Input, Select } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormState, useFormContext } from 'react-hook-form';
@@ -20,14 +21,11 @@ export const Common: React.FC = () => {
 
   return (
     <div className={s.wrappper}>
-      <div className={s.header}>
-        <Heading variant={'H4'}>Основные</Heading>
-      </div>
       <div className={s.content}>
         <div className={s.fields}>
           <div className={s['field-v']}>
             <Field label={'Название'} error={errors.name?.message}>
-              <Input {...register('name')} autoFocus={true} placeholder={'Наименование'} />
+              <Input {...register('name')} autoFocus={true} tabIndex={1} placeholder={'Наименование'} />
             </Field>
           </div>
           <div className={s['field-v']}>
@@ -65,7 +63,8 @@ export const Common: React.FC = () => {
                   render={({ field }) => {
                     return (
                       <Field label={'Бренд'} error={errors.brandUuid?.message}>
-                        <SimpleSelect
+                        <Select
+                          tabIndex={2}
                           isClearable={true}
                           placeholder={'Бренд'}
                           optionKey={'uuid'}

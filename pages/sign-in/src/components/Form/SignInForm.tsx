@@ -1,5 +1,5 @@
 import { Field } from '@library/kit';
-import { Button, Input } from '@sellgar/kit';
+import { Button, Input, Icon } from '@sellgar/kit';
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -37,7 +37,7 @@ export const SignInForm: React.FC<IFormProps> = (props) => {
           <Field error={errors.email?.message}>
             <Input
               {...register('email')}
-              leadicon={'at-line'}
+              leadIcon={<Icon icon={'at-line'} />}
               size={'md'}
               autoFocus
               type={'phone'}
@@ -51,7 +51,7 @@ export const SignInForm: React.FC<IFormProps> = (props) => {
           <Field error={errors.password?.message}>
             <Input
               {...register('password')}
-              leadicon={'lock-2-line'}
+              leadIcon={<Icon icon={'lock-2-line'} />}
               size={'md'}
               type={'password'}
               name={'password'}

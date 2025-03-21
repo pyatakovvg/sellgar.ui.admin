@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@library/table",
+  "version": "0.0.1",
+  "description": "List components",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@emotion/react": "11.14.0",
+    "@table-library/react-table-library": "4.1.12"
+  }
+}

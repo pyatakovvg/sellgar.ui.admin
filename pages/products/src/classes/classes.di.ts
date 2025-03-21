@@ -26,4 +26,4 @@ container.bind<ProductsStore>(ProductsStoreSymbol).to(ProductsStore).inSingleton
 
 container.bind<ProductsController>(ProductsControllerSymbol).to(ProductsController);
 
-export { container };
+export const controller = container.get<ProductsController>(ProductsControllerSymbol);

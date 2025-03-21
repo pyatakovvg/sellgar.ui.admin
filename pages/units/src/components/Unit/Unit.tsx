@@ -1,27 +1,19 @@
+import { Page } from '@library/design';
+
 import React from 'react';
 
 import { Proxy } from './Proxy';
 import { Header } from './Header';
 
-import { useFindAllRequest } from '../../hooks/find-all-request.hook.ts';
-
-import s from './default.module.scss';
-
 export const Unit = () => {
-  const findAllRequest = useFindAllRequest();
-
-  React.useEffect(() => {
-    findAllRequest();
-  }, []);
-
   return (
-    <div className={s.wrapper}>
-      <div className={s.header}>
+    <Page>
+      <Page.Header>
         <Header />
-      </div>
-      <div className={s.content}>
+      </Page.Header>
+      <Page.Content>
         <Proxy />
-      </div>
-    </div>
+      </Page.Content>
+    </Page>
   );
 };

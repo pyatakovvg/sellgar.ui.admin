@@ -1,0 +1,34 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.spinner {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  align-items: center;
+}
+
+.logotype {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  justify-content: center;
+  margin-top: var(--numbers-32);
+}

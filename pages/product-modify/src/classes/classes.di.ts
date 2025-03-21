@@ -43,31 +43,29 @@ import { ProductStoreInterface } from './store/product/product-store.interface.t
 import { ProductPresenter } from './presenter/product.presenter.ts';
 import { ProductPresenterInterface } from './presenter/product-presenter.interface.ts';
 
-export const createContainer = () => {
-  const container = new Container();
+const container = new Container();
 
-  container.bind<ConfigInterface>(ConfigInterface).to(Config);
-  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
+container.bind<ConfigInterface>(ConfigInterface).to(Config);
+container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
 
-  container.bind<BrandGatewayInterface>(BrandGatewayInterface).to(BrandGateway);
-  container.bind<BrandServiceInterface>(BrandServiceInterface).to(BrandService);
-  container.bind<CategoryGatewayInterface>(CategoryGatewayInterface).to(CategoryGateway);
-  container.bind<CategoryServiceInterface>(CategoryServiceInterface).to(CategoryService);
-  container.bind<PropertyGatewayInterface>(PropertyGatewayInterface).to(PropertyGateway);
-  container.bind<PropertyServiceInterface>(PropertyServiceInterface).to(PropertyService);
-  container.bind<PriceGatewayInterface>(PriceGatewayInterface).to(PriceGateway);
-  container.bind<PriceServiceInterface>(PriceServiceInterface).to(PriceService);
-  container.bind<CurrencyGatewayInterface>(CurrencyGatewayInterface).to(CurrencyGateway);
-  container.bind<CurrencyServiceInterface>(CurrencyServiceInterface).to(CurrencyService);
+container.bind<BrandGatewayInterface>(BrandGatewayInterface).to(BrandGateway);
+container.bind<BrandServiceInterface>(BrandServiceInterface).to(BrandService);
+container.bind<CategoryGatewayInterface>(CategoryGatewayInterface).to(CategoryGateway);
+container.bind<CategoryServiceInterface>(CategoryServiceInterface).to(CategoryService);
+container.bind<PropertyGatewayInterface>(PropertyGatewayInterface).to(PropertyGateway);
+container.bind<PropertyServiceInterface>(PropertyServiceInterface).to(PropertyService);
+container.bind<PriceGatewayInterface>(PriceGatewayInterface).to(PriceGateway);
+container.bind<PriceServiceInterface>(PriceServiceInterface).to(PriceService);
+container.bind<CurrencyGatewayInterface>(CurrencyGatewayInterface).to(CurrencyGateway);
+container.bind<CurrencyServiceInterface>(CurrencyServiceInterface).to(CurrencyService);
 
-  container.bind<ProductGatewayInterface>(ProductGatewayInterface).to(ProductGateway);
-  container.bind<ProductServiceInterface>(ProductServiceInterface).to(ProductService);
+container.bind<ProductGatewayInterface>(ProductGatewayInterface).to(ProductGateway);
+container.bind<ProductServiceInterface>(ProductServiceInterface).to(ProductService);
 
-  container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
-  container.bind<PriceStoreInterface>(PriceStoreInterface).to(PriceStore);
-  container.bind<ProductStoreInterface>(ProductStoreInterface).to(ProductStore);
+container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
+container.bind<PriceStoreInterface>(PriceStoreInterface).to(PriceStore);
+container.bind<ProductStoreInterface>(ProductStoreInterface).to(ProductStore);
 
-  container.bind<ProductPresenterInterface>(ProductPresenterInterface).to(ProductPresenter);
+container.bind<ProductPresenterInterface>(ProductPresenterInterface).to(ProductPresenter);
 
-  return container;
-};
+export const controller = container.get<ProductPresenterInterface>(ProductPresenterInterface);

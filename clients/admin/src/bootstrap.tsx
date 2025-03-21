@@ -1,4 +1,4 @@
-import { NavigateLayout } from '@admin/layouts';
+import { NavigateLayout } from '@layout/navigate';
 import { Application, Route, Router, PublicRouter, PrivateRouter } from '@library/app';
 
 import React from 'react';
@@ -6,6 +6,9 @@ import ReactDOM from 'react-dom/client';
 
 const app = new Application({
   routes: [
+    /**
+     * Контент требующий авторизации
+     */
     new PrivateRouter([
       new Router(
         '/',
@@ -20,20 +23,14 @@ const app = new Application({
             [
               new Route('/', () => import('@page/categories')),
               new Route('/create', () => import('@page/category-modify'), {
-                breadcrumb: {
-                  label: 'Создать категорию',
-                },
+                breadcrumb: () => 'Создать категорию',
               }),
               new Route('/:uuid', () => import('@page/category-modify'), {
-                breadcrumb: {
-                  id: 'CATEGORY_MODIFY',
-                },
+                breadcrumb: (data) => data.name,
               }),
             ],
             {
-              breadcrumb: {
-                label: 'Категории',
-              },
+              breadcrumb: () => 'Категории',
             },
           ),
 
@@ -45,20 +42,14 @@ const app = new Application({
             [
               new Route('/', () => import('@page/brands')),
               new Route('/create', () => import('@page/brand-modify'), {
-                breadcrumb: {
-                  label: 'Создать бренд',
-                },
+                breadcrumb: () => 'Создать бренд',
               }),
               new Route('/:uuid', () => import('@page/brand-modify'), {
-                breadcrumb: {
-                  id: 'BRAND_MODIFY',
-                },
+                breadcrumb: (data) => data.name,
               }),
             ],
             {
-              breadcrumb: {
-                label: 'Бренды',
-              },
+              breadcrumb: () => 'Бренды',
             },
           ),
 
@@ -70,20 +61,14 @@ const app = new Application({
             [
               new Route('/', () => import('@page/units')),
               new Route('/create', () => import('@page/unit-modify'), {
-                breadcrumb: {
-                  label: 'Создать единицу измерения',
-                },
+                breadcrumb: () => 'Создать единицу измерения',
               }),
               new Route('/:uuid', () => import('@page/unit-modify'), {
-                breadcrumb: {
-                  id: 'UNIT_MODIFY',
-                },
+                breadcrumb: (data) => data.name,
               }),
             ],
             {
-              breadcrumb: {
-                label: 'Единица измерения',
-              },
+              breadcrumb: () => 'Единица измерения',
             },
           ),
 
@@ -95,14 +80,10 @@ const app = new Application({
             [
               new Route('/', () => import('@page/properties')),
               new Route('/create', () => import('@page/property-modify'), {
-                breadcrumb: {
-                  label: 'Создать свойство',
-                },
+                breadcrumb: () => 'Создать свойство',
               }),
               new Route('/:uuid', () => import('@page/property-modify'), {
-                breadcrumb: {
-                  id: 'PROPERTY_MODIFY',
-                },
+                breadcrumb: (data) => data.name,
               }),
 
               /**
@@ -110,21 +91,15 @@ const app = new Application({
                */
               new Router('groups', [
                 new Route('/create', () => import('@page/property-group-modify'), {
-                  breadcrumb: {
-                    label: 'Создать группу свойств',
-                  },
+                  breadcrumb: () => 'Создать группу свойств',
                 }),
                 new Route('/:uuid', () => import('@page/property-group-modify'), {
-                  breadcrumb: {
-                    id: 'PROPERTY_GROUP_MODIFY',
-                  },
+                  breadcrumb: (data) => data.name,
                 }),
               ]),
             ],
             {
-              breadcrumb: {
-                label: 'Свойства',
-              },
+              breadcrumb: () => 'Свойства',
             },
           ),
 
@@ -136,20 +111,14 @@ const app = new Application({
             [
               new Route('/', () => import('@page/products')),
               new Route('create', () => import('@page/product-modify'), {
-                breadcrumb: {
-                  label: 'Добавить товар',
-                },
+                breadcrumb: () => 'Добавить товар',
               }),
               new Route(':uuid', () => import('@page/product-modify'), {
-                breadcrumb: {
-                  id: 'PRODUCT_MODIFY',
-                },
+                breadcrumb: (data) => data.name,
               }),
             ],
             {
-              breadcrumb: {
-                label: 'Товары',
-              },
+              breadcrumb: () => 'Товары',
             },
           ),
 
@@ -157,9 +126,7 @@ const app = new Application({
            * Файлы
            */
           new Router('files', [new Route('/', () => import('@page/files'))], {
-            breadcrumb: {
-              label: 'Файлы',
-            },
+            breadcrumb: () => 'Файлы',
           }),
         ],
         {
@@ -167,6 +134,10 @@ const app = new Application({
         },
       ),
     ]),
+
+    /**
+     * Общедоступный контент
+     */
     new PublicRouter([new Route('sign-in', () => import('@page/sign-in'))]),
   ],
 });

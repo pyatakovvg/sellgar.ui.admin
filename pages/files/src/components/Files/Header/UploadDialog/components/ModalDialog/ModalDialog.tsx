@@ -1,6 +1,6 @@
 import { Dialog } from '@library/kit';
 import { useQuery } from '@library/app';
-import { Upload } from '@admin/design';
+import { Upload } from '@library/design';
 
 import React from 'react';
 import { observer } from 'mobx-react';

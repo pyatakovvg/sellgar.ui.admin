@@ -1,5 +1,6 @@
 import { PriceEntity } from '@library/domain';
-import { Text, Description, Icon, AmountInput } from '@library/kit';
+import { Icon, AmountInput } from '@library/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 import { format } from 'date-fns';
@@ -34,13 +35,19 @@ export const Price: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <div className={s.price}>
-        <Text variant={'compact'}>{AmountInput.format(props.data.value)}</Text>
+        <Typography size={'caption-m'} weight={'medium'}>
+          <p>{AmountInput.format(props.data.value)}</p>
+        </Typography>
       </div>
       <div className={s.currency}>
-        <Text variant={'compact'}>{props.data.currency.name}</Text>
+        <Typography size={'caption-m'} weight={'medium'}>
+          <p>{props.data.currency.name}</p>
+        </Typography>
       </div>
       <div className={s.date}>
-        <Description variant={'compact'}>(изменено {format(props.data.createdAt, 'dd.MM.yyyy')})</Description>
+        <Typography size={'caption-s'} weight={'medium'}>
+          <p>(изменено {format(props.data.createdAt, 'dd.MM.yyyy')})</p>
+        </Typography>
       </div>
       {direction && (
         <div

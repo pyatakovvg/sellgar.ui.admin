@@ -1,4 +1,4 @@
-import { Breadcrumb } from '@sellgar/kit';
+import { Breadcrumb, Icon } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -10,12 +10,14 @@ interface IProps {
 }
 
 export const Label: React.FC<React.PropsWithChildren<IProps>> = (props) => {
-  if (props.inProcess) {
-    return <p>Loading</p>;
-  }
   return (
     <div className={s.wrapper}>
-      <Breadcrumb active={true} label={props.label} showdivider={false} />
+      <Breadcrumb
+        active={true}
+        leadIcon={props.inProcess ? <Icon icon={'loader-4-fill'} /> : undefined}
+        label={!props.inProcess ? props.label : ''}
+        showDivider={false}
+      />
     </div>
   );
 };

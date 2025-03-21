@@ -26,4 +26,4 @@ container.bind<BrandStore>(BrandStoreSymbol).to(BrandStore).inSingletonScope();
 
 container.bind<BrandsController>(BrandsControllerSymbol).to(BrandsController);
 
-export { container };
+export const controller = container.get<BrandsController>(BrandsControllerSymbol);

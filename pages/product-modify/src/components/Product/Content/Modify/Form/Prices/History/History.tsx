@@ -1,4 +1,5 @@
-import { Heading, Underlay } from '@library/kit';
+import { Underlay } from '@library/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -20,7 +21,9 @@ export const History: React.FC<IProps> = observer((props) => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <Heading variant={'H4'}>История цен</Heading>
+        <Typography size={'body-m'} weight={'medium'}>
+          <p>История цен</p>
+        </Typography>
       </div>
       <div className={s.content}>
         <Underlay>

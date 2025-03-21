@@ -16,8 +16,8 @@ export const NavLabel: React.FC<React.PropsWithChildren<IProps>> = (props) => {
     return <p>Loading...</p>;
   }
   return (
-    <NavLink className={s.wrapper} to={props.href}>
-      <Breadcrumb showdivider={true} label={props.label} />
+    <NavLink className={s.wrapper} to={props.href} viewTransition={true}>
+      <Breadcrumb showDivider={true} label={props.label} />
     </NavLink>
   );
 };

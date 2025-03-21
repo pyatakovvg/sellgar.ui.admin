@@ -3,16 +3,16 @@
 
   position: relative;
   display: block;
-  padding: 24px;
 }
 
 .delete {
 
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 0;
+  right: 0;
   display: block;
-  color: var(--color-red-50);
+  color: var(--icon-base-primary);
+  font-size: var(--numbers-20);
   cursor: pointer;
 }
 
@@ -37,10 +37,10 @@
   flex: 1 0;
 
   & + & {
-    margin: 12px 0 0;
+    margin: var(--numbers-16) 0 0;
   }
 }
 
 .fields .field + .field {
-    margin: 0 0 0 16px;
+  margin: 0 0 0 var(--numbers-16);
 }

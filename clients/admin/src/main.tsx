@@ -1,11 +1,11 @@
-import '@sellgar/kit/font.css';
-import '@sellgar/kit/theme.css';
-
 import 'reflect-metadata';
 import { registerSW } from 'virtual:pwa-register';
 
-import('./bootstrap');
-import('./styles/index.module.scss');
+import '@sellgar/kit/font.css';
+import '@sellgar/kit/theme.css';
+import './styles/index.css';
+
+import './bootstrap';
 
 const intervalMS = 60 * 60 * 1000;
 

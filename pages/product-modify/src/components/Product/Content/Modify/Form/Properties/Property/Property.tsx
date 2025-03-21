@@ -1,5 +1,6 @@
 import { PropertyEntity } from '@library/domain';
-import { Field, Icon, Input, Text, SimpleSelect } from '@library/kit';
+import { Field } from '@library/kit';
+import { Icon, Input, Select, Typography } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -55,8 +56,8 @@ export const Property: React.FC<IProps> = (props) => {
             render={({ field }) => {
               return (
                 <Field error={errors?.properties?.[props.index]?.propertyUuid?.message ?? ''}>
-                  <SimpleSelect
-                    isClearable={true}
+                  <Select
+                    // isClearable={true}
                     placeholder={'Свойство'}
                     optionKey={'uuid'}
                     optionValue={'name'}
@@ -74,16 +75,17 @@ export const Property: React.FC<IProps> = (props) => {
         </div>
         <div className={s.field}>
           <Field error={errors?.properties?.[props.index]?.value?.message ?? ''}>
-            <Input {...register(`properties.${props.index}.value`)} placeholder={'Значение'} />
+            <Input
+              {...register(`properties.${props.index}.value`)}
+              placeholder={'Значение'}
+              badge={selectedProperty ? selectedProperty.unit?.name : undefined}
+            />
           </Field>
-        </div>
-        <div className={s.unit}>
-          <Text>{selectedProperty ? selectedProperty.unit?.name : '---'}</Text>
         </div>
       </div>
       <div className={s.control}>
         <div className={s.delete} onClick={props.onDelete}>
-          <Icon icon={'delete'} size={18} />
+          <Icon icon={'close-line'} />
         </div>
       </div>
     </div>

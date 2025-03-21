@@ -8,7 +8,6 @@ export { MyInput } from './symbols/MyInput';
 export { PhoneInput } from './symbols/PhoneInput';
 export { Button } from './symbols/Button';
 export { ButtonContext } from './symbols/ButtonContext';
-export { Spinner } from './symbols/Spinner';
 export { Skeleton } from './symbols/Skeleton';
 export { Icon } from './symbols/Icon';
 export { IconBox } from './symbols/IconBox';

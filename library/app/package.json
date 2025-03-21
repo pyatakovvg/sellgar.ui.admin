@@ -16,21 +16,21 @@
     "@library/message": "0.0.1",
     "@library/push": "0.0.1",
     "@utils/generate": "0.0.1",
-    "axios": "1.8.1",
+    "axios": "1.8.4",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.1",
-    "inversify": "7.0.1",
+    "inversify": "7.1.0",
     "inversify-inject-decorators": "3.1.0",
-    "mobx": "6.13.6",
+    "mobx": "6.13.7",
     "mobx-react": "9.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-error-boundary": "5.0.0",
-    "react-router-dom": "7.2.0",
+    "react-router-dom": "7.4.0",
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/react": "19.0.10",
+    "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
     "@types/reflect-metadata": "0.1.0"
   }

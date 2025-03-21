@@ -29,4 +29,4 @@ container.bind<FindAllCategoryUseCase>(FindAllCategoryUseCaseSymbol).to(FindAllC
 
 container.bind<CategoryPresenter>(CategoryPresenterSymbol).to(CategoryPresenter);
 
-export { container };
+export const controller = container.get<CategoryPresenter>(CategoryPresenterSymbol);

@@ -1,13 +1,4 @@
 .wrapper {
 
-  display: block;
-  color: var(--color-blue-25);
-  white-space: nowrap;
   text-decoration: none;
-
-  &:hover {
-
-    color: var(--color-blue-20);
-    text-decoration: underline;
-  }
 }

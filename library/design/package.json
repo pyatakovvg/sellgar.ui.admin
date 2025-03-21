@@ -1,7 +1,7 @@
 {
   "private": true,
   "type": "module",
-  "name": "@admin/design",
+  "name": "@library/design",
   "version": "0.0.1",
   "description": "List components",
   "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
@@ -15,10 +15,10 @@
     "classnames": "2.5.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-router-dom": "7.2.0"
+    "react-router-dom": "7.4.0"
   },
   "devDependencies": {
-    "@types/react": "19.0.10",
+    "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
     "@types/reflect-metadata": "0.1.0"
   }

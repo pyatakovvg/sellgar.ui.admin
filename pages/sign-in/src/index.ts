@@ -1,1 +1,1 @@
-export { Module } from './sign-in.module.tsx';
+export * from './sign-in.module.tsx';

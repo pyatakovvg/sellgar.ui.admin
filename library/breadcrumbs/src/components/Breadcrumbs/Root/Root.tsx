@@ -1,16 +1,18 @@
-import { Breadcrumb } from '@sellgar/kit';
+import { Breadcrumb, Icon } from '@sellgar/kit';
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 import s from './default.module.scss';
 
-interface IProps {}
+interface IProps {
+  hasCrumbs: boolean;
+}
 
-export const Root: React.FC<React.PropsWithChildren<IProps>> = () => {
+export const Root: React.FC<React.PropsWithChildren<IProps>> = (props) => {
   return (
-    <NavLink className={s.wrapper} to={'/'}>
-      <Breadcrumb leadicon={'home-line'} label={'Главная'} showdivider={true} />
+    <NavLink className={s.wrapper} to={'/'} viewTransition={true}>
+      <Breadcrumb leadIcon={<Icon icon={'home-line'} />} label={'Главная'} showDivider={props.hasCrumbs} />
     </NavLink>
   );
 };

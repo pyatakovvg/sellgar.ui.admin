@@ -1,0 +1,12 @@
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  padding: var(--numbers-8) 0;
+}
+
+.link {
+
+  text-decoration: none;
+}

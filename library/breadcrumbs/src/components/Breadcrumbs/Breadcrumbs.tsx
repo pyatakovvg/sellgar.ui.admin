@@ -20,15 +20,18 @@ export const Breadcrumbs = observer(() => {
   const matches = useMatches() as any[];
 
   React.useEffect(() => {
-    const matchesBreadcrumbs = matches.filter((match: any) => Boolean(match.handle?.crumb));
+    const matchesBreadcrumbs = matches
+      .filter((match: any) => Boolean(match.handle?.crumb))
+      .map((match) => match.handle.crumb(match.data));
 
     resetBreadcrumbs();
 
     matchesBreadcrumbs.forEach((match) => {
-      if (!match.handle.crumb()) {
+      if (!match) {
         return;
       }
-      const crumb = match.handle.crumb();
+
+      const crumb = match;
       const id = crumb.id;
 
       addBreadcrumb({
@@ -43,7 +46,7 @@ export const Breadcrumbs = observer(() => {
   return (
     <div className={s.wrapper}>
       <div className={s.item}>
-        <Root />
+        <Root hasCrumbs={!!breadcrumbs.length} />
       </div>
       {breadcrumbs.map((breadcrumb, index: number) => {
         return (

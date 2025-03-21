@@ -1,6 +1,6 @@
 import { useNavigate } from '@library/app';
-import { Field, Textarea, Button } from '@library/kit';
-import { useChangeBreadcrumb } from '@library/breadcrumbs';
+import { Textarea, Button, TabMenu } from '@sellgar/kit';
+import { Field } from '@library/kit';
 
 import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -28,7 +28,6 @@ interface IProps {
 
 export const Form: React.FC<IProps> = (props) => {
   const navigate = useNavigate();
-  const changeBreadcrumb = useChangeBreadcrumb();
 
   const createRequest = useCreateProductRequest();
   const updateRequest = useUpdateProductRequest();
@@ -37,14 +36,6 @@ export const Form: React.FC<IProps> = (props) => {
     resolver: yupResolver<UpdateProductDto | CreateProductDto>(schema),
     defaultValues: props.defaultValues,
   });
-
-  const values = methods.getValues();
-
-  React.useEffect(() => {
-    if (values) {
-      changeBreadcrumb('PRODUCT_MODIFY', values.name);
-    }
-  }, [values]);
 
   const onSubmit = methods.handleSubmit(async (dto: CreateProductDto | UpdateProductDto) => {
     if ('uuid' in dto) {
@@ -66,32 +57,37 @@ export const Form: React.FC<IProps> = (props) => {
     <FormProvider {...methods}>
       <form className={s.wrapper} onSubmit={onSubmit}>
         <div className={s.fields}>
-          <div className={s.field}>
-            <Common />
-          </div>
+          <TabMenu.Content name={'common'}>
+            <div className={s.field}>
+              <Common />
+            </div>
+            <div className={s.field}>
+              <Prices />
+            </div>
+          </TabMenu.Content>
 
-          <div className={s.field}>
-            <Prices />
-          </div>
+          <TabMenu.Content name={'variants'}>
+            <div className={s.field}>
+              <Variants />
+            </div>
+          </TabMenu.Content>
 
-          <div className={s.field}>
-            <Variants />
-          </div>
+          <TabMenu.Content name={'properties'}>
+            <div className={s.field}>
+              <Properties />
+            </div>
+          </TabMenu.Content>
 
-          <div className={s.field}>
-            <Properties />
-          </div>
-
-          <div className={s.field}>
-            <Field error={methods.formState.errors.description?.message}>
-              <Textarea {...methods.register('description')} placeholder={'Описание'} />
-            </Field>
-          </div>
+          <TabMenu.Content name={'description'}>
+            <div className={s.field}>
+              <Field error={methods.formState.errors.description?.message}>
+                <Textarea {...methods.register('description')} placeholder={'Описание'} />
+              </Field>
+            </div>
+          </TabMenu.Content>
         </div>
         <div className={s.control}>
-          <Button type={'submit'} inProcess={props.inProcess}>
-            Сохранить
-          </Button>
+          <Button type={'submit'}>Сохранить</Button>
         </div>
       </form>
     </FormProvider>

@@ -8,7 +8,7 @@ import { useDataInProcess } from '../../../hooks/get-data-in-process.hook.ts';
 
 export const Content = observer(() => {
   const inProcess = useDataInProcess();
-  console.log(inProcess);
+
   if (inProcess) {
     return <Process />;
   }

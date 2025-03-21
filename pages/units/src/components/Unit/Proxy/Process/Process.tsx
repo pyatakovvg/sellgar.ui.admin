@@ -1,4 +1,4 @@
-import { Spinner } from '@library/kit';
+import { Spinner } from '@sellgar/kit';
 
 import React from 'react';
 

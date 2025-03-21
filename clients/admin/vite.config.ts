@@ -5,7 +5,6 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 // import federation from '@originjs/vite-plugin-federation';
 
 // import { visualizer } from 'rollup-plugin-visualizer';
-import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -22,16 +21,6 @@ export default defineConfig({
   },
   plugins: [
     tsconfigPaths(),
-    chunkSplitPlugin({
-      strategy: 'default',
-      customSplitting: {
-        'react.vendor': ['react', 'react-dom', 'react-router-dom'],
-        'mobx.vendor': ['mobx', 'mobx-react'],
-
-        'app.vendor': ['@library/app'],
-        'library.vendor': ['@library/kit', '@admin/design'],
-      },
-    }),
     VitePWA({
       minify: true,
       registerType: 'autoUpdate',
@@ -44,25 +33,25 @@ export default defineConfig({
         display: 'fullscreen',
         background_color: '#ffffff',
         start_url: '.',
-        screenshots: [{ src: 'pwa-512x512.png', sizes: '512x512', form_factor: 'wide' }],
+        screenshots: [{ src: 'pwa/pwa-512x512.png', sizes: '512x512', form_factor: 'wide' }],
         icons: [
           {
-            src: 'pwa-64x64.png',
+            src: 'pwa/pwa-64x64.png',
             sizes: '64x64',
             type: 'image/png',
           },
           {
-            src: 'pwa-192x192.png',
+            src: 'pwa/pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'pwa/pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
           },
           {
-            src: 'maskable-icon-512x512.png',
+            src: 'pwa/maskable-icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',

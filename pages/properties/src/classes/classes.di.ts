@@ -26,4 +26,4 @@ container.bind<PropertyStore>(PropertyStoreSymbol).to(PropertyStore).inSingleton
 
 container.bind<PropertyController>(PropertyControllerSymbol).to(PropertyController);
 
-export { container };
+export const controller = container.get<PropertyController>(PropertyControllerSymbol);
