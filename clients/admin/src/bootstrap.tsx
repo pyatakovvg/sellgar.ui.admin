@@ -26,7 +26,7 @@ const app = new Application({
                 breadcrumb: () => 'Создать категорию',
               }),
               new Route('/:uuid', () => import('@page/category-modify'), {
-                breadcrumb: (data) => data.name,
+                breadcrumb: (data) => data?.name ?? '',
               }),
             ],
             {

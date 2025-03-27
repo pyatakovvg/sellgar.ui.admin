@@ -16,8 +16,10 @@ import { UnitStore, UnitStoreSymbol } from './store/unit.store.ts';
 
 import { UnitPresenter, UnitPresenterSymbol } from './presenter/unit.presenter.ts';
 
-export const createContainer = () => {
-  const container = new Container({ defaultScope: 'Singleton' });
+let container: Container;
+
+export const create = () => {
+  container = new Container();
 
   container.bind<ConfigInterface>(ConfigInterface).to(Config);
   container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
@@ -32,3 +34,5 @@ export const createContainer = () => {
 
   return container;
 };
+
+export const destroy = () => container.unbindAll();

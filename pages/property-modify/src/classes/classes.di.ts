@@ -15,8 +15,10 @@ import { PropertyStore, PropertyStoreSymbol } from './store/property.store.ts';
 
 import { PropertyPresenter, PropertyPresenterSymbol } from './presenter/property.presenter.ts';
 
-export const createContainer = () => {
-  const container = new Container({ defaultScope: 'Singleton' });
+let container: Container;
+
+export const create = () => {
+  container = new Container();
 
   container.bind<ConfigInterface>(ConfigInterface).to(Config);
   container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
@@ -37,3 +39,5 @@ export const createContainer = () => {
 
   return container;
 };
+
+export const destroy = () => container.unbindAll();

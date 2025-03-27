@@ -41,6 +41,8 @@ export class PropertyGroupStore {
         const result = await this.propertyGroupService.findByUuid(uuid);
 
         this.setData(result);
+
+        return result;
       }
     } catch (error) {
       this.setError(error as HttpException);

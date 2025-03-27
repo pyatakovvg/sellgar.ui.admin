@@ -14,7 +14,7 @@
     "@library/design": "0.0.1",
     "@library/domain": "0.0.1",
     "@library/kit": "0.0.1",
-    "@sellgar/kit": "0.0.96",
+    "@sellgar/kit": "0.0.97",
     "classnames": "2.5.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",

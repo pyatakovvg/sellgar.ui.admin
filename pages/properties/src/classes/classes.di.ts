@@ -14,16 +14,26 @@ import { Container } from 'inversify';
 import { PropertyStore, PropertyStoreSymbol } from './store/property.store.ts';
 import { PropertyController, PropertyControllerSymbol } from './controller/property.controller.ts';
 
-const container = new Container();
+let container: Container;
 
-container.bind<ConfigInterface>(ConfigInterface).to(Config);
-container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
+const create = () => {
+  container = new Container();
 
-container.bind<PropertyGroupGatewayInterface>(PropertyGroupGatewayInterface).to(PropertyGroupGateway);
-container.bind<PropertyGroupServiceInterface>(PropertyGroupServiceInterface).to(PropertyGroupService);
+  container.bind<ConfigInterface>(ConfigInterface).to(Config);
+  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
 
-container.bind<PropertyStore>(PropertyStoreSymbol).to(PropertyStore).inSingletonScope();
+  container.bind<PropertyGroupGatewayInterface>(PropertyGroupGatewayInterface).to(PropertyGroupGateway);
+  container.bind<PropertyGroupServiceInterface>(PropertyGroupServiceInterface).to(PropertyGroupService);
 
-container.bind<PropertyController>(PropertyControllerSymbol).to(PropertyController);
+  container.bind<PropertyStore>(PropertyStoreSymbol).to(PropertyStore).inSingletonScope();
 
-export const controller = container.get<PropertyController>(PropertyControllerSymbol);
+  container.bind<PropertyController>(PropertyControllerSymbol).to(PropertyController);
+
+  return container;
+};
+
+const destroy = () => {
+  container.unbindAll();
+};
+
+export { create, destroy };

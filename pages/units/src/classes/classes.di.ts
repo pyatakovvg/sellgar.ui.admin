@@ -14,16 +14,22 @@ import { Container } from 'inversify';
 import { UnitStore, UnitStoreSymbol } from './store/unit.store.ts';
 import { UnitsController, UnitsControllerSymbol } from './controller/units.controller.ts';
 
-const container = new Container();
+let container: Container;
 
-container.bind<ConfigInterface>(ConfigInterface).to(Config);
-container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
+export const create = () => {
+  container = new Container();
 
-container.bind<UnitGatewayInterface>(UnitGatewayInterface).to(UnitGateway);
-container.bind<UnitServiceInterface>(UnitServiceInterface).to(UnitService);
+  container.bind<ConfigInterface>(ConfigInterface).to(Config);
+  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
 
-container.bind<UnitStore>(UnitStoreSymbol).to(UnitStore).inSingletonScope();
+  container.bind<UnitGatewayInterface>(UnitGatewayInterface).to(UnitGateway);
+  container.bind<UnitServiceInterface>(UnitServiceInterface).to(UnitService);
 
-container.bind<UnitsController>(UnitsControllerSymbol).to(UnitsController);
+  container.bind<UnitStore>(UnitStoreSymbol).to(UnitStore).inSingletonScope();
 
-export const controller = container.get<UnitsController>(UnitsControllerSymbol);
+  container.bind<UnitsController>(UnitsControllerSymbol).to(UnitsController);
+
+  return container;
+};
+
+export const destroy = () => container.unbindAll();

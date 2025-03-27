@@ -5,8 +5,6 @@ import { useParams } from 'react-router-dom';
 
 import { Content } from './Content';
 
-import { useGetDataRequest } from '../../hooks/get-data-category-request.hook.ts';
-
 import s from './default.module.scss';
 
 interface IParams {
@@ -15,11 +13,6 @@ interface IParams {
 
 export const Category = () => {
   const params = useParams() as unknown as IParams;
-  const getDataRequest = useGetDataRequest();
-
-  React.useEffect(() => {
-    getDataRequest(params?.uuid);
-  }, [params]);
 
   return (
     <div className={s.wrapper}>

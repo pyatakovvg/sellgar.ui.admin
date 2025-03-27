@@ -11,3 +11,5 @@ export { useQuery } from './hook/useQuery.ts';
 export { useProfile } from './hook/useProfile.ts';
 export { useRequest } from './hook/useRequest.ts';
 export { useNavigate } from './hook/useNavigate.ts';
+
+export { ApplicationModule } from './module.class.ts';

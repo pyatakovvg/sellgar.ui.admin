@@ -17,16 +17,22 @@ import { FormStoreInterface } from './store/form-store.interface.ts';
 import { SignInPresenter } from './presenter/sign-in.presenter.ts';
 import { SignInPresenterInterface } from './presenter/sign-in-presenter.interface.ts';
 
-const container = new Container();
+let container: Container;
 
-container.bind<ConfigInterface>(ConfigInterface).to(Config);
-container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
+export const create = () => {
+  container = new Container();
 
-container.bind<AuthGatewayInterface>(AuthGatewayInterface).to(AuthGateway);
-container.bind<AuthServiceInterface>(AuthServiceInterface).to(AuthService);
+  container.bind<ConfigInterface>(ConfigInterface).to(Config);
+  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
 
-container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
+  container.bind<AuthGatewayInterface>(AuthGatewayInterface).to(AuthGateway);
+  container.bind<AuthServiceInterface>(AuthServiceInterface).to(AuthService);
 
-container.bind<SignInPresenterInterface>(SignInPresenterInterface).to(SignInPresenter);
+  container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
 
-export const controller = container.get<SignInPresenterInterface>(SignInPresenterInterface);
+  container.bind<SignInPresenterInterface>(SignInPresenterInterface).to(SignInPresenter);
+
+  return container;
+};
+
+export const destroy = () => container.unbindAll();

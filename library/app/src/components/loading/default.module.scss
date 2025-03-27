@@ -20,15 +20,12 @@
 
   display: flex;
   flex-direction: column;
-  flex: 1 0;
+  flex: 0 0 auto;
   align-items: center;
-}
-
-.logotype {
-
-  display: flex;
-  flex-direction: row;
-  flex: 1 0;
   justify-content: center;
-  margin-top: var(--numbers-32);
+  width: var(--numbers-120);
+  height: var(--numbers-120);
+  background: var(--background-surface-default);
+  border: var(--numbers-1) solid var(--border-base-divider);
+  border-radius: var(--measurements-radius-xxl);
 }

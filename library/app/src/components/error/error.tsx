@@ -16,9 +16,11 @@ export const Error: React.FC = () => {
         <h4>{error.message}</h4>
       </div>
       <div className={s.stack}>
-        <p>
-          <code className={s.code}>{error.stack}</code>
-        </p>
+        <div className={s.content}>
+          <p>
+            <code className={s.code}>{error.stack}</code>
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { useNavigate } from '@library/app';
 import { BrandEntity } from '@library/domain';
-import { useChangeBreadcrumb } from '@library/breadcrumbs';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -14,18 +13,11 @@ import { useUpdateBrandRequest } from '../../../../hooks/update-brand-request.ho
 
 export const Modify = observer(() => {
   const navigate = useNavigate();
-  const changeBreadcrumb = useChangeBreadcrumb();
 
   const data = useGetBrandData();
   const inProcess = useGetFormInProcess();
   const updateBrandRequest = useUpdateBrandRequest();
   const createBrandRequest = useCreateBrandRequest();
-
-  React.useEffect(() => {
-    if (data) {
-      changeBreadcrumb('BRAND_MODIFY', data.name);
-    }
-  }, [data]);
 
   const handleSubmit = async (data: BrandEntity) => {
     if (data.uuid) {

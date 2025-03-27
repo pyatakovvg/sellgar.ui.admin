@@ -26,21 +26,27 @@ import { UploadStoreInterface } from './store/upload/upload-store.interface.ts';
 
 import { FilesPresenter, FilesPresenterSymbol } from './presenter/files.presenter.ts';
 
-const container = new Container({ defaultScope: 'Singleton' });
+let container: Container;
 
-container.bind<ConfigInterface>(ConfigInterface).to(Config);
-container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
+export const create = () => {
+  container = new Container({ defaultScope: 'Singleton' });
 
-container.bind<FolderGatewayInterface>(FolderGatewayInterface).to(FolderGateway);
-container.bind<FolderServiceInterface>(FolderServiceInterface).to(FolderService);
+  container.bind<ConfigInterface>(ConfigInterface).to(Config);
+  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
 
-container.bind<FileGatewayInterface>(FileGatewayInterface).to(FileGateway);
-container.bind<FileServiceInterface>(FileServiceInterface).to(FileService);
+  container.bind<FolderGatewayInterface>(FolderGatewayInterface).to(FolderGateway);
+  container.bind<FolderServiceInterface>(FolderServiceInterface).to(FolderService);
 
-container.bind<FileStoreInterface>(FileStoreInterface).to(FileStore);
-container.bind<FolderStoreInterface>(FolderStoreInterface).to(FolderStore);
-container.bind<UploadStoreInterface>(UploadStoreInterface).to(UploadStore);
+  container.bind<FileGatewayInterface>(FileGatewayInterface).to(FileGateway);
+  container.bind<FileServiceInterface>(FileServiceInterface).to(FileService);
 
-container.bind<FilesPresenter>(FilesPresenterSymbol).to(FilesPresenter);
+  container.bind<FileStoreInterface>(FileStoreInterface).to(FileStore);
+  container.bind<FolderStoreInterface>(FolderStoreInterface).to(FolderStore);
+  container.bind<UploadStoreInterface>(UploadStoreInterface).to(UploadStore);
 
-export { container };
+  container.bind<FilesPresenter>(FilesPresenterSymbol).to(FilesPresenter);
+
+  return container;
+};
+
+export const destroy = () => container.unbindAll();

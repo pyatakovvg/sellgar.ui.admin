@@ -1,4 +1,4 @@
-import { CategoryEntity } from '@library/domain';
+import { CategoryEntity, CategoryServiceInterface } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
 
@@ -12,7 +12,34 @@ export class CategoryPresenter {
   constructor(
     @inject(FormStoreSymbol) private readonly formStore: FormStore,
     @inject(CategoryStoreSymbol) private readonly categoryStore: CategoryStore,
+    @inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface,
   ) {}
+
+  async findByUuid(uuid: string) {
+    try {
+      const result = await this.categoryService.findByUuid(uuid);
+
+      this.categoryStore.setData(result);
+
+      return result;
+    } catch (error) {
+      if (error instanceof Array) {
+        this.categoryStore.setValidationError(error);
+      }
+    }
+  }
+
+  async findAll() {
+    try {
+      const result = await this.categoryService.findAll();
+
+      this.categoryStore.setCategories(result);
+    } catch (error) {
+      if (error instanceof Array) {
+        this.categoryStore.setValidationError(error);
+      }
+    }
+  }
 
   async update(category: CategoryEntity) {
     await this.formStore.update(category);
@@ -31,14 +58,10 @@ export class CategoryPresenter {
   }
 
   getCategoryInProcess() {
-    return this.categoryStore.inProcess;
+    return false;
   }
 
   getFormInProcess() {
     return this.formStore.inProcess;
-  }
-
-  async getData(uuid?: string) {
-    return await this.categoryStore.getData(uuid);
   }
 }

@@ -16,8 +16,10 @@ import { CategoryStore, CategoryStoreSymbol } from './store/category.store.ts';
 
 import { CategoryPresenter, CategoryPresenterSymbol } from './presenter/category.presenter.ts';
 
-export const createContainer = () => {
-  const container = new Container({ defaultScope: 'Singleton' });
+let container: Container;
+
+const create = () => {
+  container = new Container();
 
   container.bind<ConfigInterface>(ConfigInterface).to(Config);
   container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
@@ -32,3 +34,9 @@ export const createContainer = () => {
 
   return container;
 };
+
+const destroy = () => {
+  container.unbindAll();
+};
+
+export { create, destroy };

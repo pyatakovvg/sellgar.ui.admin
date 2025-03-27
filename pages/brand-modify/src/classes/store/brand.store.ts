@@ -39,6 +39,8 @@ export class BrandStore {
         const result = await this.brandService.findByUuid(uuid);
 
         this.setData(result);
+
+        return result;
       }
     } catch (error) {
       this.setError(error as HttpException);

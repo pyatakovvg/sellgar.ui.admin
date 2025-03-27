@@ -9,7 +9,7 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
-    "@sellgar/kit": "0.0.96",
+    "@sellgar/kit": "0.0.97",
     "classnames": "2.5.1",
     "mobx": "6.13.7",
     "mobx-react": "9.2.0",

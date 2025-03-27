@@ -1,6 +1,5 @@
 import { useNavigate } from '@library/app';
 import { CategoryEntity } from '@library/domain';
-import { useChangeBreadcrumb } from '@library/breadcrumbs';
 
 import React from 'react';
 
@@ -13,18 +12,11 @@ import { useUpdateCategoryRequest } from '../../../../hooks/update-category-requ
 
 export const Modify = () => {
   const navigate = useNavigate();
-  const changeBreadcrumb = useChangeBreadcrumb();
 
   const data = useGetCategoryData();
   const inProcess = useGetFormInProcess();
   const updateCategoryRequest = useUpdateCategoryRequest();
   const createCategoryRequest = useCreateCategoryRequest();
-
-  React.useEffect(() => {
-    if (data) {
-      changeBreadcrumb('CATEGORY_MODIFY', data.name);
-    }
-  }, [data]);
 
   const handleSubmit = async (data: CategoryEntity) => {
     if (data.uuid) {

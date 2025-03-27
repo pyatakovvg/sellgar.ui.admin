@@ -75,14 +75,25 @@ export class Route {
     return {
       path: Route.normalizePath(this.path),
       lazy: async () => {
-        const { Module, loader } = await this.module();
+        const { Module } = await this.module();
+
+        const module = new Module();
+        const Content = module.render.bind(module);
+        const loader = module.loader && module.loader.bind(module);
 
         return {
           loader,
           Component: () => {
+            React.useEffect(() => {
+              module.create && module.create();
+              return () => {
+                module.destroy && module.destroy();
+              };
+            }, []);
+
             return (
               <CheckCredentials route={this}>
-                <Module />
+                <Content />
               </CheckCredentials>
             );
           },
@@ -90,7 +101,7 @@ export class Route {
       },
       ErrorBoundary: () => {
         const error = useRouteError();
-        console.log(345354, error);
+
         if (error instanceof UnauthorizedException) {
           return <Navigate to={'/sign-in'} />;
         }

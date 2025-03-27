@@ -20,8 +20,8 @@ export class PrivateRouter {
       path: import.meta.env.BASE_URL,
       loader: async () => {
         if (!this._isInitialized) {
-          await controller.loadProfile();
           this._isInitialized = true;
+          await controller.loadProfile();
         }
         return true;
       },
@@ -29,7 +29,7 @@ export class PrivateRouter {
         const error = useRouteError();
 
         if (error instanceof UnauthorizedException) {
-          return <Navigate to={'/sign-in'} />;
+          return <Navigate to={import.meta.env.BASE_URL + 'sign-in'} />;
         }
         return <Error />;
       },

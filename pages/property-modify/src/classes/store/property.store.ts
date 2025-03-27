@@ -59,15 +59,19 @@ export class PropertyStore {
     this.setProcess(true);
 
     try {
-      if (uuid) {
-        const result = await this.propertyService.findByUuid(uuid);
-        this.setData(result);
-      }
       const units = await this.unitService.findAll();
       const groups = await this.propertyGroupService.findAll();
 
       this.setUnits(units.data);
       this.setGroups(groups.data);
+
+      if (uuid) {
+        const result = await this.propertyService.findByUuid(uuid);
+
+        this.setData(result);
+
+        return result;
+      }
     } catch (error) {
       this.setError(error as HttpException);
     } finally {

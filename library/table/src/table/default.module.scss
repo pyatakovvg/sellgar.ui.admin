@@ -1,6 +1,55 @@
 .wrapper {
 
   table-layout: fixed;
+  border-spacing: 0;
   border-radius: var(--measurements-radius-lg);
   border: var(--numbers-1) solid var(--border-action-normal);
+  overflow: hidden;
+}
+
+.head {
+
+  background: var(--background-surface-neutral);
+}
+
+.tbody {
+
+  background: var(--background-surface-default);
+}
+
+.th {
+
+  color: var(--text-base-secondary);
+  font-size: var(--typography-size-caption-l);
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--typography-line-height-caption-l);
+  letter-spacing: var(--typography-letter-spacing-caption-l);
+  height: var(--numbers-36);
+}
+
+.th {
+
+  text-align: left;
+  padding: 0 var(--numbers-12);
+}
+
+.td > div {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--numbers-64);
+}
+
+.tr > .th {
+  border-bottom: 1px solid var(--border-base-divider);
+}
+
+.tr {
+  background: transparent;
+
+  & + & > .td {
+    border-top: 1px solid var(--border-base-divider);
+  }
 }

@@ -1,3 +1,5 @@
+import { BrandServiceInterface } from '@library/domain';
+
 import { inject, injectable } from 'inversify';
 
 import { BrandStore, BrandStoreSymbol } from '../store/brand.store.ts';
@@ -6,7 +8,10 @@ export const BrandsControllerSymbol = Symbol.for('BrandsController');
 
 @injectable()
 export class BrandsController {
-  constructor(@inject(BrandStoreSymbol) private readonly brandStore: BrandStore) {}
+  constructor(
+    @inject(BrandStoreSymbol) private readonly brandStore: BrandStore,
+    @inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface,
+  ) {}
 
   getData() {
     return this.brandStore.data;
@@ -16,11 +21,12 @@ export class BrandsController {
     return this.brandStore.meta;
   }
 
-  getInProcess() {
-    return this.brandStore.inProcess;
-  }
-
   async findAll() {
-    return await this.brandStore.findAll();
+    const result = await this.brandService.findAll();
+
+    this.brandStore.setData(result.data);
+    this.brandStore.setMeta(result.meta);
+
+    return result.data;
   }
 }

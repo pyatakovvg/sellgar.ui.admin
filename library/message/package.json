@@ -12,7 +12,7 @@
     "@library/kit": "0.0.1",
     "@utils/generate": "0.0.1",
     "classnames": "2.5.1",
-    "inversify": "7.1.0",
+    "inversify": "7.2.0",
     "mobx": "6.13.7",
     "mobx-react": "9.2.0",
     "react": "19.0.0",

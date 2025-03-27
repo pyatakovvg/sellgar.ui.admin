@@ -9,7 +9,9 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
-    "@emotion/react": "11.14.0",
-    "@table-library/react-table-library": "4.1.12"
+    "gridjs": "6.2.0",
+    "gridjs-react": "6.1.1",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
   }
 }

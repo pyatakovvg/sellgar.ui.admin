@@ -1,13 +1,17 @@
 import React from 'react';
 
 import { Provider } from './module.context.ts';
-import { controller } from './classes/classes.di.ts';
+import { UnitsController } from './classes/controller/units.controller.ts';
 
-export const ModuleProvider: React.FC<React.PropsWithChildren> = (props) => {
+interface IProps {
+  controller: UnitsController;
+}
+
+export const ModuleProvider: React.FC<React.PropsWithChildren<IProps>> = (props) => {
   return (
     <Provider
       value={{
-        controller: controller,
+        controller: props.controller,
       }}
     >
       {props.children}

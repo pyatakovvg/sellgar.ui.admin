@@ -14,16 +14,24 @@ import { Container } from 'inversify';
 import { ProductsStore, ProductsStoreSymbol } from './store/products.store.ts';
 import { ProductsController, ProductsControllerSymbol } from './controller/products.controller.ts';
 
-const container = new Container();
+let container: Container;
 
-container.bind<ConfigInterface>(ConfigInterface).to(Config);
-container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
+const create = () => {
+  container = new Container();
 
-container.bind<ProductGatewayInterface>(ProductGatewayInterface).to(ProductGateway);
-container.bind<ProductServiceInterface>(ProductServiceInterface).to(ProductService);
+  container.bind<ConfigInterface>(ConfigInterface).to(Config);
+  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
 
-container.bind<ProductsStore>(ProductsStoreSymbol).to(ProductsStore).inSingletonScope();
+  container.bind<ProductGatewayInterface>(ProductGatewayInterface).to(ProductGateway);
+  container.bind<ProductServiceInterface>(ProductServiceInterface).to(ProductService);
 
-container.bind<ProductsController>(ProductsControllerSymbol).to(ProductsController);
+  container.bind<ProductsStore>(ProductsStoreSymbol).to(ProductsStore).inSingletonScope();
 
-export const controller = container.get<ProductsController>(ProductsControllerSymbol);
+  container.bind<ProductsController>(ProductsControllerSymbol).to(ProductsController);
+
+  return container;
+};
+
+const destroy = () => container.unbindAll();
+
+export { create, destroy };

@@ -2,19 +2,16 @@ import { HttpException, CategoryEntity, CategoryServiceInterface } from '@librar
 
 import { inject, injectable } from 'inversify';
 import { makeObservable, observable, action } from 'mobx';
+import { ValidationError } from 'class-validator';
 
 export const CategoryStoreSymbol = Symbol.for('CategoryStore');
 
 @injectable()
 export class CategoryStore {
-  @observable inProcess: boolean = true;
   @observable data: CategoryEntity;
-  @observable error: HttpException | null = null;
   @observable categories: CategoryEntity[] = [];
-
-  constructor(@inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface) {
-    makeObservable(this);
-  }
+  @observable error: HttpException | null = null;
+  @observable validationError: ValidationError[] = [];
 
   @action.bound
   setData(data: CategoryEntity) {
@@ -27,51 +24,55 @@ export class CategoryStore {
   }
 
   @action.bound
-  setProcess(state: boolean) {
-    this.inProcess = state;
-  }
-
-  @action.bound
   setError(error: HttpException | null) {
     this.error = error;
   }
 
-  filterCategoryByUuid(data: CategoryEntity[], uuid?: string) {
-    if (!uuid) {
-      return data;
-    }
-    return data.reduce((acc, category) => {
-      if (category.uuid === uuid) {
-        return acc;
-      }
-      const filteredChildren = this.filterCategoryByUuid(category.children, uuid);
-      acc.push({
-        ...category,
-        children: filteredChildren,
-      });
-      return acc;
-    }, [] as CategoryEntity[]);
-  }
-
   @action.bound
-  async getData(uuid?: string) {
-    this.setProcess(true);
-
-    try {
-      if (uuid) {
-        const category = await this.categoryService.findByUuid(uuid);
-
-        this.setData(category);
-      }
-
-      const categories = await this.categoryService.findAll();
-      const filteredCategories = this.filterCategoryByUuid(categories.data, uuid);
-
-      this.setCategories(filteredCategories);
-    } catch (error) {
-      this.setError(error as HttpException);
-    } finally {
-      this.setProcess(false);
-    }
+  setValidationError(errors: ValidationError[]) {
+    this.validationError = errors;
   }
+
+  // filterCategoryByUuid(data: CategoryEntity[], uuid?: string) {
+  //   if (!uuid) {
+  //     return data;
+  //   }
+  //   return data.reduce((acc, category) => {
+  //     if (category.uuid === uuid) {
+  //       return acc;
+  //     }
+  //     const filteredChildren = this.filterCategoryByUuid(category.children, uuid);
+  //     acc.push({
+  //       ...category,
+  //       children: filteredChildren,
+  //     });
+  //     return acc;
+  //   }, [] as CategoryEntity[]);
+  // }
+
+  // @action.bound
+  // async getData(uuid?: string) {
+  //   this.setProcess(true);
+  //
+  //   try {
+  //     let category;
+  //
+  //     if (uuid) {
+  //       category = await this.categoryService.findByUuid(uuid);
+  //
+  //       this.setData(category);
+  //     }
+  //
+  //     const categories = await this.categoryService.findAll();
+  //     const filteredCategories = this.filterCategoryByUuid(categories.data, uuid);
+  //
+  //     this.setCategories(filteredCategories);
+  //
+  //     return category;
+  //   } catch (error) {
+  //     this.setError(error as HttpException);
+  //   } finally {
+  //     this.setProcess(false);
+  //   }
+  // }
 }

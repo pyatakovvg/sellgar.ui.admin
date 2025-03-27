@@ -1,18 +1,30 @@
+import { ApplicationModule } from '@library/app';
+
 import React from 'react';
 
-import { Brand } from './components/Brand';
+import { BrandView } from './view';
 import { ModuleProvider } from './module.provider.tsx';
 
-import { controller } from './classes/classes.di.ts';
+import { create, destroy } from './classes/classes.di.ts';
+import { BrandsController, BrandsControllerSymbol } from './classes/controller/brands.controller.ts';
 
-export const loader = async () => {
-  await controller.findAll();
-};
+export class Module implements ApplicationModule {
+  private readonly container = create();
+  private readonly controller = this.container.get<BrandsController>(BrandsControllerSymbol);
 
-export const Module = () => {
-  return (
-    <ModuleProvider>
-      <Brand />
-    </ModuleProvider>
-  );
-};
+  destroy() {
+    destroy();
+  }
+
+  loader = async () => {
+    await this.controller.findAll();
+  };
+
+  render() {
+    return (
+      <ModuleProvider controller={this.controller}>
+        <BrandView />
+      </ModuleProvider>
+    );
+  }
+}

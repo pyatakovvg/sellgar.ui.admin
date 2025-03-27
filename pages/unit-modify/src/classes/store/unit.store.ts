@@ -39,6 +39,8 @@ export class UnitStore {
         const result = await this.unitService.findByUuid(uuid);
 
         this.setData(result);
+
+        return result;
       }
     } catch (error) {
       this.setError(error as HttpException);

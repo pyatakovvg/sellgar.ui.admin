@@ -14,16 +14,26 @@ import { Container } from 'inversify';
 import { BrandStore, BrandStoreSymbol } from './store/brand.store.ts';
 import { BrandsController, BrandsControllerSymbol } from './controller/brands.controller.ts';
 
-const container = new Container();
+let container: Container;
 
-container.bind<ConfigInterface>(ConfigInterface).to(Config);
-container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
+const create = () => {
+  container = new Container();
 
-container.bind<BrandGatewayInterface>(BrandGatewayInterface).to(BrandGateway);
-container.bind<BrandServiceInterface>(BrandServiceInterface).to(BrandService);
+  container.bind<ConfigInterface>(ConfigInterface).to(Config);
+  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
 
-container.bind<BrandStore>(BrandStoreSymbol).to(BrandStore).inSingletonScope();
+  container.bind<BrandGatewayInterface>(BrandGatewayInterface).to(BrandGateway);
+  container.bind<BrandServiceInterface>(BrandServiceInterface).to(BrandService);
 
-container.bind<BrandsController>(BrandsControllerSymbol).to(BrandsController);
+  container.bind<BrandStore>(BrandStoreSymbol).to(BrandStore).inSingletonScope();
 
-export const controller = container.get<BrandsController>(BrandsControllerSymbol);
+  container.bind<BrandsController>(BrandsControllerSymbol).to(BrandsController);
+
+  return container;
+};
+
+const destroy = () => {
+  container.unbindAll();
+};
+
+export { create, destroy };

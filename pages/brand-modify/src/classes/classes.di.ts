@@ -16,17 +16,27 @@ import { BrandStore, BrandStoreSymbol } from './store/brand.store.ts';
 
 import { BrandPresenter, BrandPresenterSymbol } from './presenter/brand.presenter.ts';
 
-const container = new Container({ defaultScope: 'Singleton' });
+let container: Container;
 
-container.bind<ConfigInterface>(ConfigInterface).to(Config);
-container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
+const create = () => {
+  container = new Container();
 
-container.bind<BrandGatewayInterface>(BrandGatewayInterface).to(BrandGateway);
-container.bind<BrandServiceInterface>(BrandServiceInterface).to(BrandService);
+  container.bind<ConfigInterface>(ConfigInterface).to(Config);
+  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
 
-container.bind<FormStore>(FormStoreSymbol).to(FormStore);
-container.bind<BrandStore>(BrandStoreSymbol).to(BrandStore);
+  container.bind<BrandGatewayInterface>(BrandGatewayInterface).to(BrandGateway);
+  container.bind<BrandServiceInterface>(BrandServiceInterface).to(BrandService);
 
-container.bind<BrandPresenter>(BrandPresenterSymbol).to(BrandPresenter);
+  container.bind<FormStore>(FormStoreSymbol).to(FormStore);
+  container.bind<BrandStore>(BrandStoreSymbol).to(BrandStore);
 
-export const controller = container.get<BrandPresenter>(BrandPresenterSymbol);
+  container.bind<BrandPresenter>(BrandPresenterSymbol).to(BrandPresenter);
+
+  return container;
+};
+
+const destroy = () => {
+  container.unbindAll();
+};
+
+export { create, destroy };

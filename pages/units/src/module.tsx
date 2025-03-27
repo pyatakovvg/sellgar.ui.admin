@@ -1,18 +1,30 @@
+import { ApplicationModule } from '@library/app';
+
 import React from 'react';
 
 import { Unit } from './components/Unit';
 import { ModuleProvider } from './module.provider.tsx';
 
-import { controller } from './classes/classes.di.ts';
+import { create, destroy } from './classes/classes.di.ts';
+import { UnitsController, UnitsControllerSymbol } from './classes/controller/units.controller.ts';
 
-export const loader = async () => {
-  await controller.findAll();
-};
+export class Module implements ApplicationModule {
+  private readonly container = create();
+  private readonly controller = this.container.get<UnitsController>(UnitsControllerSymbol);
 
-export const Module = () => {
-  return (
-    <ModuleProvider>
-      <Unit />
-    </ModuleProvider>
-  );
-};
+  destroy() {
+    destroy();
+  }
+
+  async loader() {
+    await this.controller.findAll();
+  }
+
+  render() {
+    return (
+      <ModuleProvider controller={this.controller}>
+        <Unit />
+      </ModuleProvider>
+    );
+  }
+}
