@@ -2,7 +2,7 @@ import { ApplicationModule } from '@library/app';
 
 import React from 'react';
 
-import { Unit } from './components/Unit';
+import { UnitView } from './view';
 import { ModuleProvider } from './module.provider.tsx';
 
 import { create, destroy } from './classes/classes.di.ts';
@@ -23,7 +23,7 @@ export class Module implements ApplicationModule {
   render() {
     return (
       <ModuleProvider controller={this.controller}>
-        <Unit />
+        <UnitView />
       </ModuleProvider>
     );
   }

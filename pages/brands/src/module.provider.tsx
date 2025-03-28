@@ -1,10 +1,10 @@
 import React from 'react';
 
 import { Provider } from './module.context.ts';
-import { BrandsController } from './classes/controller/brands.controller.ts';
+import { BrandsControllerInterface } from './classes/controller/brand-controller.interface.ts';
 
 interface IProps {
-  controller: BrandsController;
+  controller: BrandsControllerInterface;
 }
 
 export const ModuleProvider: React.FC<React.PropsWithChildren<IProps>> = (props) => {

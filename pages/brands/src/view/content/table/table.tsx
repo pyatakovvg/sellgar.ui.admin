@@ -1,11 +1,11 @@
 import { BrandEntity } from '@library/domain';
-import { Table as NewTable } from '@library/table';
+import { Table as TableComponent, Column } from '@library/table';
 
 import React from 'react';
 
-import { Name } from './Name';
-import { Info } from './Info';
-// import { CrudActions } from './CrudActions';
+import { Name } from './name';
+import { Info } from './info';
+import { Actions } from './actions';
 
 import s from './default.module.scss';
 
@@ -16,56 +16,25 @@ interface IProps {
 export const Table: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
-      <NewTable
-        data={props.data}
-        columns={[
-          {
-            key: 'name',
-            title: 'Наименование',
-            width: '280',
-            Component: (cell) => {
-              return <Name>{cell?.toString()}</Name>;
-            },
-          },
-          {
-            key: 'description',
-            title: 'Описание',
-            Component(cell) {
-              return <Info>{cell?.toString()}</Info>;
-            },
-          },
-        ]}
-      />
-
-      {/*<div className={s.container}>*/}
-      {/*  <TableComponent*/}
-      {/*    data={props.data}*/}
-      {/*    columns={[*/}
-      {/*      {*/}
-      {/*        id: 'name',*/}
-      {/*        size: 280,*/}
-      {/*        header: 'Наименование',*/}
-      {/*        cell: (cell) => <Name deps={cell.row.depth}>{cell.getValue()}</Name>,*/}
-      {/*        accessorKey: 'name',*/}
-      {/*      },*/}
-      {/*      {*/}
-      {/*        id: 'description',*/}
-      {/*        size: 420,*/}
-      {/*        accessorKey: 'description',*/}
-      {/*        header: 'Описание',*/}
-      {/*        enableResizing: false,*/}
-      {/*        cell: (cell) => <Info>{cell.getValue()}</Info>,*/}
-      {/*      },*/}
-      {/*      {*/}
-      {/*        id: 'actions',*/}
-      {/*        size: 48,*/}
-      {/*        enableResizing: false,*/}
-      {/*        header: () => false,*/}
-      {/*        cell: ({ row }) => <CrudActions data={row.original} />,*/}
-      {/*      },*/}
-      {/*    ]}*/}
-      {/*  />*/}
-      {/*</div>*/}
+      <TableComponent data={props.data}>
+        <Column accessor={'name'} width={200}>
+          <Column.Title>Наименование</Column.Title>
+          <Column.Cell>
+            <Name />
+          </Column.Cell>
+        </Column>
+        <Column accessor={'description'}>
+          <Column.Title>Описание</Column.Title>
+          <Column.Cell>
+            <Info />
+          </Column.Cell>
+        </Column>
+        <Column width={100}>
+          <Column.Cell>
+            <Actions />
+          </Column.Cell>
+        </Column>
+      </TableComponent>
     </div>
   );
 };

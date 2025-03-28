@@ -11,22 +11,30 @@ import {
 
 import { Container } from 'inversify';
 
-import { CategoryStore, CategoryStoreSymbol } from './store/category.store.ts';
-import { FindAllCategoryUseCase, FindAllCategoryUseCaseSymbol } from './usecase/find-all-category.usecase.ts';
-import { CategoryPresenter, CategoryPresenterSymbol } from './presenter/category.presenter.ts';
+import { CategoryStore } from './store/category.store.ts';
+import { CategoryStoreInterface } from './store/category-store.interface.ts';
 
-const container = new Container();
+import { CategoryController } from './controller/category.controller.ts';
+import { CategoryControllerInterface } from './controller/category-controller.interface.ts';
 
-container.bind<ConfigInterface>(ConfigInterface).to(Config);
-container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
+let container: Container;
 
-container.bind<CategoryGatewayInterface>(CategoryGatewayInterface).to(CategoryGateway);
-container.bind<CategoryServiceInterface>(CategoryServiceInterface).to(CategoryService);
+export const create = () => {
+  container = new Container();
 
-container.bind<CategoryStore>(CategoryStoreSymbol).to(CategoryStore).inSingletonScope();
+  container.bind<ConfigInterface>(ConfigInterface).to(Config);
+  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
 
-container.bind<FindAllCategoryUseCase>(FindAllCategoryUseCaseSymbol).to(FindAllCategoryUseCase);
+  container.bind<CategoryGatewayInterface>(CategoryGatewayInterface).to(CategoryGateway);
+  container.bind<CategoryServiceInterface>(CategoryServiceInterface).to(CategoryService);
 
-container.bind<CategoryPresenter>(CategoryPresenterSymbol).to(CategoryPresenter);
+  container.bind<CategoryStoreInterface>(CategoryStoreInterface).to(CategoryStore).inSingletonScope();
 
-export const controller = container.get<CategoryPresenter>(CategoryPresenterSymbol);
+  container.bind<CategoryControllerInterface>(CategoryControllerInterface).to(CategoryController);
+
+  return container;
+};
+
+export const destroy = () => {
+  container.unbindAll();
+};

@@ -1,0 +1,27 @@
+.wrapper {
+
+  text-align: left;
+  height: var(--numbers-36);
+}
+
+.cell {
+
+  display: contents;
+  overflow: hidden;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  padding: 0 var(--numbers-12);
+  color: var(--text-base-secondary);
+  overflow: hidden;
+}
+
+.text {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

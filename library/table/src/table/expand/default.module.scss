@@ -1,0 +1,46 @@
+
+.cell {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+.expand {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: var(--numbers-20);
+  height: var(--numbers-20);
+  align-items: center;
+  justify-content: center;
+  font-size: var(--numbers-10);
+  border-radius: var(--measurements-radius-xs);
+  border: var(--numbers-1) solid var(--border-action-normal);
+  color: var(--text-base-secondary);
+  background: var(--background-button-secondary);
+  transition: var(--measurements-transition);
+
+  &:hover {
+    border-color: var(--border-action-hover);
+    background: var(--background-button-secondary--hover);
+  }
+}
+
+.active,
+.active:hover {
+
+  border-color: var(--border-action-focus-light);
+  background: var(--background-button-secondary);
+  box-shadow: 0 0 0 var(--numbers-2) rgba(200, 178, 255, 0.50);
+}
+
+.disabled,
+.disabled:hover {
+
+  color: var(--text-base-quaternary);
+  border-color: var(--border-action-disabled);
+  background: var(--background-button-tertiary);
+}

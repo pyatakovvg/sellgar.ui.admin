@@ -1,0 +1,33 @@
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  color: var(--text-base-primary);
+  padding: var(--numbers-4) var(--numbers-12);
+  overflow: auto;
+}
+
+
+.expand {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  margin: 0 0 0 var(--numbers-8);
+  overflow: auto;
+}
+
+.text {
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { CategoryPresenter } from './classes/presenter/category.presenter.ts';
+import { CategoryControllerInterface } from './classes/controller/category-controller.interface.ts';
 
 interface IContext {
-  presenter: CategoryPresenter;
+  controller: CategoryControllerInterface;
 }
 
 export const context = React.createContext<IContext>({} as IContext);

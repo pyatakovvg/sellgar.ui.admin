@@ -5,9 +5,9 @@ import React from 'react';
 import { context } from '../module.context.ts';
 
 export const useFindAllRequest = () => {
-  const { presenter } = React.useContext(context);
+  const { controller } = React.useContext(context);
 
   return useRequest(async () => {
-    return await presenter.findAll();
+    return await controller.findAll();
   });
 };

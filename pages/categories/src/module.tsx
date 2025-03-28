@@ -2,20 +2,28 @@ import { ApplicationModule } from '@library/app';
 
 import React from 'react';
 
-import { Category } from './components/Category';
+import { CategoryView } from './view';
 import { ModuleProvider } from './module.provider.tsx';
 
-import { controller } from './classes/classes.di.ts';
+import { CategoryControllerInterface } from './classes/controller/category-controller.interface.ts';
+import { create, destroy } from './classes/classes.di.ts';
 
 export class Module implements ApplicationModule {
+  private readonly container = create();
+  private readonly controller = this.container.get(CategoryControllerInterface);
+
+  destroy() {
+    destroy();
+  }
+
   async loader() {
-    await controller.findAll();
+    await this.controller.findAll();
   }
 
   render() {
     return (
-      <ModuleProvider>
-        <Category />
+      <ModuleProvider controller={this.controller}>
+        <CategoryView />
       </ModuleProvider>
     );
   }

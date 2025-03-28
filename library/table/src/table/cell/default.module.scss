@@ -1,0 +1,22 @@
+.wrapper {
+
+  background: transparent;
+}
+
+.cell {
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-height: 64px;
+}
+
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  justify-content: center;
+  overflow: auto;
+}

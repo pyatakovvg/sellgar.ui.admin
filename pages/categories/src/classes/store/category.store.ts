@@ -3,11 +3,10 @@ import { CategoryEntity, MetaEntity } from '@library/domain';
 import { injectable } from 'inversify';
 import { makeObservable, observable, action } from 'mobx';
 
-export const CategoryStoreSymbol = Symbol.for('CategoryStore');
+import { CategoryStoreInterface } from './category-store.interface.ts';
 
 @injectable()
-export class CategoryStore {
-  @observable inProcess: boolean = true;
+export class CategoryStore implements CategoryStoreInterface {
   @observable data: CategoryEntity[] = [];
   @observable meta: MetaEntity;
 
@@ -23,10 +22,5 @@ export class CategoryStore {
   @action.bound
   setMeta(meta: MetaEntity) {
     this.meta = meta;
-  }
-
-  @action.bound
-  setProcess(state: boolean) {
-    this.inProcess = state;
   }
 }

@@ -11,8 +11,11 @@ import {
 
 import { Container } from 'inversify';
 
-import { BrandStore, BrandStoreSymbol } from './store/brand.store.ts';
-import { BrandsController, BrandsControllerSymbol } from './controller/brands.controller.ts';
+import { BrandStore } from './store/brand.store.ts';
+import { BrandStoreInterface } from './store/brand-store.interface.ts';
+
+import { BrandController } from './controller/brand.controller.ts';
+import { BrandsControllerInterface } from './controller/brand-controller.interface.ts';
 
 let container: Container;
 
@@ -25,9 +28,9 @@ const create = () => {
   container.bind<BrandGatewayInterface>(BrandGatewayInterface).to(BrandGateway);
   container.bind<BrandServiceInterface>(BrandServiceInterface).to(BrandService);
 
-  container.bind<BrandStore>(BrandStoreSymbol).to(BrandStore).inSingletonScope();
+  container.bind<BrandStoreInterface>(BrandStoreInterface).to(BrandStore).inSingletonScope();
 
-  container.bind<BrandsController>(BrandsControllerSymbol).to(BrandsController);
+  container.bind<BrandsControllerInterface>(BrandsControllerInterface).to(BrandController);
 
   return container;
 };

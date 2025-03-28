@@ -1,0 +1,51 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 var(--numbers-16);
+}
+
+.actions {
+
+  display: block;
+  padding: 8px 16px 16px;
+}
+
+.action {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  color: var(--color-black);
+  align-items: center;
+  cursor: pointer;
+
+  & + & {
+    margin: 16px 0 0;
+  }
+}
+
+.icon {
+
+  display: block;
+}
+
+.title {
+
+  display: block;
+  margin: 0 0 0 8px;
+}
+
+.mode {
+  &--edit {
+    color: var(--color-green-50);
+  }
+
+  &--delete {
+    color: var(--color-red-25);
+  }
+}

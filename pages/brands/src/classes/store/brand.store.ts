@@ -3,10 +3,10 @@ import { BrandEntity, MetaEntity } from '@library/domain';
 import { injectable } from 'inversify';
 import { makeObservable, observable, action } from 'mobx';
 
-export const BrandStoreSymbol = Symbol.for('BrandStore');
+import { BrandStoreInterface } from './brand-store.interface.ts';
 
 @injectable()
-export class BrandStore {
+export class BrandStore implements BrandStoreInterface {
   @observable data: BrandEntity[] = [];
   @observable meta: MetaEntity;
 
