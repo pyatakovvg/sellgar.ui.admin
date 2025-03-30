@@ -2,15 +2,15 @@ import { ApplicationModule } from '@library/app';
 
 import React from 'react';
 
-import { Property } from './components/Property';
+import { PropertyView } from './view';
 import { ModuleProvider } from './module.provider.tsx';
 
 import { create, destroy } from './classes/classes.di.ts';
-import { PropertyController, PropertyControllerSymbol } from './classes/controller/property.controller.ts';
+import { PropertyControllerInterface } from './classes/controller/property-controller.interface.ts';
 
 export class Module implements ApplicationModule {
   private readonly container = create();
-  private readonly controller = this.container.get<PropertyController>(PropertyControllerSymbol);
+  private readonly controller = this.container.get<PropertyControllerInterface>(PropertyControllerInterface);
 
   destroy() {
     destroy();
@@ -23,7 +23,7 @@ export class Module implements ApplicationModule {
   render() {
     return (
       <ModuleProvider controller={this.controller}>
-        <Property />
+        <PropertyView />
       </ModuleProvider>
     );
   }

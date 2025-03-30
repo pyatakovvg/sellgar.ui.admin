@@ -11,8 +11,10 @@ import {
 
 import { Container } from 'inversify';
 
-import { PropertyStore, PropertyStoreSymbol } from './store/property.store.ts';
-import { PropertyController, PropertyControllerSymbol } from './controller/property.controller.ts';
+import { PropertyStore } from './store/property.store.ts';
+import { PropertyStoreInterface } from './store/property-store.interface.ts';
+import { PropertyController } from './controller/property.controller.ts';
+import { PropertyControllerInterface } from './controller/property-controller.interface.ts';
 
 let container: Container;
 
@@ -25,9 +27,9 @@ const create = () => {
   container.bind<PropertyGroupGatewayInterface>(PropertyGroupGatewayInterface).to(PropertyGroupGateway);
   container.bind<PropertyGroupServiceInterface>(PropertyGroupServiceInterface).to(PropertyGroupService);
 
-  container.bind<PropertyStore>(PropertyStoreSymbol).to(PropertyStore).inSingletonScope();
+  container.bind<PropertyStoreInterface>(PropertyStoreInterface).to(PropertyStore);
 
-  container.bind<PropertyController>(PropertyControllerSymbol).to(PropertyController);
+  container.bind<PropertyControllerInterface>(PropertyControllerInterface).to(PropertyController);
 
   return container;
 };

@@ -1,0 +1,38 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  & + & {
+    margin: 36px 0 0;
+  }
+}
+
+.header {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  align-items: center;
+}
+
+.title {
+
+  display: block;
+}
+
+.actions {
+
+  display: block;
+  margin: 0 0 0 var(--numbers-16);
+}
+
+.table {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  margin: var(--numbers-16) 0 0;
+}

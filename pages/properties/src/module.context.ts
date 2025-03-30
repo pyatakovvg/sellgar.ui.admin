@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { PropertyController } from './classes/controller/property.controller.ts';
+import { PropertyControllerInterface } from './classes/controller/property-controller.interface.ts';
 
 interface IContext {
-  controller: PropertyController;
+  controller: PropertyControllerInterface;
 }
 
 export const context = React.createContext<IContext>({} as IContext);

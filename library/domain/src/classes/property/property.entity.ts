@@ -1,8 +1,8 @@
 import { Type } from 'class-transformer';
 import { IsUUID, IsOptional, IsString, ValidateNested, IsDateString } from 'class-validator';
 
+import { UnitEntity } from '../unit';
 import { MetaEntity } from '../../meta.entity.ts';
-import { UnitEntity } from '../unit/unit.entity.ts';
 
 export class PropertyEntity {
   @IsUUID()
@@ -27,9 +27,10 @@ export class PropertyEntity {
   @IsString()
   type: 'TEXT' | 'CHECKBOX' | 'RADIO' | 'DATE' | 'RANGE';
 
+  @IsOptional()
   @ValidateNested()
   @Type(() => UnitEntity)
-  unit: UnitEntity | null;
+  unit?: UnitEntity | null;
 
   @IsDateString()
   createdAt: string;

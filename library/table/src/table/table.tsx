@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Head } from './head';
 import { Row } from './row';
+import { Empty } from './empty';
 
 import { Provider as TableProvider, context as tableContext, type IContext } from './table.context.ts';
 
@@ -15,6 +16,7 @@ interface ITree<T> {
 interface IProps<T> {
   data: T[];
   tree?: ITree<T>;
+  empty?: React.ReactNode;
 }
 
 interface IRowsProps<T> {
@@ -113,7 +115,7 @@ export const Table = <T extends Record<string, any>>(props: React.PropsWithChild
               })}
             </Head>
           </thead>
-          <tbody>
+          <tbody className={s.tbody}>
             {props.data.map((item, index) => {
               return (
                 <Rows key={'row_' + index} index={index} deps={0} tree={props.tree} data={item as T}>
@@ -122,6 +124,7 @@ export const Table = <T extends Record<string, any>>(props: React.PropsWithChild
               );
             })}
           </tbody>
+          {!props.data.length && <caption className={s.caption}>{props.empty ?? <Empty>Нет данных</Empty>}</caption>}
         </table>
       </div>
     </TableProvider>

@@ -11,10 +11,13 @@ import {
 
 import { Container } from 'inversify';
 
-import { FormStore, FormStoreSymbol } from './store/form.store.ts';
-import { BrandStore, BrandStoreSymbol } from './store/brand.store.ts';
+import { FormStore } from './store/form/form.store.ts';
+import { FormStoreInterface } from './store/form/form-store.interface.ts';
+import { BrandStore } from './store/brand/brand.store.ts';
+import { BrandStoreInterface } from './store/brand/brand-store.interface.ts';
 
-import { BrandPresenter, BrandPresenterSymbol } from './presenter/brand.presenter.ts';
+import { BrandController } from './controller/brand.controller.ts';
+import { BrandControllerInterface } from './controller/brand-controller.interface.ts';
 
 let container: Container;
 
@@ -27,10 +30,10 @@ const create = () => {
   container.bind<BrandGatewayInterface>(BrandGatewayInterface).to(BrandGateway);
   container.bind<BrandServiceInterface>(BrandServiceInterface).to(BrandService);
 
-  container.bind<FormStore>(FormStoreSymbol).to(FormStore);
-  container.bind<BrandStore>(BrandStoreSymbol).to(BrandStore);
+  container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
+  container.bind<BrandStoreInterface>(BrandStoreInterface).to(BrandStore);
 
-  container.bind<BrandPresenter>(BrandPresenterSymbol).to(BrandPresenter);
+  container.bind<BrandControllerInterface>(BrandControllerInterface).to(BrandController);
 
   return container;
 };

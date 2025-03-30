@@ -5,7 +5,7 @@ import React from 'react';
 
 import { Name } from './name';
 import { Info } from './info';
-import { CrudActions } from './CrudActions';
+import { Actions } from './actions';
 
 import s from './default.module.scss';
 
@@ -31,7 +31,7 @@ export const Table: React.FC<IProps> = (props) => {
         </Column>
         <Column width={100}>
           <Column.Cell>
-            <CrudActions />
+            <Actions />
           </Column.Cell>
         </Column>
       </TableComponent>

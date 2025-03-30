@@ -3,11 +3,11 @@ import { ApplicationModule } from '@library/app';
 import React from 'react';
 import { LoaderFunctionArgs } from 'react-router-dom';
 
-import { Brand } from './components/Brand';
+import { BrandView } from './view';
 import { ModuleProvider } from './module.provider.tsx';
 
 import { create, destroy } from './classes/classes.di.ts';
-import { BrandPresenterSymbol, BrandPresenter } from './classes/presenter/brand.presenter.ts';
+import { BrandControllerInterface } from './classes/controller/brand-controller.interface.ts';
 
 interface ILoaderProps {
   uuid?: string;
@@ -15,7 +15,7 @@ interface ILoaderProps {
 
 export class Module implements ApplicationModule {
   private readonly container = create();
-  private readonly controller = this.container.get<BrandPresenter>(BrandPresenterSymbol);
+  private readonly controller = this.container.get<BrandControllerInterface>(BrandControllerInterface);
 
   destroy() {
     destroy();
@@ -30,7 +30,7 @@ export class Module implements ApplicationModule {
   render() {
     return (
       <ModuleProvider controller={this.controller}>
-        <Brand />
+        <BrandView />
       </ModuleProvider>
     );
   }
