@@ -32,6 +32,13 @@ export const Navigate = () => {
               )}
             </NavLink>
           </Sidebar.Cell>
+          <Sidebar.Cell>
+            <NavLink className={s.link} to={'/store'} viewTransition={true}>
+              {({ isActive, isPending }) => (
+                <MenuItem leadIcon={'unsplash-line'} caption={'Склад'} isActive={isActive} isPending={isPending} />
+              )}
+            </NavLink>
+          </Sidebar.Cell>
         </Sidebar.Block>
 
         <Sidebar.Block>

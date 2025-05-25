@@ -1,31 +1,23 @@
 import { Page } from '@library/design';
-import { BrandEntity } from '@library/domain';
+import { BrandEntity, CreateBrandDto } from '@library/domain';
 
 import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useParams, useLoaderData } from 'react-router-dom';
 
-import { Form } from './form';
 import { Controls } from './controls';
+import { Content } from './content';
 
 import { schema } from './schema.ts';
 
-interface IParams {
-  readonly uuid?: string;
-}
-
-interface IForm {
-  code: string;
-  name: string;
-  description: string;
-}
+interface IForm extends CreateBrandDto {}
 
 export const BrandView = () => {
   const data = useLoaderData<BrandEntity>();
-  const params = useParams() as unknown as IParams;
+  const params = useParams();
 
-  const methods = useForm<IForm>({ defaultValues: data, resolver: yupResolver<IForm>(schema) });
+  const methods = useForm<IForm>({ defaultValues: data, resolver: yupResolver(schema) });
 
   return (
     <FormProvider {...methods}>
@@ -37,7 +29,7 @@ export const BrandView = () => {
           </Page.Header.Controls>
         </Page.Header>
         <Page.Content>
-          <Form />
+          <Content />
         </Page.Content>
       </Page>
     </FormProvider>

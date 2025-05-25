@@ -36,7 +36,7 @@ export const Variants: React.FC = () => {
       </div>
       <div className={s.control}>
         <Button
-          size={'sm'}
+          size={'xs'}
           style={'tertiary'}
           leadIcon={<Icon icon={'add-fill'} />}
           onClick={() => append(new ProductVariantDto())}

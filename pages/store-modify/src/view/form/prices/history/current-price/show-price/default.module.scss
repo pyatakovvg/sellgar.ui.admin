@@ -1,0 +1,79 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0 auto;
+  align-items: center;
+  padding: var(--numbers-8) var(--numbers-12);
+  height: var(--numbers-40);
+  border-radius: var(--measurements-radius-xl);
+  background: var(--background-surface-success);
+}
+
+.content {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.price {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  color: var(--text-base-primary);
+}
+
+.currency {
+
+  display: inline-block;
+  color: var(--text-base-primary);
+  margin: 0 0 0 4px;
+}
+
+.date {
+
+  display: inline-block;
+  color: var(--text-base-secondary);
+  margin: 0 0 0 12px;
+}
+
+.direction {
+
+  display: block;
+  margin: 0 0 0 12px;
+}
+
+
+.up {
+
+  color: var(--icon-status-success);
+}
+
+.down {
+
+  color: var(--icon-status-destructive);
+}
+
+.same {
+
+  color: var(--icon-status-info);
+}
+
+.control {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  justify-content: flex-end;
+}
+
+.edit {
+
+  display: block;
+  color: var(--icon-status-success);
+  cursor: pointer;
+}

@@ -1,4 +1,4 @@
-import { Heading } from '@library/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -9,7 +9,9 @@ export const NotFound = () => {
     <div className={s.wrapper}>
       <div className={s.content}>
         <div className={s.description}>
-          <Heading variant={'H2'}>Страница не найдена</Heading>
+          <Typography size={'h6'} weight={'semi-bold'}>
+            <p>Страница не найдена</p>
+          </Typography>
         </div>
       </div>
     </div>

@@ -36,7 +36,7 @@ export const Properties: React.FC = () => {
         <div className={s.control}>
           <Button
             style={'secondary'}
-            size={'sm'}
+            size={'xs'}
             leadIcon={<Icon icon={'add-fill'} />}
             onClick={() => append(new ProductPropertyDto())}
           >

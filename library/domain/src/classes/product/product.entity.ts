@@ -3,10 +3,10 @@ import { IsUUID, IsString, ValidateNested, IsDateString, IsOptional } from 'clas
 
 import { MetaEntity } from '../../meta.entity.ts';
 
-import { BrandEntity } from '../brand/brand.entity.ts';
-import { CategoryEntity } from '../category/category.entity.ts';
-import { PropertyEntity } from '../property/property.entity.ts';
-import { PriceEntity } from '../price/price.entity.ts';
+import { BrandEntity } from '../brand';
+import { CategoryEntity } from '../category';
+import { PropertyEntity } from '../property';
+import { ProductVariantEntity } from '../product-variant';
 
 export class ProductPropertyEntity {
   @Expose()
@@ -26,37 +26,6 @@ export class ProductPropertyEntity {
   @Expose()
   @IsString()
   value: string;
-}
-
-export class ProductVariantEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsString()
-  article: string;
-
-  @Expose()
-  @IsString()
-  name: string;
-
-  @Expose()
-  @IsString()
-  description: string;
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => PriceEntity)
-  prices: PriceEntity[];
-
-  @Expose()
-  @IsDateString()
-  createdAt: string;
-
-  @Expose()
-  @IsDateString()
-  updatedAt: string;
 }
 
 export class ProductEntity {

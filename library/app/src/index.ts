@@ -12,4 +12,6 @@ export { useProfile } from './hook/useProfile.ts';
 export { useRequest } from './hook/useRequest.ts';
 export { useNavigate } from './hook/useNavigate.ts';
 
-export { ApplicationModule } from './module.class.ts';
+export { searchToObject } from './utils/search-to-object.utils.ts';
+
+export type { IClassModule } from './lazy-route.tsx';

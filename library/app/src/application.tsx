@@ -1,9 +1,9 @@
+import 'reflect-metadata';
+
 import { LngProvider } from '@library/lng';
 import { PushProvider } from '@library/push';
 import { BreadcrumbsProvider } from '@library/breadcrumbs';
 import { Message, MessageProvider } from '@library/message';
-
-import 'reflect-metadata';
 
 import React from 'react';
 import { createBrowserRouter, RouteObject, RouterProvider, Outlet } from 'react-router-dom';
@@ -18,6 +18,8 @@ import { Error } from './components/error';
 import { NotFound } from './components/not-found';
 
 import { Splash } from './components/splash';
+
+import s from './default.module.scss';
 
 interface IApplicationOption {
   basename?: string;
@@ -48,13 +50,21 @@ export class Application {
         {
           id: 'root',
           element: <Content />,
-          errorElement: <Error />,
+          errorElement: (
+            <div className={s.wrapper}>
+              <Error />
+            </div>
+          ),
           hydrateFallbackElement: <Splash />,
           children: this.options.routes.map((route) => route.create()).filter((route) => route) as RouteObject[],
         },
         {
           path: '*',
-          errorElement: <Error />,
+          errorElement: (
+            <div className={s.wrapper}>
+              <Error />
+            </div>
+          ),
           element: <NotFound />,
         },
       ],
@@ -64,6 +74,10 @@ export class Application {
         basename: this.options.basename ?? '/',
       },
     );
+
+    if (import.meta.hot) {
+      import.meta.hot.dispose(() => routes.dispose());
+    }
 
     return () => {
       return (

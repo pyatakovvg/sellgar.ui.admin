@@ -1,4 +1,4 @@
-import { ApplicationModule } from '@library/app';
+import { type IClassModule } from '@library/app';
 
 import React from 'react';
 import { LoaderFunctionArgs } from 'react-router-dom';
@@ -9,16 +9,21 @@ import { ModuleProvider } from './module.provider.tsx';
 import { create, destroy } from './classes/classes.di.ts';
 import { FilesPresenter, FilesPresenterSymbol } from './classes/presenter/files.presenter.ts';
 
-export class Module implements ApplicationModule {
-  private readonly container = create();
-  private readonly controller = this.container.get<FilesPresenter>(FilesPresenterSymbol);
+export class ClassModule implements IClassModule {
+  private readonly controller: FilesPresenter;
 
-  destroy() {
+  constructor() {
+    const container = create();
+
+    this.controller = container.get(FilesPresenterSymbol);
+  }
+
+  destructor() {
     destroy();
   }
 
-  async loader({ params }: LoaderFunctionArgs) {
-    return this.controller.findAll(params);
+  async loader(args: LoaderFunctionArgs) {
+    return await this.controller.findAll(args.params);
   }
 
   render() {

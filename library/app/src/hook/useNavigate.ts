@@ -4,6 +4,9 @@ export const useNavigate = () => {
   const navigate = useRouterNavigate();
 
   return (to: string, options?: NavigateOptions) => {
-    return navigate(import.meta.env.BASE_URL.replace(/\/$/gi, '') + to, options);
+    return navigate(import.meta.env.BASE_URL.replace(/\/$/gi, '') + to, {
+      ...options,
+      viewTransition: true,
+    });
   };
 };

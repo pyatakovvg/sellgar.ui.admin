@@ -1,11 +1,16 @@
-import React from 'react';
+import { UnauthorizedException } from '@library/domain';
 
-import { useRouteError } from 'react-router-dom';
+import React from 'react';
+import { useRouteError, Navigate } from 'react-router-dom';
 
 import s from './default.module.scss';
 
 export const Error: React.FC = () => {
   const error = useRouteError() as Error;
+
+  if (error instanceof UnauthorizedException) {
+    return <Navigate to={'/sign-in'} />;
+  }
 
   return (
     <div className={s.wrapper}>

@@ -1,0 +1,31 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.controls {
+
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  justify-content: flex-end;
+}
+
+.button {
+
+  display: block;
+
+  & + & {
+    margin: 0 0 0 var(--numbers-8);
+  }
+}

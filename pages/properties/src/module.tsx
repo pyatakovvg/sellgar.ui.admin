@@ -1,4 +1,4 @@
-import { ApplicationModule } from '@library/app';
+import { type IClassModule } from '@library/app';
 
 import React from 'react';
 
@@ -8,11 +8,16 @@ import { ModuleProvider } from './module.provider.tsx';
 import { create, destroy } from './classes/classes.di.ts';
 import { PropertyControllerInterface } from './classes/controller/property-controller.interface.ts';
 
-export class Module implements ApplicationModule {
-  private readonly container = create();
-  private readonly controller = this.container.get<PropertyControllerInterface>(PropertyControllerInterface);
+export class ClassModule implements IClassModule {
+  private readonly controller: PropertyControllerInterface;
 
-  destroy() {
+  constructor() {
+    const container = create();
+
+    this.controller = container.get<PropertyControllerInterface>(PropertyControllerInterface);
+  }
+
+  destructor() {
     destroy();
   }
 

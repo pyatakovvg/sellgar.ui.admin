@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import './default.module.scss';
+import './default.css';
 
 import { Container } from './components/Container';
 

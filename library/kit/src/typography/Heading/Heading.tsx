@@ -27,14 +27,9 @@ const getHeadingElement = (variant?: TVariant): React.ReactElement => {
 
 export const Heading: React.FC<React.PropsWithChildren<IProps>> = ({ variant, ...props }) => {
   const element = React.useMemo(() => getHeadingElement(variant), [variant]);
-  const className = React.useMemo(
-    () => cn(s.heading, element.props.className, props.className),
-    [element, props.className],
-  );
+  const className = React.useMemo(() => cn(s.heading, props.className), [element, props.className]);
 
   return React.cloneElement(element, {
     ...props,
-    className,
-    children: props.children,
   });
 };

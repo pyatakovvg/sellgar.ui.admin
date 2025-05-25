@@ -73,13 +73,11 @@ export class ProductStore implements ProductStoreInterface {
         this.brandService.findAll(),
         this.categoryService.findAll(),
         this.propertyService.findAll(),
-        // this.currencyService.findAll(),
       ]);
 
       this.setBrand(brandResult.data);
       this.setCategories(categoryResult.data);
       this.setProperty(propertyResult.data);
-      // this.setCurrencies(currencyResult.data);
     } catch (error) {
       this.setError(error as HttpException);
     } finally {

@@ -1,14 +1,17 @@
-import { UnauthorizedException } from '@library/domain';
 import { uuid } from '@utils/generate';
+import { UnauthorizedException } from '@library/domain';
 
 import React from 'react';
-import { Navigate, RouteObject, useRouteError, useNavigation } from 'react-router-dom';
+import { Navigate, RouteObject, useRouteError, useNavigation, LoaderFunctionArgs } from 'react-router-dom';
 
 import { useProfile } from './hook/useProfile.ts';
 
 import { Error } from './components/error';
 import { Loading } from './components/loading';
 import { Forbidden } from './components/forbidden';
+import { ErrorLoadingModule } from './components/error-loading-module';
+
+import { LazyRoute } from './lazy-route.tsx';
 
 export interface IPropsWithAppRoute {
   route: Route;
@@ -44,7 +47,7 @@ export class Route {
 
   constructor(
     private readonly path: string,
-    private readonly module: () => Promise<any>,
+    private readonly importModule: () => Promise<any>,
     private readonly options?: IRouteOptions,
   ) {}
 
@@ -67,43 +70,50 @@ export class Route {
     return this.options?.breadcrumb ?? null;
   }
 
-  get content() {
-    return this.module;
-  }
-
   create(): RouteObject | null {
     return {
       path: Route.normalizePath(this.path),
       lazy: async () => {
-        const { Module } = await this.module();
+        try {
+          const { ClassModule } = await this.importModule();
 
-        const module = new Module();
-        const Content = module.render.bind(module);
-        const loader = module.loader && module.loader.bind(module);
+          const lazyRoute = new LazyRoute(ClassModule);
 
-        return {
-          loader,
-          Component: () => {
-            React.useEffect(() => {
-              module.create && module.create();
-              return () => {
-                module.destroy && module.destroy();
-              };
-            }, []);
+          return {
+            loader: (args: LoaderFunctionArgs) => {
+              lazyRoute.create();
 
-            return (
-              <CheckCredentials route={this}>
-                <Content />
-              </CheckCredentials>
-            );
-          },
-        };
+              return lazyRoute.loader.call(lazyRoute, args);
+            },
+            Component: async () => {
+              const Module = lazyRoute.render.bind(lazyRoute);
+
+              React.useLayoutEffect(() => {
+                return () => {
+                  lazyRoute.destructor.call(lazyRoute);
+                };
+              }, []);
+
+              return (
+                <CheckCredentials route={this}>
+                  <Module />
+                </CheckCredentials>
+              );
+            },
+          };
+        } catch (error) {
+          return {
+            Component: () => {
+              return <ErrorLoadingModule error={error as Error} />;
+            },
+          };
+        }
       },
       ErrorBoundary: () => {
         const error = useRouteError();
 
         if (error instanceof UnauthorizedException) {
-          return <Navigate to={'/sign-in'} />;
+          return <Navigate to={import.meta.env.BASE_URL.replace(/\/$/gi, '') + '/sign-in'} />;
         }
         return <Error />;
       },

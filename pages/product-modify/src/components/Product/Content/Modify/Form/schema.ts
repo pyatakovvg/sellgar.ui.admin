@@ -6,31 +6,25 @@ export const schema = yup
     name: yup.string().required('Необходимо заполнить'),
     categoryUuid: yup.string().uuid().required('Необходимо заполнить'),
     brandUuid: yup.string().uuid().required('Необходимо заполнить'),
-    price: yup
-      .number()
-      .typeError('Цена должна быть числом')
-      .min(1, 'Цена должна быть больше ноля')
-      .positive('Цена должна быть положительным числом')
-      .optional(),
+    properties: yup
+      .array()
+      .of(
+        yup.object({
+          propertyUuid: yup.string().uuid().required('Необходимо выбрать'),
+          value: yup.string().required('Необходимо заполнить'),
+        }),
+      )
+      .required('Необходимо заполнить'),
     variants: yup
       .array()
       .of(
-        yup.object().shape({
+        yup.object({
           article: yup.string().required('Необходимо заполнить'),
           name: yup.string().required('Необходимо заполнить'),
           description: yup.string().required('Необходимо заполнить'),
         }),
       )
-      .required(),
-    properties: yup
-      .array()
-      .of(
-        yup.object().shape({
-          propertyUuid: yup.string().uuid().required('Необходимо выбрать'),
-          value: yup.string().required('Необходимо заполнить'),
-        }),
-      )
-      .required(),
+      .required('Необходимо заполнить'),
     description: yup.string().required('Необходимо заполнить'),
   })
   .required();

@@ -9,17 +9,16 @@ import { useGetMessages } from '../../hooks/get-messages.hook.ts';
 import { MessageEntity } from '../../classes/stores/entity/message.entity.ts';
 
 import s from './default.module.scss';
-import { EMode } from '@library/kit';
 
 interface IProps {
   push: MessageEntity;
 }
 
 const MessageByMode: React.FC<IProps> = (props) => {
-  switch (props.push.mode) {
-    case EMode.SUCCESS:
+  switch (props.push.target) {
+    case 'success':
       return <Success {...props} />;
-    case EMode.DANGER:
+    case 'destructive':
       return <Danger {...props} />;
     default:
       return <Primary {...props} />;

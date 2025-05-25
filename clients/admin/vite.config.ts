@@ -1,10 +1,10 @@
-import { defineConfig } from 'vite';
+import { defineConfig, PluginOption } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 // import federation from '@originjs/vite-plugin-federation';
 
-// import { visualizer } from 'rollup-plugin-visualizer';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,7 +23,7 @@ export default defineConfig({
     tsconfigPaths(),
     VitePWA({
       minify: true,
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       manifest: {
         id: '/',
         lang: 'ru',
@@ -59,11 +59,10 @@ export default defineConfig({
         ],
       },
       workbox: {
-        clientsClaim: true,
-        skipWaiting: true,
         globDirectory: 'build',
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js'],
+        maximumFileSizeToCacheInBytes: 9000000,
       },
       devOptions: {
         enabled: true,
@@ -79,13 +78,13 @@ export default defineConfig({
     //   },
     //   shared: ['react', 'react-dom'],
     // }),
-    // process.env.NODE_ENV === 'production' &&
-    //   (visualizer({
-    //     template: 'treemap', // or sunburst
-    //     open: true,
-    //     gzipSize: true,
-    //     brotliSize: true,
-    //     filename: 'build/analyse.html', // will be saved in project's root
-    //   }) as PluginOption),
+    process.env.NODE_ENV === 'production' &&
+      (visualizer({
+        template: 'treemap', // or sunburst
+        open: true,
+        gzipSize: true,
+        brotliSize: true,
+        filename: 'build/analyse.html', // will be saved in project's root
+      }) as PluginOption),
   ],
 });

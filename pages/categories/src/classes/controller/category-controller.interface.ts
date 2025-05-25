@@ -1,8 +1,8 @@
-import { CategoryEntity, MetaEntity } from '@library/domain';
+import { CategoryResultEntity, CategoryEntity, MetaEntity } from '@library/domain';
 
 export abstract class CategoryControllerInterface {
   abstract getData(): CategoryEntity[];
   abstract getMeta(): MetaEntity;
 
-  abstract findAll(): Promise<CategoryEntity[]>;
+  abstract findAll(): Promise<CategoryResultEntity>;
 }

@@ -1,32 +1,20 @@
-import {
-  Config,
-  ConfigInterface,
-  HttpClient,
-  HttpClientInterface,
-  ProfileService,
-  ProfileServiceInterface,
-  ProfileGateway,
-  ProfileGatewayInterface,
-} from '@library/domain';
+import { ContainerModule } from 'inversify';
 
-import { Container } from 'inversify';
+import { ProfileStore } from './stores/profile/profile.store.ts';
+import { ProfileStoreInterface } from './stores/profile/profile-store.interface.ts';
+import { ApplicationStore } from './stores/application/application.store.ts';
+import { ApplicationStoreInterface } from './stores/application/application-store.interface.ts';
 
-import { ProfileStore, ProfileStoreSymbol } from './stores/profile.store.ts';
-import { ApplicationStore, ApplicationStoreSymbol } from './stores/application.store.ts';
+import { ApplicationController } from './controller/application.controller.ts';
+import { ApplicationControllerInterface } from './controller/application-controller.interface.ts';
 
-import { ApplicationPresenter, ApplicationPresenterSymbol } from './presenters/application.presenter.ts';
+export const create = () =>
+  new ContainerModule((container) => {
+    container.bind<ProfileStoreInterface>(ProfileStoreInterface).to(ProfileStore);
+    container.bind<ApplicationStoreInterface>(ApplicationStoreInterface).to(ApplicationStore);
 
-const container = new Container();
-
-container.bind<ConfigInterface>(ConfigInterface).to(Config);
-container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
-
-container.bind<ApplicationPresenter>(ApplicationPresenterSymbol).to(ApplicationPresenter);
-
-container.bind<ProfileStore>(ProfileStoreSymbol).to(ProfileStore);
-container.bind<ApplicationStore>(ApplicationStoreSymbol).to(ApplicationStore);
-
-container.bind<ProfileServiceInterface>(ProfileServiceInterface).to(ProfileService);
-container.bind<ProfileGatewayInterface>(ProfileGatewayInterface).to(ProfileGateway);
-
-export const controller = container.get<ApplicationPresenter>(ApplicationPresenterSymbol);
+    container
+      .bind<ApplicationControllerInterface>(ApplicationControllerInterface)
+      .to(ApplicationController)
+      .inSingletonScope();
+  });

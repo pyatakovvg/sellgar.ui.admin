@@ -1,5 +1,4 @@
-import { Field } from '@library/kit';
-import { Icon, Input, Textarea, Card } from '@sellgar/kit';
+import { Icon, Input, Textarea, Card, FieldWrapper, Label, Caption } from '@sellgar/kit';
 
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -34,21 +33,69 @@ export const Variant: React.FC<IProps> = (props) => {
           <div className={s.field}>
             <div className={s.fields}>
               <div className={s.field}>
-                <Field label={'Артикул'} error={errors?.variants?.[props.index]?.article?.message ?? ''}>
-                  <Input {...register(`variants.${props.index}.article`)} placeholder={'Артикул'} />
-                </Field>
+                <FieldWrapper>
+                  <FieldWrapper.Label>
+                    <Label label={'Артикул'} />
+                  </FieldWrapper.Label>
+                  <FieldWrapper.Content>
+                    <Input
+                      {...register(`variants.${props.index}.article`)}
+                      placeholder={'Артикул'}
+                      target={!!errors?.variants?.[props.index]?.article?.message ? 'destructive' : undefined}
+                    />
+                  </FieldWrapper.Content>
+                  {!!errors?.variants?.[props.index]?.article?.message && (
+                    <FieldWrapper.Caption>
+                      <Caption
+                        state={'destructive'}
+                        caption={errors?.variants?.[props.index]?.article?.message ?? ''}
+                      />
+                    </FieldWrapper.Caption>
+                  )}
+                </FieldWrapper>
               </div>
               <div className={s.field}>
-                <Field label={'Название'} error={errors?.variants?.[props.index]?.name?.message ?? ''}>
-                  <Input {...register(`variants.${props.index}.name`)} placeholder={'Наименование'} />
-                </Field>
+                <FieldWrapper>
+                  <FieldWrapper.Label>
+                    <Label label={'Название'} />
+                  </FieldWrapper.Label>
+                  <FieldWrapper.Content>
+                    <Input
+                      {...register(`variants.${props.index}.name`)}
+                      placeholder={'Наименование'}
+                      target={!!errors?.variants?.[props.index]?.name?.message ? 'destructive' : undefined}
+                    />
+                  </FieldWrapper.Content>
+                  {!!errors?.variants?.[props.index]?.name?.message && (
+                    <FieldWrapper.Caption>
+                      <Caption state={'destructive'} caption={errors?.variants?.[props.index]?.name?.message ?? ''} />
+                    </FieldWrapper.Caption>
+                  )}
+                </FieldWrapper>
               </div>
             </div>
           </div>
           <div className={s.field}>
-            <Field label={'Описание'} error={errors?.variants?.[props.index]?.description?.message ?? ''}>
-              <Textarea {...register(`variants.${props.index}.description`)} placeholder={'Описание'} />
-            </Field>
+            <FieldWrapper>
+              <FieldWrapper.Label>
+                <Label label={'Описание'} />
+              </FieldWrapper.Label>
+              <FieldWrapper.Content>
+                <Textarea
+                  {...register(`variants.${props.index}.description`)}
+                  placeholder={'Описание'}
+                  target={!!errors?.variants?.[props.index]?.description?.message ? 'destructive' : undefined}
+                />
+              </FieldWrapper.Content>
+              {!!errors?.variants?.[props.index]?.description?.message && (
+                <FieldWrapper.Caption>
+                  <Caption
+                    state={'destructive'}
+                    caption={errors?.variants?.[props.index]?.description?.message ?? ''}
+                  />
+                </FieldWrapper.Caption>
+              )}
+            </FieldWrapper>
           </div>
         </div>
       </div>

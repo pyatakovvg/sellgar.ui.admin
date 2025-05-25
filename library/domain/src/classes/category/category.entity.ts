@@ -9,7 +9,7 @@ export class CategoryEntity {
 
   @IsUUID()
   @IsOptional()
-  parentUuid?: string;
+  parentUuid?: string | null;
 
   @IsString()
   name: string;

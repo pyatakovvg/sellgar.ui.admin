@@ -4,7 +4,7 @@ import { Provider } from './module.context.ts';
 import { CategoryControllerInterface } from './classes/controller/category-controller.interface.ts';
 
 interface IProps {
-  readonly controller: CategoryControllerInterface;
+  controller: CategoryControllerInterface;
 }
 
 export const ModuleProvider: React.FC<React.PropsWithChildren<IProps>> = (props) => {

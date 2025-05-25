@@ -15,11 +15,11 @@ export class PriceGateway implements PriceGatewayInterface {
     @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
-  findAll(productUuid: string): Promise<PriceResultEntity> {
-    return this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/products/' + productUuid + '/prices');
+  findAll(storeUuid: string): Promise<PriceResultEntity> {
+    return this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store/' + storeUuid + '/prices');
   }
 
-  create(productUuid: string, dto: CreatePriceDto): Promise<PriceEntity> {
-    return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/products/' + productUuid + '/prices', dto);
+  create(storeUuid: string, dto: CreatePriceDto): Promise<PriceEntity> {
+    return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/store/' + storeUuid + '/prices', dto);
   }
 }

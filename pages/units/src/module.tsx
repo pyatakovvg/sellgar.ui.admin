@@ -1,4 +1,4 @@
-import { ApplicationModule } from '@library/app';
+import { type IClassModule } from '@library/app';
 
 import React from 'react';
 
@@ -8,11 +8,16 @@ import { ModuleProvider } from './module.provider.tsx';
 import { create, destroy } from './classes/classes.di.ts';
 import { UnitsController, UnitsControllerSymbol } from './classes/controller/units.controller.ts';
 
-export class Module implements ApplicationModule {
-  private readonly container = create();
-  private readonly controller = this.container.get<UnitsController>(UnitsControllerSymbol);
+export class ClassModule implements IClassModule {
+  private readonly controller: UnitsController;
 
-  destroy() {
+  constructor() {
+    const container = create();
+
+    this.controller = container.get<UnitsController>(UnitsControllerSymbol);
+  }
+
+  destructor() {
     destroy();
   }
 

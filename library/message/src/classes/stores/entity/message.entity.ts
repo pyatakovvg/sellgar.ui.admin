@@ -1,9 +1,7 @@
-import { EMode } from '@library/kit';
-
 export class MessageEntity {
   uuid: string;
-  mode?: EMode;
-  title?: string;
+  target: 'info' | 'destructive' | 'success';
+  title: string;
   content: any;
   autoClose?: boolean;
   timeoutClose?: number;

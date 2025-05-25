@@ -1,4 +1,4 @@
-import { BrandEntity, CategoryEntity, PriceEntity, PropertyEntity } from '@library/domain';
+import { BrandEntity, CategoryEntity, PropertyEntity } from '@library/domain';
 
 import { CreateProductDto } from '../store/form/dto/create-product.dto.ts';
 import { UpdateProductDto } from '../store/form/dto/update-product.dto.ts';
@@ -9,7 +9,6 @@ export abstract class ProductPresenterInterface {
   abstract update(uuid: string, dto: UpdateProductDto): Promise<UpdateProductDto | null>;
 
   abstract getBrandsData(): BrandEntity[];
-  abstract getPricesData(): PriceEntity[];
   abstract getCategoriesData(): CategoryEntity[];
   abstract getPropertiesData(): PropertyEntity[];
 

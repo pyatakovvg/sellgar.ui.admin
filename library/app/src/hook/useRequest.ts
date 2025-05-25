@@ -1,14 +1,16 @@
 import { HttpException } from '@library/domain';
+import { useShowMessage } from '@library/message';
 import { UnauthorizedException } from '@library/domain';
 
 import { useNavigate } from './useNavigate';
 
-export const useRequest = <T extends any, R>(
-  callback: (...args: T[]) => Promise<R>,
-): ((...args: T[]) => Promise<R>) => {
+export const useRequest = <T extends any[], R>(
+  callback: (...args: T) => Promise<R>,
+): ((...args: T) => Promise<R | undefined>) => {
   const navigate = useNavigate();
+  const showMessage = useShowMessage();
 
-  return async (...args: any[]) => {
+  return async (...args: T): Promise<R | undefined> => {
     try {
       return await callback(...args);
     } catch (e) {
@@ -17,9 +19,26 @@ export const useRequest = <T extends any, R>(
 
         if (error instanceof UnauthorizedException) {
           navigate('/sign-in');
+        } else {
+          const response = error.getResponse();
+
+          showMessage({
+            target: 'destructive',
+            autoClose: true,
+            timeoutClose: 5,
+            title: 'Ошибка',
+            content: `Что-то пошло не так`,
+          });
         }
+      } else if (e instanceof Array) {
+        showMessage({
+          target: 'destructive',
+          autoClose: true,
+          timeoutClose: 5,
+          title: 'Ошибка',
+          content: `Ошибка валидации ответа`,
+        });
       }
-      throw e;
     }
   };
 };

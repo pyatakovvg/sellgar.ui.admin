@@ -1,27 +1,40 @@
 import { ProfileEntity } from '@library/domain';
 
 import React from 'react';
+import { Container } from 'inversify';
 
 import { context } from '../application.context.ts';
+import { container } from '../classes/container.di.ts';
 
 interface IApplicationHook {
+  container: Container;
+
   isInitialized: boolean;
+  setInitialized(): void;
+
   profile: ProfileEntity;
   loadProfile(): Promise<void>;
+
   checkRoles(roles: string[]): boolean;
   checkPermissions(permissions: string[]): boolean;
-  setInitialized(): void;
 }
 
 export const useApp = (): IApplicationHook => {
-  const { presenter } = React.useContext(context);
+  const { controller } = React.useContext(context);
 
   return {
-    profile: React.useMemo(() => presenter.profile, [presenter.profile]),
-    isInitialized: React.useMemo(() => presenter.initialized, [presenter.initialized]),
-    loadProfile: React.useCallback(() => presenter.loadProfile(), [presenter]),
-    setInitialized: React.useCallback(() => presenter.setApplicationInitialized(), [presenter]),
-    checkRoles: React.useCallback((roles) => presenter.checkRoles(roles), [presenter.profile]),
-    checkPermissions: React.useCallback((permissions) => presenter.checkPermissions(permissions), [presenter.profile]),
+    container,
+
+    profile: React.useMemo(() => controller.profileStore.profile, [controller]),
+    loadProfile: React.useCallback(() => controller.loadProfile(), [controller]),
+
+    isInitialized: React.useMemo(() => controller.applicationStore.initialized, [controller]),
+    setInitialized: React.useCallback(() => controller.applicationStore.setInitialize, [controller]),
+
+    checkRoles: React.useCallback((roles) => controller.profileStore.checkRoles(roles), [controller]),
+    checkPermissions: React.useCallback(
+      (permissions) => controller.profileStore.checkPermissions(permissions),
+      [controller],
+    ),
   };
 };

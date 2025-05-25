@@ -1,38 +1,40 @@
-import { ApplicationModule } from '@library/app';
+import { type IClassModule } from '@library/app';
 
 import React from 'react';
 import { LoaderFunctionArgs } from 'react-router-dom';
 
-import { Provider } from './module.context.ts';
-import { Category } from './components/Category';
+import { CategoryView } from './view';
 
+import { ModuleProvider } from './module.provider.tsx';
 import { create, destroy } from './classes/classes.di.ts';
-import { CategoryPresenter, CategoryPresenterSymbol } from './classes/presenter/category.presenter.ts';
+import { CategoryControllerInterface } from './classes/controller/category-controller.interface.ts';
 
-export class Module implements ApplicationModule {
-  private readonly container = create();
-  private readonly controller = this.container.get<CategoryPresenter>(CategoryPresenterSymbol);
+export class ClassModule implements IClassModule {
+  private readonly controller: CategoryControllerInterface;
 
-  create() {
-    console.log('create');
+  constructor() {
+    const container = create();
+
+    this.controller = container.get(CategoryControllerInterface);
   }
 
-  destroy() {
-    console.log('destroy');
+  destructor() {
     destroy();
   }
 
-  async loader({ params }: LoaderFunctionArgs) {
-    if (params.uuid) {
-      return await this.controller.findByUuid(params.uuid);
+  async loader(args: LoaderFunctionArgs) {
+    await this.controller.findAll();
+
+    if (args.params.uuid) {
+      return await this.controller.findByUuid(args.params.uuid);
     }
   }
 
   render() {
     return (
-      <Provider value={{ presenter: this.controller }}>
-        <Category />
-      </Provider>
+      <ModuleProvider controller={this.controller}>
+        <CategoryView />
+      </ModuleProvider>
     );
   }
 }

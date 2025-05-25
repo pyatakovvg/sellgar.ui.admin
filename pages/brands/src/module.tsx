@@ -1,4 +1,4 @@
-import { ApplicationModule } from '@library/app';
+import { type IClassModule } from '@library/app';
 
 import React from 'react';
 
@@ -9,17 +9,22 @@ import { BrandsControllerInterface } from './classes/controller/brand-controller
 
 import { create, destroy } from './classes/classes.di.ts';
 
-export class Module implements ApplicationModule {
-  private readonly container = create();
-  private readonly controller = this.container.get<BrandsControllerInterface>(BrandsControllerInterface);
+export class ClassModule implements IClassModule {
+  private readonly controller: BrandsControllerInterface;
 
-  destroy() {
+  constructor() {
+    const container = create();
+
+    this.controller = container.get(BrandsControllerInterface);
+  }
+
+  destructor() {
     destroy();
   }
 
-  loader = async () => {
+  async loader() {
     await this.controller.findAll();
-  };
+  }
 
   render() {
     return (

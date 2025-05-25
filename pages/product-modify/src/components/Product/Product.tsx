@@ -16,14 +16,6 @@ export const Product = () => {
         <Page.Header>
           <Page.Header.Title>{params.uuid ? 'Редактировать' : 'Создать'}</Page.Header.Title>
         </Page.Header>
-        <Page.Menu>
-          <TabMenu.Menu>
-            <TabMenu.Menu.Tab title={'Основные'} name={'common'} />
-            <TabMenu.Menu.Tab title={'Варианты'} name={'variants'} />
-            <TabMenu.Menu.Tab title={'Свойства'} name={'properties'} />
-            <TabMenu.Menu.Tab title={'Описание'} name={'description'} />
-          </TabMenu.Menu>
-        </Page.Menu>
         <Page.Content>
           <Content />
         </Page.Content>

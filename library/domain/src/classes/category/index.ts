@@ -1,3 +1,6 @@
+export { CreateCategoryDto } from './service/dto/create-category.dto.ts';
+export { UpdateCategoryDto } from './service/dto/update-category.dto.ts';
+
 export { CategoryEntity, CategoryResultEntity } from './category.entity.ts';
 
 export { CategoryGateway } from './gateway/category.gateway.ts';

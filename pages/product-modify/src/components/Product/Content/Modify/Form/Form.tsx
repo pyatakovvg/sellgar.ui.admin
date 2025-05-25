@@ -7,7 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { Common } from './Common';
-import { Prices } from './Prices';
 import { Variants } from './Variants';
 import { Properties } from './Properties';
 
@@ -26,26 +25,29 @@ interface IProps {
   defaultValues(): Promise<UpdateProductDto | CreateProductDto>;
 }
 
+type IForm = UpdateProductDto | CreateProductDto;
+
 export const Form: React.FC<IProps> = (props) => {
   const navigate = useNavigate();
 
   const createRequest = useCreateProductRequest();
   const updateRequest = useUpdateProductRequest();
 
-  const methods = useForm<UpdateProductDto | CreateProductDto>({
-    resolver: yupResolver<UpdateProductDto | CreateProductDto>(schema),
+  const methods = useForm<IForm>({
+    // @ts-ignore
+    resolver: yupResolver(schema),
     defaultValues: props.defaultValues,
   });
 
-  const onSubmit = methods.handleSubmit(async (dto: CreateProductDto | UpdateProductDto) => {
+  const onSubmit = methods.handleSubmit(async (dto) => {
     if ('uuid' in dto) {
-      const result = await updateRequest(dto);
+      const result = await updateRequest(dto as never as UpdateProductDto);
 
       if (result) {
         methods.reset(result);
       }
     } else {
-      const result = await createRequest(dto);
+      const result = await createRequest(dto as never as CreateProductDto);
 
       if (result) {
         navigate('/products/' + result.uuid);
@@ -57,34 +59,21 @@ export const Form: React.FC<IProps> = (props) => {
     <FormProvider {...methods}>
       <form className={s.wrapper} onSubmit={onSubmit}>
         <div className={s.fields}>
-          <TabMenu.Content name={'common'}>
-            <div className={s.field}>
-              <Common />
-            </div>
-            <div className={s.field}>
-              <Prices />
-            </div>
-          </TabMenu.Content>
+          <div className={s.field}>
+            <Common />
+          </div>
 
-          <TabMenu.Content name={'variants'}>
-            <div className={s.field}>
-              <Variants />
-            </div>
-          </TabMenu.Content>
-
-          <TabMenu.Content name={'properties'}>
-            <div className={s.field}>
-              <Properties />
-            </div>
-          </TabMenu.Content>
-
-          <TabMenu.Content name={'description'}>
-            <div className={s.field}>
-              <Field error={methods.formState.errors.description?.message}>
-                <Textarea {...methods.register('description')} placeholder={'Описание'} />
-              </Field>
-            </div>
-          </TabMenu.Content>
+          <div className={s.field}>
+            <Variants />
+          </div>
+          <div className={s.field}>
+            <Properties />
+          </div>
+          <div className={s.field}>
+            <Field error={methods.formState.errors.description?.message}>
+              <Textarea {...methods.register('description')} placeholder={'Описание'} />
+            </Field>
+          </div>
         </div>
         <div className={s.control}>
           <Button type={'submit'}>Сохранить</Button>

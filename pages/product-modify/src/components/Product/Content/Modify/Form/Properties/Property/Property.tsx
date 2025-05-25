@@ -1,6 +1,5 @@
 import { PropertyEntity } from '@library/domain';
-import { Field } from '@library/kit';
-import { Icon, Input, Select, Typography } from '@sellgar/kit';
+import { Icon, Input, Select, FieldWrapper, Caption } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -55,32 +54,51 @@ export const Property: React.FC<IProps> = (props) => {
             control={control}
             render={({ field }) => {
               return (
-                <Field error={errors?.properties?.[props.index]?.propertyUuid?.message ?? ''}>
-                  <Select
-                    // isClearable={true}
-                    placeholder={'Свойство'}
-                    optionKey={'uuid'}
-                    optionValue={'name'}
-                    value={field.value ?? null}
-                    options={properties}
-                    onChange={(value) => {
-                      return field.onChange(value);
-                    }}
-                    onBlur={field.onBlur}
-                  />
-                </Field>
+                <FieldWrapper>
+                  <FieldWrapper.Content>
+                    <Select
+                      // isClearable={true}
+                      placeholder={'Свойство'}
+                      optionKey={'uuid'}
+                      optionValue={'name'}
+                      value={field.value ?? null}
+                      options={properties}
+                      target={!!errors?.properties?.[props.index]?.propertyUuid?.message ? 'destructive' : undefined}
+                      onChange={(value) => {
+                        return field.onChange(value);
+                      }}
+                      onBlur={field.onBlur}
+                    />
+                  </FieldWrapper.Content>
+                  {!!errors?.properties?.[props.index]?.propertyUuid?.message && (
+                    <FieldWrapper.Caption>
+                      <Caption
+                        state={'destructive'}
+                        caption={errors?.properties?.[props.index]?.propertyUuid?.message ?? ''}
+                      />
+                    </FieldWrapper.Caption>
+                  )}
+                </FieldWrapper>
               );
             }}
           />
         </div>
         <div className={s.field}>
-          <Field error={errors?.properties?.[props.index]?.value?.message ?? ''}>
-            <Input
-              {...register(`properties.${props.index}.value`)}
-              placeholder={'Значение'}
-              badge={selectedProperty ? selectedProperty.unit?.name : undefined}
-            />
-          </Field>
+          <FieldWrapper>
+            <FieldWrapper.Content>
+              <Input
+                {...register(`properties.${props.index}.value`)}
+                placeholder={'Значение'}
+                badge={selectedProperty ? selectedProperty.unit?.name : undefined}
+                target={!!errors?.properties?.[props.index]?.value?.message ? 'destructive' : undefined}
+              />
+            </FieldWrapper.Content>
+            {!!errors?.properties?.[props.index]?.value?.message && (
+              <FieldWrapper.Caption>
+                <Caption state={'destructive'} caption={errors?.properties?.[props.index]?.value?.message ?? ''} />
+              </FieldWrapper.Caption>
+            )}
+          </FieldWrapper>
         </div>
       </div>
       <div className={s.control}>

@@ -5,9 +5,11 @@ import { action, observable, makeObservable } from 'mobx';
 
 export const ProfileStoreSymbol = Symbol.for('ProfileStore');
 
+const initialize: ProfileEntity = new ProfileEntity();
+
 @injectable()
 export class ProfileStore {
-  @observable profile: ProfileEntity;
+  @observable profile: ProfileEntity = initialize;
 
   constructor(@inject(ProfileServiceInterface) private readonly profileService: ProfileServiceInterface) {
     makeObservable(this);
@@ -43,6 +45,6 @@ export class ProfileStore {
   }
 
   resetProfile() {
-    this.setProfile(undefined);
+    this.setProfile(initialize);
   }
 }

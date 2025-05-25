@@ -4,6 +4,8 @@ import { Application, Route, Router, PublicRouter, PrivateRouter } from '@librar
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import { RegisterAndUpdateServiceWorker } from './sw';
+
 const app = new Application({
   routes: [
     /**
@@ -122,6 +124,25 @@ const app = new Application({
             },
           ),
 
+          new Router(
+            'store',
+            [
+              new Route('/', () => import('@page/store')),
+              new Route('/create', () => import('@page/store-modify'), {
+                breadcrumb: () => 'Добавить товар',
+              }),
+              new Route('/:uuid', () => import('@page/store-modify'), {
+                breadcrumb: (data) => {
+                  console.log(data);
+                  return data?.variant?.name ?? '';
+                },
+              }),
+            ],
+            {
+              breadcrumb: () => 'Склад',
+            },
+          ),
+
           /**
            * Файлы
            */
@@ -146,4 +167,9 @@ const AppView = app.createView();
 
 const root = ReactDOM.createRoot(document.querySelector('#root')!);
 
-root.render(<AppView />);
+root.render(
+  <>
+    <RegisterAndUpdateServiceWorker />
+    <AppView />
+  </>,
+);

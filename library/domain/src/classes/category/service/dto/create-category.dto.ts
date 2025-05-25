@@ -2,7 +2,7 @@ import { IsUUID, IsString } from 'class-validator';
 
 export class CreateCategoryDto {
   @IsUUID()
-  parentUuid?: string;
+  parentUuid: string | null;
 
   @IsString()
   name: string;

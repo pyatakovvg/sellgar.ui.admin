@@ -11,10 +11,11 @@ import {
 
 import { Container } from 'inversify';
 
-import { FormStore, FormStoreSymbol } from './store/form.store.ts';
-import { CategoryStore, CategoryStoreSymbol } from './store/category.store.ts';
+import { FormStore } from './store/form/form.store.ts';
+import { FormStoreInterface } from './store/form/form-store.interface.ts';
 
-import { CategoryPresenter, CategoryPresenterSymbol } from './presenter/category.presenter.ts';
+import { CategoryController } from './controller/category.controller.ts';
+import { CategoryControllerInterface } from './controller/category-controller.interface.ts';
 
 let container: Container;
 
@@ -27,10 +28,9 @@ const create = () => {
   container.bind<CategoryGateway>(CategoryGatewayInterface).to(CategoryGateway);
   container.bind<CategoryService>(CategoryServiceInterface).to(CategoryService);
 
-  container.bind<FormStore>(FormStoreSymbol).to(FormStore);
-  container.bind<CategoryStore>(CategoryStoreSymbol).to(CategoryStore);
+  container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
 
-  container.bind<CategoryPresenter>(CategoryPresenterSymbol).to(CategoryPresenter);
+  container.bind<CategoryControllerInterface>(CategoryControllerInterface).to(CategoryController);
 
   return container;
 };

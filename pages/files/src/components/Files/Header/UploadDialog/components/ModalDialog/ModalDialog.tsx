@@ -16,18 +16,18 @@ interface IProps {
 }
 
 export const ModalDialog: React.FC<IProps> = observer((props) => {
-  const [query] = useQuery();
+  const [query] = useQuery<any>();
 
   const inProcess = useInProcess();
   const uploadRequest = useUploadRequest();
-  console.log(inProcess);
+
   const handleSubmit = async (files: File[]) => {
     const result = await uploadRequest({
       files,
       folderUuid: query.folderUuid,
     });
 
-    if (result.length) {
+    if (result && result.length) {
       props.onClose();
     }
   };

@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { ApplicationPresenter } from './classes/presenters/application.presenter.ts';
+import { ApplicationControllerInterface } from './classes/controller/application-controller.interface.ts';
 
 export interface IApplicationContext {
-  presenter: ApplicationPresenter;
+  controller: ApplicationControllerInterface;
 }
 
 export const context = React.createContext<IApplicationContext>({} as IApplicationContext);

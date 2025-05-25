@@ -1,0 +1,33 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  color: var(--text-base-primary);
+  padding: 0 var(--numbers-12);
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.name {
+  color: var(--text-base-primary);
+}
+
+.additional {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  margin: var(--numbers-4) 0 0;
+  padding: 0 0 0 var(--numbers-8);
+}
+
+.variant {
+  color: var(--text-base-secondary);
+}

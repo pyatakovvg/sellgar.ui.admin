@@ -11,6 +11,17 @@
     background: var(--background-surface-neutral);
     z-index: 10;
   }
+
+  #sw {
+
+    position: fixed;
+    right: var(--numbers-24);
+    bottom: var(--numbers-24);
+    display: flex;
+    flex-direction: column;
+    flex: 1 0;
+    z-index: 90;
+  }
 }
 
 

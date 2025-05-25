@@ -1,9 +1,6 @@
-import { PriceEntity } from '@library/domain';
-
 import { inject, injectable } from 'inversify';
 
 import { FormStoreInterface } from '../store/form/form-store.interface.ts';
-import { PriceStoreInterface } from '../store/price/price-store.interface.ts';
 import { ProductPresenterInterface } from './product-presenter.interface.ts';
 import { ProductStoreInterface } from '../store/product/product-store.interface.ts';
 
@@ -14,33 +11,19 @@ import { UpdateProductDto } from '../store/form/dto/update-product.dto.ts';
 export class ProductPresenter implements ProductPresenterInterface {
   constructor(
     @inject(FormStoreInterface) private readonly formStore: FormStoreInterface,
-    @inject(PriceStoreInterface) private readonly priceStore: PriceStoreInterface,
     @inject(ProductStoreInterface) private readonly productStore: ProductStoreInterface,
   ) {}
 
   async findByUuid(uuid: string): Promise<UpdateProductDto | null> {
-    await this.priceStore.findAll(uuid);
     return await this.formStore.getByUuid(uuid);
   }
 
   async create(dto: CreateProductDto): Promise<UpdateProductDto | null> {
-    const result = await this.formStore.create(dto);
-    if (result) {
-      await this.priceStore.findAll(result.uuid);
-    }
-    return result;
+    return await this.formStore.create(dto);
   }
 
   async update(uuid: string, dto: UpdateProductDto): Promise<UpdateProductDto | null> {
-    const result = await this.formStore.update(uuid, dto);
-    if (result) {
-      await this.priceStore.findAll(result.uuid);
-    }
-    return result;
-  }
-
-  getPricesData(): PriceEntity[] {
-    return this.priceStore.data;
+    return await this.formStore.update(uuid, dto);
   }
 
   getBrandsData() {

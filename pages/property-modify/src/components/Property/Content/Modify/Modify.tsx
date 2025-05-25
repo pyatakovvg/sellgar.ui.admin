@@ -1,5 +1,5 @@
 import { useNavigate } from '@library/app';
-import { BrandEntity } from '@library/domain';
+import { PropertyEntity } from '@library/domain';
 import { useChangeBreadcrumb } from '@library/breadcrumbs';
 
 import React from 'react';
@@ -27,7 +27,7 @@ export const Modify = observer(() => {
     }
   }, [data]);
 
-  const handleSubmit = async (data: BrandEntity) => {
+  const handleSubmit = async (data: PropertyEntity) => {
     if (data.uuid) {
       await updateBrandRequest(data);
     } else {

@@ -1,3 +1,5 @@
+import { Notification } from '@sellgar/kit';
+
 import React from 'react';
 
 import { useCloseMessage } from '../../../hooks/close-message.hook.ts';
@@ -34,18 +36,11 @@ export const Danger: React.FC<IProps> = (props) => {
   };
 
   return (
-    <div className={s.wrapper}>
-      {props.push.title && (
-        <div className={s.header}>
-          <p className={s.title}>{props.push.title}</p>
-        </div>
-      )}
-      <div className={s.content}>
-        <Content>{props.push.content}</Content>
-      </div>
-      <div className={s.close} onClick={handleClose}>
-        <p>X</p>
-      </div>
-    </div>
+    <Notification
+      style={'destructive'}
+      title={props.push.title}
+      slot={<Content>{props.push.content}</Content>}
+      onClose={handleClose}
+    />
   );
 };

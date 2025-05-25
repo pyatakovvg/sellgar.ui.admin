@@ -1,0 +1,48 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  width: var(--numbers-520);
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.block {
+
+  display: block;
+
+  & + & {
+    margin: 24px 0 0;
+  }
+}
+
+.fields {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.field {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  & + & {
+    margin: var(--numbers-24) 0 0;
+  }
+}
+
+.control {
+
+  display: block;
+  margin: 24px 0 0;
+}

@@ -11,18 +11,14 @@ import {
   CategoryGatewayInterface,
   CategoryService,
   CategoryServiceInterface,
-  ProductGateway,
-  ProductGatewayInterface,
-  ProductService,
-  ProductServiceInterface,
+  ProductVariantGateway,
+  ProductVariantGatewayInterface,
+  ProductVariantService,
+  ProductVariantServiceInterface,
   PropertyGateway,
   PropertyGatewayInterface,
   PropertyService,
   PropertyServiceInterface,
-  PriceGateway,
-  PriceGatewayInterface,
-  PriceService,
-  PriceServiceInterface,
   CurrencyGateway,
   CurrencyGatewayInterface,
   CurrencyService,
@@ -33,9 +29,6 @@ import { Container } from 'inversify';
 
 import { FormStore } from './store/form/form.store.ts';
 import { FormStoreInterface } from './store/form/form-store.interface.ts';
-
-import { PriceStore } from './store/price/price.store.ts';
-import { PriceStoreInterface } from './store/price/price-store.interface.ts';
 
 import { ProductStore } from './store/product/product.store.ts';
 import { ProductStoreInterface } from './store/product/product-store.interface.ts';
@@ -57,16 +50,13 @@ const create = () => {
   container.bind<CategoryServiceInterface>(CategoryServiceInterface).to(CategoryService);
   container.bind<PropertyGatewayInterface>(PropertyGatewayInterface).to(PropertyGateway);
   container.bind<PropertyServiceInterface>(PropertyServiceInterface).to(PropertyService);
-  container.bind<PriceGatewayInterface>(PriceGatewayInterface).to(PriceGateway);
-  container.bind<PriceServiceInterface>(PriceServiceInterface).to(PriceService);
   container.bind<CurrencyGatewayInterface>(CurrencyGatewayInterface).to(CurrencyGateway);
   container.bind<CurrencyServiceInterface>(CurrencyServiceInterface).to(CurrencyService);
 
-  container.bind<ProductGatewayInterface>(ProductGatewayInterface).to(ProductGateway);
-  container.bind<ProductServiceInterface>(ProductServiceInterface).to(ProductService);
+  container.bind<ProductVariantGatewayInterface>(ProductVariantGatewayInterface).to(ProductVariantGateway);
+  container.bind<ProductVariantServiceInterface>(ProductVariantServiceInterface).to(ProductVariantService);
 
   container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
-  container.bind<PriceStoreInterface>(PriceStoreInterface).to(PriceStore);
   container.bind<ProductStoreInterface>(ProductStoreInterface).to(ProductStore);
 
   container.bind<ProductPresenterInterface>(ProductPresenterInterface).to(ProductPresenter);

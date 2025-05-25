@@ -1,4 +1,4 @@
-import { FieldWrapper, LabelField, CaptionField } from '@sellgar/kit';
+import { FieldWrapper, Label as LabelField, Caption } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -30,7 +30,7 @@ export const Field: React.FC<React.PropsWithChildren<IProps>> = (props) => {
       </FieldWrapper.Content>
       {props.error && (
         <FieldWrapper.Caption>
-          <CaptionField leadicon={'error-warning-line'} caption={props.error} state={'destructive'} />
+          <Caption leadIcon={'error-warning-line'} caption={props.error} state={'destructive'} />
         </FieldWrapper.Caption>
       )}
     </FieldWrapper>

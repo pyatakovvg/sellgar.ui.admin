@@ -10,15 +10,15 @@
   "main": "./src/index.ts",
   "dependencies": {
     "@library/design": "0.0.1",
-    "@sellgar/kit": "0.0.97",
+    "@sellgar/kit": "0.0.110",
     "classnames": "2.5.1",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "react-router-dom": "7.4.0"
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-router-dom": "7.6.1"
   },
   "devDependencies": {
-    "@types/react": "19.0.12",
-    "@types/react-dom": "19.0.4",
+    "@types/react": "19.1.5",
+    "@types/react-dom": "19.1.5",
     "@types/reflect-metadata": "0.1.0"
   }
 }

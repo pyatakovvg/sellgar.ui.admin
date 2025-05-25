@@ -1,0 +1,48 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: row;
+  flex: 0 0;
+  padding: 0 0 0 var(--numbers-12);
+}
+
+.price {
+
+  display: inline-block;
+}
+
+.currency {
+
+  display: inline-block;
+  color: var(--color-gray-60);
+  margin: 0 0 0 4px;
+}
+
+.date {
+
+  display: inline-block;
+  color: var(--text-base-secondary);
+  margin: 0 0 0 var(--numbers-24);
+}
+
+.direction {
+
+  display: block;
+  margin: 0 0 0 12px;
+}
+
+.up {
+
+  color: var(--icon-status-success);
+}
+
+.down {
+
+  color: var(--icon-status-destructive);
+}
+
+.same {
+
+  color: var(--icon-status-info);
+}

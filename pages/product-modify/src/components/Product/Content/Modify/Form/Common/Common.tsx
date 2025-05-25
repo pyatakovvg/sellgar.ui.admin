@@ -1,5 +1,5 @@
 import { Field, TreeSelect } from '@library/kit';
-import { Typography, Input, Select } from '@sellgar/kit';
+import { SelectTree, Input, Select } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormState, useFormContext } from 'react-hook-form';
@@ -37,12 +37,12 @@ export const Common: React.FC = () => {
                   render={({ field }) => {
                     return (
                       <Field label={'Категория'} error={errors.categoryUuid?.message}>
-                        <TreeSelect
+                        <SelectTree
                           isClearable={true}
                           placeholder={'Категория'}
                           optionKey={'uuid'}
                           optionValue={'name'}
-                          optionSubItemsKey={'children'}
+                          accessor={'children'}
                           value={field.value ?? null}
                           options={categories}
                           onChange={(value) => {

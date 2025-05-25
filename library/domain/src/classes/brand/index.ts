@@ -1,3 +1,6 @@
+export { CreateBrandDto } from './service/dto/create-brand.dto.ts';
+export { UpdateBrandDto } from './service/dto/update-brand.dto.ts';
+
 export { BrandEntity, BrandResultEntity } from './brand.entity.ts';
 
 export { BrandGateway } from './gateway/brand.gateway.ts';

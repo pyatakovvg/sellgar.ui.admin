@@ -2,8 +2,13 @@ import React from 'react';
 
 import { context } from '../cell.context.ts';
 
-export const useCellData = () => {
-  const { data, deps } = React.useContext(context);
+interface IContext<T> {
+  data: T;
+  deps: number;
+}
+
+export const useCellData = <T>() => {
+  const { data, deps } = React.useContext<IContext<T>>(context);
 
   return { data, deps };
 };

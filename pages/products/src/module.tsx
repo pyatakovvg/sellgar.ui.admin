@@ -1,18 +1,23 @@
-import { ApplicationModule } from '@library/app';
+import { type IClassModule } from '@library/app';
 
 import React from 'react';
 
-import { Products } from './components/Products';
+import { ProductsView } from './view';
 import { ModuleProvider } from './module.provider.tsx';
 
 import { create, destroy } from './classes/classes.di.ts';
-import { ProductsController, ProductsControllerSymbol } from './classes/controller/products.controller.ts';
+import { ProductsControllerInterface } from './classes/controller/products-controller.interface.ts';
 
-export class Module implements ApplicationModule {
-  private readonly container = create();
-  private readonly controller = this.container.get<ProductsController>(ProductsControllerSymbol);
+export class ClassModule implements IClassModule {
+  private readonly controller: ProductsControllerInterface;
 
-  destroy() {
+  constructor() {
+    const container = create();
+
+    this.controller = container.get<ProductsControllerInterface>(ProductsControllerInterface);
+  }
+
+  destructor() {
     destroy();
   }
 
@@ -23,7 +28,7 @@ export class Module implements ApplicationModule {
   render() {
     return (
       <ModuleProvider controller={this.controller}>
-        <Products />
+        <ProductsView />
       </ModuleProvider>
     );
   }
