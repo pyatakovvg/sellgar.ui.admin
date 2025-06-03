@@ -24,6 +24,7 @@ import {
   ProductVariantService,
   ProductVariantServiceInterface,
 } from '@library/domain';
+import { ProductGateway, ProductGatewayInterface, ProductService, ProductServiceInterface } from '@library/domain';
 
 import { Container } from 'inversify';
 
@@ -72,6 +73,9 @@ container.bind<CurrencyServiceInterface>(CurrencyServiceInterface).to(CurrencySe
 
 container.bind<ProfileGatewayInterface>(ProfileGatewayInterface).to(ProfileGateway);
 container.bind<ProfileServiceInterface>(ProfileServiceInterface).to(ProfileService);
+
+container.bind<ProductGatewayInterface>(ProductGatewayInterface).to(ProductGateway);
+container.bind<ProductServiceInterface>(ProductServiceInterface).to(ProductService);
 
 container.bind<ProductVariantGatewayInterface>(ProductVariantGatewayInterface).to(ProductVariantGateway);
 container.bind<ProductVariantServiceInterface>(ProductVariantServiceInterface).to(ProductVariantService);

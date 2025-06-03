@@ -1,4 +1,4 @@
-import { ProductVariantServiceInterface } from '@library/domain';
+import { ProductServiceInterface } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
 
@@ -9,7 +9,7 @@ import { ProductsControllerInterface } from './products-controller.interface.ts'
 export class ProductsController implements ProductsControllerInterface {
   constructor(
     @inject(ProductsStoreInterface) readonly productStore: ProductsStoreInterface,
-    @inject(ProductVariantServiceInterface) private readonly productService: ProductVariantServiceInterface,
+    @inject(ProductServiceInterface) private readonly productService: ProductServiceInterface,
   ) {}
 
   async findAll() {

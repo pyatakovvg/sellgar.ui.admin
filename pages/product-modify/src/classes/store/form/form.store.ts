@@ -1,4 +1,4 @@
-import { HttpException, ProductVariantServiceInterface } from '@library/domain';
+import { HttpException, ProductServiceInterface } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
 import { makeObservable, observable, action } from 'mobx';
@@ -15,7 +15,7 @@ export class FormStore implements FormStoreInterface {
   @observable inProcess: boolean = false;
   @observable error: HttpException | null = null;
 
-  constructor(@inject(ProductVariantServiceInterface) private readonly productService: ProductVariantServiceInterface) {
+  constructor(@inject(ProductServiceInterface) private readonly productService: ProductServiceInterface) {
     makeObservable(this);
   }
 

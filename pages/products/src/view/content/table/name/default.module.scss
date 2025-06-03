@@ -29,5 +29,10 @@
 }
 
 .variant {
+
   color: var(--text-base-secondary);
+
+  & + & {
+    margin: var(--numbers-4) 0 0;
+  }
 }

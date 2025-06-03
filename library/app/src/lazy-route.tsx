@@ -11,11 +11,12 @@ export interface IClassModule {
 }
 
 export class LazyRoute {
-  private instance: IClassModule;
+  private instance?: IClassModule;
 
   constructor(private readonly ClassModule: new (container: Container) => IClassModule) {}
 
   create() {
+    this.destructor();
     this.instance = new this.ClassModule(container);
   }
 
@@ -23,17 +24,18 @@ export class LazyRoute {
     if (this.instance) {
       if (this.instance.destructor) {
         this.instance.destructor();
+        delete this.instance;
       }
     }
   }
 
   loader(args: LoaderFunctionArgs) {
-    if (this.instance.loader) {
+    if (this.instance?.loader) {
       return this.instance.loader(args);
     }
   }
 
   render() {
-    return <>{this.instance.render()}</>;
+    return <>{this.instance?.render()}</>;
   }
 }

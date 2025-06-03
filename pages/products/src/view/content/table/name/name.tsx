@@ -18,11 +18,13 @@ export const Name: React.FC = () => {
       <div className={s.additional}>
         {data.variants.map((variant) => {
           return (
-            <Typography key={variant.uuid} size={'caption-m'} weight={'medium'}>
-              <p className={s.variant}>
-                {variant.name} ({variant.article})
-              </p>
-            </Typography>
+            <div key={variant.uuid} className={s.variant}>
+              <Typography size={'caption-m'} weight={'medium'}>
+                <p>
+                  {variant.name} ({variant.article})
+                </p>
+              </Typography>
+            </div>
           );
         })}
       </div>

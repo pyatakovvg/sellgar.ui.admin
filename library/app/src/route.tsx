@@ -45,6 +45,19 @@ const CheckCredentials: React.FC<React.PropsWithChildren<IPropsWithAppRoute>> = 
 export class Route {
   readonly uuid = uuid();
 
+  static routeCache = new Map<string, any>();
+
+  static createLazyRoute(Module: any) {
+    if (Route.routeCache.has(Module)) {
+      return Route.routeCache.get(Module);
+    }
+    const lazyRoute = new LazyRoute(Module);
+
+    Route.routeCache.set(Module, lazyRoute);
+
+    return lazyRoute;
+  }
+
   constructor(
     private readonly path: string,
     private readonly importModule: () => Promise<any>,
@@ -77,7 +90,7 @@ export class Route {
         try {
           const { ClassModule } = await this.importModule();
 
-          const lazyRoute = new LazyRoute(ClassModule);
+          const lazyRoute = Route.createLazyRoute(ClassModule);
 
           return {
             loader: (args: LoaderFunctionArgs) => {

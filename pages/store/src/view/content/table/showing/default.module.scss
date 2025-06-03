@@ -1,0 +1,29 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  color: var(--text-base-primary);
+  padding: 0 var(--numbers-12);
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.showing {
+
+  font-size: var(--numbers-13);
+  color: var(--icon-status-success);
+}
+
+.hidden {
+
+  font-size: var(--numbers-13);
+  color: var(--icon-base-tertiary);
+}

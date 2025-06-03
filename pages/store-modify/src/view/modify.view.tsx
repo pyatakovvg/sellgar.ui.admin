@@ -1,6 +1,5 @@
 import { Page } from '@library/design';
 import { Button } from '@sellgar/kit';
-import { StoreEntity } from '@library/domain';
 import { useNavigate } from '@library/app';
 
 import React from 'react';
@@ -8,6 +7,7 @@ import { useLoaderData } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormProvider, useForm } from 'react-hook-form';
 
+import { usePresenter } from '../hooks/presenter.hook.ts';
 import { useCreateProductRequest } from '../hooks/create-product-request.hook.ts';
 import { useUpdateProductRequest } from '../hooks/update-product-request.hook.ts';
 
@@ -20,8 +20,8 @@ import { formSchema } from './form.schema.ts';
 
 interface IForm {
   uuid?: string;
-  count: string;
-  price: string;
+  count: number;
+  price: number;
   variantUuid: string;
   showing: boolean;
 }
@@ -30,10 +30,13 @@ export const ModifyView = () => {
   const navigate = useNavigate();
   const data = useLoaderData();
 
+  const presenter = usePresenter();
+
   const createRequest = useCreateProductRequest();
   const updateRequest = useUpdateProductRequest();
 
   const methods = useForm<IForm>({
+    // @ts-ignore
     resolver: yupResolver(formSchema),
     defaultValues: data
       ? {
@@ -49,13 +52,26 @@ export const ModifyView = () => {
   const handleSubmit = methods.handleSubmit(
     async (dto) => {
       if ('uuid' in dto) {
-        const result = await updateRequest(dto as never as UpdateProductStoreDto);
+        const result = await updateRequest({
+          ...dto,
+          count: Number(dto.count),
+          ...(dto.price
+            ? {
+                price: Number(dto.price),
+              }
+            : {}),
+        } as never as UpdateProductStoreDto);
 
         if (result) {
-          methods.reset();
+          await presenter.getPriceHistory(dto.uuid);
+          methods.reset(dto);
         }
       } else {
-        const result = await createRequest(dto as never as CreateProductStoreDto);
+        const result = await createRequest({
+          ...dto,
+          count: Number(dto.count),
+          price: Number(dto.price),
+        } as never as CreateProductStoreDto);
 
         if (result) {
           navigate('/store/' + result.uuid);

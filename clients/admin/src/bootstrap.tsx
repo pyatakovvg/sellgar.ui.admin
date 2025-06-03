@@ -132,10 +132,7 @@ const app = new Application({
                 breadcrumb: () => 'Добавить товар',
               }),
               new Route('/:uuid', () => import('@page/store-modify'), {
-                breadcrumb: (data) => {
-                  console.log(data);
-                  return data?.variant?.name ?? '';
-                },
+                breadcrumb: (data) => data.variant.name,
               }),
             ],
             {
