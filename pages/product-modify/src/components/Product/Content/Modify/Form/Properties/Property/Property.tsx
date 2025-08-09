@@ -49,7 +49,6 @@ export const Property: React.FC<IProps> = (props) => {
       <div className={s.content}>
         <div className={s.field}>
           <Controller
-            //@ts-ignore
             name={`properties.${props.index}.propertyUuid`}
             control={control}
             render={({ field }) => {

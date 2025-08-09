@@ -9,7 +9,12 @@ import { RegisterAndUpdateServiceWorker } from './sw';
 const app = new Application({
   routes: [
     /**
-     * Контент требующий авторизации
+     * Общедоступный контент
+     */
+    new PublicRouter([new Route('sign-in', () => import('@page/sign-in'))]),
+
+    /**
+     * Контент, требующий авторизации
      */
     new PrivateRouter([
       new Router(
@@ -152,11 +157,6 @@ const app = new Application({
         },
       ),
     ]),
-
-    /**
-     * Общедоступный контент
-     */
-    new PublicRouter([new Route('sign-in', () => import('@page/sign-in'))]),
   ],
 });
 

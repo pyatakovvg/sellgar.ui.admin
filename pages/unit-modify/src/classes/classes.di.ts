@@ -1,38 +1,13 @@
-import {
-  Config,
-  ConfigInterface,
-  HttpClient,
-  HttpClientInterface,
-  UnitGateway,
-  UnitGatewayInterface,
-  UnitService,
-  UnitServiceInterface,
-} from '@library/domain';
+import { ContainerModule } from 'inversify';
 
-import { Container } from 'inversify';
+import { FormStore } from './store/form/form.store.ts';
+import { FormStoreInterface } from './store/form/form-store.interface.ts';
 
-import { FormStore, FormStoreSymbol } from './store/form.store.ts';
-import { UnitStore, UnitStoreSymbol } from './store/unit.store.ts';
+import { UnitController } from './controller/unit.controller.ts';
+import { UnitControllerInterface } from './controller/unit-controller.interface.ts';
 
-import { UnitPresenter, UnitPresenterSymbol } from './presenter/unit.presenter.ts';
+export const containerModule = new ContainerModule((container) => {
+  container.bind(FormStoreInterface).to(FormStore);
 
-let container: Container;
-
-export const create = () => {
-  container = new Container();
-
-  container.bind<ConfigInterface>(ConfigInterface).to(Config);
-  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
-
-  container.bind<UnitGatewayInterface>(UnitGatewayInterface).to(UnitGateway);
-  container.bind<UnitServiceInterface>(UnitServiceInterface).to(UnitService);
-
-  container.bind<FormStore>(FormStoreSymbol).to(FormStore);
-  container.bind<UnitStore>(UnitStoreSymbol).to(UnitStore);
-
-  container.bind<UnitPresenter>(UnitPresenterSymbol).to(UnitPresenter);
-
-  return container;
-};
-
-export const destroy = () => container.unbindAll();
+  container.bind(UnitControllerInterface).to(UnitController);
+});

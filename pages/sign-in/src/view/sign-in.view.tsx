@@ -17,7 +17,7 @@ export const SignInView = observer(() => {
   const inProcess = useGetFormInProcess();
 
   const handleSubmit = async (values: IFormValues) => {
-    const result = await signInRequest(values.email, values.password);
+    const result = await signInRequest(values.login, values.password);
 
     if (result) {
       navigate('/');

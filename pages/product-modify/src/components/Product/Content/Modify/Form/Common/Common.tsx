@@ -1,5 +1,4 @@
-import { Field, TreeSelect } from '@library/kit';
-import { SelectTree, Input, Select } from '@sellgar/kit';
+import { FieldWrapper, Label, Caption, SelectTree, Input, Select } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormState, useFormContext } from 'react-hook-form';
@@ -24,9 +23,25 @@ export const Common: React.FC = () => {
       <div className={s.content}>
         <div className={s.fields}>
           <div className={s['field-v']}>
-            <Field label={'Название'} error={errors.name?.message}>
-              <Input {...register('name')} autoFocus={true} tabIndex={1} placeholder={'Наименование'} />
-            </Field>
+            <FieldWrapper>
+              <FieldWrapper.Label>
+                <Label label={'Название'} />
+              </FieldWrapper.Label>
+              <FieldWrapper.Content>
+                <Input
+                  {...register('name')}
+                  autoFocus={true}
+                  tabIndex={1}
+                  placeholder={'Наименование'}
+                  target={errors.name?.message ? 'destructive' : undefined}
+                />
+              </FieldWrapper.Content>
+              {errors.name?.message && (
+                <FieldWrapper.Caption>
+                  <Caption state={'destructive'} caption={errors.name?.message} />
+                </FieldWrapper.Caption>
+              )}
+            </FieldWrapper>
           </div>
           <div className={s['field-v']}>
             <div className={s.horizontal}>
@@ -36,47 +51,66 @@ export const Common: React.FC = () => {
                   control={control}
                   render={({ field }) => {
                     return (
-                      <Field label={'Категория'} error={errors.categoryUuid?.message}>
-                        <SelectTree
-                          isClearable={true}
-                          placeholder={'Категория'}
-                          optionKey={'uuid'}
-                          optionValue={'name'}
-                          accessor={'children'}
-                          value={field.value ?? null}
-                          options={categories}
-                          onChange={(value) => {
-                            return field.onChange(value);
-                          }}
-                          onBlur={field.onBlur}
-                        />
-                      </Field>
+                      <FieldWrapper>
+                        <FieldWrapper.Label>
+                          <Label label={'Категория'} />
+                        </FieldWrapper.Label>
+                        <FieldWrapper.Content>
+                          <SelectTree
+                            isClearable={true}
+                            placeholder={'Категория'}
+                            optionKey={'uuid'}
+                            optionValue={'name'}
+                            accessor={'children'}
+                            value={field.value ?? null}
+                            options={categories}
+                            onChange={(value) => {
+                              return field.onChange(value);
+                            }}
+                            onBlur={field.onBlur}
+                          />
+                        </FieldWrapper.Content>
+                        {errors.categoryUuid?.message && (
+                          <FieldWrapper.Caption>
+                            <Caption state={'destructive'} caption={errors.categoryUuid?.message} />
+                          </FieldWrapper.Caption>
+                        )}
+                      </FieldWrapper>
                     );
                   }}
                 />
               </div>
               <div className={s['field-h']}>
                 <Controller
-                  //@ts-ignore
                   name={'brandUuid'}
                   control={control}
                   render={({ field }) => {
                     return (
-                      <Field label={'Бренд'} error={errors.brandUuid?.message}>
-                        <Select
-                          tabIndex={2}
-                          isClearable={true}
-                          placeholder={'Бренд'}
-                          optionKey={'uuid'}
-                          optionValue={'name'}
-                          value={field.value ?? null}
-                          options={brands}
-                          onChange={(value) => {
-                            return field.onChange(value);
-                          }}
-                          onBlur={field.onBlur}
-                        />
-                      </Field>
+                      <FieldWrapper>
+                        <FieldWrapper.Label>
+                          <Label label={'Бренд'} />
+                        </FieldWrapper.Label>
+                        <FieldWrapper.Content>
+                          <Select
+                            tabIndex={2}
+                            isClearable={true}
+                            placeholder={'Бренд'}
+                            optionKey={'uuid'}
+                            optionValue={'name'}
+                            value={field.value ?? null}
+                            options={brands}
+                            onChange={(value) => {
+                              return field.onChange(value);
+                            }}
+                            onBlur={field.onBlur}
+                          />
+                        </FieldWrapper.Content>
+                        {errors.brandUuid?.message && (
+                          <FieldWrapper.Caption>
+                            <Caption state={'destructive'} caption={errors.brandUuid?.message} />
+                          </FieldWrapper.Caption>
+                        )}
+                      </FieldWrapper>
                     );
                   }}
                 />

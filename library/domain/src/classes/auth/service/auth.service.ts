@@ -8,7 +8,7 @@ import { type AuthServiceInterface } from './auth-service.interface.ts';
 export class AuthService implements AuthServiceInterface {
   constructor(@inject(AuthGatewayInterface) private readonly authGateway: AuthGatewayInterface) {}
 
-  async signIn(email: string, password: string): Promise<void> {
-    await this.authGateway.signIn(email, password);
+  async signIn(login: string, password: string): Promise<void> {
+    await this.authGateway.signIn(login, password);
   }
 }

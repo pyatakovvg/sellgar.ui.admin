@@ -1,26 +1,24 @@
-import { type IClassModule } from '@library/app';
+import type { IClassModule, IClassModuleArgs } from '@library/app';
 
 import React from 'react';
-import { Container } from 'inversify';
 
 import { StoreView } from './view';
 import { ModuleProvider } from './module.provider.tsx';
 
-import { create } from './classes/classes.di.ts';
+import { containerModule } from './classes/classes.di.ts';
 import { StoreControllerInterface } from './classes/controller/store-controller.interface.ts';
 
 export class ClassModule implements IClassModule {
-  private readonly containerModule = create();
   private readonly controller: StoreControllerInterface;
 
-  constructor(private readonly container: Container) {
-    this.container.loadSync(this.containerModule);
+  constructor({ container }: IClassModuleArgs) {
+    container.loadSync(containerModule);
 
     this.controller = container.get<StoreControllerInterface>(StoreControllerInterface);
   }
 
-  destructor() {
-    this.container.unloadSync(this.containerModule);
+  destructor({ container }: IClassModuleArgs) {
+    container.unloadSync(containerModule);
   }
 
   async loader() {

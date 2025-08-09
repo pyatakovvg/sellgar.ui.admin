@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 
+import { container } from '@library/domain';
 import { LngProvider } from '@library/lng';
 import { PushProvider } from '@library/push';
 import { BreadcrumbsProvider } from '@library/breadcrumbs';
@@ -15,9 +16,10 @@ import { PrivateRouter } from './private-router.tsx';
 import { ApplicationProvider } from './application.provider.tsx';
 
 import { Error } from './components/error';
+import { Splash } from './components/splash';
 import { NotFound } from './components/not-found';
 
-import { Splash } from './components/splash';
+import { containerModule } from './classes/classes.di.ts';
 
 import s from './default.module.scss';
 
@@ -42,7 +44,9 @@ const Content: React.FC = () => {
 };
 
 export class Application {
-  constructor(private readonly options: IApplicationOption) {}
+  constructor(private readonly options: IApplicationOption) {
+    container.loadSync(containerModule);
+  }
 
   createView() {
     const routes = createBrowserRouter(
@@ -56,7 +60,9 @@ export class Application {
             </div>
           ),
           hydrateFallbackElement: <Splash />,
-          children: this.options.routes.map((route) => route.create()).filter((route) => route) as RouteObject[],
+          children: this.options.routes
+            .map((route) => route.create(container))
+            .filter((route) => route) as RouteObject[],
         },
         {
           path: '*',

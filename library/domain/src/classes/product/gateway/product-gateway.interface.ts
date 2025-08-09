@@ -5,7 +5,7 @@ import { ProductEntity, ProductResultEntity } from '../product.entity.ts';
 
 export abstract class ProductGatewayInterface {
   abstract findAll(): Promise<ProductResultEntity>;
-  abstract findByUuid(uuid: string): Promise<ProductEntity | null>;
+  abstract findByUuid(uuid: string): Promise<ProductEntity>;
   abstract create(dto: CreateProductDto): Promise<ProductEntity>;
   abstract update(uuid: string, dto: UpdateProductDto): Promise<ProductEntity>;
 }

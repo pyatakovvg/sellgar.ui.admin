@@ -10,7 +10,7 @@ import { schema } from './schema.ts';
 import s from './default.module.scss';
 
 export interface IFormValues {
-  email: string;
+  login: string;
   password: string;
 }
 
@@ -34,14 +34,14 @@ export const SignInForm: React.FC<IFormProps> = (props) => {
     <form className={s.wrapper} onSubmit={onSubmit}>
       <div className={s.content}>
         <div className={s.row}>
-          <Field error={errors.email?.message}>
+          <Field error={errors.login?.message}>
             <Input
-              {...register('email')}
+              {...register('login')}
               leadIcon={<Icon icon={'at-line'} />}
               size={'md'}
               autoFocus
               type={'phone'}
-              name={'email'}
+              name={'login'}
               placeholder={'Email'}
               disabled={props.inProcess}
             />

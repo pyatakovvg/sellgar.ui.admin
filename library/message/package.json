@@ -12,7 +12,7 @@
     "@library/kit": "0.0.1",
     "@utils/generate": "0.0.1",
     "classnames": "2.5.1",
-    "inversify": "7.5.1",
+    "inversify": "7.6.1",
     "mobx": "6.13.7",
     "mobx-react": "9.2.0",
     "react": "19.1.0",
@@ -20,8 +20,8 @@
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/react": "19.1.5",
-    "@types/react-dom": "19.1.5",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
     "@types/reflect-metadata": "0.1.0"
   }
 }

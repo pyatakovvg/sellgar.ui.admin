@@ -6,12 +6,13 @@ export { Router } from './router.tsx';
 export { PublicRouter } from './public-router.tsx';
 export { PrivateRouter } from './private-router.tsx';
 
-export { useApp } from './hook/useApp.ts';
-export { useQuery } from './hook/useQuery.ts';
-export { useProfile } from './hook/useProfile.ts';
-export { useRequest } from './hook/useRequest.ts';
-export { useNavigate } from './hook/useNavigate.ts';
+export { useApp } from './hook/app.hook.ts';
+export { useQuery } from './hook/query.hook.ts';
+export { useProfile } from './hook/profile.hook.ts';
+export { useRequest } from './hook/request.hook.ts';
+export { useNavigate } from './hook/navigate.hook.ts';
+export { useLoaderData } from './hook/loader-data.hook.ts';
 
 export { searchToObject } from './utils/search-to-object.utils.ts';
 
-export type { IClassModule } from './lazy-route.tsx';
+export type { IClassModule, IClassModuleArgs } from './lazy-route.tsx';

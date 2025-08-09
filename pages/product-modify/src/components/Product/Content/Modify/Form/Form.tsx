@@ -1,5 +1,5 @@
 import { useNavigate } from '@library/app';
-import { Textarea, Button, TabMenu } from '@sellgar/kit';
+import { Textarea, Button } from '@sellgar/kit';
 import { Field } from '@library/kit';
 
 import React from 'react';
@@ -37,6 +37,7 @@ export const Form: React.FC<IProps> = (props) => {
     // @ts-ignore
     resolver: yupResolver(schema),
     defaultValues: props.defaultValues,
+    mode: 'onBlur',
   });
 
   const onSubmit = methods.handleSubmit(async (dto) => {

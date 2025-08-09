@@ -2,8 +2,8 @@ import { inject, injectable } from 'inversify';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
-import { ConfigInterface } from '../../../helpers/Config';
-import { HttpClientInterface } from '../../../helpers/HttpClient';
+import { ConfigInterface } from '../../../helpers/config';
+import { HttpClientInterface } from '../../../helpers/http-client';
 
 import { ProfileResultEntity } from '../profile.entity.ts';
 

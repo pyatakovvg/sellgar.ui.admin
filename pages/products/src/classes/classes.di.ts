@@ -5,11 +5,8 @@ import { ProductsStoreInterface } from './store/products-store.interface.ts';
 import { ProductsController } from './controller/products.controller.ts';
 import { ProductsControllerInterface } from './controller/products-controller.interface.ts';
 
-const create = () => {
-  return new ContainerModule((container) => {
-    container.bind<ProductsStoreInterface>(ProductsStoreInterface).to(ProductsStore);
+export const containerModule = new ContainerModule((container) => {
+  container.bind<ProductsStoreInterface>(ProductsStoreInterface).to(ProductsStore);
 
-    container.bind<ProductsControllerInterface>(ProductsControllerInterface).to(ProductsController);
-  });
-};
-export { create };
+  container.bind<ProductsControllerInterface>(ProductsControllerInterface).to(ProductsController);
+});

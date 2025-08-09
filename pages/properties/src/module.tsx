@@ -1,24 +1,24 @@
-import { type IClassModule } from '@library/app';
+import type { IClassModule, IClassModuleArgs } from '@library/app';
 
 import React from 'react';
 
 import { PropertyView } from './view';
 import { ModuleProvider } from './module.provider.tsx';
 
-import { create, destroy } from './classes/classes.di.ts';
+import { containerModule } from './classes/classes.di.ts';
 import { PropertyControllerInterface } from './classes/controller/property-controller.interface.ts';
 
 export class ClassModule implements IClassModule {
   private readonly controller: PropertyControllerInterface;
 
-  constructor() {
-    const container = create();
+  constructor({ container }: IClassModuleArgs) {
+    container.loadSync(containerModule);
 
     this.controller = container.get<PropertyControllerInterface>(PropertyControllerInterface);
   }
 
-  destructor() {
-    destroy();
+  destructor({ container }: IClassModuleArgs) {
+    container.unloadSync(containerModule);
   }
 
   async loader() {

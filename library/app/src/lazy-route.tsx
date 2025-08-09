@@ -1,41 +1,47 @@
 import React from 'react';
 import { Container } from 'inversify';
-import { LoaderFunctionArgs } from 'react-router-dom';
+import { Params } from 'react-router-dom';
 
-import { container } from './classes/container.di.ts';
+import { ApplicationControllerInterface } from './classes/controller/application-controller.interface.ts';
+
+export interface IClassModuleArgs {
+  container: Container;
+  controller: ApplicationControllerInterface;
+  params?: Params;
+}
 
 export interface IClassModule {
-  destructor?(): void;
-  loader?(args: LoaderFunctionArgs): unknown;
-  render(): React.JSX.Element;
+  destructor?(args: IClassModuleArgs): void;
+  loader?(args: IClassModuleArgs): unknown;
+  render(args: IClassModuleArgs): React.JSX.Element;
 }
 
 export class LazyRoute {
   private instance?: IClassModule;
 
-  constructor(private readonly ClassModule: new (container: Container) => IClassModule) {}
+  constructor(private readonly ClassModule: new (args: IClassModuleArgs) => IClassModule) {}
 
-  create() {
-    this.destructor();
-    this.instance = new this.ClassModule(container);
+  create(args: IClassModuleArgs) {
+    this.destructor(args);
+    this.instance = new this.ClassModule(args);
   }
 
-  destructor() {
+  destructor(args: IClassModuleArgs) {
     if (this.instance) {
       if (this.instance.destructor) {
-        this.instance.destructor();
+        this.instance.destructor(args);
         delete this.instance;
       }
     }
   }
 
-  loader(args: LoaderFunctionArgs) {
+  loader(args: IClassModuleArgs) {
     if (this.instance?.loader) {
       return this.instance.loader(args);
     }
   }
 
-  render() {
-    return <>{this.instance?.render()}</>;
+  render(args: IClassModuleArgs) {
+    return <>{this.instance?.render(args)}</>;
   }
 }

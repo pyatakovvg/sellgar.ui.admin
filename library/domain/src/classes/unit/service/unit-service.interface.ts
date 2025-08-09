@@ -5,7 +5,7 @@ import { UnitEntity, UnitResultEntity } from '../unit.entity.ts';
 
 export abstract class UnitServiceInterface {
   abstract findAll(): Promise<UnitResultEntity>;
-  abstract findByUuid(code: string): Promise<UnitEntity | null>;
+  abstract findByUuid(code: string): Promise<UnitEntity>;
   abstract create(createBrandDto: CreateUnitDto): Promise<UnitEntity>;
   abstract update(code: string, updateBrandDto: UpdateUnitDto): Promise<UnitEntity>;
 }

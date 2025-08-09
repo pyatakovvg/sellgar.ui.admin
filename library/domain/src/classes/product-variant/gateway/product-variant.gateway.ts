@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 
-import { ConfigInterface } from '../../../helpers/Config';
-import { HttpClientInterface } from '../../../helpers/HttpClient';
+import { ConfigInterface } from '../../../helpers/config';
+import { HttpClientInterface } from '../../../helpers/http-client';
 import { ProductVariantGatewayInterface } from './product-variant-gateway.interface.ts';
 
 import { CreateProductDto } from './dto/create-product.dto.ts';

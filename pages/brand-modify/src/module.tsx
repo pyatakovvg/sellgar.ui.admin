@@ -1,12 +1,11 @@
-import type { IClassModule } from '@library/app';
+import type { IClassModule, IClassModuleArgs } from '@library/app';
 
 import React from 'react';
-import { LoaderFunctionArgs } from 'react-router-dom';
 
 import { BrandView } from './view';
 import { ModuleProvider } from './module.provider.tsx';
 
-import { create, destroy } from './classes/classes.di.ts';
+import { containerModule } from './classes/classes.di.ts';
 import { BrandControllerInterface } from './classes/controller/brand-controller.interface.ts';
 
 interface ILoaderParams {
@@ -16,18 +15,20 @@ interface ILoaderParams {
 export class ClassModule implements IClassModule {
   private readonly controller: BrandControllerInterface;
 
-  constructor() {
-    const container = create();
+  constructor({ container }: IClassModuleArgs) {
+    container.loadSync(containerModule);
 
     this.controller = container.get(BrandControllerInterface);
   }
 
-  destructor() {
-    destroy();
+  destructor({ container }: IClassModuleArgs) {
+    container.unloadSync(containerModule);
   }
 
-  async loader(args: LoaderFunctionArgs) {
+  async loader(args: IClassModuleArgs) {
     const params = args.params as never as ILoaderParams;
+
+    console.log(params);
 
     if (params.uuid) {
       return await this.controller.findByUuid(params.uuid);

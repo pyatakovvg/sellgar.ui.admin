@@ -2,9 +2,12 @@ import { uuid } from '@utils/generate';
 import { UnauthorizedException } from '@library/domain';
 
 import React from 'react';
-import { Navigate, RouteObject, useRouteError, useNavigation, LoaderFunctionArgs } from 'react-router-dom';
+import { Container } from 'inversify';
+import { Navigate, RouteObject, useRouteError, useNavigation, useParams, LoaderFunctionArgs } from 'react-router-dom';
 
-import { useProfile } from './hook/useProfile.ts';
+import { useProfile } from './hook/profile.hook.ts';
+
+import { RouteProvider } from './route.provider.tsx';
 
 import { Error } from './components/error';
 import { Loading } from './components/loading';
@@ -83,7 +86,7 @@ export class Route {
     return this.options?.breadcrumb ?? null;
   }
 
-  create(): RouteObject | null {
+  create(container: Container): RouteObject | null {
     return {
       path: Route.normalizePath(this.path),
       lazy: async () => {
@@ -94,22 +97,38 @@ export class Route {
 
           return {
             loader: (args: LoaderFunctionArgs) => {
-              lazyRoute.create();
+              lazyRoute.create({
+                container,
+                params: args.params,
+              });
 
-              return lazyRoute.loader.call(lazyRoute, args);
+              return lazyRoute.loader.call(lazyRoute, {
+                container,
+                params: args.params,
+              });
             },
-            Component: async () => {
-              const Module = lazyRoute.render.bind(lazyRoute);
+            Component: () => {
+              const params = useParams();
+
+              const Module = lazyRoute.render.bind(lazyRoute, {
+                container,
+                params,
+              });
 
               React.useLayoutEffect(() => {
                 return () => {
-                  lazyRoute.destructor.call(lazyRoute);
+                  lazyRoute.destructor.call(lazyRoute, {
+                    container,
+                    params,
+                  });
                 };
               }, []);
 
               return (
                 <CheckCredentials route={this}>
-                  <Module />
+                  <RouteProvider>
+                    <Module />
+                  </RouteProvider>
                 </CheckCredentials>
               );
             },

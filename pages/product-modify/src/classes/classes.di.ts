@@ -9,13 +9,9 @@ import { ProductStoreInterface } from './store/product/product-store.interface.t
 import { ProductPresenter } from './presenter/product.presenter.ts';
 import { ProductPresenterInterface } from './presenter/product-presenter.interface.ts';
 
-const create = () => {
-  return new ContainerModule((container) => {
-    container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
-    container.bind<ProductStoreInterface>(ProductStoreInterface).to(ProductStore);
+export const containerModule = new ContainerModule((container) => {
+  container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
+  container.bind<ProductStoreInterface>(ProductStoreInterface).to(ProductStore);
 
-    container.bind<ProductPresenterInterface>(ProductPresenterInterface).to(ProductPresenter);
-  });
-};
-
-export { create };
+  container.bind<ProductPresenterInterface>(ProductPresenterInterface).to(ProductPresenter);
+});

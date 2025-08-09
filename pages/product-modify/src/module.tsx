@@ -1,32 +1,30 @@
-import { type IClassModule } from '@library/app';
+import type { IClassModule, IClassModuleArgs } from '@library/app';
 
 import React from 'react';
-import { Container } from 'inversify';
-import { LoaderFunctionArgs } from 'react-router-dom';
 
 import { Product } from './components/Product';
 import { ModuleProvider } from './module.provider.tsx';
 
-import { create } from './classes/classes.di.ts';
+import { containerModule } from './classes/classes.di.ts';
 import { ProductPresenterInterface } from './classes/presenter/product-presenter.interface.ts';
 
 export class ClassModule implements IClassModule {
-  private readonly containerModule = create();
   private readonly controller: ProductPresenterInterface;
 
-  constructor(private readonly container: Container) {
-    this.container.loadSync(this.containerModule);
+  constructor({ container }: IClassModuleArgs) {
+    container.loadSync(containerModule);
 
     this.controller = container.get(ProductPresenterInterface);
   }
 
-  destructor() {
-    this.container.unloadSync(this.containerModule);
+  destructor({ container }: IClassModuleArgs) {
+    container.unloadSync(containerModule);
   }
 
-  async loader(args: LoaderFunctionArgs) {
+  async loader(args: IClassModuleArgs) {
     await this.controller.findProperties();
-    if (args.params.uuid) {
+
+    if (args.params?.uuid) {
       return await this.controller.findByUuid(args.params.uuid);
     }
   }

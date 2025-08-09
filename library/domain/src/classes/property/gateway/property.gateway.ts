@@ -3,8 +3,8 @@ import { inject, injectable } from 'inversify';
 import { CreatePropertyDto } from './dto/create-property.dto.ts';
 import { UpdatePropertyDto } from './dto/update-property.dto.ts';
 
-import { ConfigInterface } from '../../../helpers/Config';
-import { HttpClientInterface } from '../../../helpers/HttpClient';
+import { ConfigInterface } from '../../../helpers/config';
+import { HttpClientInterface } from '../../../helpers/http-client';
 
 import { type PropertyGatewayInterface } from './property-gateway.interface.ts';
 

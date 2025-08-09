@@ -23,8 +23,8 @@ export class UnitService implements UnitServiceInterface {
     return resultInstance;
   }
 
-  async findByUuid(uuid: string): Promise<UnitEntity | null> {
-    const result = await this.unitGateway.findByUuid(uuid);
+  async findByUuid(code: string): Promise<UnitEntity> {
+    const result = await this.unitGateway.findByUuid(code);
     const resultInstance = plainToInstance(UnitEntity, result);
 
     await validateOrReject(resultInstance);
@@ -32,8 +32,12 @@ export class UnitService implements UnitServiceInterface {
     return resultInstance;
   }
 
-  async update(uuid: string, updateCategoryDto: UpdateUnitDto): Promise<UnitEntity> {
-    const result = await this.unitGateway.update(uuid, updateCategoryDto);
+  async update(uuid: string, dto: UpdateUnitDto): Promise<UnitEntity> {
+    const dtoInstance = plainToInstance(UpdateUnitDto, dto);
+
+    await validateOrReject(dtoInstance);
+
+    const result = await this.unitGateway.update(uuid, dtoInstance);
     const resultInstance = plainToInstance(UnitEntity, result);
 
     await validateOrReject(resultInstance);
@@ -41,8 +45,12 @@ export class UnitService implements UnitServiceInterface {
     return resultInstance;
   }
 
-  async create(createCategoryDto: CreateUnitDto): Promise<UnitEntity> {
-    const result = await this.unitGateway.create(createCategoryDto);
+  async create(dto: CreateUnitDto): Promise<UnitEntity> {
+    const dtoInstance = plainToInstance(UpdateUnitDto, dto);
+
+    await validateOrReject(dtoInstance);
+
+    const result = await this.unitGateway.create(dtoInstance);
     const resultInstance = plainToInstance(UnitEntity, result);
 
     await validateOrReject(resultInstance);

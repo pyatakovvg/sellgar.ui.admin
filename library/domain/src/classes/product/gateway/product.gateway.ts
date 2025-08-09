@@ -1,11 +1,14 @@
 import { inject, injectable } from 'inversify';
+import { plainToInstance } from 'class-transformer';
+import { validateOrReject } from 'class-validator';
 
-import { ConfigInterface } from '../../../helpers/Config';
-import { HttpClientInterface } from '../../../helpers/HttpClient';
-import { ProductGatewayInterface } from './product-gateway.interface.ts';
+import { ConfigInterface } from '../../../helpers/config';
+import { HttpClientInterface } from '../../../helpers/http-client';
 
 import { CreateProductDto } from './dto/create-product.dto.ts';
 import { UpdateProductDto } from './dto/update-product.dto.ts';
+
+import { ProductGatewayInterface } from './product-gateway.interface.ts';
 
 import { ProductEntity, ProductResultEntity } from '../product.entity.ts';
 
@@ -16,19 +19,39 @@ export class ProductGateway implements ProductGatewayInterface {
     @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
-  async findAll(): Promise<ProductResultEntity> {
-    return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/products');
+  async findAll() {
+    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/products');
+    const resultInstance = plainToInstance(ProductResultEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  async findByUuid(uuid: string): Promise<ProductEntity | null> {
-    return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/products/' + uuid);
+  async findByUuid(uuid: string) {
+    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/products/' + uuid);
+    const resultInstance = plainToInstance(ProductEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  async create(dto: CreateProductDto): Promise<ProductEntity> {
-    return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/products', dto);
+  async create(dto: CreateProductDto) {
+    const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/products', dto);
+    const resultInstance = plainToInstance(ProductEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  async update(uuid: string, dto: UpdateProductDto): Promise<ProductEntity> {
-    return this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/products/' + uuid, dto);
+  async update(uuid: string, dto: UpdateProductDto) {
+    const result = await this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/products/' + uuid, dto);
+    const resultInstance = plainToInstance(ProductEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

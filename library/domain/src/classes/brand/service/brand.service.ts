@@ -15,38 +15,26 @@ export class BrandService implements BrandServiceInterface {
   constructor(@inject(BrandGatewayInterface) private readonly brandGateway: BrandGatewayInterface) {}
 
   async findAll(): Promise<BrandResultEntity> {
-    const result = await this.brandGateway.findAll();
-    const resultInstance = plainToInstance(BrandResultEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+    return await this.brandGateway.findAll();
   }
 
   async findByUuid(uuid: string): Promise<BrandEntity> {
-    const result = await this.brandGateway.findByUuid(uuid);
-    const resultInstance = plainToInstance(BrandEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+    return await this.brandGateway.findByUuid(uuid);
   }
 
-  async update(uuid: string, updateCategoryDto: UpdateBrandDto): Promise<BrandEntity> {
-    const result = await this.brandGateway.update(uuid, updateCategoryDto);
-    const resultInstance = plainToInstance(BrandEntity, result);
+  async update(uuid: string, dto: UpdateBrandDto): Promise<BrandEntity> {
+    const dtoInstance = plainToInstance(UpdateBrandDto, dto);
 
-    await validateOrReject(resultInstance);
+    await validateOrReject(dtoInstance);
 
-    return resultInstance;
+    return await this.brandGateway.update(uuid, dtoInstance);
   }
 
-  async create(createCategoryDto: CreateBrandDto): Promise<BrandEntity> {
-    const result = await this.brandGateway.create(createCategoryDto);
-    const resultInstance = plainToInstance(BrandEntity, result);
+  async create(dto: CreateBrandDto): Promise<BrandEntity> {
+    const dtoInstance = plainToInstance(UpdateBrandDto, dto);
 
-    await validateOrReject(resultInstance);
+    await validateOrReject(dtoInstance);
 
-    return resultInstance;
+    return await this.brandGateway.create(dtoInstance);
   }
 }

@@ -2,51 +2,39 @@ import { inject, injectable } from 'inversify';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
-import { CategoryEntity, CategoryResultEntity } from '../category.entity.ts';
-
 import { CreateCategoryDto } from './dto/create-category.dto.ts';
 import { UpdateCategoryDto } from './dto/update-category.dto.ts';
 
 import { CategoryServiceInterface } from './category-service.interface.ts';
 import { CategoryGatewayInterface } from '../gateway/category-gateway.interface.ts';
 
+import { CategoryEntity, CategoryResultEntity } from '../category.entity.ts';
+
 @injectable()
 export class CategoryService implements CategoryServiceInterface {
   constructor(@inject(CategoryGatewayInterface) private readonly categoryGateway: CategoryGatewayInterface) {}
 
   async findAll(): Promise<CategoryResultEntity> {
-    const result = await this.categoryGateway.findAll();
-    const resultInstance = plainToInstance(CategoryResultEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+    return await this.categoryGateway.findAll();
   }
 
   async findByUuid(uuid: string): Promise<CategoryEntity> {
-    const result = await this.categoryGateway.findByUuid(uuid);
-    const resultInstance = plainToInstance(CategoryEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+    return await this.categoryGateway.findByUuid(uuid);
   }
 
-  async update(uuid: string, updateCategoryDto: UpdateCategoryDto): Promise<CategoryEntity> {
-    const result = await this.categoryGateway.update(uuid, updateCategoryDto);
-    const resultInstance = plainToInstance(CategoryEntity, result);
+  async update(uuid: string, dto: UpdateCategoryDto): Promise<CategoryEntity> {
+    const dtoInstance = plainToInstance(UpdateCategoryDto, dto);
 
-    await validateOrReject(resultInstance);
+    await validateOrReject(dtoInstance);
 
-    return resultInstance;
+    return await this.categoryGateway.update(uuid, dtoInstance);
   }
 
-  async create(createCategoryDto: CreateCategoryDto): Promise<CategoryEntity> {
-    const result = await this.categoryGateway.create(createCategoryDto);
-    const resultInstance = plainToInstance(CategoryEntity, result);
+  async create(dto: CreateCategoryDto): Promise<CategoryEntity> {
+    const dtoInstance = plainToInstance(CreateCategoryDto, dto);
 
-    await validateOrReject(resultInstance);
+    await validateOrReject(dtoInstance);
 
-    return resultInstance;
+    return await this.categoryGateway.create(dtoInstance);
   }
 }

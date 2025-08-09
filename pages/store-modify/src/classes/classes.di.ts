@@ -12,12 +12,10 @@ import { VariantsStoreInterface } from './store/variants/variants-store.interfac
 import { ProductPresenter } from './presenter/product.presenter.ts';
 import { ProductPresenterInterface } from './presenter/product-presenter.interface.ts';
 
-export const create = () => {
-  return new ContainerModule((container) => {
-    container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
-    container.bind<PriceStoreInterface>(PriceStoreInterface).to(PriceStore);
-    container.bind<VariantsStoreInterface>(VariantsStoreInterface).to(VariantsStore);
+export const containerModule = new ContainerModule((container) => {
+  container.bind<FormStoreInterface>(FormStoreInterface).to(FormStore);
+  container.bind<PriceStoreInterface>(PriceStoreInterface).to(PriceStore);
+  container.bind<VariantsStoreInterface>(VariantsStoreInterface).to(VariantsStore);
 
-    container.bind<ProductPresenterInterface>(ProductPresenterInterface).to(ProductPresenter);
-  });
-};
+  container.bind<ProductPresenterInterface>(ProductPresenterInterface).to(ProductPresenter);
+});

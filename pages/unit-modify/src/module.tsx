@@ -1,37 +1,36 @@
-import { type IClassModule } from '@library/app';
+import type { IClassModule, IClassModuleArgs } from '@library/app';
 
 import React from 'react';
-import { LoaderFunctionArgs } from 'react-router-dom';
 
-import { Unit } from './components/Unit';
+import { UnitView } from './view';
 import { ModuleProvider } from './module.provider.tsx';
 
-import { create, destroy } from './classes/classes.di.ts';
-import { UnitPresenter, UnitPresenterSymbol } from './classes/presenter/unit.presenter.ts';
+import { containerModule } from './classes/classes.di.ts';
+import { UnitControllerInterface } from './classes/controller/unit-controller.interface.ts';
 
 export class ClassModule implements IClassModule {
-  private readonly controller: UnitPresenter;
+  private readonly controller: UnitControllerInterface;
 
-  constructor() {
-    const container = create();
+  constructor({ container }: IClassModuleArgs) {
+    container.loadSync(containerModule);
 
-    this.controller = container.get<UnitPresenter>(UnitPresenterSymbol);
+    this.controller = container.get(UnitControllerInterface);
   }
 
-  destructor() {
-    destroy();
+  destructor({ container }: IClassModuleArgs) {
+    container.unloadSync(containerModule);
   }
 
-  async loader(args: LoaderFunctionArgs) {
-    if (args.params.uuid) {
-      return await this.controller.findByUuid(args.params.uuid);
+  async loader(args: IClassModuleArgs) {
+    if (args.params?.uuid) {
+      return await this.controller.getByUuid(args.params.uuid);
     }
   }
 
   render() {
     return (
       <ModuleProvider controller={this.controller}>
-        <Unit />
+        <UnitView />
       </ModuleProvider>
     );
   }

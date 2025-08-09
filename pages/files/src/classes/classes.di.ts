@@ -1,19 +1,4 @@
-import {
-  Config,
-  ConfigInterface,
-  HttpClient,
-  HttpClientInterface,
-  FolderGateway,
-  FolderGatewayInterface,
-  FolderService,
-  FolderServiceInterface,
-  FileGateway,
-  FileGatewayInterface,
-  FileService,
-  FileServiceInterface,
-} from '@library/domain';
-
-import { Container } from 'inversify';
+import { ContainerModule } from 'inversify';
 
 import { FileStore } from './store/file/file.store.ts';
 import { FileStoreInterface } from './store/file/file-store.interface.ts';
@@ -26,27 +11,10 @@ import { UploadStoreInterface } from './store/upload/upload-store.interface.ts';
 
 import { FilesPresenter, FilesPresenterSymbol } from './presenter/files.presenter.ts';
 
-let container: Container;
-
-export const create = () => {
-  container = new Container({ defaultScope: 'Singleton' });
-
-  container.bind<ConfigInterface>(ConfigInterface).to(Config);
-  container.bind<HttpClientInterface>(HttpClientInterface).to(HttpClient);
-
-  container.bind<FolderGatewayInterface>(FolderGatewayInterface).to(FolderGateway);
-  container.bind<FolderServiceInterface>(FolderServiceInterface).to(FolderService);
-
-  container.bind<FileGatewayInterface>(FileGatewayInterface).to(FileGateway);
-  container.bind<FileServiceInterface>(FileServiceInterface).to(FileService);
-
+export const containerModule = new ContainerModule((container) => {
   container.bind<FileStoreInterface>(FileStoreInterface).to(FileStore);
   container.bind<FolderStoreInterface>(FolderStoreInterface).to(FolderStore);
   container.bind<UploadStoreInterface>(UploadStoreInterface).to(UploadStore);
 
   container.bind<FilesPresenter>(FilesPresenterSymbol).to(FilesPresenter);
-
-  return container;
-};
-
-export const destroy = () => container.unbindAll();
+});

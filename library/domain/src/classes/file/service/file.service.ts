@@ -1,4 +1,6 @@
 import { inject, injectable } from 'inversify';
+import { plainToInstance } from 'class-transformer';
+import { validateOrReject } from 'class-validator';
 
 import { GetAllFileFilterDto } from '../gateway/dto/get-all-file-filter.dto.ts';
 
@@ -9,11 +11,15 @@ import { FileGatewayInterface } from '../gateway/file-gateway.interface.ts';
 export class FileService implements FileServiceInterface {
   constructor(@inject(FileGatewayInterface) private readonly fileGateway: FileGatewayInterface) {}
 
-  findAll(filter: GetAllFileFilterDto) {
-    return this.fileGateway.findAll(filter);
+  async findAll(filter: GetAllFileFilterDto) {
+    const filterInstance = plainToInstance(GetAllFileFilterDto, filter);
+
+    await validateOrReject(filterInstance);
+
+    return await this.fileGateway.findAll(filter);
   }
 
-  upload(files: File[], folderUuid?: string) {
+  async upload(files: File[], folderUuid?: string) {
     const formData = new FormData();
 
     if (folderUuid) {
@@ -25,6 +31,6 @@ export class FileService implements FileServiceInterface {
       formData.append(`files`, file);
     }
 
-    return this.fileGateway.upload(formData);
+    return await this.fileGateway.upload(formData);
   }
 }

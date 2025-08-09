@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 
-import { ConfigInterface } from '../../../helpers/Config';
-import { HttpClientInterface } from '../../../helpers/HttpClient';
+import { ConfigInterface } from '../../../helpers/config';
+import { HttpClientInterface } from '../../../helpers/http-client';
 
 import { type AuthGatewayInterface } from './auth-gateway.interface.ts';
 
@@ -12,9 +12,9 @@ export class AuthGateway implements AuthGatewayInterface {
     @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
-  async signIn(email: string, password: string): Promise<void> {
+  async signIn(login: string, password: string): Promise<void> {
     await this.httpClient.post(this.config.get('GATEWAY_API') + '/v1/auth/sign-in', {
-      email,
+      login,
       password,
     });
   }

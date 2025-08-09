@@ -8,13 +8,9 @@ import { ApplicationStoreInterface } from './stores/application/application-stor
 import { ApplicationController } from './controller/application.controller.ts';
 import { ApplicationControllerInterface } from './controller/application-controller.interface.ts';
 
-export const create = () =>
-  new ContainerModule((container) => {
-    container.bind<ProfileStoreInterface>(ProfileStoreInterface).to(ProfileStore);
-    container.bind<ApplicationStoreInterface>(ApplicationStoreInterface).to(ApplicationStore);
+export const containerModule = new ContainerModule((container) => {
+  container.bind(ProfileStoreInterface).to(ProfileStore);
+  container.bind(ApplicationStoreInterface).to(ApplicationStore);
 
-    container
-      .bind<ApplicationControllerInterface>(ApplicationControllerInterface)
-      .to(ApplicationController)
-      .inSingletonScope();
-  });
+  container.bind(ApplicationControllerInterface).to(ApplicationController).inSingletonScope();
+});

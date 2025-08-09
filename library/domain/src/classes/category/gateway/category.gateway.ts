@@ -1,14 +1,16 @@
 import { inject, injectable } from 'inversify';
+import { plainToInstance } from 'class-transformer';
+import { validateOrReject } from 'class-validator';
 
-import { ConfigInterface } from '../../../helpers/Config';
-import { HttpClientInterface } from '../../../helpers/HttpClient';
-
-import { CategoryEntity, CategoryResultEntity } from '../category.entity.ts';
+import { ConfigInterface } from '../../../helpers/config';
+import { HttpClientInterface } from '../../../helpers/http-client';
 
 import { CreateCategoryDto } from './dto/create-category.dto.ts';
 import { UpdateCategoryDto } from './dto/update-category.dto.ts';
 
 import { CategoryGatewayInterface } from './category-gateway.interface.ts';
+
+import { CategoryEntity, CategoryResultEntity } from '../category.entity.ts';
 
 @injectable()
 export class CategoryGateway implements CategoryGatewayInterface {
@@ -17,19 +19,42 @@ export class CategoryGateway implements CategoryGatewayInterface {
     @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
-  update(uuid: string, updateCategoryDto: UpdateCategoryDto): Promise<CategoryEntity> {
-    return this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/categories/' + uuid, updateCategoryDto);
+  async update(uuid: string, updateCategoryDto: UpdateCategoryDto): Promise<CategoryEntity> {
+    const result = await this.httpClient.patch(
+      this.config.get('GATEWAY_API') + '/v2/categories/' + uuid,
+      updateCategoryDto,
+    );
+    const resultInstance = plainToInstance(CategoryEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  create(createCategoryDto: CreateCategoryDto): Promise<CategoryEntity> {
-    return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/categories', createCategoryDto);
+  async create(createCategoryDto: CreateCategoryDto): Promise<CategoryEntity> {
+    const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/categories', createCategoryDto);
+    const resultInstance = plainToInstance(CategoryEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  findByUuid(uuid: string): Promise<CategoryEntity> {
-    return this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/categories/' + uuid);
+  async findByUuid(uuid: string): Promise<CategoryEntity> {
+    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/categories/' + uuid);
+    const resultInstance = plainToInstance(CategoryEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  findAll(): Promise<CategoryResultEntity> {
-    return this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/categories');
+  async findAll(): Promise<CategoryResultEntity> {
+    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/categories');
+    const resultInstance = plainToInstance(CategoryResultEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

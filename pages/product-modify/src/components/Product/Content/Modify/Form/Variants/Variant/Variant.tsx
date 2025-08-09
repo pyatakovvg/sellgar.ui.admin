@@ -22,7 +22,7 @@ export const Variant: React.FC<IProps> = (props) => {
   } = useFormContext<CreateProductDto | UpdateProductDto>();
 
   return (
-    <Card target={'inverted'}>
+    <Card>
       <div className={s.wrapper}>
         <div className={s.delete}>
           <span onClick={props.onDelete}>

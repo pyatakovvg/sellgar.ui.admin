@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 
-import { ConfigInterface } from '../../../helpers/Config';
-import { HttpClientInterface } from '../../../helpers/HttpClient';
+import { ConfigInterface } from '../../../helpers/config';
+import { HttpClientInterface } from '../../../helpers/http-client';
 
 import { CreatePropertyGroupDto } from './dto/create-property-group.dto.ts';
 import { UpdatePropertyGroupDto } from './dto/update-property-group.dto.ts';

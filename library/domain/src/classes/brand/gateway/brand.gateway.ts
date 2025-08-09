@@ -1,12 +1,16 @@
 import { inject, injectable } from 'inversify';
+import { plainToInstance } from 'class-transformer';
+import { validateOrReject } from 'class-validator';
 
-import { ConfigInterface } from '../../../helpers/Config';
-import { HttpClientInterface } from '../../../helpers/HttpClient';
+import { ConfigInterface } from '../../../helpers/config';
+import { HttpClientInterface } from '../../../helpers/http-client';
 
 import { CreateBrandDto } from './dto/create-brand.dto.ts';
 import { UpdateBrandDto } from './dto/update-brand.dto.ts';
 
 import { type BrandGatewayInterface } from './brand-gateway.interface.ts';
+
+import { BrandEntity, BrandResultEntity } from '../brand.entity.ts';
 
 @injectable()
 export class BrandGateway implements BrandGatewayInterface {
@@ -15,19 +19,39 @@ export class BrandGateway implements BrandGatewayInterface {
     @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
-  update(uuid: string, updateBrandDto: UpdateBrandDto) {
-    return this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/brands/' + uuid, updateBrandDto);
+  async update(uuid: string, dto: UpdateBrandDto) {
+    const result = await this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/brands/' + uuid, dto);
+    const resultInstance = plainToInstance(BrandEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  create(createBrandDto: CreateBrandDto) {
-    return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/brands', createBrandDto);
+  async create(dto: CreateBrandDto) {
+    const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/brands', dto);
+    const resultInstance = plainToInstance(BrandEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  findByUuid(uuid: string) {
-    return this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/brands/' + uuid);
+  async findByUuid(uuid: string) {
+    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/brands/' + uuid);
+    const resultInstance = plainToInstance(BrandEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 
-  findAll() {
-    return this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/brands');
+  async findAll() {
+    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/brands');
+    const resultInstance = plainToInstance(BrandResultEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
   }
 }

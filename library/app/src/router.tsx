@@ -1,11 +1,12 @@
 import { uuid } from '@utils/generate';
 
 import React from 'react';
+import { Container } from 'inversify';
 import { Outlet, RouteObject } from 'react-router-dom';
 
 import { Route } from './route.tsx';
 
-import { useProfile } from './hook/useProfile.ts';
+import { useProfile } from './hook/profile.hook.ts';
 
 import { Error } from './components/error';
 import { NotFound } from './components/not-found';
@@ -67,7 +68,7 @@ export class Router {
     return this.options?.breadcrumb ?? null;
   }
 
-  create(): RouteObject {
+  create(container: Container): RouteObject {
     return {
       handle: {
         crumb: (data: any) => {
@@ -84,7 +85,7 @@ export class Router {
       errorElement: <Error />,
       element: <CheckCredentials router={this}>{this.options?.layout}</CheckCredentials>,
       children: [
-        ...(this.children.map((route) => route.create()).filter((route) => route) as RouteObject[]),
+        ...(this.children.map((route) => route.create(container)).filter((route) => route) as RouteObject[]),
         {
           path: '*',
           element: <NotFound />,

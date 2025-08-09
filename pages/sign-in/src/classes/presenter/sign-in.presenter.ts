@@ -12,7 +12,7 @@ export class SignInPresenter implements SignInPresenterInterface {
     return this.formStore.inProcess;
   }
 
-  async signIn(email: string, password: string) {
-    return await this.formStore.execute(email, password);
+  async signIn(login: string, password: string) {
+    return await this.formStore.execute(login, password);
   }
 }

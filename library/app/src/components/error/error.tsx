@@ -1,3 +1,4 @@
+import { Typography } from '@sellgar/kit';
 import { UnauthorizedException } from '@library/domain';
 
 import React from 'react';
@@ -15,16 +16,20 @@ export const Error: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <h3>Что-то пошло не так!</h3>
+        <Typography size={'h6'} weight={'semi-bold'}>
+          <p>Что-то пошло не так!</p>
+        </Typography>
       </div>
       <div className={s.message}>
-        <h4>{error.message}</h4>
+        <Typography size={'body-m'} weight={'medium'}>
+          <p>{error.message}</p>
+        </Typography>
       </div>
       <div className={s.stack}>
         <div className={s.content}>
-          <p>
+          <Typography size={'caption-s'} weight={'medium'}>
             <code className={s.code}>{error.stack}</code>
-          </p>
+          </Typography>
         </div>
       </div>
     </div>
