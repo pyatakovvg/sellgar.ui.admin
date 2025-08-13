@@ -1,5 +1,6 @@
 import { Breadcrumbs } from '@library/breadcrumbs';
-import { Typography, Button, Icon } from '@sellgar/kit';
+import { Typography } from '@sellgar/kit';
+import { Widget as SignOutWidget } from '@widget/logout';
 
 import React from 'react';
 
@@ -19,9 +20,7 @@ export const Header = () => {
         </div>
       </div>
       <div className={s.control}>
-        <Button style={'secondary'} size={'sm'} leadIcon={<Icon icon={'logout-box-line'} />}>
-          Выход
-        </Button>
+        <SignOutWidget />
       </div>
     </div>
   );

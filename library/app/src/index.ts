@@ -12,6 +12,7 @@ export { useProfile } from './hook/profile.hook.ts';
 export { useRequest } from './hook/request.hook.ts';
 export { useNavigate } from './hook/navigate.hook.ts';
 export { useLoaderData } from './hook/loader-data.hook.ts';
+export { useLoadContainerModule } from './hook/load-ontainer-module.hook.ts';
 
 export { searchToObject } from './utils/search-to-object.utils.ts';
 

@@ -1,0 +1,38 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  color: var(--text-base-primary);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  margin: var(--numbers-16) 0 0;
+  color: var(--text-base-secondary);
+}
+
+.control {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  justify-content: flex-end;
+  margin: var(--numbers-24) 0 0;
+}
+
+.button {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+
+  & + & {
+    margin: 0 0 0 var(--numbers-8);
+  }
+}

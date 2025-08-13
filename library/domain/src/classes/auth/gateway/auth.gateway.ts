@@ -12,10 +12,14 @@ export class AuthGateway implements AuthGatewayInterface {
     @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
-  async signIn(login: string, password: string): Promise<void> {
+  async signIn(login: string, password: string) {
     await this.httpClient.post(this.config.get('GATEWAY_API') + '/v1/auth/sign-in', {
       login,
       password,
     });
+  }
+
+  async signOut() {
+    await this.httpClient.post(this.config.get('GATEWAY_API') + '/v1/auth/sign-out');
   }
 }

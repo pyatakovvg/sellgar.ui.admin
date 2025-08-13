@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@widget/logout",
+  "version": "0.0.1",
+  "description": "List components",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@library/app": "0.0.1",
+    "@library/design": "0.0.1",
+    "@library/domain": "0.0.1",
+    "@sellgar/kit": "0.0.114",
+    "classnames": "2.5.1",
+    "mobx": "6.13.7",
+    "mobx-react": "9.2.0",
+    "react": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "@types/reflect-metadata": "0.1.0"
+  }
+}

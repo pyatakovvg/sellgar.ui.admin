@@ -4,6 +4,8 @@ import { UnauthorizedException } from '@library/domain';
 import React from 'react';
 import { useRouteError, Navigate } from 'react-router-dom';
 
+import { Validation } from './validation';
+
 import s from './default.module.scss';
 
 export const Error: React.FC = () => {
@@ -11,6 +13,10 @@ export const Error: React.FC = () => {
 
   if (error instanceof UnauthorizedException) {
     return <Navigate to={'/sign-in'} />;
+  }
+
+  if (Array.isArray(error)) {
+    return <Validation />;
   }
 
   return (

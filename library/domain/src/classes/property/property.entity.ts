@@ -9,7 +9,8 @@ export class PropertyEntity {
   uuid: string;
 
   @IsUUID()
-  groupUuid: string;
+  @IsOptional()
+  groupUuid?: string;
 
   @IsUUID()
   @IsOptional()

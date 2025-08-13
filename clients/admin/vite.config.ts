@@ -15,7 +15,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern-compiler', // Указываем использовать современный компилятор
+        additionalData: `@import "@sellgar/kit/theme.css";`,
       },
     },
   },

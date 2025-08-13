@@ -1,6 +1,5 @@
 :root {
   #root {
-
     position: relative;
     display: flex;
     flex-direction: column;
@@ -9,11 +8,10 @@
     height: 100vh;
     overflow: hidden;
     background: var(--background-surface-neutral);
-    z-index: 10;
+    z-index: 0;
   }
 
   #sw {
-
     position: fixed;
     right: var(--numbers-24);
     bottom: var(--numbers-24);
@@ -23,6 +21,3 @@
     z-index: 90;
   }
 }
-
-
-

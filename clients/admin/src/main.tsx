@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 
+import '@sellgar/kit/icons.css';
 import '@sellgar/kit/font.css';
 import '@sellgar/kit/theme.css';
 
