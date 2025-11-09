@@ -1,4 +1,4 @@
-import { ButtonContext, ESize } from '@library/kit';
+import { Button } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -9,14 +9,15 @@ export const UploadDialog: React.FC = () => {
 
   return (
     <>
-      <ButtonContext
-        size={ESize.SM}
+      <Button
+        size={'sm'}
+        style={'secondary'}
         onClick={() => {
           setOpen(true);
         }}
       >
         Загрузить изображение
-      </ButtonContext>
+      </Button>
       <ModalDialog isOpen={isOpen} onClose={() => setOpen(false)} />
     </>
   );

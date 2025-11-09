@@ -1,4 +1,4 @@
-import { FieldWrapper, Caption, Icon, InputNumeral } from '@sellgar/kit';
+import { Field, Caption, Icon, InputNumeral } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -29,8 +29,8 @@ export const EditPrice: React.FC<IProps> = (props) => {
           name={'price'}
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <FieldWrapper>
-              <FieldWrapper.Content>
+            <Field>
+              <Field.Content>
                 <InputNumeral
                   {...field}
                   defaultValue={props.value}
@@ -43,13 +43,13 @@ export const EditPrice: React.FC<IProps> = (props) => {
                   }
                   onChange={(event) => field.onChange(InputNumeral.unFormat(event.target.value))}
                 />
-              </FieldWrapper.Content>
+              </Field.Content>
               {error?.message && (
-                <FieldWrapper.Caption>
+                <Field.Caption>
                   <Caption state={'destructive'} caption={error?.message} />
-                </FieldWrapper.Caption>
+                </Field.Caption>
               )}
-            </FieldWrapper>
+            </Field>
           )}
         ></Controller>
       </div>

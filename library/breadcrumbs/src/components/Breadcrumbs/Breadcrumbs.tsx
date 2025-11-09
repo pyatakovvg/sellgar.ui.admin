@@ -45,9 +45,11 @@ export const Breadcrumbs = observer(() => {
 
   return (
     <div className={s.wrapper}>
-      <div className={s.item}>
-        <Root hasCrumbs={!!breadcrumbs.length} />
-      </div>
+      {breadcrumbs.length > 0 && (
+        <div className={s.item}>
+          <Root hasCrumbs={true} />
+        </div>
+      )}
       {breadcrumbs.map((breadcrumb, index: number) => {
         return (
           <div key={index} className={s.item}>

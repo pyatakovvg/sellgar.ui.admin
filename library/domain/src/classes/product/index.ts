@@ -1,4 +1,4 @@
-export { ProductEntity, ProductResultEntity, ProductPropertyEntity } from './product.entity.ts';
+export { ProductEntity, ProductResultEntity } from './product.entity.ts';
 
 export { ProductGateway } from './gateway/product.gateway.ts';
 export { ProductGatewayInterface } from './gateway/product-gateway.interface.ts';

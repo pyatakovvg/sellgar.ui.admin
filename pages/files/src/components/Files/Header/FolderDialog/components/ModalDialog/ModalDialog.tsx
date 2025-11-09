@@ -1,4 +1,4 @@
-import { Dialog } from '@library/kit';
+import { Modal } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -11,10 +11,8 @@ interface IProps {
 
 export const ModalDialog: React.FC<IProps> = (props) => {
   return (
-    <Dialog isOpen={props.isOpen} onOpenChange={props.onClose}>
-      <Dialog.Content>
-        <Upload />
-      </Dialog.Content>
-    </Dialog>
+    <Modal open={props.isOpen} onOpen={props.onClose}>
+      <Upload />
+    </Modal>
   );
 };

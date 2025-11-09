@@ -2,19 +2,19 @@ import type { IClassModule, IClassModuleArgs } from '@library/app';
 
 import React from 'react';
 
-import { Product } from './components/Product';
+import { ModuleView } from './view/module.view.tsx';
 import { ModuleProvider } from './module.provider.tsx';
 
 import { containerModule } from './classes/classes.di.ts';
-import { ProductPresenterInterface } from './classes/presenter/product-presenter.interface.ts';
+import { ProductControllerInterface } from './classes/controller/product-controller.interface.ts';
 
 export class ClassModule implements IClassModule {
-  private readonly controller: ProductPresenterInterface;
+  private readonly controller: ProductControllerInterface;
 
   constructor({ container }: IClassModuleArgs) {
     container.loadSync(containerModule);
 
-    this.controller = container.get(ProductPresenterInterface);
+    this.controller = container.get(ProductControllerInterface);
   }
 
   destructor({ container }: IClassModuleArgs) {
@@ -22,17 +22,13 @@ export class ClassModule implements IClassModule {
   }
 
   async loader(args: IClassModuleArgs) {
-    await this.controller.findProperties();
-
-    if (args.params?.uuid) {
-      return await this.controller.findByUuid(args.params.uuid);
-    }
+    return await this.controller.findByUuid(args.params.uuid);
   }
 
   render() {
     return (
       <ModuleProvider controller={this.controller}>
-        <Product />
+        <ModuleView />
       </ModuleProvider>
     );
   }

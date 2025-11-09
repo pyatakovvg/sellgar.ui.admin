@@ -1,4 +1,4 @@
-import { Icon } from '../../Icon';
+import { Icon } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -7,7 +7,7 @@ import s from './default.module.scss';
 export const Error = () => {
   return (
     <div className={s.wrapper}>
-      <Icon icon={'error'} size={32} />
+      <Icon icon={'close-line'} />
     </div>
   );
 };

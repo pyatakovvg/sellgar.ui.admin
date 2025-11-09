@@ -1,4 +1,4 @@
-import { Icon } from '@library/kit';
+import { Icon } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -33,7 +33,7 @@ export const Primary: React.FC<IProps> = (props) => {
         <Content>{props.content}</Content>
       </div>
       <div className={s.close} onClick={handleClose}>
-        <Icon icon={'xmark'} />
+        <Icon icon={'close-line'} />
       </div>
     </div>
   );

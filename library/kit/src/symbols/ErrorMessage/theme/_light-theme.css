@@ -1,6 +1,0 @@
-@media (prefers-color-scheme: light) {
-  .error[data-theme="error-message"] {
-
-    --text-color: var(--color-red-50);
-  }
-}

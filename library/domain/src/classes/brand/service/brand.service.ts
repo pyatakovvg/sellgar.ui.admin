@@ -31,7 +31,7 @@ export class BrandService implements BrandServiceInterface {
   }
 
   async create(dto: CreateBrandDto): Promise<BrandEntity> {
-    const dtoInstance = plainToInstance(UpdateBrandDto, dto);
+    const dtoInstance = plainToInstance(CreateBrandDto, dto);
 
     await validateOrReject(dtoInstance);
 

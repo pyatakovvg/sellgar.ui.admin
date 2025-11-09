@@ -1,4 +1,5 @@
-import { Button, Text, InputFiles } from '@library/kit';
+import { InputFiles } from '@library/kit';
+import { Button, Typography } from '@sellgar/kit';
 
 import React from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -32,7 +33,9 @@ export const Form: React.FC<IProps> = (props) => {
       <div className={s.content}>
         {!fields.length && (
           <div className={s.item}>
-            <Text>Нет файлов для загрузки</Text>
+            <Typography size={'body-m'} weight={'medium'}>
+              <p>Нет файлов для загрузки</p>
+            </Typography>
           </div>
         )}
         {fields.map((file, index) => {

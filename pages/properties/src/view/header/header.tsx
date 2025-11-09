@@ -1,11 +1,16 @@
 import { Button, Icon, Typography } from '@sellgar/kit';
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+
+import { context as modifyContext } from '../modify';
+import { context as modifyGroupContext } from '../modify-group';
 
 import s from './default.module.scss';
 
 export const Header = () => {
+  const { onOpen: onModifyOpen } = React.useContext(modifyContext);
+  const { onOpen: onModifyGroupOpen } = React.useContext(modifyGroupContext);
+
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
@@ -14,18 +19,19 @@ export const Header = () => {
         </Typography>
       </div>
       <div className={s.link}>
-        <NavLink to={'/properties/groups/create'}>
-          <Button size={'sm'} style={'secondary'} leadIcon={<Icon icon={'add-line'} />}>
-            Добавить группу
-          </Button>
-        </NavLink>
+        <Button
+          size={'sm'}
+          style={'secondary'}
+          leadIcon={<Icon icon={'add-line'} />}
+          onClick={() => onModifyGroupOpen()}
+        >
+          Добавить группу
+        </Button>
       </div>
       <div className={s.link}>
-        <NavLink to={'/properties/create'}>
-          <Button size={'sm'} leadIcon={<Icon icon={'add-line'} />}>
-            Добавить свойство
-          </Button>
-        </NavLink>
+        <Button size={'sm'} leadIcon={<Icon icon={'add-line'} />} onClick={() => onModifyOpen()}>
+          Добавить свойство
+        </Button>
       </div>
     </div>
   );

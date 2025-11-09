@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-
+//
 import '@sellgar/kit/icons.css';
-import '@sellgar/kit/font.css';
+import '@sellgar/kit/geologica.css';
 import '@sellgar/kit/theme.css';
 
 import './styles/index.css';

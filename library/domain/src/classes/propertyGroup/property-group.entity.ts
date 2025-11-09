@@ -2,7 +2,8 @@ import { Type } from 'class-transformer';
 import { IsUUID, IsString, ValidateNested, IsDateString } from 'class-validator';
 
 import { MetaEntity } from '../../meta.entity.ts';
-import { PropertyEntity } from '../property/property.entity.ts';
+
+import { PropertyEntity } from '../property';
 
 export class PropertyGroupEntity {
   @IsUUID()

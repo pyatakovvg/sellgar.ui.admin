@@ -1,20 +1,19 @@
 .wrapper {
-
   display: flex;
   flex-direction: column;
   flex: 1 0;
+  gap: var(--numbers-24);
   padding: var(--numbers-24);
 }
 
 .header {
-
   display: flex;
   flex-direction: row;
   flex: 0 0 auto;
+  gap: var(--numbers-12);
 }
 
 .title {
-
   display: flex;
   flex-direction: column;
   flex: 1 0;
@@ -22,33 +21,31 @@
 }
 
 .controls {
-
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
-  margin: 0 0 0 var(--numbers-12);
 }
 
 .filter {
-
   display: flex;
   flex-direction: row;
   flex: 0 0 auto;
-  margin: var(--numbers-24) 0 0;
 }
 
 .menu {
-
   display: flex;
   flex-direction: row;
   flex: 0 0 auto;
-  margin: var(--numbers-24) 0 0;
 }
 
 .content {
-
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
-  margin: var(--numbers-24) 0 0;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
 }

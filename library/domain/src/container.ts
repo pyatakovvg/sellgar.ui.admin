@@ -31,12 +31,7 @@ import { FolderGateway, FolderGatewayInterface, FolderService, FolderServiceInte
 import { ProfileGateway, ProfileGatewayInterface, ProfileService, ProfileServiceInterface } from './classes/profile';
 import { UserGateway, UserGatewayInterface, UserService, UserServiceInterface } from './classes/user';
 import { ProductGateway, ProductGatewayInterface, ProductService, ProductServiceInterface } from './classes/product';
-import {
-  ProductVariantGateway,
-  ProductVariantGatewayInterface,
-  ProductVariantService,
-  ProductVariantServiceInterface,
-} from './classes/product-variant';
+import { VariantGateway, VariantGatewayInterface, VariantService, VariantServiceInterface } from './classes/variant';
 import { StoreGateway, StoreGatewayInterface, StoreService, StoreServiceInterface } from './classes/store';
 import { PriceGateway, PriceGatewayInterface, PriceService, PriceServiceInterface } from './classes/price';
 import {
@@ -95,7 +90,7 @@ container.bind(ProfileServiceInterface).to(ProfileService);
 container.bind(ProductGatewayInterface).to(ProductGateway);
 container.bind(ProductServiceInterface).to(ProductService);
 
-container.bind(ProductVariantGatewayInterface).to(ProductVariantGateway);
-container.bind(ProductVariantServiceInterface).to(ProductVariantService);
+container.bind(VariantGatewayInterface).to(VariantGateway);
+container.bind(VariantServiceInterface).to(VariantService);
 
 export { container };

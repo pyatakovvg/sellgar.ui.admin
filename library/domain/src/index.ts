@@ -14,7 +14,7 @@ export * from './classes/folder';
 export * from './classes/profile';
 export * from './classes/user';
 export * from './classes/product';
-export * from './classes/product-variant';
+export * from './classes/variant';
 export * from './classes/store';
 export * from './classes/price';
 export * from './classes/currency';

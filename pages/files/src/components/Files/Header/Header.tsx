@@ -1,4 +1,4 @@
-import { ButtonContext, ESize, Heading } from '@library/kit';
+import { Button, Typography } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -10,11 +10,15 @@ export const Header = () => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <Heading variant={'H3'}>Файлы</Heading>
+        <Typography size={'h3'} weight={'medium'}>
+          Файлы
+        </Typography>
       </div>
       <div className={s.content}>
         <div className={s.link}>
-          <ButtonContext size={ESize.SM}>Добавить каталок</ButtonContext>
+          <Button size={'sm'} style={'secondary'}>
+            Добавить каталок
+          </Button>
         </div>
         <div className={s.link}>
           <UploadDialog />

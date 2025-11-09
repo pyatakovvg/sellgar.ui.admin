@@ -1,5 +1,5 @@
 import { Typography } from '@sellgar/kit';
-import { useCellData } from '@library/table';
+import { useCellData } from '@sellgar/kit';
 import { PropertyEntity } from '@library/domain';
 
 import React from 'react';
@@ -11,11 +11,14 @@ export const Name: React.FC = () => {
 
   return (
     <div className={s.wrapper}>
-      <Typography size={'caption-l'} weight={'medium'}>
-        <p>
-          {data.name} {data.unit && <>({data.unit.name})</>}
-        </p>
+      <Typography size={'caption-l'} weight={'semi-bold'}>
+        <p className={s.name}>{data.name}</p>
       </Typography>
+      {data.unit && (
+        <Typography size={'caption-m'} weight={'semi-bold'}>
+          <p className={s.unit}>[{data.unit.name}]</p>
+        </Typography>
+      )}
     </div>
   );
 };

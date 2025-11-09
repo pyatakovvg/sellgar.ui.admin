@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   flex: 1 0;
+  padding: var(--numbers-24);
 }
 
 .header {
@@ -15,7 +16,7 @@
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
-  margin: var(--numbers-16) 0 0;
+  margin: var(--numbers-8) 0 0;
   color: var(--text-base-secondary);
 }
 
@@ -24,7 +25,7 @@
   flex-direction: row;
   flex: 1 0;
   justify-content: flex-end;
-  margin: var(--numbers-24) 0 0;
+  margin: var(--numbers-32) 0 0;
 }
 
 .button {

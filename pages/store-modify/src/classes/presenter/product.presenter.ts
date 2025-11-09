@@ -1,9 +1,4 @@
-import {
-  StoreEntity,
-  PriceServiceInterface,
-  StoreServiceInterface,
-  ProductVariantServiceInterface,
-} from '@library/domain';
+import { StoreEntity, PriceServiceInterface, StoreServiceInterface, VariantServiceInterface } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
 
@@ -24,7 +19,7 @@ export class ProductPresenter implements ProductPresenterInterface {
     @inject(VariantsStoreInterface) readonly variantsStore: VariantsStoreInterface,
     @inject(StoreServiceInterface) private readonly storeService: StoreServiceInterface,
     @inject(PriceServiceInterface) private readonly priceService: PriceServiceInterface,
-    @inject(ProductVariantServiceInterface) private readonly productVariantService: ProductVariantServiceInterface,
+    @inject(VariantServiceInterface) private readonly productVariantService: VariantServiceInterface,
   ) {}
 
   async getPriceHistory(storeUuid: string) {

@@ -1,4 +1,5 @@
-import { Button, IconBox, Text, InputFiles } from '@library/kit';
+import { InputFiles } from '@library/kit';
+import { Button, Icon, Label } from '@sellgar/kit';
 
 import React from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -34,7 +35,7 @@ export const Form: React.FC<IProps> = (props) => {
         <div className={s.files}>
           {!fields.length && (
             <div className={s.item}>
-              <Text>Нет файлов для загрузки</Text>
+              <Label label={'Нет файлов для загрузки'} />
             </div>
           )}
           {fields.map((file, index) => {
@@ -48,14 +49,12 @@ export const Form: React.FC<IProps> = (props) => {
         </div>
         <div className={s.fields}>
           <InputFiles multiple={true} accept={'image/*'} onChange={(files) => append(files)}>
-            <IconBox icon={'add'} />
+            <Icon icon={'ancient-gate-line'} />
           </InputFiles>
         </div>
       </div>
       <div className={s.control}>
-        <Button type={'submit'} inProcess={props.inProcess}>
-          Загрузить
-        </Button>
+        <Button type={'submit'}>Загрузить</Button>
       </div>
     </form>
   );

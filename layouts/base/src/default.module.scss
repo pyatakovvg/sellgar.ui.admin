@@ -1,31 +1,14 @@
 .wrapper {
-
   position: relative;
   display: flex;
   flex-direction: column;
   flex: 1 0;
-  background: var(--background-surface-neutral);
-}
-
-.header {
-
-  position: sticky;
-  top: 0;
-  display: block;
-  z-index: 20;
-}
-
-.logotype {
-
-  display: block;
-  padding: 24px;
+  background: var(--background-accent-blue-accent);
 }
 
 .content {
-
   display: flex;
   flex-direction: column;
   flex: 1 0;
-  margin: 24px 0 0;
   z-index: 10;
 }

@@ -1,5 +1,6 @@
 import { FileEntity } from '@library/domain';
-import { Text, Description, Image } from '@library/kit';
+import { Image } from '@library/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -20,12 +21,16 @@ export const File: React.FC<IProps> = (props) => {
       </div>
       <div className={s.content}>
         <div className={s.name}>
-          <Text>{props.data.name}</Text>
+          <Typography size={'body-m'} weight={'medium'}>
+            <p>{props.data.name}</p>
+          </Typography>
         </div>
         <div className={s.info}>
-          <Description>
-            {props.data.mime}: {props.data.size}Kb
-          </Description>
+          <Typography size={'caption-m'} weight={'medium'}>
+            <p>
+              {props.data.mime}: {props.data.size}Kb
+            </p>
+          </Typography>
         </div>
       </div>
     </div>

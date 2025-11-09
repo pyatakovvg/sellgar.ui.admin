@@ -1,0 +1,45 @@
+
+.wrapper {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  align-items: center;
+  justify-content: center;
+  padding: var(--numbers-24);
+}
+
+.header {
+
+  display: block;
+}
+
+.message {
+
+  display: block;
+  margin-top: var(--numbers-24);
+  color: var(--color-brown);
+}
+
+.stack {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  margin-top: var(--numbers-32);
+  overflow: auto;
+}
+
+.content {
+
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  overflow: auto;
+}
+
+.code {
+
+  display: block;
+  white-space: pre-wrap;
+}

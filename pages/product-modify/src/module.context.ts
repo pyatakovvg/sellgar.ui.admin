@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { ProductPresenterInterface } from './classes/presenter/product-presenter.interface.ts';
+import { ProductControllerInterface } from './classes/controller/product-controller.interface.ts';
 
 interface IContext {
-  presenter: ProductPresenterInterface;
+  controller: ProductControllerInterface;
 }
 
 export const context = React.createContext<IContext>({} as IContext);

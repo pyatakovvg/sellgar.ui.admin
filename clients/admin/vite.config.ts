@@ -1,9 +1,7 @@
-import { defineConfig, PluginOption } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
-
-// import federation from '@originjs/vite-plugin-federation';
-
+import reactSWC from '@vitejs/plugin-react-swc';
+import { defineConfig, PluginOption } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
@@ -12,15 +10,20 @@ export default defineConfig({
     outDir: 'build',
     sourcemap: process.env.SOURCE_MAP === 'true',
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "@sellgar/kit/theme.css";`,
-      },
+  optimizeDeps: {
+    force: true,
+    esbuildOptions: {
+      jsx: 'automatic',
     },
   },
   plugins: [
     tsconfigPaths(),
+
+    reactSWC({
+      tsDecorators: true,
+      devTarget: 'esnext',
+    }),
+
     VitePWA({
       minify: true,
       registerType: 'prompt',
@@ -69,15 +72,7 @@ export default defineConfig({
         type: 'module',
       },
     }),
-    // federation({
-    //   name: 'pokemonList',
-    //   filename: 'remoteEntry.js',
-    //   exposes: {
-    //     './PokemonList': './src/components/PokemonList',
-    //     './Pokemon': './src/atoms/Pokemon.ts',
-    //   },
-    //   shared: ['react', 'react-dom'],
-    // }),
+
     process.env.NODE_ENV === 'production' &&
       (visualizer({
         template: 'treemap', // or sunburst

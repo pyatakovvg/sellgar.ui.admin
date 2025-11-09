@@ -1,7 +1,8 @@
 import { FolderEntity } from '@library/domain';
-import { Icon, Text, Link } from '@library/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 import s from './default.module.scss';
 
@@ -11,13 +12,13 @@ interface IProps {
 
 export const Folder: React.FC<IProps> = (props) => {
   return (
-    <Link className={s.wrapper} href={'/files' + '?folderUuid=' + props.data.uuid}>
-      <div className={s.icon}>
-        <Icon icon={'folder'} size={100} />
-      </div>
+    <NavLink className={s.wrapper} to={'/files' + '?folderUuid=' + props.data.uuid}>
+      <div className={s.icon}>{/*<Icon icon={'folder'} size={100} />*/}</div>
       <div className={s.name}>
-        <Text>{props.data.name}</Text>
+        <Typography size={'body-m'} weight={'medium'}>
+          <p>{props.data.name}</p>
+        </Typography>
       </div>
-    </Link>
+    </NavLink>
   );
 };

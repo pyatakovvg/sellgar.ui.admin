@@ -1,5 +1,5 @@
 import { Typography } from '@sellgar/kit';
-import { cellContext, Expand } from '@library/table';
+import { cellContext, Expand } from '@sellgar/kit';
 
 import React from 'react';
 

@@ -1,4 +1,4 @@
-import { Heading } from '@library/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -19,7 +19,9 @@ export const Upload: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
-        <Heading variant={'H3'}>Загрузить файлы</Heading>
+        <Typography size={'body-l'} weight={'medium'}>
+          <p>Загрузить файлы</p>
+        </Typography>
       </div>
       <div className={s.content}>
         <Form inProcess={props.inProcess} onSubmit={handleSubmit} />

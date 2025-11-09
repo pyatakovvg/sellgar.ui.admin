@@ -1,28 +1,28 @@
-import { ButtonIcon, Icon } from '@sellgar/kit';
-import { cellContext } from '@library/table';
+import { Button, Icon } from '@sellgar/kit';
+import { cellContext } from '@sellgar/kit';
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import { context } from '../../../modify';
 
 import s from './default.module.scss';
 
 export const Actions: React.FC = () => {
-  const navigate = useNavigate();
   const { data } = React.use(cellContext);
+  const { onOpen } = React.useContext(context);
 
-  const handleClick = (type: 'edit' | 'delete') => {
-    if (type === 'edit') {
-      navigate('/categories/' + data.uuid);
-    }
+  const handleClick = (uuid: string) => {
+    onOpen(uuid);
   };
 
   return (
     <div className={s.wrapper}>
-      <ButtonIcon
+      <Button
+        form={'icon'}
         style={'ghost'}
         size={'sm'}
-        icon={<Icon icon={'more-2-fill'} />}
-        onClick={() => handleClick('edit')}
+        leadIcon={<Icon icon={'more-2-fill'} />}
+        onClick={() => handleClick(data.uuid)}
       />
     </div>
   );

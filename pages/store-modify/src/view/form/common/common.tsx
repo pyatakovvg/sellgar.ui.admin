@@ -1,4 +1,4 @@
-import { FieldWrapper, Label, Caption, InputNumeral, Checkbox } from '@sellgar/kit';
+import { Field, Label, Caption, InputNumeral, Checkbox } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormState, useFormContext } from 'react-hook-form';
@@ -20,8 +20,8 @@ export const Common: React.FC = () => {
             control={control}
             render={({ field }) => {
               return (
-                <FieldWrapper>
-                  <FieldWrapper.Content>
+                <Field>
+                  <Field.Content>
                     <Checkbox
                       checked={field.value}
                       label={'Отображать на витрине'}
@@ -29,13 +29,13 @@ export const Common: React.FC = () => {
                       onBlur={field.onBlur}
                       onChange={field.onChange}
                     />
-                  </FieldWrapper.Content>
+                  </Field.Content>
                   {!!errors.showing?.message && (
-                    <FieldWrapper.Caption>
+                    <Field.Caption>
                       <Caption state={'destructive'} caption={errors.showing.message} />
-                    </FieldWrapper.Caption>
+                    </Field.Caption>
                   )}
-                </FieldWrapper>
+                </Field>
               );
             }}
           />
@@ -45,24 +45,24 @@ export const Common: React.FC = () => {
             name={'count'}
             render={({ field, fieldState: { error } }) => {
               return (
-                <FieldWrapper>
-                  <FieldWrapper.Label>
+                <Field>
+                  <Field.Label>
                     <Label label={'Количество на складе'} />
-                  </FieldWrapper.Label>
-                  <FieldWrapper.Content>
+                  </Field.Label>
+                  <Field.Content>
                     <InputNumeral
                       {...field}
                       autoFocus={true}
                       defaultValue={0}
                       onChange={(event) => field.onChange(InputNumeral.unFormat(event.target.value))}
                     />
-                  </FieldWrapper.Content>
+                  </Field.Content>
                   {!!error?.message && (
-                    <FieldWrapper.Caption>
+                    <Field.Caption>
                       <Caption state={'destructive'} caption={error.message} />
-                    </FieldWrapper.Caption>
+                    </Field.Caption>
                   )}
-                </FieldWrapper>
+                </Field>
               );
             }}
           />

@@ -30,7 +30,9 @@ export class ProductGateway implements ProductGatewayInterface {
 
   async findByUuid(uuid: string) {
     const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/products/' + uuid);
-    const resultInstance = plainToInstance(ProductEntity, result);
+    const resultInstance = plainToInstance(ProductEntity, result, {
+      strategy: 'excludeAll',
+    });
 
     await validateOrReject(resultInstance);
 

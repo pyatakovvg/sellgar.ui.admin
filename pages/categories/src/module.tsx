@@ -22,7 +22,7 @@ export class ClassModule implements IClassModule {
   }
 
   async loader() {
-    await this.controller.findAll();
+    return await this.controller.findAll();
   }
 
   render() {

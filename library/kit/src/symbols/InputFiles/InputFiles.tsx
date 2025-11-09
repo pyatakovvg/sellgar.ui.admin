@@ -1,6 +1,6 @@
-import React from 'react';
+import { Button } from '@sellgar/kit';
 
-import { ButtonContext } from '../ButtonContext';
+import React from 'react';
 
 interface IProps {
   accept?: string;
@@ -53,8 +53,8 @@ export const InputFiles: React.FC<React.PropsWithChildren<SingleFile | MultipleF
   }
 
   return (
-    <ButtonContext onClick={handleChooseFiles} disabled={props.disabled}>
+    <Button onClick={handleChooseFiles} disabled={props.disabled}>
       Выбрать файл
-    </ButtonContext>
+    </Button>
   );
 };

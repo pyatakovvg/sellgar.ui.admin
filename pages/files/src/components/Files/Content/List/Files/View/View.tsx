@@ -1,4 +1,5 @@
-import { Dialog, Image } from '@library/kit';
+import { Image } from '@library/kit';
+import { Modal } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -10,10 +11,8 @@ interface IProps {
 
 export const View: React.FC<IProps> = (props) => {
   return (
-    <Dialog isOpen={props.isOpen} onOpenChange={props.onClose}>
-      <Dialog.Content>
-        <Image src={props.src} />
-      </Dialog.Content>
-    </Dialog>
+    <Modal open={props.isOpen} onClose={props.onClose}>
+      <Image src={props.src} />
+    </Modal>
   );
 };

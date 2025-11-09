@@ -11,27 +11,25 @@
   "dependencies": {
     "@library/breadcrumbs": "0.0.1",
     "@library/domain": "0.0.1",
-    "@library/kit": "0.0.1",
-    "@library/lng": "0.0.1",
     "@library/message": "0.0.1",
     "@library/push": "0.0.1",
     "@utils/generate": "0.0.1",
-    "axios": "1.11.0",
+    "axios": "1.13.1",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
-    "inversify": "7.7.1",
+    "inversify": "7.10.4",
     "inversify-inject-decorators": "3.1.0",
-    "mobx": "6.13.7",
-    "mobx-react": "9.2.0",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
+    "mobx": "6.15.0",
+    "mobx-react": "9.2.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "react-error-boundary": "6.0.0",
-    "react-router-dom": "7.8.0",
+    "react-router-dom": "7.9.5",
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/react": "19.1.10",
-    "@types/react-dom": "19.1.7",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
     "@types/reflect-metadata": "0.1.0"
   }
 }

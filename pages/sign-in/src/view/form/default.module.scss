@@ -1,18 +1,14 @@
-
 .wrapper {
-
   display: flex;
   flex-direction: column;
   flex: 1 0;
 }
 
 .content {
-
   display: block;
 }
 
 .row {
-
   display: block;
 
   & + & {
@@ -21,9 +17,15 @@
 }
 
 .control {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  margin: var(--numbers-24) 0 0;
+  gap: 0 var(--numbers-16);
+}
 
+.button {
   display: flex;
   flex-direction: column;
   flex: 1 0;
-  margin: var(--numbers-16) 0 0;
 }

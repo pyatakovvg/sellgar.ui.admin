@@ -1,6 +1,5 @@
 import { PriceEntity } from '@library/domain';
-import { Typography, Icon } from '@sellgar/kit';
-import { AmountInput } from '@library/kit';
+import { Typography, Icon, InputNumeral } from '@sellgar/kit';
 
 import React from 'react';
 import { format } from 'date-fns';
@@ -38,7 +37,7 @@ export const ShowPrice: React.FC<IProps> = (props) => {
       <div className={s.content}>
         <div className={s.price}>
           <Typography size={'body-m'} weight={'semi-bold'}>
-            <p>{AmountInput.format(props.data.value)}</p>
+            <p>{InputNumeral.format(props.data.value)}</p>
           </Typography>
         </div>
         <div className={s.currency}>

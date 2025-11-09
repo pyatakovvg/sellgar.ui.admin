@@ -1,4 +1,4 @@
-import { FieldWrapper, Label, Caption, Select } from '@sellgar/kit';
+import { Field, Label, Caption, Select } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormState, useFormContext } from 'react-hook-form';
@@ -26,11 +26,11 @@ export const Variant: React.FC = () => {
             control={control}
             render={({ field, fieldState: { error } }) => {
               return (
-                <FieldWrapper>
-                  <FieldWrapper.Label>
+                <Field>
+                  <Field.Label>
                     <Label label={'Товар'} />
-                  </FieldWrapper.Label>
-                  <FieldWrapper.Content>
+                  </Field.Label>
+                  <Field.Content>
                     <Select
                       {...field}
                       fixHeight={false}
@@ -49,13 +49,13 @@ export const Variant: React.FC = () => {
                       onBlur={field.onBlur}
                       onChange={field.onChange}
                     />
-                  </FieldWrapper.Content>
+                  </Field.Content>
                   {!!error?.message && (
-                    <FieldWrapper.Caption>
+                    <Field.Caption>
                       <Caption state={'destructive'} caption={error.message} />
-                    </FieldWrapper.Caption>
+                    </Field.Caption>
                   )}
-                </FieldWrapper>
+                </Field>
               );
             }}
           />

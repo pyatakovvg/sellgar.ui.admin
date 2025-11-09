@@ -6,10 +6,8 @@ import { LogoutControllerInterface } from './controller/logout-controller.interf
 import { LogoutStore } from './store/logout/logout.store.ts';
 import { LogoutStoreInterface } from './store/logout/logout-store.interface.ts';
 
-export const create = () => {
-  return new ContainerModule((container) => {
-    container.bind<LogoutControllerInterface>(LogoutControllerInterface).to(LogoutController);
+export const containerModule = new ContainerModule((container) => {
+  container.bind<LogoutControllerInterface>(LogoutControllerInterface).to(LogoutController);
 
-    container.bind<LogoutStoreInterface>(LogoutStoreInterface).to(LogoutStore);
-  });
-};
+  container.bind<LogoutStoreInterface>(LogoutStoreInterface).to(LogoutStore);
+});

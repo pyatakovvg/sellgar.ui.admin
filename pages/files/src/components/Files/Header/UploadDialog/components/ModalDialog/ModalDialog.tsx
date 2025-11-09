@@ -1,4 +1,4 @@
-import { Dialog } from '@library/kit';
+import { Modal } from '@sellgar/kit';
 import { useQuery } from '@library/app';
 import { Upload } from '@library/design';
 
@@ -33,12 +33,10 @@ export const ModalDialog: React.FC<IProps> = observer((props) => {
   };
 
   return (
-    <Dialog isOpen={props.isOpen} onOpenChange={props.onClose}>
-      <Dialog.Content>
-        <div className={s.wrapper}>
-          <Upload inProcess={inProcess} onDone={handleSubmit} />
-        </div>
-      </Dialog.Content>
-    </Dialog>
+    <Modal open={props.isOpen} onClose={props.onClose}>
+      <div className={s.wrapper}>
+        <Upload inProcess={inProcess} onDone={handleSubmit} />
+      </div>
+    </Modal>
   );
 });

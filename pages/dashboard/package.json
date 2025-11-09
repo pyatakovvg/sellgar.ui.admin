@@ -12,20 +12,19 @@
     "@library/app": "0.0.1",
     "@library/design": "0.0.1",
     "@library/domain": "0.0.1",
-    "@library/kit": "0.0.1",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
     "classnames": "2.5.1",
     "formik": "2.4.6",
-    "inversify": "7.7.1",
+    "inversify": "7.10.4",
     "inversify-inject-decorators": "3.1.0",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
-    "react-router-dom": "7.8.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-router-dom": "7.9.5",
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/react": "19.1.10",
-    "@types/react-dom": "19.1.7"
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2"
   }
 }

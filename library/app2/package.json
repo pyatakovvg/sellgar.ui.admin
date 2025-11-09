@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@library/app-v2",
+  "version": "0.0.1",
+  "description": "application",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@library/breadcrumbs": "0.0.1",
+    "@library/domain": "0.0.1",
+    "@library/message": "0.0.1",
+    "@library/push": "0.0.1",
+    "@utils/generate": "0.0.1",
+    "axios": "1.13.1",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.14.2",
+    "inversify": "7.10.4",
+    "inversify-inject-decorators": "3.1.0",
+    "mobx": "6.15.0",
+    "mobx-react": "9.2.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-error-boundary": "6.0.0",
+    "react-router-dom": "7.9.5",
+    "reflect-metadata": "0.2.2"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "@types/reflect-metadata": "0.1.0"
+  }
+}

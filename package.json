@@ -3,26 +3,31 @@
   "license": "UNLICENSED",
   "scripts": {
     "update": "yarn upgrade-interactive",
-    "format": "prettier --write \"**/src/**/*.{ts,tsx}\" \"**/test/**/*.ts\" \"**/prisma/**/*.ts\"",
+    "audit": "yarn npm audit -A -R --environment production --severity moderate",
+    "format": "prettier --write \"**/src/**/*.{ts,tsx}\" \"**/test/**/*.ts\"",
     "lint": "eslint \"**/{src,test}/**/*.{ts,tsx}\" --fix",
     "dev:admin_ui": "yarn workspace @client/admin start",
     "build:admin_ui": "yarn workspaces foreach --all -tR --from '@client/admin' -R run build"
   },
   "devDependencies": {
-    "@eslint/js": "9.33.0",
-    "@types/node": "22.17.1",
-    "@types/react": "19.1.10",
-    "@types/react-dom": "19.1.7",
-    "@typescript-eslint/eslint-plugin": "8.39.1",
-    "@typescript-eslint/parser": "8.39.1",
-    "eslint": "9.33.0",
+    "@eslint/js": "9.39.0",
+    "@types/node": "22.19.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "@typescript-eslint/eslint-plugin": "8.46.2",
+    "@typescript-eslint/parser": "8.46.2",
+    "eslint": "9.39.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.4",
+    "jiti": "2.6.1",
     "prettier": "3.6.2",
-    "stylelint": "16.23.1",
+    "stylelint": "16.25.0",
     "stylelint-config-prettier": "9.0.5",
     "stylelint-prettier": "5.0.3",
-    "typescript": "5.9.2"
+    "typescript": "5.9.3"
+  },
+  "resolutions": {
+    "@babel/runtime": ">=7.26.10"
   },
   "workspaces": [
     "clients/**/*",

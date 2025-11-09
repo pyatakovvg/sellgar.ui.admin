@@ -1,0 +1,23 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  color: var(--text-base-secondary);
+}
+
+.field {
+  display: block;
+
+  & + & {
+    margin: var(--numbers-4) 0 0;
+  }
+}
+
+.field-description {
+  display: block;
+}
+
+.field-content {
+  display: block;
+  margin: 0 0 0 var(--numbers-8);
+}

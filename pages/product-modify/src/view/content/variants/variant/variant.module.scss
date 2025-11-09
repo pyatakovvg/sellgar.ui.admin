@@ -1,0 +1,49 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  padding: var(--numbers-16) var(--numbers-24) var(--numbers-24);
+  border: var(--numbers-1) solid var(--border-base-divider);
+  border-radius: var(--measurements-radius-lg);
+  background: var(--background-surface-neutral);
+}
+
+.gallery {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  margin: var(--numbers-16) 0 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  justify-content: flex-end;
+}
+
+.line {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+
+  & + & {
+    margin: var(--numbers-16) 0 0;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  & + & {
+    margin: 0 0 0 var(--numbers-16);
+  }
+}

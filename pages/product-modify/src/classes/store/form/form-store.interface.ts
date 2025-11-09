@@ -1,16 +1,11 @@
-import { HttpException } from '@library/domain';
-
-import { CreateProductDto } from './dto/create-product.dto.ts';
-import { UpdateProductDto } from './dto/update-product.dto.ts';
+import { BrandEntity, CategoryEntity, PropertyEntity } from '@library/domain';
 
 export abstract class FormStoreInterface {
-  abstract inProcess: boolean;
-  abstract error: HttpException | null;
+  abstract brands: BrandEntity[];
+  abstract categories: CategoryEntity[];
+  abstract properties: PropertyEntity[];
 
-  abstract setProcess(state: boolean): void;
-  abstract setError(error: HttpException | null): void;
-
-  abstract create(dto: CreateProductDto): Promise<UpdateProductDto | null>;
-  abstract update(uuid: string, dto: UpdateProductDto): Promise<UpdateProductDto | null>;
-  abstract getByUuid(uuid: string): Promise<UpdateProductDto | null>;
+  abstract setBrands(brands: BrandEntity[]): void;
+  abstract setCategories(categories: CategoryEntity[]): void;
+  abstract setProperties(properties: PropertyEntity[]): void;
 }

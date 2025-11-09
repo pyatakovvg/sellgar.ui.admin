@@ -1,11 +1,14 @@
 import { Typography, Icon, Button } from '@sellgar/kit';
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+
+import { context } from '../modify';
 
 import s from './default.module.scss';
 
 export const Header = () => {
+  const { onOpen } = React.useContext(context);
+
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
@@ -14,11 +17,9 @@ export const Header = () => {
         </Typography>
       </div>
       <div>
-        <NavLink to={'/units/create'}>
-          <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'}>
-            Добавить измерение
-          </Button>
-        </NavLink>
+        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => onOpen()}>
+          Добавить измерение
+        </Button>
       </div>
     </div>
   );

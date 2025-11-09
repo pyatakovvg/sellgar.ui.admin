@@ -12,6 +12,8 @@ export class ClassModule implements IClassModule {
   private readonly controller: ProductsControllerInterface;
 
   constructor({ container }: IClassModuleArgs) {
+    console.log(123, 'create list');
+
     container.loadSync(containerModule);
 
     this.controller = container.get(ProductsControllerInterface);
@@ -19,6 +21,7 @@ export class ClassModule implements IClassModule {
 
   destructor({ container }: IClassModuleArgs) {
     container.unloadSync(containerModule);
+    console.log(123, 'destroy list');
   }
 
   async loader() {

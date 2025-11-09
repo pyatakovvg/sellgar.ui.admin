@@ -4,7 +4,7 @@ import { IsUUID, IsNumber, IsBoolean, ValidateNested, IsDateString } from 'class
 import { MetaEntity } from '../../meta.entity.ts';
 
 import { PriceEntity } from '../price';
-import { ProductVariantEntity } from '../product-variant';
+import { VariantEntity } from '../variant';
 
 export class StoreEntity {
   @IsUUID()
@@ -17,8 +17,8 @@ export class StoreEntity {
 
   @Expose()
   @ValidateNested()
-  @Type(() => ProductVariantEntity)
-  variant: ProductVariantEntity;
+  @Type(() => VariantEntity)
+  variant: VariantEntity;
 
   @Expose()
   @IsNumber()

@@ -1,4 +1,4 @@
-import { FieldWrapper, Label } from '@sellgar/kit';
+import { Field, Label } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -9,14 +9,14 @@ import s from './default.module.scss';
 export const Price: React.FC = () => {
   return (
     <div className={s.wrapper}>
-      <FieldWrapper>
-        <FieldWrapper.Label>
+      <Field>
+        <Field.Label>
           <Label label={'Цена'} />
-        </FieldWrapper.Label>
-        <FieldWrapper.Content>
+        </Field.Label>
+        <Field.Content>
           <EditPrice value={0} />
-        </FieldWrapper.Content>
-      </FieldWrapper>
+        </Field.Content>
+      </Field>
     </div>
   );
 };

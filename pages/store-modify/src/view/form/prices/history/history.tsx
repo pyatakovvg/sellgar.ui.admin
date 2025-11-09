@@ -1,4 +1,4 @@
-import { Typography, FieldWrapper, Label } from '@sellgar/kit';
+import { Typography, Field, Label } from '@sellgar/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -19,11 +19,11 @@ export const History: React.FC<IProps> = observer((props) => {
 
   return (
     <div className={s.wrapper}>
-      <FieldWrapper>
-        <FieldWrapper.Label>
+      <Field>
+        <Field.Label>
           <Label label={'История цен'} />
-        </FieldWrapper.Label>
-        <FieldWrapper.Content>
+        </Field.Label>
+        <Field.Content>
           <div className={s.fields}>
             {presenter.priceStore.prices.map((price, index) => (
               <div key={price.uuid} className={s.field}>
@@ -34,8 +34,8 @@ export const History: React.FC<IProps> = observer((props) => {
               </div>
             ))}
           </div>
-        </FieldWrapper.Content>
-      </FieldWrapper>
+        </Field.Content>
+      </Field>
     </div>
   );
 });

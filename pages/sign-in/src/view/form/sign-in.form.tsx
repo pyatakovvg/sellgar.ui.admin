@@ -1,5 +1,4 @@
-import { Field } from '@library/kit';
-import { Button, Input, Icon } from '@sellgar/kit';
+import { Button, Input, Icon, Field, Label, Caption } from '@sellgar/kit';
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
@@ -34,37 +33,60 @@ export const SignInForm: React.FC<IFormProps> = (props) => {
     <form className={s.wrapper} onSubmit={onSubmit}>
       <div className={s.content}>
         <div className={s.row}>
-          <Field error={errors.login?.message}>
-            <Input
-              {...register('login')}
-              leadIcon={<Icon icon={'at-line'} />}
-              size={'md'}
-              autoFocus
-              type={'phone'}
-              name={'login'}
-              placeholder={'Email'}
-              disabled={props.inProcess}
-            />
+          <Field>
+            <Field.Label>
+              <Label label={'Email'} />
+            </Field.Label>
+            <Field.Content>
+              <Input
+                {...register('login')}
+                leadIcon={<Icon icon={'at-line'} />}
+                size={'md'}
+                autoFocus
+                type={'phone'}
+                name={'login'}
+                placeholder={'Email'}
+                disabled={props.inProcess}
+              />
+            </Field.Content>
+            {errors.login?.message && (
+              <Field.Caption>
+                <Caption state={'destructive'} caption={errors.login.message} />
+              </Field.Caption>
+            )}
           </Field>
         </div>
         <div className={s.row}>
-          <Field error={errors.password?.message}>
-            <Input
-              {...register('password')}
-              leadIcon={<Icon icon={'lock-2-line'} />}
-              size={'md'}
-              type={'password'}
-              name={'password'}
-              placeholder={'Пароль'}
-              disabled={props.inProcess}
-            />
+          <Field>
+            <Field.Label>
+              <Label label={'Пароль'} />
+            </Field.Label>
+            <Field.Content>
+              <Input
+                {...register('password')}
+                leadIcon={<Icon icon={'lock-2-line'} />}
+                size={'md'}
+                type={'password'}
+                name={'password'}
+                placeholder={'Пароль'}
+                disabled={props.inProcess}
+              />
+            </Field.Content>
+            {errors.password?.message && (
+              <Field.Caption>
+                <Caption state={'destructive'} caption={errors.password.message} />
+              </Field.Caption>
+            )}
           </Field>
         </div>
       </div>
       <div className={s.control}>
-        <Button style={'primary'} size={'md'}>
-          Войти
-        </Button>
+        <div className={s.button}>
+          <Button style={'primary'}>Войти</Button>
+        </div>
+        <div className={s.button}>
+          <Button style={'ghost'}>Забили пароль?</Button>
+        </div>
       </div>
     </form>
   );

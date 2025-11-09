@@ -1,5 +1,4 @@
 .wrapper {
-
   position: relative;
   display: flex;
   flex-direction: column;
@@ -9,7 +8,6 @@
 }
 
 .header {
-
   position: sticky;
   top: 0;
   display: block;
@@ -17,7 +15,6 @@
 }
 
 .context {
-
   display: flex;
   flex-direction: row;
   flex: 1 0;
@@ -26,7 +23,6 @@
 }
 
 .aside {
-
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
@@ -36,7 +32,6 @@
 }
 
 .content {
-
   display: flex;
   flex-direction: column;
   flex: 1 0;
@@ -45,17 +40,7 @@
   z-index: 10;
 }
 
-//.breadcrumbs {
-//
-//  display: block;
-//  padding: 16px 24px;
-//  background: var(--color-gray-5);
-//  border-bottom: var(--numbers-1) solid var(--border-action-normal);
-//  z-index: 20;
-//}
-
 .outlet {
-
   display: flex;
   flex-direction: column;
   flex: 1 0;

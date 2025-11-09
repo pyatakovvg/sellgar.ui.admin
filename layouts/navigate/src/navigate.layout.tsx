@@ -1,3 +1,5 @@
+import { Scrollbar } from '@sellgar/kit';
+
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
@@ -17,9 +19,9 @@ export const NavigateLayout = () => {
           <Navigate />
         </div>
         <div className={s.content}>
-          <div className={s.outlet}>
+          <Scrollbar className={s.outlet}>
             <Outlet />
-          </div>
+          </Scrollbar>
         </div>
       </div>
     </div>

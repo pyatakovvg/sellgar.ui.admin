@@ -4,16 +4,20 @@ import React from 'react';
 
 import { Header } from './header';
 import { Content } from './content';
+import { ModifyProvider, Modify } from './modify';
 
 export const CategoryView = () => {
   return (
-    <Page>
-      <Page.Header>
-        <Header />
-      </Page.Header>
-      <Page.Content>
-        <Content />
-      </Page.Content>
-    </Page>
+    <ModifyProvider>
+      <Page>
+        <Page.Header>
+          <Header />
+        </Page.Header>
+        <Page.Content>
+          <Content />
+        </Page.Content>
+      </Page>
+      <Modify />
+    </ModifyProvider>
   );
 };

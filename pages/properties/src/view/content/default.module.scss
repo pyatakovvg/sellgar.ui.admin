@@ -1,6 +1,4 @@
-
 .wrapper {
-
   display: flex;
   flex-direction: column;
   flex: 1 0;
@@ -11,7 +9,6 @@
 }
 
 .header {
-
   display: flex;
   flex-direction: row;
   flex: 1 0;
@@ -19,18 +16,21 @@
 }
 
 .title {
-
   display: block;
 }
 
 .actions {
-
   display: block;
   margin: 0 0 0 var(--numbers-16);
 }
 
-.table {
+.description {
+  display: block;
+  margin: var(--numbers-4) 0 0;
+  color: var(--text-base-secondary);
+}
 
+.table {
   display: flex;
   flex-direction: row;
   flex: 0 0 auto;

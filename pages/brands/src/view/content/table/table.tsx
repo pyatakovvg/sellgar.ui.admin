@@ -1,5 +1,5 @@
 import { BrandEntity } from '@library/domain';
-import { Table as TableComponent, Column } from '@library/table';
+import { Table as TableComponent, Column } from '@sellgar/kit';
 
 import React from 'react';
 

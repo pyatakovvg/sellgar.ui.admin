@@ -1,0 +1,26 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@widget/brand-modify",
+  "version": "0.0.1",
+  "description": "List components",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@library/app": "0.0.1",
+    "@library/design": "0.0.1",
+    "@library/domain": "0.0.1",
+    "@sellgar/kit": "0.0.159",
+    "classnames": "2.5.1",
+    "mobx": "6.15.0",
+    "mobx-react": "9.2.1",
+    "react": "19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "@types/reflect-metadata": "0.1.0"
+  }
+}

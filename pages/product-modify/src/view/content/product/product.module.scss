@@ -1,0 +1,43 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  padding: var(--numbers-24);
+  border: var(--numbers-1) solid var(--border-base-divider);
+  border-radius: var(--measurements-radius-lg);
+  background: var(--background-surface-neutral);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  color: var(--text-base-primary);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  margin: var(--numbers-24) 0 0;
+}
+
+.line {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+
+  & + & {
+    margin: var(--numbers-16) 0 0;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  & + & {
+    margin: 0 0 0 var(--numbers-16);
+  }
+}

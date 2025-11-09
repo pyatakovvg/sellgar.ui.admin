@@ -1,8 +1,9 @@
-import { ButtonIcon, Icon } from '@sellgar/kit';
+import { Button, Icon } from '@sellgar/kit';
 import { PropertyGroupEntity } from '@library/domain';
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+
+import { context } from '../../modify-group';
 
 import s from './default.module.scss';
 
@@ -11,21 +12,16 @@ interface IProps {
 }
 
 export const Actions: React.FC<IProps> = (props) => {
-  const navigate = useNavigate();
-
-  const handleClick = (type: 'edit' | 'delete') => {
-    if (type === 'edit') {
-      navigate('/properties/groups/' + props.data.uuid);
-    }
-  };
+  const { onOpen } = React.useContext(context);
 
   return (
     <div className={s.wrapper}>
-      <ButtonIcon
+      <Button
+        form={'icon'}
         style={'ghost'}
         size={'sm'}
-        icon={<Icon icon={'more-2-fill'} />}
-        onClick={() => handleClick('edit')}
+        leadIcon={<Icon icon={Icon.editLine} />}
+        onClick={() => onOpen(props.data.uuid)}
       />
     </div>
   );
