@@ -15,16 +15,16 @@
     "class-transformer": "0.5.1",
     "class-validator": "0.14.2",
     "classnames": "2.5.1",
-    "formik": "2.4.6",
+    "formik": "2.4.9",
     "inversify": "7.10.4",
     "inversify-inject-decorators": "3.1.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "react-router-dom": "7.9.5",
+    "react-router-dom": "7.9.6",
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2"
+    "@types/react": "19.2.5",
+    "@types/react-dom": "19.2.3"
   }
 }

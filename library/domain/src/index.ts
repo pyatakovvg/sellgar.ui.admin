@@ -3,6 +3,7 @@ export * from './helpers/http-client';
 export * from './helpers/device';
 export * from './helpers/storage';
 
+export * from './classes/person';
 export * from './classes/auth';
 export * from './classes/brand';
 export * from './classes/category';
@@ -20,5 +21,3 @@ export * from './classes/price';
 export * from './classes/currency';
 
 export { MetaEntity } from './meta.entity.ts';
-
-export { container } from './container.ts';

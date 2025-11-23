@@ -74,7 +74,7 @@ export const ModifyView = () => {
         } as never as CreateProductStoreDto);
 
         if (result) {
-          navigate('/store/' + result.uuid);
+          navigate.location('/store/' + result.uuid);
         }
       }
     },

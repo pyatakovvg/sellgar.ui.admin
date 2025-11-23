@@ -9,14 +9,14 @@ import * as ReactHookFormResolver from '@hookform/resolvers/yup';
 import { Content } from './content';
 import { Controls } from './controls';
 
-import { useCreate } from '../hooks/create.hook.ts';
-import { useUpdate } from '../hooks/update.hook.ts';
+import { useCreate } from '../requests/create.hook.ts';
+import { useUpdate } from '../requests/update.hook.ts';
 
 import { IFormData, schema } from './schema.ts';
 
 export const ModuleView = () => {
   const navigate = useNavigate();
-  const data = useLoaderData<ProductEntity>();
+  const [data] = useLoaderData<[ProductEntity]>();
 
   const { ...methods } = ReactHookForm.useForm<IFormData>({
     mode: 'onChange',
@@ -40,7 +40,7 @@ export const ModuleView = () => {
       } else {
         await create(values);
 
-        navigate('/products');
+        navigate.location('/products');
       }
     },
     (errors) => console.log(errors),

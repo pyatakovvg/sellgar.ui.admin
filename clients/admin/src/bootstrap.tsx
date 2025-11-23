@@ -1,109 +1,84 @@
-import { NavigateLayout } from '@layout/navigate';
-import { Application, Route, Router, PublicRouter, PrivateRouter } from '@library/app';
+import { Application, Router, PublicRoutes, PrivateRoutes, Route } from '@library/app';
+
 import { BaseLayout } from '@layout/base';
+import { NavigateLayout } from '@layout/navigate';
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { RegisterAndUpdateServiceWorker } from './sw';
 
+import { containerModule } from './container.module.ts';
+
 const app = new Application({
-  routes: [
-    /**
-     * Контент, требующий авторизации
-     */
-    new PrivateRouter([
-      new Router(
-        '/',
-        [
-          new Route('/', () => import('@page/dashboard')),
-
-          /**
-           * Категория
-           */
-          new Router('categories', [new Route('/', () => import('@page/categories'))], {
-            breadcrumb: () => 'Категории',
+  router: new Router({
+    routes: [
+      new PrivateRoutes({
+        layout: (outlet) => <NavigateLayout>{outlet}</NavigateLayout>,
+        routes: [
+          new Route({
+            path: '/',
+            module: () => import('@page/dashboard'),
           }),
-
-          /**
-           * Бренд
-           */
-          new Router('brands', [new Route('/', () => import('@page/brands'))], {
-            breadcrumb: () => 'Бренды',
-          }),
-
-          /**
-           * Единица измерения
-           */
-          new Router('units', [new Route('/', () => import('@page/units'))], {
-            breadcrumb: () => 'Единица измерения',
-          }),
-
-          /**
-           * Свойства
-           */
-          new Router('properties', [new Route('/', () => import('@page/properties'))], {
-            breadcrumb: () => 'Свойства',
-          }),
-
-          /**
-           * Товары
-           */
-          new Router(
-            'products',
-            [
-              new Route('/', () => import('@page/products')),
-              new Route('create', () => import('@page/product-modify'), {
-                breadcrumb: () => 'Добавить товар',
+          new Route({
+            path: '/products',
+            breadcrumb: 'Товары',
+            routes: [
+              new Route({
+                module: () => import('@page/products'),
               }),
-              new Route(':uuid', () => import('@page/product-modify'), {
-                breadcrumb: (data) => data?.name ?? 'Ytn',
+              new Route({
+                path: '/create',
+                breadcrumb: 'Новый товар',
+                module: () => import('@page/product-modify'),
+              }),
+              new Route({
+                path: '/:uuid',
+                breadcrumb: ([data]: any) => data.name,
+                module: () => import('@page/product-modify'),
               }),
             ],
-            {
-              breadcrumb: () => 'Товары',
-            },
-          ),
-
-          new Router(
-            'store',
-            [
-              new Route('/', () => import('@page/store')),
-              new Route('/create', () => import('@page/store-modify'), {
-                breadcrumb: () => 'Добавить товар',
-              }),
-              new Route('/:uuid', () => import('@page/store-modify'), {
-                breadcrumb: (data) => data.variant.name,
+          }),
+          new Route({
+            path: '/brands',
+            breadcrumb: 'Бренд',
+            routes: [
+              new Route({
+                module: () => import('@page/brands'),
               }),
             ],
-            {
-              breadcrumb: () => 'Склад',
-            },
-          ),
-
-          /**
-           * Файлы
-           */
-          new Router('files', [new Route('/', () => import('@page/files'))], {
-            breadcrumb: () => 'Файлы',
+          }),
+          new Route({
+            path: '/categories',
+            breadcrumb: 'Категория',
+            module: () => import('@page/categories'),
+          }),
+          new Route({
+            path: '/units',
+            breadcrumb: 'Единица измерения',
+            module: () => import('@page/units'),
+          }),
+          new Route({
+            path: '/properties',
+            breadcrumb: 'Свойства',
+            module: () => import('@page/properties'),
           }),
         ],
-        {
-          layout: <NavigateLayout />,
-        },
-      ),
-    ]),
-
-    /**
-     * Общедоступный контент
-     */
-    new PublicRouter([
-      new Router('/', [new Route('sign-in', () => import('@page/sign-in'))], {
-        layout: <BaseLayout />,
       }),
-    ]),
-  ],
+      new PublicRoutes({
+        layout: (outlet) => <BaseLayout>{outlet}</BaseLayout>,
+        routes: [
+          new Route({
+            path: '/sign-in',
+            module: () => import('@page/sign-in'),
+          }),
+        ],
+      }),
+    ],
+  }),
 });
+
+app.container.bind(containerModule);
 
 const AppView = app.createView();
 

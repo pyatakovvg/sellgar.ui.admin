@@ -1,16 +1,16 @@
 import { Typography } from '@sellgar/kit';
+import { useLoaderData } from '@library/app';
+import { PropertyGroupEntity } from '@library/domain';
 
 import React from 'react';
 
 import { Table } from './table';
 import { Actions } from './actions';
 
-import { useGetData } from '../../hooks/get-data.hook.ts';
-
 import s from './default.module.scss';
 
 export const Content = () => {
-  const data = useGetData();
+  const [data] = useLoaderData<[PropertyGroupEntity][]>();
 
   return data.map((group) => {
     return (

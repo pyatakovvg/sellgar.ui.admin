@@ -1,8 +1,8 @@
 import { ProductEntity } from '@library/domain';
 import { Button, Icon, useCellData } from '@sellgar/kit';
+import { useNavigate } from '@library/app';
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import s from './default.module.scss';
 
@@ -11,7 +11,7 @@ export const Actions: React.FC = () => {
   const { data } = useCellData<ProductEntity>();
 
   const handleClick = () => {
-    navigate('/products/' + data.uuid);
+    navigate.location('/products/' + data.uuid);
   };
 
   return (

@@ -1,14 +1,13 @@
 import { Scrollbar } from '@sellgar/kit';
 
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 
 import { Header } from './Header';
 import { Navigate } from './Navigate';
 
 import s from './default.module.scss';
 
-export const NavigateLayout = () => {
+export const NavigateLayout: React.FC<React.PropsWithChildren> = (props) => {
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
@@ -19,9 +18,7 @@ export const NavigateLayout = () => {
           <Navigate />
         </div>
         <div className={s.content}>
-          <Scrollbar className={s.outlet}>
-            <Outlet />
-          </Scrollbar>
+          <Scrollbar className={s.outlet}>{props.children}</Scrollbar>
         </div>
       </div>
     </div>

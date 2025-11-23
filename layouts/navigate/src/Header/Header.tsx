@@ -1,4 +1,4 @@
-import { Breadcrumbs } from '@library/breadcrumbs';
+import { Breadcrumbs } from '@library/app';
 import { Typography } from '@sellgar/kit';
 import { Widget as SignOutWidget } from '@widget/logout';
 

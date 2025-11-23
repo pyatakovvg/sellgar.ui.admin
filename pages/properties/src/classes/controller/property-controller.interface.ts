@@ -4,5 +4,5 @@ export abstract class PropertyControllerInterface {
   abstract getData(): PropertyGroupEntity[];
   abstract getMeta(): MetaEntity;
 
-  abstract findAll(): Promise<PropertyGroupEntity[] | undefined>;
+  abstract loader(): Promise<PropertyGroupEntity[] | undefined>;
 }

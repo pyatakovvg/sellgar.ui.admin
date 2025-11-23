@@ -1,4 +1,4 @@
-export { ProfileEntity, ProfileResultEntity } from './profile.entity.ts';
+export { ProfileEntity } from './profile.entity.ts';
 
 export { ProfileGateway } from './gateway/profile.gateway.ts';
 export { ProfileGatewayInterface } from './gateway/profile-gateway.interface.ts';

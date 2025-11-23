@@ -1,7 +1,5 @@
-import { ProductsStoreInterface } from '../store/products-store.interface.ts';
+import { ProductResultEntity } from '@library/domain';
 
 export abstract class ProductsControllerInterface {
-  abstract readonly productStore: ProductsStoreInterface;
-
-  abstract findAll(): Promise<void>;
+  abstract loader(): Promise<ProductResultEntity>;
 }

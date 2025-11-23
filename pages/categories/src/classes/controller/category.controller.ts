@@ -8,7 +8,7 @@ import { CategoryControllerInterface } from './category-controller.interface.ts'
 export class CategoryController implements CategoryControllerInterface {
   constructor(@inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface) {}
 
-  async findAll() {
+  async loader() {
     return await this.categoryService.findAll();
   }
 }

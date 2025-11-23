@@ -5,7 +5,7 @@ import { plainToInstance } from 'class-transformer';
 import { ConfigInterface } from '../../../helpers/config';
 import { HttpClientInterface } from '../../../helpers/http-client';
 
-import { ProfileResultEntity } from '../profile.entity.ts';
+import { ProfileEntity } from '../profile.entity.ts';
 
 import { ProfileGatewayInterface } from './profile-gateway.interface.ts';
 
@@ -17,8 +17,8 @@ export class ProfileGateway implements ProfileGatewayInterface {
   ) {}
 
   async get() {
-    const result = await this.httpClient.get<ProfileResultEntity>(this.config.get('GATEWAY_API') + '/v1/auth/profile');
-    const resultInstance = plainToInstance(ProfileResultEntity, result);
+    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v1/auth/profile');
+    const resultInstance = plainToInstance(ProfileEntity, result);
 
     await validateOrReject(resultInstance);
 

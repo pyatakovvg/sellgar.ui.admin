@@ -6,6 +6,10 @@ interface IForm {
   categoryUuid: string;
   description: string;
   variants: {
+    images: {
+      file: File;
+      preview: string;
+    }[];
     article: string;
     name: string;
     description: string;
@@ -25,6 +29,12 @@ export const schema = yup.object({
   description: yup.string().required('Необходимо заполнить'),
   variants: yup.array().of(
     yup.object({
+      images: yup.array().of(
+        yup.object({
+          file: yup.mixed().required('Необходимо выбрать'),
+          preview: yup.string().required('Необходимо выбрать'),
+        }),
+      ),
       article: yup.string().required('Необходимо заполнить'),
       name: yup.string().required('Необходимо заполнить'),
       description: yup.string().required('Необходимо заполнить'),

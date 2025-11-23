@@ -2,30 +2,25 @@ import { Typography, Container } from '@sellgar/kit';
 
 import React from 'react';
 import { observer } from 'mobx-react';
-import { useNavigate } from 'react-router-dom';
 
 import { SignInForm, type IFormValues } from './form';
 
-import { useSignInRequest } from '../hooks/sign-in-request.hook.ts';
-import { useGetFormInProcess } from '../hooks/get-form-in-process.hook.ts';
+import { useInProcess } from '../hooks/in-process.hook.ts';
+import { useSignInRequest } from '../requests/sign-in.request.ts';
 
 import s from './default.module.scss';
 
 export const SignInView = observer(() => {
-  const navigate = useNavigate();
+  const inProcess = useInProcess();
+
   const signInRequest = useSignInRequest();
-  const inProcess = useGetFormInProcess();
 
   const handleSubmit = async (values: IFormValues) => {
-    const result = await signInRequest(values.login, values.password);
-
-    if (result) {
-      navigate('/');
-    }
+    await signInRequest(values.login, values.password);
   };
 
   return (
-    <div className={s.wrapper} data-page={'sign-in'}>
+    <div className={s.wrapper}>
       <div className={s.container}>
         <Container>
           <div className={s.content}>

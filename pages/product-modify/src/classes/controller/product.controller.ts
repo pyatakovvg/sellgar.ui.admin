@@ -4,6 +4,7 @@ import {
   CategoryServiceInterface,
   PropertyServiceInterface,
 } from '@library/domain';
+import { ModuleArgs } from '@library/app';
 
 import { inject, injectable } from 'inversify';
 
@@ -56,5 +57,9 @@ export class ProductController implements ProductControllerInterface {
       categoryUuid: dto.categoryUuid,
       variants: dto.variants,
     });
+  }
+
+  async loader(args: ModuleArgs) {
+    return await this.findByUuid(args.params?.uuid);
   }
 }

@@ -1,4 +1,4 @@
-import { Sidebar, MenuItem, Typography } from '@sellgar/kit';
+import { Sidebar, MenuItem } from '@sellgar/kit';
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';

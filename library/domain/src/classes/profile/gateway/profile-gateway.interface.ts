@@ -1,3 +1,5 @@
+import { ProfileEntity } from '../profile.entity.ts';
+
 export abstract class ProfileGatewayInterface {
-  abstract get(): Promise<any>;
+  abstract get(): Promise<ProfileEntity>;
 }

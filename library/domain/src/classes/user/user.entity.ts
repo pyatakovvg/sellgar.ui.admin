@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsString, IsUUID, IsDateString, ValidateNested } from 'class-validator';
+import { IsString, IsUUID, IsBoolean, IsDateString, ValidateNested } from 'class-validator';
 
 import { MetaEntity } from '../../meta.entity.ts';
 
@@ -8,25 +8,16 @@ export class UserEntity {
   uuid: string;
 
   @IsString()
-  name: string;
+  login: string;
 
-  @IsString()
-  surname: string;
-
-  @IsString()
-  patronymic: string | null;
-
-  @IsString()
-  sex: 'MALE' | 'FEMALE' | null;
+  @IsBoolean()
+  isBlocked: string;
 
   @IsDateString()
-  birthday: Date | null;
+  createdAt: Date;
 
   @IsDateString()
-  createdAt?: Date;
-
-  @IsDateString()
-  updatedAt?: Date;
+  updatedAt: Date;
 }
 
 export class UserResultEntity {

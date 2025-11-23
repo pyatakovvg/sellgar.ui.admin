@@ -23,18 +23,4 @@ export class FormStore implements FormStoreInterface {
   setError(error: HttpException | null) {
     this.error = error;
   }
-
-  async execute(email: string, password: string) {
-    this.setProcess(true);
-
-    try {
-      await this.authService.signIn(email, password);
-      return true;
-    } catch (error) {
-      this.setError(error as HttpException);
-      throw error;
-    } finally {
-      this.setProcess(false);
-    }
-  }
 }

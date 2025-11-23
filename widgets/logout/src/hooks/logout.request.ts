@@ -13,7 +13,7 @@ export const useLogout = () => {
     try {
       await controller.logout();
 
-      navigate('/sign-in');
+      navigate.replace('/sign-in');
     } catch (error) {
       throw error;
     }

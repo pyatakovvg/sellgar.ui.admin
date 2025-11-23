@@ -7,7 +7,7 @@ import { ProfileGatewayInterface } from '../gateway/profile-gateway.interface.ts
 export class ProfileService implements ProfileServiceInterface {
   constructor(@inject(ProfileGatewayInterface) private readonly profileGateway: ProfileGatewayInterface) {}
 
-  get() {
-    return this.profileGateway.get();
+  async get() {
+    return await this.profileGateway.get();
   }
 }

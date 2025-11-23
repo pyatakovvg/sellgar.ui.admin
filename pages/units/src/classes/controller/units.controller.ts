@@ -1,26 +1,14 @@
+import { UnitServiceInterface } from '@library/domain';
+
 import { inject, injectable } from 'inversify';
 
-import { UnitStore, UnitStoreSymbol } from '../store/unit.store.ts';
-
-export const UnitsControllerSymbol = Symbol.for('UnitsController');
+import { UnitsControllerInterface } from './units-controller.interface.ts';
 
 @injectable()
-export class UnitsController {
-  constructor(@inject(UnitStoreSymbol) private readonly unitStore: UnitStore) {}
+export class UnitsController implements UnitsControllerInterface {
+  constructor(@inject(UnitServiceInterface) private readonly unitService: UnitServiceInterface) {}
 
-  getData() {
-    return this.unitStore.data;
-  }
-
-  getMeta() {
-    return this.unitStore.meta;
-  }
-
-  getInProcess() {
-    return this.unitStore.inProcess;
-  }
-
-  async findAll() {
-    return await this.unitStore.findAll();
+  async loader() {
+    return await this.unitService.findAll();
   }
 }

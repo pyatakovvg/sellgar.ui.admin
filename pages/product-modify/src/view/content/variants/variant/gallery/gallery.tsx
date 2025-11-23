@@ -3,6 +3,8 @@ import { Typography, Icon, Image, Button } from '@sellgar/kit';
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
 
+import type { IFormData } from '../../../../schema.ts';
+
 import s from './gallery.module.scss';
 
 interface IProps {
@@ -10,8 +12,8 @@ interface IProps {
 }
 
 export const Gallery: React.FC<IProps> = (props) => {
-  const { control } = ReactHookForm.useFormContext();
-  const { fields, append, remove, move } = ReactHookForm.useFieldArray({
+  const { control } = ReactHookForm.useFormContext<IFormData>();
+  const { fields, append, remove } = ReactHookForm.useFieldArray({
     control,
     name: `variants.${props.index}.images`,
   });
@@ -26,10 +28,17 @@ export const Gallery: React.FC<IProps> = (props) => {
     input.setAttribute('multiple', 'multiple');
 
     input.onchange = () => {
-      append(Array.from(input?.files ?? []));
+      Array.from(input?.files ?? []).forEach((file) => {
+        append({
+          file,
+          preview: URL.createObjectURL(file),
+        });
+      });
+
       input.onchange = null;
       input.oncancel = null;
     };
+
     input.oncancel = () => {
       input.onchange = null;
       input.oncancel = null;
@@ -45,21 +54,23 @@ export const Gallery: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <div className={s.content}>
-        {fields.map((file, index) => (
-          <div key={file.id} className={s.image}>
-            <span className={s.remove} onClick={() => handleRemove(index)}>
-              <Button
-                shape={'pill'}
-                size={'xs'}
-                target={'destructive'}
-                style={'secondary'}
-                form={'icon'}
-                leadIcon={<Icon icon={Icon.deleteBin5Line} />}
-              />
-            </span>
-            {/*<Image className={s.img} src={URL.createObjectURL(file)} />*/}
-          </div>
-        ))}
+        {fields.map((file, index) => {
+          return (
+            <div key={file.id} className={s.image}>
+              <span className={s.remove} onClick={() => handleRemove(index)}>
+                <Button
+                  shape={'pill'}
+                  size={'xs'}
+                  target={'destructive'}
+                  style={'secondary'}
+                  form={'icon'}
+                  leadIcon={<Icon icon={Icon.deleteBin5Line} />}
+                />
+              </span>
+              <Image className={s.img} src={file.preview} />
+            </div>
+          );
+        })}
         <div className={s.add} onClick={() => handleAdd()}>
           <Icon icon={Icon.imageAddLine} />
         </div>

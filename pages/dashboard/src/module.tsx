@@ -1,17 +1,15 @@
-import { Page } from '@library/design';
-import { type IClassModule } from '@library/app';
+import { Module } from '@library/app';
 
 import React from 'react';
 
-export class ClassModule implements IClassModule {
-  render() {
-    return (
-      <Page>
-        <Page.Header>
-          <Page.Header.Title>Дашборд</Page.Header.Title>
-        </Page.Header>
-        <Page.Content></Page.Content>
-      </Page>
-    );
-  }
-}
+import { DashboardView } from './view';
+
+import { containerModule } from './classes/classes.di.ts';
+import { DashboardConstructorInterface } from './classes/constructor/dashboard-constructor.interface.ts';
+
+@Module({
+  imports: [containerModule],
+  controllers: [DashboardConstructorInterface],
+  view: <DashboardView />,
+})
+export class DashboardModule {}

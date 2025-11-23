@@ -20,7 +20,7 @@ export class PropertyController implements PropertyControllerInterface {
     return this.propertyStore.meta;
   }
 
-  async findAll() {
+  async loader() {
     try {
       const result = await this.propertyGroupService.findAll();
 

@@ -9,7 +9,7 @@ import { Table } from './table';
 import s from './default.module.scss';
 
 export const Content = () => {
-  const brand = useLoaderData<BrandResultEntity>();
+  const [brand] = useLoaderData<[BrandResultEntity]>();
 
   return (
     <div className={s.wrapper}>

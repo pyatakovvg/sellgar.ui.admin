@@ -1,9 +1,9 @@
-import React from 'react';
+import { useController } from '@library/app';
 
-import { context } from '../module.context.ts';
+import { ProductControllerInterface } from '../classes/controller/product-controller.interface.ts';
 
 export const useProperties = () => {
-  const { controller } = React.useContext(context);
+  const controller = useController(ProductControllerInterface);
 
   return controller.formStore.properties;
 };
