@@ -3,7 +3,7 @@ export { Module, type IController } from './common/module';
 export { useController } from './common/lazy-loader';
 export { Route, useLoaderData, useLoaderRevalidate } from './common/route';
 
-export { Router, useNavigate } from './common/router';
+export { Router, useNavigate, useLocation } from './common/router';
 export { PublicRoutes } from './common/public-routes';
 export { PrivateRoutes } from './common/private-routes';
 

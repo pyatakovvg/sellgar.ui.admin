@@ -1,25 +1,28 @@
 import { Widget } from '@widget/category-modify';
 import { Drawer } from '@sellgar/kit';
-import { useLoaderRevalidate } from '@library/app';
+import { useLoaderRevalidate, useLocation } from '@library/app';
 
 import React from 'react';
 
-import { context } from './modify.context.ts';
-
 export const Modify = () => {
-  const { uuid, isOpen, onClose } = React.useContext(context);
   const { revalidate } = useLoaderRevalidate();
+  const location = useLocation();
+  const [isOpen, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    setOpen('modal' in location.hash);
+  }, [location.hash]);
 
   return (
-    <Drawer open={isOpen} onClose={onClose}>
+    <Drawer open={isOpen} onClose={() => setOpen(false)}>
       <Widget
-        uuid={uuid}
+        uuid={location.hash.modal.uuid}
         onSuccess={async () => {
           await revalidate();
-          onClose();
+          setOpen(false);
         }}
         onCancel={() => {
-          onClose();
+          setOpen(false);
         }}
       />
     </Drawer>
