@@ -1,4 +1,5 @@
-import { LoaderFunctionArgs } from 'react-router-dom';
+import React from 'react';
+import ReactRouter from 'react-router-dom';
 
 import { contextProvider } from '../context';
 import { ApplicationContext } from '../application';
@@ -12,8 +13,10 @@ import { LazyLoaderInterface } from './lazy-loader.interface.ts';
 const lastInstance: Set<any> = new Set<any>();
 
 export class LazyLoader implements LazyLoaderInterface {
-  private instance: any;
   private static controller = new Controller();
+
+  private instance: any;
+  private isCreated: boolean = false;
 
   constructor(private readonly ClassModule: new () => any) {}
 
@@ -36,7 +39,7 @@ export class LazyLoader implements LazyLoaderInterface {
     }
   }
 
-  private unloadMetaData(args: LoaderFunctionArgs, instance: any) {
+  private unloadMetaData(args: ReactRouter.LoaderFunctionArgs, instance: any) {
     const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
     const metaData = Reflect.getMetadata(MODULE_METADATA_KEY, instance.constructor) as ModuleMetadata;
 
@@ -62,7 +65,11 @@ export class LazyLoader implements LazyLoaderInterface {
     }
   }
 
-  create(args: LoaderFunctionArgs) {
+  create(args: ReactRouter.LoaderFunctionArgs) {
+    if (this.isCreated) {
+      return void 0;
+    }
+
     if (lastInstance.size) {
       lastInstance.forEach((instance) => {
         this.unloadMetaData(args, instance);
@@ -78,7 +85,7 @@ export class LazyLoader implements LazyLoaderInterface {
     lastInstance.add(this.instance);
   }
 
-  async loader(args: LoaderFunctionArgs) {
+  async loader(args: ReactRouter.LoaderFunctionArgs) {
     const metaData = Reflect.getMetadata(MODULE_METADATA_KEY, this.ClassModule) as ModuleMetadata;
 
     return await Promise.all(
@@ -99,6 +106,13 @@ export class LazyLoader implements LazyLoaderInterface {
 
   render() {
     const metaData = Reflect.getMetadata(MODULE_METADATA_KEY, this.ClassModule) as ModuleMetadata;
+
+    React.useEffect(() => {
+      this.isCreated = true;
+      return () => {
+        this.isCreated = false;
+      };
+    }, []);
 
     return <LazyLoaderProvider controller={LazyLoader.controller}>{metaData.view}</LazyLoaderProvider>;
   }

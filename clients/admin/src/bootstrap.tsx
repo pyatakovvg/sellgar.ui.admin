@@ -8,9 +8,20 @@ import ReactDOM from 'react-dom/client';
 
 import { RegisterAndUpdateServiceWorker } from './sw';
 
+import { Splash } from './components/splash';
+import { Loading } from './components/loading';
+import { NotFound } from './components/not-found';
+import { Exception } from './components/exception';
+
 import { containerModule } from './container.module.ts';
 
 const app = new Application({
+  components: {
+    splash: <Splash />,
+    loading: <Loading />,
+    notFound: <NotFound />,
+    exception: <Exception />,
+  },
   router: new Router({
     routes: [
       new PrivateRoutes({

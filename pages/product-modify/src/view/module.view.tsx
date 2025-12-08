@@ -18,9 +18,8 @@ export const ModuleView = () => {
   const navigate = useNavigate();
   const [data] = useLoaderData<[ProductEntity]>();
 
-  const { ...methods } = ReactHookForm.useForm<IFormData>({
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+  const methods = ReactHookForm.useForm<IFormData>({
+    mode: 'onBlur',
     defaultValues: data ?? new ProductEntity(),
     resolver: ReactHookFormResolver.yupResolver(schema),
   });
@@ -38,13 +37,17 @@ export const ModuleView = () => {
 
         methods.reset(result);
       } else {
-        await create(values);
+        const result = await create(values);
 
-        navigate.location('/products');
+        navigate.location('/products/' + result?.uuid);
       }
     },
     (errors) => console.log(errors),
   );
+
+  // React.useEffect(() => {
+  console.log(123, methods.formState.isDirty);
+  // }, [methods.formState]);
 
   return (
     <ReactHookForm.FormProvider {...methods}>

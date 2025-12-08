@@ -1,13 +1,12 @@
 import { Typography, Icon, Button } from '@sellgar/kit';
+import { useNavigate } from '@library/app';
 
 import React from 'react';
-
-import { context } from '../modify';
 
 import s from './default.module.scss';
 
 export const Header = () => {
-  const { onOpen } = React.useContext(context);
+  const navigate = useNavigate();
 
   return (
     <div className={s.wrapper}>
@@ -17,7 +16,7 @@ export const Header = () => {
         </Typography>
       </div>
       <div>
-        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => onOpen()}>
+        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => navigate.hash({ modal: {} })}>
           Добавить категорию
         </Button>
       </div>

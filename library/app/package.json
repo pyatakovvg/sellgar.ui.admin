@@ -15,19 +15,19 @@
     "@utils/generate": "0.0.1",
     "axios": "1.13.2",
     "class-transformer": "0.5.1",
-    "class-validator": "0.14.2",
-    "inversify": "7.10.4",
+    "class-validator": "0.14.3",
+    "inversify": "7.10.6",
     "inversify-inject-decorators": "3.1.0",
     "mobx": "6.15.0",
     "mobx-react": "9.2.1",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
     "react-error-boundary": "6.0.0",
-    "react-router-dom": "7.9.6",
+    "react-router-dom": "7.10.1",
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/react": "19.2.5",
+    "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@types/reflect-metadata": "0.1.0"
   }

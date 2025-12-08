@@ -10,14 +10,14 @@
   "main": "./src/index.ts",
   "dependencies": {
     "@library/design": "0.0.1",
-    "@sellgar/kit": "0.0.160",
+    "@sellgar/kit": "0.0.161",
     "classnames": "2.5.1",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "react-router-dom": "7.9.6"
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "react-router-dom": "7.10.1"
   },
   "devDependencies": {
-    "@types/react": "19.2.5",
+    "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@types/reflect-metadata": "0.1.0"
   }

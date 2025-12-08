@@ -15,6 +15,8 @@ interface IProps {
 }
 
 export const Variant: React.FC<IProps> = (props) => {
+  const { control } = ReactHookForm.useFormContext();
+
   return (
     <div className={s.wrapper}>
       <div className={s.controls}>
@@ -54,6 +56,7 @@ export const Variant: React.FC<IProps> = (props) => {
         <div className={s.line}>
           <div className={s.field} style={{ flex: '0 0 auto', width: 220 }}>
             <ReactHookForm.Controller
+              control={control}
               name={`variants.${props.index}.article`}
               render={({ field, fieldState: { error } }) => (
                 <Field>
@@ -62,8 +65,8 @@ export const Variant: React.FC<IProps> = (props) => {
                   </Field.Label>
                   <Field.Content>
                     <Input
-                      leadIcon={<Icon icon={Icon.bookmarkLine} />}
                       {...field}
+                      leadIcon={<Icon icon={Icon.bookmarkLine} />}
                       target={error?.message ? 'destructive' : undefined}
                     />
                   </Field.Content>
@@ -78,6 +81,7 @@ export const Variant: React.FC<IProps> = (props) => {
           </div>
           <div className={s.field}>
             <ReactHookForm.Controller
+              control={control}
               name={`variants.${props.index}.name`}
               render={({ field, fieldState: { error } }) => (
                 <Field>
@@ -100,6 +104,7 @@ export const Variant: React.FC<IProps> = (props) => {
         <div className={s.line}>
           <div className={s.field}>
             <ReactHookForm.Controller
+              control={control}
               name={`variants.${props.index}.description`}
               render={({ field, fieldState: { error } }) => (
                 <Field>

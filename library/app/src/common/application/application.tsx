@@ -3,10 +3,6 @@ import React from 'react';
 import { Container } from '../container';
 import { contextProvider } from '../context';
 
-import { Splash } from './component/splash';
-import { NotFound } from './component/not-found';
-import { Exception } from './component/exception';
-
 import { ApplicationContext } from './application.context.tsx';
 import { ApplicationInterface, type IOptions } from './application.interface.tsx';
 
@@ -26,9 +22,6 @@ export class Application implements ApplicationInterface {
         {
           ...this.options,
           components: {
-            splash: <Splash />,
-            notFound: <NotFound />,
-            exception: <Exception />,
             ...this.options.components,
           },
         },

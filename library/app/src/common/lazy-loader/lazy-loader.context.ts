@@ -3,7 +3,7 @@ import React from 'react';
 import { ControllerInterface } from '../module/controller';
 
 interface IContext {
-  controllers: ControllerInterface;
+  controller: ControllerInterface<any>;
 }
 
 export const context = React.createContext({} as IContext);

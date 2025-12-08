@@ -25,8 +25,8 @@ export const Product = () => {
         <div className={s.line}>
           <div className={s.field}>
             <ReactHookForm.Controller
-              name={'name'}
               control={control}
+              name={'name'}
               render={({ field, fieldState: { error } }) => (
                 <Field>
                   <Field.Label>
@@ -48,8 +48,8 @@ export const Product = () => {
         <div className={s.line}>
           <div className={s.field}>
             <ReactHookForm.Controller
-              name={'categoryUuid'}
               control={control}
+              name={'categoryUuid'}
               render={({ field, fieldState: { error } }) => (
                 <Field>
                   <Field.Label>
@@ -80,8 +80,8 @@ export const Product = () => {
         <div className={s.line}>
           <div className={s.field}>
             <ReactHookForm.Controller
-              name={'brandUuid'}
               control={control}
+              name={'brandUuid'}
               render={({ field, fieldState: { error } }) => (
                 <Field>
                   <Field.Label>
@@ -111,8 +111,8 @@ export const Product = () => {
         <div className={s.line}>
           <div className={s.field}>
             <ReactHookForm.Controller
-              name={'description'}
               control={control}
+              name={'description'}
               render={({ field, fieldState: { error } }) => (
                 <Field>
                   <Field.Label>

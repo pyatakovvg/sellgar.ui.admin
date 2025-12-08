@@ -5,8 +5,6 @@ import { contextProvider } from '../context';
 import { ApplicationContext } from '../application';
 import { LazyLoader, LazyLoaderInterface } from '../lazy-loader';
 
-import { Loading } from './components/loading';
-
 import { RouteProvider } from './route.provider.tsx';
 
 import { RouteInterface, type IOptions } from './route.interface.ts';
@@ -14,9 +12,10 @@ import { RouteInterface, type IOptions } from './route.interface.ts';
 const Wrapper: React.FC<React.PropsWithChildren> = (props) => {
   const navigation = ReactRouter.useNavigation();
   const inProcess = Boolean(navigation.location);
+  const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
 
   if (inProcess) {
-    return <Loading />;
+    return applicationContext.options.components?.loading;
   }
   return props.children;
 };
@@ -61,7 +60,7 @@ export class Route implements RouteInterface {
 
               return await lazyLoader.loader.call(lazyLoader, args);
             },
-            element: (
+            Component: () => (
               <Wrapper>
                 <RouteProvider>{lazyLoader.render.call(lazyLoader)}</RouteProvider>
               </Wrapper>
@@ -100,7 +99,8 @@ export class Route implements RouteInterface {
           return null;
         },
       },
-      element:
+      errorElement: applicationContext.options.components!.exception,
+      Component: () =>
         'layout' in this.options && this.options.layout ? (
           this.options.layout(<ReactRouter.Outlet />)
         ) : (

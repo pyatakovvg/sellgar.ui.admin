@@ -4,6 +4,7 @@ export { ApplicationInterface } from './application.interface.tsx';
 export { Await } from './component/await';
 
 export { useRequest } from './hooks/request.hook.ts';
+export { useContainer } from './hooks/container.hook.ts';
 export { useAwaitLoaderData } from './hooks/await-loader-data.hook.ts';
 export { useLoadContainerModule } from './hooks/load-container-module.hook.ts';
 

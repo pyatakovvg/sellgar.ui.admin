@@ -1,19 +1,13 @@
-import { Button, Icon } from '@sellgar/kit';
-import { cellContext } from '@sellgar/kit';
+import { Button, Icon, cellContext } from '@sellgar/kit';
+import { useNavigate } from '@library/app';
 
 import React from 'react';
-
-import { context } from '../../../modify';
 
 import s from './default.module.scss';
 
 export const Actions: React.FC = () => {
   const { data } = React.use(cellContext);
-  const { onOpen } = React.useContext(context);
-
-  const handleClick = (uuid: string) => {
-    onOpen(uuid);
-  };
+  const navigate = useNavigate();
 
   return (
     <div className={s.wrapper}>
@@ -22,7 +16,7 @@ export const Actions: React.FC = () => {
         style={'ghost'}
         size={'sm'}
         leadIcon={<Icon icon={'more-2-fill'} />}
-        onClick={() => handleClick(data.uuid)}
+        onClick={() => navigate.hash({ modal: { uuid: data.uuid } })}
       />
     </div>
   );

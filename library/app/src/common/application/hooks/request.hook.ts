@@ -4,13 +4,11 @@ import { UnauthorizedException } from '@library/domain';
 
 import { useNavigate } from '../../router';
 
-export const useRequest = <T extends any[], R>(
-  callback: (...args: T) => Promise<R>,
-): ((...args: T) => Promise<R | undefined>) => {
+export const useRequest = <T extends any[], R>(callback: (...args: T) => Promise<R>): ((...args: T) => Promise<R>) => {
   const navigate = useNavigate();
   const showMessage = useShowMessage();
 
-  return async (...args: T): Promise<R | undefined> => {
+  return async (...args: T): Promise<R> => {
     try {
       return await callback(...args);
     } catch (e) {

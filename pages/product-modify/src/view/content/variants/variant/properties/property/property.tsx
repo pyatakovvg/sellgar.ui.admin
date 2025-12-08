@@ -45,8 +45,8 @@ export const Property: React.FC<IProps> = (props) => {
       </div>
       <div className={s.field}>
         <ReactHookForm.Controller
-          name={`variants.${props.parentIndex}.properties.${props.index}.propertyUuid`}
           control={control}
+          name={`variants.${props.parentIndex}.properties.${props.index}.propertyUuid`}
           render={({ field, fieldState: { error } }) => (
             <Field>
               <Field.Content>
@@ -71,8 +71,8 @@ export const Property: React.FC<IProps> = (props) => {
       </div>
       <div className={s.field}>
         <ReactHookForm.Controller
-          name={`variants.${props.parentIndex}.properties.${props.index}.value`}
           control={control}
+          name={`variants.${props.parentIndex}.properties.${props.index}.value`}
           render={({ field, fieldState: { error } }) => (
             <Field>
               <Field.Content>

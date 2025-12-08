@@ -5,6 +5,7 @@ import { ContainerInterface } from '../container';
 
 export interface IComponents {
   splash: React.ReactNode;
+  loading: React.ReactNode;
   exception: React.ReactNode;
   notFound: React.ReactNode;
   forbidden: React.ReactNode;
