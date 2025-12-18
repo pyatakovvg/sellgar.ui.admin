@@ -1,5 +1,3 @@
-import { logger } from '@library/domain';
-
 import React from 'react';
 
 import { Container } from '../container';
