@@ -1,53 +1,32 @@
-import { StoreEntity } from '@library/domain';
+import { ProductEntity } from '@library/domain';
 import { Table as TableComponent, Column } from '@sellgar/kit';
 
 import React from 'react';
 
-import { Price } from './price';
-import { Count } from './count';
-import { Product } from './product';
-import { Variant } from './variant';
-import { Showing } from './showing';
+import { Name } from './name';
 import { Actions } from './actions';
+import { Category } from './category';
 
 import s from './default.module.scss';
 
 interface IProps {
-  data: StoreEntity[];
+  data: ProductEntity[];
 }
 
 export const Table: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <TableComponent data={props.data}>
-        <Column accessor={'variant'}>
-          <Column.Title>Товар</Column.Title>
+        <Column>
+          <Column.Title>Описание</Column.Title>
           <Column.Cell>
-            <Product />
+            <Name />
           </Column.Cell>
         </Column>
-        <Column accessor={'variant'}>
-          <Column.Title>Вариант</Column.Title>
+        <Column>
+          <Column.Title>Категория</Column.Title>
           <Column.Cell>
-            <Variant />
-          </Column.Cell>
-        </Column>
-        <Column width={80} align={'center'}>
-          <Column.Title>Кол-во</Column.Title>
-          <Column.Cell>
-            <Count />
-          </Column.Cell>
-        </Column>
-        <Column width={120} align={'right'}>
-          <Column.Title>Цена</Column.Title>
-          <Column.Cell>
-            <Price />
-          </Column.Cell>
-        </Column>
-        <Column width={120} align={'center'}>
-          <Column.Title>На витрине</Column.Title>
-          <Column.Cell>
-            <Showing />
+            <Category />
           </Column.Cell>
         </Column>
         <Column width={80}>

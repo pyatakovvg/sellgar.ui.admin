@@ -12,8 +12,8 @@
     "@library/design": "0.0.1",
     "@sellgar/kit": "0.0.161",
     "classnames": "2.5.1",
-    "react": "19.2.1",
-    "react-dom": "19.2.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-router-dom": "7.10.1"
   },
   "devDependencies": {

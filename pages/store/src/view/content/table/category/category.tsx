@@ -1,14 +1,14 @@
-import { Typography, useCellData, InputNumeral } from '@sellgar/kit';
+import { Typography, useCellData } from '@sellgar/kit';
 import { ProductEntity } from '@library/domain';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-export const Price: React.FC = () => {
+export const Category: React.FC = () => {
   const { data } = useCellData<ProductEntity>();
 
-  if (!data.prices[0]) {
+  if (!data.category) {
     return (
       <div className={s.wrapper}>
         <Typography size={'caption-m'} weight={'semi-bold'}>
@@ -20,11 +20,8 @@ export const Price: React.FC = () => {
 
   return (
     <div className={s.wrapper}>
-      <Typography size={'caption-m'} weight={'semi-bold'}>
-        <p className={s.value}>{InputNumeral.format(data.prices[0].value)}</p>
-      </Typography>
       <Typography size={'caption-m'} weight={'medium'}>
-        <p className={s.currency}>{data.prices[0].currency.name}</p>
+        <p className={s.value}>{data.category.name}</p>
       </Typography>
     </div>
   );

@@ -8,12 +8,22 @@ import { visualizer } from 'rollup-plugin-visualizer';
 export default defineConfig({
   build: {
     outDir: 'build',
+    minify: 'terser',
     sourcemap: process.env.SOURCE_MAP === 'true',
+    terserOptions: {
+      compress: {
+        keep_classnames: true,
+        keep_fnames: true,
+        keep_fargs: true,
+      },
+      mangle: false,
+    },
   },
   optimizeDeps: {
     force: true,
     esbuildOptions: {
       jsx: 'automatic',
+      keepNames: true,
     },
   },
   plugins: [

@@ -18,8 +18,8 @@
     "formik": "2.4.9",
     "inversify": "7.10.6",
     "inversify-inject-decorators": "3.1.0",
-    "react": "19.2.1",
-    "react-dom": "19.2.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-router-dom": "7.10.1",
     "reflect-metadata": "0.2.2"
   },

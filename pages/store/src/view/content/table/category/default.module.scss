@@ -4,8 +4,14 @@
   display: flex;
   flex-direction: row;
   flex: 0 0 auto;
-  justify-content: center;
   color: var(--text-base-primary);
   padding: 0 var(--numbers-12);
 }
 
+.value {
+
+  display: block;
+  color: var(--text-base-primary);
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

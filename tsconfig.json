@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "types": ["reflect-metadata"],
+
     "target": "ESNext",
     "useDefineForClassFields": true,
     "module": "ESNext",

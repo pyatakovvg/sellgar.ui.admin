@@ -20,15 +20,14 @@
     "inversify-inject-decorators": "3.1.0",
     "mobx": "6.15.0",
     "mobx-react": "9.2.1",
-    "react": "19.2.1",
-    "react-dom": "19.2.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-error-boundary": "6.0.0",
     "react-router-dom": "7.10.1",
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
     "@types/react": "19.2.7",
-    "@types/react-dom": "19.2.3",
-    "@types/reflect-metadata": "0.1.0"
+    "@types/react-dom": "19.2.3"
   }
 }

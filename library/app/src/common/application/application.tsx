@@ -1,3 +1,5 @@
+import { logger } from '@library/domain';
+
 import React from 'react';
 
 import { Container } from '../container';
@@ -12,8 +14,6 @@ export class Application implements ApplicationInterface {
   public readonly container = new Container();
 
   constructor(private readonly options: IOptions) {
-    console.log('App: constructor - start');
-
     this.container.bind(containerModule);
 
     contextProvider.bind(
@@ -28,13 +28,9 @@ export class Application implements ApplicationInterface {
         this.container,
       ),
     );
-
-    console.log('App: constructor - finish');
   }
 
   createView(): React.FC {
-    console.log('App: createView');
-
     const RouterView = this.options.router.render();
 
     return () => {

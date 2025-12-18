@@ -1,15 +1,12 @@
-
 .wrapper {
-
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
   color: var(--text-base-primary);
-  padding: 0 var(--numbers-12);
+  padding: var(--numbers-8) var(--numbers-12);
 }
 
 .content {
-
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
@@ -20,7 +17,6 @@
 }
 
 .additional {
-
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
@@ -30,4 +26,8 @@
 
 .variant {
   color: var(--text-base-secondary);
+
+  & + & {
+    margin: var(--numbers-4) 0 0;
+  }
 }

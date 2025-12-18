@@ -3,8 +3,9 @@ import {
   BrandServiceInterface,
   CategoryServiceInterface,
   PropertyServiceInterface,
+  logger,
 } from '@library/domain';
-import { ModuleArgs } from '@library/app';
+import { LoaderArgs } from '@library/app';
 
 import { inject, injectable } from 'inversify';
 
@@ -24,7 +25,9 @@ export class ProductController implements ProductControllerInterface {
     @inject(ProductServiceInterface) private readonly productService: ProductServiceInterface,
   ) {}
 
+  @logger()
   async findByUuid(uuid?: string) {
+    console.log(123, 'find');
     const brands = await this.brandService.findAll();
     const categories = await this.categoryService.findAll();
     const properties = await this.propertyService.findAll();
@@ -59,7 +62,7 @@ export class ProductController implements ProductControllerInterface {
     });
   }
 
-  async loader(args: ModuleArgs) {
+  async loader(args: LoaderArgs) {
     return await this.findByUuid(args.params?.uuid);
   }
 }

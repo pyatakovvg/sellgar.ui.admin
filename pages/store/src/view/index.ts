@@ -1,1 +1,1 @@
-export { StoreView } from './store.view.tsx';
+export { ProductsView } from './products.view.tsx';

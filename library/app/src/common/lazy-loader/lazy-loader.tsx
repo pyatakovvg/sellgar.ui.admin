@@ -12,6 +12,8 @@ import { LazyLoaderInterface } from './lazy-loader.interface.ts';
 
 const lastInstance: Set<any> = new Set<any>();
 
+export type LoaderArgs = ReactRouter.LoaderFunctionArgs;
+
 export class LazyLoader implements LazyLoaderInterface {
   private static controller = new Controller();
 
@@ -89,7 +91,7 @@ export class LazyLoader implements LazyLoaderInterface {
     const metaData = Reflect.getMetadata(MODULE_METADATA_KEY, this.ClassModule) as ModuleMetadata;
 
     return await Promise.all(
-      metaData.controllers.map((controller: any) => {
+      metaData.controllers.map((controller) => {
         const controllerInstance = LazyLoader.controller.get(controller);
 
         if (!controllerInstance) {

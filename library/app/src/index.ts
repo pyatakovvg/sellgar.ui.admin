@@ -12,3 +12,5 @@ export { Application, Await, useAwaitLoaderData, useRequest, useLoadContainerMod
 export { ApplicationControllerInterface } from './common/application/classes/controller/application-controller.interface.ts';
 
 export { Breadcrumbs } from './components/breadcrumbs';
+
+export type { LoaderArgs } from './common/lazy-loader';

@@ -11,6 +11,8 @@ import { DeviceServiceInterface } from '../device';
 
 import { HttpClientInterface } from './http-client.interface.ts';
 
+import { httpLogger } from '../../decorators';
+
 @injectable()
 export class HttpClient implements HttpClientInterface {
   private readonly _axios: AxiosInstance;
@@ -72,26 +74,32 @@ export class HttpClient implements HttpClientInterface {
     throw new InternalServerErrorException(error.message);
   }
 
+  @httpLogger()
   abort(reason?: any): void {
     this._controller.abort(reason);
   }
 
+  @httpLogger()
   get<T = any, R = T, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
     return this._axios.get<T, R, D>(url, config);
   }
 
+  @httpLogger()
   post<T = any, R = T, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
     return this._axios.post<T, R, D>(url, data, config);
   }
 
+  @httpLogger()
   put<T = any, R = T, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
     return this._axios.put<T, R, D>(url, data, config);
   }
 
+  @httpLogger()
   patch<T = any, R = T, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
     return this._axios.patch<T, R, D>(url, data, config);
   }
 
+  @httpLogger()
   delete<T = any, R = T, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
     return this._axios.delete<T, R, D>(url, config);
   }

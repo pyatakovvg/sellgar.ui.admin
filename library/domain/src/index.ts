@@ -20,4 +20,6 @@ export * from './classes/store';
 export * from './classes/price';
 export * from './classes/currency';
 
+export * from './decorators';
+
 export { MetaEntity } from './meta.entity.ts';

@@ -2,14 +2,14 @@ import { Module } from '@library/app';
 
 import React from 'react';
 
-import { StoreView } from './view';
+import { ProductsView } from './view';
 
 import { containerModule } from './classes/classes.di.ts';
-import { StoreControllerInterface } from './classes/controller/store-controller.interface.ts';
+import { ProductsControllerInterface } from './classes/controller/products-controller.interface.ts';
 
 @Module({
   imports: [containerModule],
-  controllers: [StoreControllerInterface],
-  view: <StoreView />,
+  controllers: [ProductsControllerInterface],
+  view: <ProductsView />,
 })
-export class StoreModule {}
+export class ProductsModule {}

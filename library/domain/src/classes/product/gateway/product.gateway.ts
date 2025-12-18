@@ -12,6 +12,8 @@ import { ProductGatewayInterface } from './product-gateway.interface.ts';
 
 import { ProductEntity, ProductResultEntity } from '../product.entity.ts';
 
+import { logger } from '../../../decorators';
+
 @injectable()
 export class ProductGateway implements ProductGatewayInterface {
   constructor(
@@ -19,6 +21,7 @@ export class ProductGateway implements ProductGatewayInterface {
     @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
+  @logger()
   async findAll() {
     const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/products');
     const resultInstance = plainToInstance(ProductResultEntity, result);
@@ -28,6 +31,7 @@ export class ProductGateway implements ProductGatewayInterface {
     return resultInstance;
   }
 
+  @logger()
   async findByUuid(uuid: string) {
     const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/products/' + uuid);
     const resultInstance = plainToInstance(ProductEntity, result, {
@@ -39,6 +43,7 @@ export class ProductGateway implements ProductGatewayInterface {
     return resultInstance;
   }
 
+  @logger()
   async create(dto: CreateProductDto) {
     const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/products', dto);
     const resultInstance = plainToInstance(ProductEntity, result);
@@ -48,6 +53,7 @@ export class ProductGateway implements ProductGatewayInterface {
     return resultInstance;
   }
 
+  @logger()
   async update(uuid: string, dto: UpdateProductDto) {
     const result = await this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/products/' + uuid, dto);
     const resultInstance = plainToInstance(ProductEntity, result);
