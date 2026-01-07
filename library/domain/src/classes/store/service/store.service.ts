@@ -1,10 +1,11 @@
 import { inject, injectable } from 'inversify';
+import { validateOrReject } from 'class-validator';
 
 import { StoreServiceInterface } from './store-service.interface.ts';
 import { StoreGatewayInterface } from '../gateway/store-gateway.interface.ts';
 
-import { CreateProductStoreDto } from '../gateway/dto/create-product-store.dto.ts';
-import { UpdateProductStoreDto } from '../gateway/dto/update-product-store.dto.ts';
+import { CreateDto } from './dto/create.dto.ts';
+import { UpdateDto } from './dto/update.dto.ts';
 
 import { StoreEntity, StoreResultEntity } from '../store.entity.ts';
 
@@ -20,11 +21,15 @@ export class StoreService implements StoreServiceInterface {
     return await this.storeGateway.findByUuid(uuid);
   }
 
-  async update(uuid: string, dto: UpdateProductStoreDto): Promise<StoreEntity> {
-    return this.storeGateway.update(uuid, dto);
+  async update(dto: UpdateDto): Promise<StoreEntity> {
+    await validateOrReject(dto);
+
+    return this.storeGateway.update(dto);
   }
 
-  async create(dto: CreateProductStoreDto): Promise<StoreEntity> {
+  async create(dto: CreateDto): Promise<StoreEntity> {
+    await validateOrReject(dto);
+
     return await this.storeGateway.create(dto);
   }
 }

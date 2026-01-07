@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Common } from './common';
-import { Prices } from './prices';
+import { Price } from './price';
 import { Variant } from './variant';
 
 import s from './default.module.scss';
@@ -14,7 +14,7 @@ export const Form: React.FC = () => {
           <Common />
         </div>
         <div className={s.field}>
-          <Prices />
+          <Price />
         </div>
         <div className={s.field}>
           <Variant />

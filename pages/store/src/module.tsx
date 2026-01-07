@@ -5,11 +5,11 @@ import React from 'react';
 import { ProductsView } from './view';
 
 import { containerModule } from './classes/classes.di.ts';
-import { ProductsControllerInterface } from './classes/controller/products-controller.interface.ts';
+import { StoreControllerInterface } from './classes/controller/store-controller.interface.ts';
 
 @Module({
   imports: [containerModule],
-  controllers: [ProductsControllerInterface],
+  controllers: [StoreControllerInterface],
   view: <ProductsView />,
 })
 export class ProductsModule {}

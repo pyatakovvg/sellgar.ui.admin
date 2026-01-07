@@ -1,14 +1,14 @@
 import { Typography, useCellData } from '@sellgar/kit';
-import { ProductEntity } from '@library/domain';
+import { StoreEntity } from '@library/domain';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
 export const Category: React.FC = () => {
-  const { data } = useCellData<ProductEntity>();
+  const { data } = useCellData<StoreEntity>();
 
-  if (!data.category) {
+  if (!data.variant.product.category) {
     return (
       <div className={s.wrapper}>
         <Typography size={'caption-m'} weight={'semi-bold'}>
@@ -21,7 +21,7 @@ export const Category: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-m'} weight={'medium'}>
-        <p className={s.value}>{data.category.name}</p>
+        <p className={s.value}>{data.variant.product.category.name}</p>
       </Typography>
     </div>
   );

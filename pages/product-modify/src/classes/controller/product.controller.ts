@@ -27,7 +27,6 @@ export class ProductController implements ProductControllerInterface {
 
   @logger()
   async findByUuid(uuid?: string) {
-    console.log(123, 'find');
     const brands = await this.brandService.findAll();
     const categories = await this.categoryService.findAll();
     const properties = await this.propertyService.findAll();

@@ -1,15 +1,12 @@
-import { Field, Label, Caption, InputNumeral, Checkbox } from '@sellgar/kit';
+import { Field, Label, Caption, InputNumeral, Input, Checkbox } from '@sellgar/kit';
 
 import React from 'react';
-import { Controller, useFormState, useFormContext } from 'react-hook-form';
-
-import { CreateProductStoreDto } from '../../../classes/store/form/dto/create-product-store.dto.ts';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import s from './default.module.scss';
 
 export const Common: React.FC = () => {
-  const { control, register } = useFormContext<CreateProductStoreDto>();
-  const { errors } = useFormState({ control });
+  const { control } = useFormContext();
 
   return (
     <div className={s.wrappper}>
@@ -18,7 +15,7 @@ export const Common: React.FC = () => {
           <Controller
             name={'showing'}
             control={control}
-            render={({ field }) => {
+            render={({ field, fieldState: { error } }) => {
               return (
                 <Field>
                   <Field.Content>
@@ -30,9 +27,9 @@ export const Common: React.FC = () => {
                       onChange={field.onChange}
                     />
                   </Field.Content>
-                  {!!errors.showing?.message && (
+                  {!!error?.message && (
                     <Field.Caption>
-                      <Caption state={'destructive'} caption={errors.showing.message} />
+                      <Caption state={'destructive'} caption={error.message} />
                     </Field.Caption>
                   )}
                 </Field>
@@ -43,6 +40,7 @@ export const Common: React.FC = () => {
         <div className={s.field}>
           <Controller
             name={'count'}
+            control={control}
             render={({ field, fieldState: { error } }) => {
               return (
                 <Field>
@@ -50,12 +48,30 @@ export const Common: React.FC = () => {
                     <Label label={'Количество на складе'} />
                   </Field.Label>
                   <Field.Content>
-                    <InputNumeral
-                      {...field}
-                      autoFocus={true}
-                      defaultValue={0}
-                      onChange={(event) => field.onChange(InputNumeral.unFormat(event.target.value))}
-                    />
+                    <InputNumeral {...field} autoFocus={true} onChange={(value) => field.onChange(value)} />
+                  </Field.Content>
+                  {!!error?.message && (
+                    <Field.Caption>
+                      <Caption state={'destructive'} caption={error.message} />
+                    </Field.Caption>
+                  )}
+                </Field>
+              );
+            }}
+          />
+        </div>
+        <div className={s.field}>
+          <Controller
+            name={'article'}
+            control={control}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <Field>
+                  <Field.Label>
+                    <Label label={'Артикул'} />
+                  </Field.Label>
+                  <Field.Content>
+                    <Input {...field} autoFocus={true} />
                   </Field.Content>
                   {!!error?.message && (
                     <Field.Caption>

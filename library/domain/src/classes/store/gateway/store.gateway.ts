@@ -1,10 +1,11 @@
 import { inject, injectable } from 'inversify';
+import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../helpers/config';
 import { HttpClientInterface } from '../../../helpers/http-client';
 
-import { CreateProductStoreDto } from './dto/create-product-store.dto.ts';
-import { UpdateProductStoreDto } from './dto/update-product-store.dto.ts';
+import { CreateDto } from './dto/create.dto.ts';
+import { UpdateDto } from './dto/update.dto.ts';
 
 import { StoreEntity, StoreResultEntity } from '../store.entity.ts';
 
@@ -25,11 +26,15 @@ export class StoreGateway implements StoreGatewayInterface {
     return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store/' + uuid);
   }
 
-  async create(dto: CreateProductStoreDto): Promise<StoreEntity> {
+  async create(dto: CreateDto): Promise<StoreEntity> {
+    await validateOrReject(dto);
+
     return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/store', dto);
   }
 
-  async update(uuid: string, dto: UpdateProductStoreDto): Promise<StoreEntity> {
-    return this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/store/' + uuid, dto);
+  async update(dto: UpdateDto): Promise<StoreEntity> {
+    await validateOrReject(dto);
+
+    return this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/store', dto);
   }
 }

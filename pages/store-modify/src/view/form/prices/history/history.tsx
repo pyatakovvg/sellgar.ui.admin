@@ -1,12 +1,12 @@
-import { Typography, Field, Label } from '@sellgar/kit';
+import { Field, Label } from '@sellgar/kit';
+import { useLoaderData } from '@library/app';
+import { StoreEntity } from '@library/domain';
 
 import React from 'react';
 import { observer } from 'mobx-react';
 
 import { Price } from './price';
 import { CurrentPrice } from './current-price';
-
-import { usePresenter } from '../../../../hooks/presenter.hook.ts';
 
 import s from './default.module.scss';
 
@@ -15,7 +15,7 @@ interface IProps {
 }
 
 export const History: React.FC<IProps> = observer((props) => {
-  const presenter = usePresenter();
+  const [data] = useLoaderData<[StoreEntity]>();
 
   return (
     <div className={s.wrapper}>
@@ -25,12 +25,10 @@ export const History: React.FC<IProps> = observer((props) => {
         </Field.Label>
         <Field.Content>
           <div className={s.fields}>
-            {presenter.priceStore.prices.map((price, index) => (
+            {data.prices.map((price, index) => (
               <div key={price.uuid} className={s.field}>
-                {index === 0 && (
-                  <CurrentPrice data={price} prevPrice={presenter.priceStore.prices[index + 1]} onEdit={props.onEdit} />
-                )}
-                {index > 0 && <Price data={price} prevPrice={presenter.priceStore.prices[index + 1]} />}
+                {index === 0 && <CurrentPrice data={price} prevPrice={data.prices[index + 1]} onEdit={props.onEdit} />}
+                {index > 0 && <Price data={price} prevPrice={data.prices[index + 1]} />}
               </div>
             ))}
           </div>

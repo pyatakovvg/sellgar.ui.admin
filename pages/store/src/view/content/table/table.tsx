@@ -6,6 +6,7 @@ import React from 'react';
 import { Name } from './name';
 import { Actions } from './actions';
 import { Category } from './category';
+import { Price } from './price';
 
 import s from './default.module.scss';
 
@@ -27,6 +28,12 @@ export const Table: React.FC<IProps> = (props) => {
           <Column.Title>Категория</Column.Title>
           <Column.Cell>
             <Category />
+          </Column.Cell>
+        </Column>
+        <Column>
+          <Column.Title>Цена</Column.Title>
+          <Column.Cell>
+            <Price />
           </Column.Cell>
         </Column>
         <Column width={80}>

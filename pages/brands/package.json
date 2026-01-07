@@ -12,7 +12,7 @@
     "@library/app": "0.0.1",
     "@library/design": "0.0.1",
     "@library/domain": "0.0.1",
-    "@sellgar/kit": "0.0.161",
+    "@sellgar/kit": "0.0.164",
     "classnames": "2.5.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",

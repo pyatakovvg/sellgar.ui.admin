@@ -1,15 +1,19 @@
 import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsNumber, IsBoolean, ValidateNested, IsDateString } from 'class-validator';
-
-import { MetaEntity } from '../../meta.entity.ts';
+import { IsUUID, IsNumber, IsBoolean, ValidateNested, IsDateString, IsString } from 'class-validator';
 
 import { PriceEntity } from '../price';
 import { VariantEntity } from '../variant';
+
+import { MetaEntity } from '../../meta.entity.ts';
 
 export class StoreEntity {
   @IsUUID()
   @Expose()
   uuid: string;
+
+  @IsString()
+  @Expose()
+  article: string;
 
   @IsUUID()
   @Expose()
@@ -28,6 +32,11 @@ export class StoreEntity {
   @ValidateNested()
   @Type(() => PriceEntity)
   prices: PriceEntity[];
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => PriceEntity)
+  currentPrice: PriceEntity;
 
   @Expose()
   @IsBoolean()

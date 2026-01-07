@@ -1,11 +1,25 @@
 import * as yup from 'yup';
 
-export const formSchema = yup
-  .object({
-    uuid: yup.string().optional(),
-    variantUuid: yup.string().required('Необходимо выбрать'),
-    price: yup.string().required('Необходимо заполнить').optional(),
-    count: yup.string().required('Необходимо заполнить'),
-    showing: yup.boolean().required('Необходимо выбрать'),
-  })
-  .required();
+interface IForm {
+  article: string;
+  variantUuid: string;
+  currentPrice: {
+    value: number;
+    currencyCode: string;
+  };
+  count: number;
+  showing: boolean;
+}
+
+export const schema = yup.object({
+  article: yup.string().required('Необходимо заполнить'),
+  variantUuid: yup.string().required('Необходимо выбрать'),
+  currentPrice: yup.object({
+    value: yup.number().required('Необходимо заполнить'),
+    currencyCode: yup.string().required('Необходимо выбрать'),
+  }),
+  count: yup.number().required('Необходимо заполнить'),
+  showing: yup.boolean().required('Необходимо выбрать'),
+}) as yup.ObjectSchema<IForm>;
+
+export type IFormData = yup.InferType<typeof schema>;

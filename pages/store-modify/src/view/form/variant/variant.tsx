@@ -1,11 +1,9 @@
 import { Field, Label, Caption, Select } from '@sellgar/kit';
 
 import React from 'react';
-import { Controller, useFormState, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
-import { CreateProductStoreDto } from '../../../classes/store/form/dto/create-product-store.dto.ts';
-
-import { usePresenter } from '../../../hooks/presenter.hook.ts';
+import { useVariants } from '../../../hooks/variants.hook.ts';
 
 import { ValueTemplate } from './value-template';
 import { OptionTemplate } from './option-template';
@@ -13,9 +11,9 @@ import { OptionTemplate } from './option-template';
 import s from './default.module.scss';
 
 export const Variant: React.FC = () => {
-  const presenter = usePresenter();
-  const { control, register } = useFormContext<CreateProductStoreDto>();
-  const { errors } = useFormState({ control });
+  const variants = useVariants();
+
+  const { control } = useFormContext();
 
   return (
     <div className={s.wrappper}>
@@ -34,7 +32,7 @@ export const Variant: React.FC = () => {
                     <Select
                       {...field}
                       fixHeight={false}
-                      options={presenter.variantsStore.variants}
+                      options={variants}
                       optionKey={'uuid'}
                       optionValue={'name'}
                       templateValue={(option) => {

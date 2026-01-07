@@ -10,13 +10,13 @@ export const Header = () => {
     <div className={s.wrapper}>
       <div className={s.header}>
         <Typography size={'h6'} weight={'semi-bold'}>
-          <h6>Товары</h6>
+          <h6>Товары на складе</h6>
         </Typography>
       </div>
       <div className={s.content}>
-        <NavLink to={'/products/create'}>
+        <NavLink to={'/store/create'}>
           <Button size={'sm'} leadIcon={<Icon icon={'add-line'} />}>
-            Добавить товар
+            Добавить товар на склад
           </Button>
         </NavLink>
       </div>

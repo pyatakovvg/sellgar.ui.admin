@@ -51,6 +51,25 @@ const app = new Application({
             ],
           }),
           new Route({
+            path: '/store',
+            breadcrumb: 'Товары на складе',
+            routes: [
+              new Route({
+                module: () => import('@page/store'),
+              }),
+              new Route({
+                path: '/create',
+                breadcrumb: 'Новый товар',
+                module: () => import('@page/store-modify'),
+              }),
+              new Route({
+                path: '/:uuid',
+                breadcrumb: ([data]: any) => data.variant.name,
+                module: () => import('@page/store-modify'),
+              }),
+            ],
+          }),
+          new Route({
             path: '/brands',
             breadcrumb: 'Бренд',
             routes: [

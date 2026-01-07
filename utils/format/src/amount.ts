@@ -1,12 +1,24 @@
-import numeral from 'numeral';
-
 interface INumberFormatOptions {
   hundredthsAfterDecimal?: boolean;
+  locale?: string;
 }
 
 export const amountFormat = (amount: number, options?: INumberFormatOptions) => {
+  const locale = options?.locale || 'ru-RU';
+
   if (options?.hundredthsAfterDecimal) {
-    return numeral(amount).format('0,0.00');
+    return new Intl.NumberFormat(locale, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      useGrouping: true,
+    }).format(amount);
   }
-  return numeral(amount).format('0,0[.]00');
+
+  const hasFraction = amount % 1 !== 0;
+
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: hasFraction ? 2 : 0,
+    maximumFractionDigits: 2,
+    useGrouping: true,
+  }).format(amount);
 };
