@@ -26,7 +26,7 @@ export const useRequest = <T extends any[], R>(callback: (...args: T) => Promise
             content: `Что-то пошло не так`,
           });
         }
-      } else if (e instanceof Array) {
+      } else if (Array.isArray(e)) {
         showMessage({
           target: 'destructive',
           autoClose: true,

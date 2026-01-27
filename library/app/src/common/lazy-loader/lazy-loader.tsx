@@ -19,6 +19,7 @@ export class LazyLoader implements LazyLoaderInterface {
 
   private instance: any;
   private isCreated: boolean = false;
+  private lastArgs?: ReactRouter.LoaderFunctionArgs;
 
   constructor(private readonly ClassModule: new () => any) {}
 
@@ -41,7 +42,7 @@ export class LazyLoader implements LazyLoaderInterface {
     }
   }
 
-  private unloadMetaData(args: ReactRouter.LoaderFunctionArgs, instance: any) {
+  private unloadMetaData(args: ReactRouter.LoaderFunctionArgs | undefined, instance: any) {
     const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
     const metaData = Reflect.getMetadata(MODULE_METADATA_KEY, instance.constructor) as ModuleMetadata;
 
@@ -54,9 +55,10 @@ export class LazyLoader implements LazyLoaderInterface {
 
       if (metaData.controllers) {
         metaData.controllers.forEach(async (controller) => {
-          const controllerInstance = LazyLoader.controller.get(controller);
-
-          if (!controllerInstance) {
+          let controllerInstance: any;
+          try {
+            controllerInstance = LazyLoader.controller.get(controller);
+          } catch (error) {
             return void 0;
           }
           controllerInstance.destructor?.(args);
@@ -71,6 +73,8 @@ export class LazyLoader implements LazyLoaderInterface {
     if (this.isCreated) {
       return void 0;
     }
+
+    this.lastArgs = args;
 
     if (lastInstance.size) {
       lastInstance.forEach((instance) => {
@@ -113,6 +117,10 @@ export class LazyLoader implements LazyLoaderInterface {
       this.isCreated = true;
       return () => {
         this.isCreated = false;
+        if (this.instance) {
+          this.unloadMetaData(this.lastArgs, this.instance);
+          this.remove();
+        }
       };
     }, []);
 

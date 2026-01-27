@@ -3,7 +3,7 @@
 
 declare interface Window {
   env: {
-    NODE_ENV: boolean;
+    NODE_ENV: string;
     GATEWAY_HOST_API: string;
     GATEWAY_WALLETS_BFF_API: string;
   };

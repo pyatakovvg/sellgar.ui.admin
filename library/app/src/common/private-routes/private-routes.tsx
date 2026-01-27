@@ -10,6 +10,7 @@ export class PrivateRoutes implements PrivateRoutesInterface {
 
   create(): ReactRouter.RouteObject {
     const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
+    const components = applicationContext.options.components;
 
     return {
       loader: async () => {
@@ -24,13 +25,13 @@ export class PrivateRoutes implements PrivateRoutesInterface {
           }
         }
       },
-      errorElement: applicationContext.options.components!.exception,
+      errorElement: components?.exception ?? null,
       element: this.options.layout?.(<ReactRouter.Outlet />) ?? <ReactRouter.Outlet />,
       children: [
         ...this.options.routes.map((route) => route.create()),
         {
           path: '*',
-          element: applicationContext.options.components!.notFound,
+          element: components?.notFound ?? null,
         },
       ],
     };

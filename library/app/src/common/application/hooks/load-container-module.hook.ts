@@ -7,15 +7,12 @@ import { contextProvider } from '../../context';
 export const useLoadContainerModule = (containerModule: ContainerModule): Container => {
   const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
 
-  React.useState(() => {
-    applicationContext.container.bind(containerModule);
-  });
-
   React.useEffect(() => {
+    applicationContext.container.bind(containerModule);
     return () => {
       applicationContext.container.unbind(containerModule);
     };
-  }, []);
+  }, [applicationContext, containerModule]);
 
   return applicationContext.container.getContainer();
 };

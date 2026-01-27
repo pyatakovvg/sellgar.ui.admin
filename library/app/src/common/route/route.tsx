@@ -23,8 +23,19 @@ const Wrapper: React.FC<React.PropsWithChildren> = (props) => {
 export class Route implements RouteInterface {
   constructor(private readonly options: IOptions) {}
 
+  private createCrumb() {
+    if (!this.options?.breadcrumb) {
+      return null;
+    }
+    return (data: never) => ({
+      href: this.options.path,
+      label: typeof this.options.breadcrumb === 'string' ? this.options.breadcrumb : this.options?.breadcrumb?.(data),
+    });
+  }
+
   private createRouteWithModule(options: IOptions): ReactRouter.RouteObject {
     const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
+    const components = applicationContext.options.components;
 
     if (!('module' in options)) {
       throw new Error('Required options must be an object');
@@ -34,18 +45,9 @@ export class Route implements RouteInterface {
       index: !this.options.path,
       path: this.options.path ? this.options.path?.replace(/^\//, '') : undefined,
       handle: {
-        crumb: (data: never) => {
-          if (this.options?.breadcrumb) {
-            return {
-              href: this.options.path,
-              label:
-                typeof this.options.breadcrumb === 'string' ? this.options.breadcrumb : this.options.breadcrumb(data),
-            };
-          }
-          return null;
-        },
+        crumb: this.createCrumb(),
       },
-      errorElement: applicationContext.options.components!.exception,
+      errorElement: components?.exception ?? null,
       lazy: async () => {
         try {
           const module = await options.module();
@@ -80,26 +82,22 @@ export class Route implements RouteInterface {
 
   private createRouteWithRoutes(options: IOptions): ReactRouter.RouteObject {
     const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
+    const components = applicationContext.options.components;
 
     if (!('routes' in options)) {
       throw new Error('Required options must be an object');
     }
 
+    if (!options.path) {
+      throw new Error('Route: "path" is required for route groups');
+    }
+
     return {
       path: options.path.replace(/^\//, ''),
       handle: {
-        crumb: (data: never) => {
-          if (this.options?.breadcrumb) {
-            return {
-              href: this.options.path,
-              label:
-                typeof this.options.breadcrumb === 'string' ? this.options.breadcrumb : this.options.breadcrumb(data),
-            };
-          }
-          return null;
-        },
+        crumb: this.createCrumb(),
       },
-      errorElement: applicationContext.options.components!.exception,
+      errorElement: components?.exception ?? null,
       Component: () =>
         'layout' in this.options && this.options.layout ? (
           this.options.layout(<ReactRouter.Outlet />)
@@ -110,7 +108,7 @@ export class Route implements RouteInterface {
         ...options.routes.map((route) => route.create()),
         {
           path: '*',
-          element: applicationContext.options.components!.notFound,
+          element: components?.notFound ?? null,
         },
       ],
     };

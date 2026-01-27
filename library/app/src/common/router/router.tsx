@@ -10,20 +10,17 @@ import { RouterInterface, type IOptions } from './router.interface.tsx';
 
 export class Router implements RouterInterface {
   constructor(private readonly options: IOptions) {
-    console.log('Router: constructor - start');
-    console.log('Router: constructor - finish');
   }
 
   private createRoutes() {
-    console.log('Router: createRoutes', this);
-
     const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
+    const components = applicationContext.options.components;
 
     return ReactRouter.createBrowserRouter(
       [
         {
-          hydrateFallbackElement: applicationContext.options.components!.splash,
-          errorElement: applicationContext.options.components!.exception,
+          hydrateFallbackElement: components?.splash ?? null,
+          errorElement: components?.exception ?? null,
           element: this.options.layout?.(<ReactRouter.Outlet />) ?? <ReactRouter.Outlet />,
           children: this.options.routes.map((route: PublicRoutesInterface | PrivateRoutesInterface) => route.create()),
         },
