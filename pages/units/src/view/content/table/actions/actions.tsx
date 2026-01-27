@@ -1,4 +1,4 @@
-import { Button, Icon, cellContext } from '@sellgar/kit';
+import { Button, Icon, useCellData } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -7,7 +7,7 @@ import { context } from '../../../modify';
 import s from './default.module.scss';
 
 export const Actions: React.FC = () => {
-  const { data } = React.use(cellContext);
+  const { data } = useCellData();
   const { onOpen } = React.useContext(context);
 
   return (

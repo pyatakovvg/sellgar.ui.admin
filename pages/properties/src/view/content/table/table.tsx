@@ -1,5 +1,5 @@
 import { PropertyEntity } from '@library/domain';
-import { Table as TableComponent, Column } from '@sellgar/kit';
+import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -17,23 +17,23 @@ export const Table: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <TableComponent data={props.data}>
-        <Column width={200}>
-          <Column.Title>Наименование</Column.Title>
-          <Column.Cell>
+        <TableComponent.Column>
+          <TableComponent.Head label={'Наименование'} />
+          <TableComponent.Cell>
             <Name />
-          </Column.Cell>
-        </Column>
-        <Column accessor={'description'}>
-          <Column.Title>Описание</Column.Title>
-          <Column.Cell>
+          </TableComponent.Cell>
+        </TableComponent.Column>
+        <TableComponent.Column>
+          <TableComponent.Head label={'Описание'} />
+          <TableComponent.Cell>
             <Info />
-          </Column.Cell>
-        </Column>
-        <Column width={100}>
-          <Column.Cell>
+          </TableComponent.Cell>
+        </TableComponent.Column>
+        <TableComponent.Column width={60} pinRight>
+          <TableComponent.Cell>
             <Actions />
-          </Column.Cell>
-        </Column>
+          </TableComponent.Cell>
+        </TableComponent.Column>
       </TableComponent>
     </div>
   );

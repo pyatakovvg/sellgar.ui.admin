@@ -1,9 +1,7 @@
-import { ProductVariantEntity } from '@library/domain';
+import { VariantEntity } from '@library/domain';
 
 export abstract class VariantsStoreInterface {
-  abstract inProcess: boolean;
-  abstract variants: ProductVariantEntity[];
+  abstract variants: VariantEntity[];
 
-  abstract setProcess(state: boolean): void;
-  abstract setVariants(variants: ProductVariantEntity[]): void;
+  abstract setVariants(data: VariantEntity[]): void;
 }

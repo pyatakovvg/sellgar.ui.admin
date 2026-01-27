@@ -39,16 +39,16 @@ export const Common: React.FC = () => {
         </div>
         <div className={s.field}>
           <Controller
-            name={'count'}
+            name={'article'}
             control={control}
             render={({ field, fieldState: { error } }) => {
               return (
                 <Field>
                   <Field.Label>
-                    <Label label={'Количество на складе'} />
+                    <Label label={'Артикул'} />
                   </Field.Label>
                   <Field.Content>
-                    <InputNumeral {...field} autoFocus={true} onChange={(value) => field.onChange(value)} />
+                    <Input {...field} />
                   </Field.Content>
                   {!!error?.message && (
                     <Field.Caption>
@@ -62,16 +62,16 @@ export const Common: React.FC = () => {
         </div>
         <div className={s.field}>
           <Controller
-            name={'article'}
+            name={'count'}
             control={control}
             render={({ field, fieldState: { error } }) => {
               return (
                 <Field>
                   <Field.Label>
-                    <Label label={'Артикул'} />
+                    <Label label={'Количество на складе'} />
                   </Field.Label>
                   <Field.Content>
-                    <Input {...field} autoFocus={true} />
+                    <InputNumeral {...field} onChange={(value) => field.onChange(value)} />
                   </Field.Content>
                   {!!error?.message && (
                     <Field.Caption>

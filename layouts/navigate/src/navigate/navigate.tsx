@@ -21,6 +21,15 @@ export const Navigate = () => {
             </NavLink>
           </Sidebar.Cell>
           <Sidebar.Cell>
+            <NavLink className={s.link} to={'/shops'} viewTransition={true}>
+              {({ isActive, isPending }) => {
+                return (
+                  <MenuItem leadIcon={'store-line'} caption={'Магазины'} isActive={isActive} isPending={isPending} />
+                );
+              }}
+            </NavLink>
+          </Sidebar.Cell>
+          <Sidebar.Cell>
             <NavLink className={s.link} to={'/products'} viewTransition={true}>
               {({ isActive, isPending }) => (
                 <MenuItem

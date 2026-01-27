@@ -18,8 +18,10 @@ export class StoreGateway implements StoreGatewayInterface {
     @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
-  async findAll(): Promise<StoreResultEntity> {
-    return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store');
+  async findAll(query: any): Promise<StoreResultEntity> {
+    return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store', {
+      params: query,
+    });
   }
 
   async findByUuid(uuid: string): Promise<StoreEntity> {

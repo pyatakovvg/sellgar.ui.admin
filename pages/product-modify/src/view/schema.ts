@@ -10,7 +10,6 @@ interface IForm {
       file: File;
       preview: string;
     }[];
-    article: string;
     name: string;
     description: string;
     properties: {
@@ -35,7 +34,6 @@ export const schema = yup.object({
           preview: yup.string().required('Необходимо выбрать'),
         }),
       ),
-      article: yup.string().required('Необходимо заполнить'),
       name: yup.string().required('Необходимо заполнить'),
       description: yup.string().required('Необходимо заполнить'),
       properties: yup.array().of(

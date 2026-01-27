@@ -1,5 +1,5 @@
 import { Button, Icon } from '@sellgar/kit';
-import { cellContext } from '@sellgar/kit';
+import { useCellData } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -8,7 +8,7 @@ import { context } from '../../../modify';
 import s from './default.module.scss';
 
 export const Actions: React.FC = () => {
-  const { data } = React.useContext(cellContext);
+  const { data } = useCellData();
   const { onOpen } = React.useContext(context);
 
   return (

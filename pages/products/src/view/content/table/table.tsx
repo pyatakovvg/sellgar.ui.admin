@@ -1,5 +1,5 @@
 import { ProductEntity } from '@library/domain';
-import { Table as TableComponent, Column } from '@sellgar/kit';
+import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -17,23 +17,23 @@ export const Table: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <TableComponent data={props.data}>
-        <Column>
-          <Column.Title>Описание</Column.Title>
-          <Column.Cell>
+        <TableComponent.Column>
+          <TableComponent.Head label={'Описание'} />
+          <TableComponent.Cell>
             <Name />
-          </Column.Cell>
-        </Column>
-        <Column>
-          <Column.Title>Категория</Column.Title>
-          <Column.Cell>
+          </TableComponent.Cell>
+        </TableComponent.Column>
+        <TableComponent.Column>
+          <TableComponent.Head label={'Категория'} />
+          <TableComponent.Cell>
             <Category />
-          </Column.Cell>
-        </Column>
-        <Column width={80}>
-          <Column.Cell>
+          </TableComponent.Cell>
+        </TableComponent.Column>
+        <TableComponent.Column width={80}>
+          <TableComponent.Cell>
             <Actions />
-          </Column.Cell>
-        </Column>
+          </TableComponent.Cell>
+        </TableComponent.Column>
       </TableComponent>
     </div>
   );

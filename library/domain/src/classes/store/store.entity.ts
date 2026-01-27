@@ -1,6 +1,7 @@
 import { Type, Expose } from 'class-transformer';
 import { IsUUID, IsNumber, IsBoolean, ValidateNested, IsDateString, IsString } from 'class-validator';
 
+import { ShopEntity } from '../shop';
 import { PriceEntity } from '../price';
 import { VariantEntity } from '../variant';
 
@@ -14,6 +15,15 @@ export class StoreEntity {
   @IsString()
   @Expose()
   article: string;
+
+  @IsUUID()
+  @Expose()
+  shopUuid: string;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => ShopEntity)
+  shop: ShopEntity;
 
   @IsUUID()
   @Expose()

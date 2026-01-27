@@ -2,6 +2,7 @@ import * as yup from 'yup';
 
 interface IForm {
   article: string;
+  shopUuid: string;
   variantUuid: string;
   currentPrice: {
     value: number;
@@ -13,6 +14,7 @@ interface IForm {
 
 export const schema = yup.object({
   article: yup.string().required('Необходимо заполнить'),
+  shopUuid: yup.string().required('Необходимо выбрать'),
   variantUuid: yup.string().required('Необходимо выбрать'),
   currentPrice: yup.object({
     value: yup.number().required('Необходимо заполнить'),

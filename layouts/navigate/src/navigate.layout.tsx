@@ -2,8 +2,8 @@ import { Scrollbar } from '@sellgar/kit';
 
 import React from 'react';
 
-import { Header } from './Header';
-import { Navigate } from './Navigate';
+import { Header } from './header';
+import { Navigate } from './navigate';
 
 import s from './default.module.scss';
 

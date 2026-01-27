@@ -42,7 +42,7 @@ export const ModuleView = () => {
         navigate.location('/products/' + result?.uuid);
       }
     },
-    (errors) => console.log(errors),
+    (errors) => console.log(123, errors),
   );
 
   // React.useEffect(() => {

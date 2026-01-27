@@ -45,7 +45,9 @@ export const Variant: React.FC = () => {
                         return <OptionTemplate {...option} />;
                       }}
                       onBlur={field.onBlur}
-                      onChange={field.onChange}
+                      onChange={(data) => {
+                        field.onChange(data);
+                      }}
                     />
                   </Field.Content>
                   {!!error?.message && (

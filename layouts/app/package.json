@@ -1,0 +1,24 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@layout/app",
+  "version": "0.0.1",
+  "description": "Base layout",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@library/design": "0.0.1",
+    "@sellgar/kit": "0.0.172",
+    "classnames": "2.5.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-router-dom": "7.13.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.9",
+    "@types/react-dom": "19.2.3",
+    "@types/reflect-metadata": "0.1.0"
+  }
+}

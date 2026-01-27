@@ -7,9 +7,6 @@ class ProductVariantDto {
   uuid?: string;
 
   @IsString()
-  article: string;
-
-  @IsString()
   name: string;
 
   @IsString()

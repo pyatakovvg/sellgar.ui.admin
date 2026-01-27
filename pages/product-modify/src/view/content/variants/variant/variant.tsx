@@ -54,31 +54,6 @@ export const Variant: React.FC<IProps> = (props) => {
       </div>
       <div className={s.content}>
         <div className={s.line}>
-          <div className={s.field} style={{ flex: '0 0 auto', width: 220 }}>
-            <ReactHookForm.Controller
-              control={control}
-              name={`variants.${props.index}.article`}
-              render={({ field, fieldState: { error } }) => (
-                <Field>
-                  <Field.Label>
-                    <Label label={'Артикул'} />
-                  </Field.Label>
-                  <Field.Content>
-                    <Input
-                      {...field}
-                      leadIcon={<Icon icon={Icon.bookmarkLine} />}
-                      target={error?.message ? 'destructive' : undefined}
-                    />
-                  </Field.Content>
-                  {error?.message && (
-                    <Field.Caption>
-                      <Caption state={'destructive'} caption={error.message} />
-                    </Field.Caption>
-                  )}
-                </Field>
-              )}
-            />
-          </div>
           <div className={s.field}>
             <ReactHookForm.Controller
               control={control}

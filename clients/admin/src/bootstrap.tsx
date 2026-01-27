@@ -1,5 +1,6 @@
 import { Application, Router, PublicRoutes, PrivateRoutes, Route } from '@library/app';
 
+import { AppLayout } from '@layout/app';
 import { BaseLayout } from '@layout/base';
 import { NavigateLayout } from '@layout/navigate';
 
@@ -16,6 +17,7 @@ import { Exception } from './components/exception';
 import { containerModule } from './container.module.ts';
 
 const app = new Application({
+  layout: (outlet) => <AppLayout>{outlet}</AppLayout>,
   components: {
     splash: <Splash />,
     loading: <Loading />,
@@ -32,8 +34,20 @@ const app = new Application({
             module: () => import('@page/dashboard'),
           }),
           new Route({
+            path: '/shops',
+            breadcrumb: 'Магазины',
+            routes: [
+              new Route({
+                module: () => import('@page/shop'),
+              }),
+            ],
+          }),
+          new Route({
             path: '/products',
             breadcrumb: 'Товары',
+            layout: (outlet) => {
+              return outlet;
+            },
             routes: [
               new Route({
                 module: () => import('@page/products'),

@@ -11,15 +11,15 @@
   "dependencies": {
     "@utils/generate": "0.0.1",
     "classnames": "2.5.1",
-    "inversify": "7.10.8",
+    "inversify": "7.11.0",
     "mobx": "6.15.0",
     "mobx-react": "9.2.1",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/react": "19.2.7",
+    "@types/react": "19.2.9",
     "@types/react-dom": "19.2.3",
     "@types/reflect-metadata": "0.1.0"
   }

@@ -9,6 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { useProcess } from '../hooks/process.hook.ts';
+import { useCurrency } from '../hooks/currency.hook.ts';
 
 import { useCreateRequest } from '../requests/create.request.ts';
 import { useUpdateRequest } from '../requests/update.request.ts';
@@ -24,6 +25,7 @@ export const ModifyView = () => {
   const navigate = useNavigate();
 
   const inProcess = useProcess();
+  const currency = useCurrency();
 
   const createRequest = useCreateRequest();
   const updateRequest = useUpdateRequest();
@@ -31,13 +33,16 @@ export const ModifyView = () => {
   const methods = useForm<IFormData>({
     defaultValues: {
       article: data?.article,
+      shopUuid: data?.shopUuid,
       variantUuid: data?.variantUuid,
       currentPrice: data?.currentPrice
         ? {
             value: data?.currentPrice?.value,
             currencyCode: data?.currentPrice?.currency.code,
           }
-        : undefined,
+        : {
+            currencyCode: currency[0].code,
+          },
       count: data?.count,
       showing: data?.showing ?? false,
     },
@@ -47,8 +52,8 @@ export const ModifyView = () => {
   const handleSubmit = methods.handleSubmit(
     async (values) => {
       if (uuid) {
-        await updateRequest({ uuid, ...values }, async (result) => {
-          methods.reset(result);
+        await updateRequest({ uuid, ...values }, async () => {
+          navigate.location('/store');
         });
       } else {
         await createRequest(values, async (result) => {
@@ -57,7 +62,7 @@ export const ModifyView = () => {
       }
     },
     (error) => {
-      console.log('error', error);
+      console.log(123, 'error', error);
     },
   );
 
@@ -66,7 +71,7 @@ export const ModifyView = () => {
       <Page.Header>
         <Page.Header.Title>{data ? 'Редактировать' : 'Создать'}</Page.Header.Title>
         <Page.Header.Controls>
-          <Button disabled={inProcess} target={'success'} onClick={handleSubmit}>
+          <Button disabled={inProcess || !methods.formState.isDirty} target={'success'} onClick={handleSubmit}>
             Сохранить
           </Button>
         </Page.Header.Controls>

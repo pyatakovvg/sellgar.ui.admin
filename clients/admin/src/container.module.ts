@@ -5,6 +5,7 @@ import { HttpClient, HttpClientInterface } from '@library/domain';
 import { DeviceService, DeviceServiceInterface } from '@library/domain';
 import { StorageService, StorageServiceInterface } from '@library/domain';
 
+import { ShopGateway, ShopGatewayInterface, ShopService, ShopServiceInterface } from '@library/domain';
 import { AuthGateway, AuthGatewayInterface, AuthService, AuthServiceInterface } from '@library/domain';
 import { BrandGateway, BrandGatewayInterface, BrandService, BrandServiceInterface } from '@library/domain';
 import { CategoryGateway, CategoryGatewayInterface, CategoryService, CategoryServiceInterface } from '@library/domain';
@@ -31,6 +32,9 @@ export const containerModule = new ContainerModule((container) => {
   container.bind(HttpClientInterface).to(HttpClient);
   container.bind(DeviceServiceInterface).to(DeviceService);
   container.bind(StorageServiceInterface).to(StorageService);
+
+  container.bind(ShopGatewayInterface).to(ShopGateway);
+  container.bind(ShopServiceInterface).to(ShopService);
 
   container.bind(AuthGatewayInterface).to(AuthGateway);
   container.bind(AuthServiceInterface).to(AuthService);

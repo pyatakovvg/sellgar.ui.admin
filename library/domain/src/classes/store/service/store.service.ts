@@ -13,8 +13,8 @@ import { StoreEntity, StoreResultEntity } from '../store.entity.ts';
 export class StoreService implements StoreServiceInterface {
   constructor(@inject(StoreGatewayInterface) private readonly storeGateway: StoreGatewayInterface) {}
 
-  async findAll(): Promise<StoreResultEntity> {
-    return await this.storeGateway.findAll();
+  async findAll(query: any): Promise<StoreResultEntity> {
+    return await this.storeGateway.findAll(query);
   }
 
   async findByUuid(uuid: string): Promise<StoreEntity> {

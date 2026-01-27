@@ -14,6 +14,9 @@ export class CreateDto {
   article: string;
 
   @IsUUID()
+  shopUuid: string;
+
+  @IsUUID()
   variantUuid: string;
 
   @ValidateNested()

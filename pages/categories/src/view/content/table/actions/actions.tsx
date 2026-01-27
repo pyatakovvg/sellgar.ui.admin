@@ -1,4 +1,4 @@
-import { Button, Icon, cellContext } from '@sellgar/kit';
+import { Button, Icon, useCellData } from '@sellgar/kit';
 import { useNavigate } from '@library/app';
 
 import React from 'react';
@@ -6,7 +6,7 @@ import React from 'react';
 import s from './default.module.scss';
 
 export const Actions: React.FC = () => {
-  const { data } = React.use(cellContext);
+  const { data } = useCellData();
   const navigate = useNavigate();
 
   return (

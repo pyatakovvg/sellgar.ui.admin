@@ -15,16 +15,16 @@
     "@library/domain": "0.0.1",
     "classnames": "2.5.1",
     "date-fns": "4.1.0",
-    "framer-motion": "12.24.10",
-    "motion": "12.24.10",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-hook-form": "7.70.0",
-    "react-router-dom": "7.11.0",
+    "framer-motion": "12.29.2",
+    "motion": "12.29.2",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-hook-form": "7.71.1",
+    "react-router-dom": "7.13.0",
     "yup": "1.7.1"
   },
   "devDependencies": {
-    "@types/react": "19.2.7",
+    "@types/react": "19.2.9",
     "@types/react-dom": "19.2.3"
   }
 }

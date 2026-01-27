@@ -19,6 +19,7 @@ export * from './classes/variant';
 export * from './classes/store';
 export * from './classes/price';
 export * from './classes/currency';
+export * from './classes/shop';
 
 export * from './decorators';
 
