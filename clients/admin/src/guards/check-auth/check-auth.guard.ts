@@ -16,9 +16,8 @@ export class CheckAuthGuard implements GuardInterface {
       const profile = await this.adminController.getProfile();
 
       app.dataStore.set(ProfileEntity, profile);
-    } else {
-      app.authStore.setAuth(true);
     }
+    app.authStore.setAuth(true);
   }
 
   async beforePublic(app: ApplicationControllerInterface) {

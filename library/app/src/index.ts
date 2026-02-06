@@ -13,7 +13,9 @@ export {
   useAwaitLoaderData,
   useRequest,
   useLoadContainerModule,
+  useContainer,
   GuardInterface,
+  NavigateServiceInterface,
 } from './common/application';
 
 export { ApplicationControllerInterface } from './common/application/classes/controller/application-controller.interface.ts';

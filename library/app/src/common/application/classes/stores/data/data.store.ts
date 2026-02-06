@@ -1,6 +1,6 @@
 import { observable, action, makeAutoObservable } from 'mobx';
 
-import { StoreDataKeyLike, DataStoreInterface } from './data-store.interface.ts';
+import { type StoreDataKeyLike, DataStoreInterface } from './data-store.interface.ts';
 
 export class DataStore implements DataStoreInterface {
   @observable private readonly data = new Map<StoreDataKeyLike<any>, unknown>();

@@ -20,9 +20,7 @@ export const Name: React.FC = () => {
           return (
             <div key={variant.uuid} className={s.variant}>
               <Typography size={'caption-m'} weight={'medium'}>
-                <p>
-                  {variant.name} ({variant.article})
-                </p>
+                <p>{variant.name}</p>
               </Typography>
             </div>
           );

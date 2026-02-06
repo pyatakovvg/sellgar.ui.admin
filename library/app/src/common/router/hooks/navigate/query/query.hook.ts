@@ -1,15 +1,9 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-type ParamValue = string | number | boolean | object | null | undefined;
-type QueryParams = Record<string, ParamValue | ParamValue[]>;
+import type { ParamValue, QueryParams, QueryApi, SetParamsOptions } from './query.types.ts';
 
-export interface SetParamsOptions {
-  merge?: boolean;
-  clearUndefined?: boolean;
-}
-
-export const useQuery = () => {
+export const useQuery = (): QueryApi => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const getAllParams = React.useCallback((): QueryParams => {

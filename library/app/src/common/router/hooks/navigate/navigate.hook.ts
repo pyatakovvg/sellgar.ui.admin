@@ -11,3 +11,5 @@ export const useNavigate = () => {
 
   return { hash, query, replace, location };
 };
+
+export type NavigateApi = ReturnType<typeof useNavigate>;

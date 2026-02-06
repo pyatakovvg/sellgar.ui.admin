@@ -1,4 +1,4 @@
-import { Field, Label, Caption, InputAmount, Dropdown } from '@sellgar/kit';
+import { Field, Label, Caption, Input } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -36,17 +36,17 @@ export const Price: React.FC = () => {
                   <Label label={'Цена'} />
                 </Field.Label>
                 <Field.Content>
-                  <InputAmount
+                  <Input
                     {...field}
-                    tailSlot={
-                      <Dropdown
-                        options={currency}
-                        optionKey={'code'}
-                        optionValue={'name'}
-                        value={currentCurrencyCode}
-                        onChange={(currencyCode) => handleCurrencyChange(currencyCode)}
-                      />
-                    }
+                    // tailSlot={
+                    //   <Dropdown
+                    //     options={currency}
+                    //     optionKey={'code'}
+                    //     optionValue={'name'}
+                    //     value={currentCurrencyCode}
+                    //     onChange={(currencyCode) => handleCurrencyChange(currencyCode)}
+                    //   />
+                    // }
                     value={field.value}
                     onBlur={() => field.onBlur()}
                     onChange={(value) => field.onChange(value)}
