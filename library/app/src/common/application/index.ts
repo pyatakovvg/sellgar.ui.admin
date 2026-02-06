@@ -1,5 +1,5 @@
 export { Application } from './application.tsx';
-export { ApplicationInterface } from './application.interface.tsx';
+export { ApplicationInterface, GuardInterface } from './application.interface.tsx';
 
 export { Await } from './component/await';
 

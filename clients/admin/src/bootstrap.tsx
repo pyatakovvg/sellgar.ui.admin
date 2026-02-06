@@ -7,19 +7,20 @@ import { NavigateLayout } from '@layout/navigate';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { CheckAuthPlugin } from './plugins/check-auth';
-
 import { RegisterAndUpdateServiceWorker } from './sw';
+
+import { CheckAuthGuard } from './guards/check-auth';
 
 import { Splash } from './components/splash';
 import { Loading } from './components/loading';
 import { NotFound } from './components/not-found';
 import { Exception } from './components/exception';
 
-import { containerModule } from './container.module.ts';
+import { containerModule as adminContainerModule } from './classes/classes.di.ts';
+import { containerModule as rootContainerModule } from './container.module.ts';
 
 const app = new Application({
-  plugins: [new CheckAuthPlugin()],
+  containers: [rootContainerModule, adminContainerModule],
   layout: (outlet) => <AppLayout>{outlet}</AppLayout>,
   components: {
     splash: <Splash />,
@@ -125,7 +126,7 @@ const app = new Application({
   }),
 });
 
-app.container.bind(containerModule);
+app.guard(CheckAuthGuard);
 
 const AppView = app.createView();
 

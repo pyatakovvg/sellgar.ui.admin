@@ -7,7 +7,14 @@ export { Router, useNavigate, useLocation } from './common/router';
 export { PublicRoutes } from './common/public-routes';
 export { PrivateRoutes } from './common/private-routes';
 
-export { Application, Await, useAwaitLoaderData, useRequest, useLoadContainerModule } from './common/application';
+export {
+  Application,
+  Await,
+  useAwaitLoaderData,
+  useRequest,
+  useLoadContainerModule,
+  GuardInterface,
+} from './common/application';
 
 export { ApplicationControllerInterface } from './common/application/classes/controller/application-controller.interface.ts';
 

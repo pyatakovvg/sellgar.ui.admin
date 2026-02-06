@@ -21,7 +21,10 @@ export class SignInController implements SignInControllerInterface {
       this.formStore.setProcess(true);
 
       await this.authService.signIn(login, password);
-      await this.applicationController.loadProfile();
+      const profile = await this.profileService.get();
+
+      // await this.applicationController.dataStore();
+      this.applicationController.authStore.setAuth(true);
     } catch (error) {
       console.error(error);
       throw error;

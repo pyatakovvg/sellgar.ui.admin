@@ -14,16 +14,13 @@ export class PrivateRoutes implements PrivateRoutesInterface {
 
     return {
       loader: async () => {
-        const container = applicationContext.container.getContainer();
-        const controller = container.get(ApplicationControllerInterface);
+        const controller = applicationContext.container.getContainer().get(ApplicationControllerInterface);
 
-        if (!controller.authStore.isAuth) {
-          if (this.options.preloadProfile === undefined || this.options.preloadProfile) {
-            await controller.loadProfile();
-          } else {
-            controller.authStore.setAuth(true);
-          }
-        }
+        await applicationContext.guardRunner.runOnce(
+          'private',
+          applicationContext.guards,
+          controller,
+        );
       },
       errorElement: components?.exception ?? null,
       element: this.options.layout?.(<ReactRouter.Outlet />) ?? <ReactRouter.Outlet />,

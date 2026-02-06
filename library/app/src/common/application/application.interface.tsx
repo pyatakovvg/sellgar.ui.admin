@@ -1,7 +1,14 @@
 import React from 'react';
+import { ContainerModule } from 'inversify';
 
 import { RouterInterface } from '../router';
-import { ContainerInterface } from '../container';
+import { ApplicationControllerInterface } from './classes/controller/application-controller.interface.ts';
+
+export abstract class GuardInterface {
+  beforeRouter?(app: ApplicationControllerInterface): Promise<void>;
+  beforePrivate?(app: ApplicationControllerInterface): Promise<void>;
+  beforePublic?(app: ApplicationControllerInterface): Promise<void>;
+}
 
 export interface IComponents {
   splash: React.ReactNode;
@@ -12,13 +19,13 @@ export interface IComponents {
 }
 
 export interface IOptions {
+  containers?: ContainerModule[];
   layout?(outlet: React.ReactNode): React.ReactNode;
   components?: Partial<IComponents>;
   router: RouterInterface;
 }
 
 export abstract class ApplicationInterface {
-  abstract container: ContainerInterface;
-
+  abstract guard(guard: new (...args: any[]) => GuardInterface): void;
   abstract createView(): React.FC;
 }

@@ -2,10 +2,10 @@ import { ProfileServiceInterface } from '@library/domain';
 
 import { injectable, inject } from 'inversify';
 
-import { ApplicationControllerInterface } from './application-controller.interface.ts';
+import { AdminControllerInterface } from './admin-controller.interface.ts';
 
 @injectable()
-export class ApplicationController implements ApplicationControllerInterface {
+export class AdminController implements AdminControllerInterface {
   constructor(@inject(ProfileServiceInterface) private profileService: ProfileServiceInterface) {}
 
   getProfile() {
