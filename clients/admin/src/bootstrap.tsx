@@ -7,6 +7,8 @@ import { NavigateLayout } from '@layout/navigate';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
+import { CheckAuthPlugin } from './plugins/check-auth';
+
 import { RegisterAndUpdateServiceWorker } from './sw';
 
 import { Splash } from './components/splash';
@@ -17,6 +19,7 @@ import { Exception } from './components/exception';
 import { containerModule } from './container.module.ts';
 
 const app = new Application({
+  plugins: [new CheckAuthPlugin()],
   layout: (outlet) => <AppLayout>{outlet}</AppLayout>,
   components: {
     splash: <Splash />,
