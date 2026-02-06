@@ -1,23 +1,28 @@
 import React from 'react';
 import { Container, ContainerModule } from 'inversify';
 
-import { ApplicationContext } from '../application.context.tsx';
 import { contextProvider } from '../../context';
+
+import { ApplicationContext } from '../application.context.tsx';
 
 export const useLoadContainerModule = (containerModule: ContainerModule): Container => {
   const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
+  const container = applicationContext.container;
 
-  React.useMemo(() => {
-    applicationContext.container.bind(containerModule);
-    return null;
-  }, [applicationContext, containerModule]);
+  const loadedRef = React.useRef(false);
+  if (!loadedRef.current) {
+    container.getContainer().loadSync(containerModule);
+    loadedRef.current = true;
+  }
 
   React.useEffect(() => {
-    applicationContext.container.bind(containerModule);
     return () => {
-      applicationContext.container.unbind(containerModule);
+      if (loadedRef.current) {
+        container.getContainer().unloadSync(containerModule);
+        loadedRef.current = false;
+      }
     };
-  }, [applicationContext, containerModule]);
+  }, [container, containerModule]);
 
-  return applicationContext.container.getContainer();
+  return container.getContainer();
 };

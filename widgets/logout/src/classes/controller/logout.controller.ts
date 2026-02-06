@@ -1,4 +1,4 @@
-import { AuthServiceInterface } from '@library/domain';
+import { AuthServiceInterface, ProfileEntity } from '@library/domain';
 import { ApplicationControllerInterface } from '@library/app';
 
 import { injectable, inject } from 'inversify';
@@ -20,6 +20,8 @@ export class LogoutController implements LogoutControllerInterface {
 
     try {
       await this.authService.signOut();
+
+      this.applicationController.dataStore.clear();
       this.applicationController.authStore.setAuth(false);
     } catch (error) {
       this.logoutStore.setProcess(false);

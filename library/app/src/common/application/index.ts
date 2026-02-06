@@ -10,3 +10,4 @@ export { useLoadContainerModule } from './hooks/load-container-module.hook.ts';
 
 export { ApplicationContext } from './application.context.tsx';
 export { ApplicationControllerInterface } from './classes/controller/application-controller.interface.ts';
+export { DataStoreInterface, createStoreDataKey } from './classes/stores/store-data/data-store.interface.ts';

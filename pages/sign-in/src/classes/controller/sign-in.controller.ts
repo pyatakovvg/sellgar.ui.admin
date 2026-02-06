@@ -1,4 +1,4 @@
-import { AuthServiceInterface, ProfileServiceInterface } from '@library/domain';
+import { AuthServiceInterface, ProfileServiceInterface, ProfileEntity } from '@library/domain';
 import { ApplicationControllerInterface } from '@library/app';
 
 import { inject, injectable } from 'inversify';
@@ -23,7 +23,7 @@ export class SignInController implements SignInControllerInterface {
       await this.authService.signIn(login, password);
       const profile = await this.profileService.get();
 
-      // await this.applicationController.dataStore();
+      this.applicationController.dataStore.set(ProfileEntity, profile);
       this.applicationController.authStore.setAuth(true);
     } catch (error) {
       console.error(error);
