@@ -1,12 +1,13 @@
 import { Button, Icon, useCellData } from '@sellgar/kit';
 import { useNavigate } from '@library/app';
+import { CategoryEntity } from '@library/domain';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
 export const Actions: React.FC = () => {
-  const { data } = useCellData();
+  const { data } = useCellData<CategoryEntity>();
   const navigate = useNavigate();
 
   return (

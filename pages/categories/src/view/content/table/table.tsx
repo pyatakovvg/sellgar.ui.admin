@@ -16,7 +16,7 @@ interface IProps {
 export const Table: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
-      <TableComponent data={props.data} tree={{ isUse: true, accessor: 'children', defaultExpanded: true }}>
+      <TableComponent data={{ nodes: props.data }} tree={{ isUse: true, accessor: 'children' }}>
         <TableComponent.Column width={280}>
           <TableComponent.Head label={'Наименование'} />
           <TableComponent.Cell>

@@ -1,5 +1,6 @@
 import { Button, Icon } from '@sellgar/kit';
 import { useCellData } from '@sellgar/kit';
+import { PropertyEntity } from '@library/domain';
 
 import React from 'react';
 
@@ -8,7 +9,7 @@ import { context } from '../../../modify';
 import s from './default.module.scss';
 
 export const Actions: React.FC = () => {
-  const { data } = useCellData();
+  const { data } = useCellData<PropertyEntity>();
   const { onOpen } = React.useContext(context);
 
   return (

@@ -6,10 +6,10 @@ import { Modify } from './modify';
 import { Fallback } from './fallback';
 import { Exception } from './exception';
 
-import { context } from '../widget.context.tsx';
+import { context } from '../drawer.context.tsx';
 import { useFindByUuidRequest } from '../requests/find-by-uuid.request.ts';
 
-export const WidgetView: React.FC = () => {
+export const DrawerView: React.FC = () => {
   const { uuid } = React.useContext(context);
 
   const findByUuidRequest = useFindByUuidRequest();

@@ -16,7 +16,7 @@ interface IProps {
 export const Table: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
-      <TableComponent data={props.data}>
+      <TableComponent data={{ nodes: props.data }}>
         <TableComponent.Column>
           <TableComponent.Head label={'Наименование'} />
           <TableComponent.Cell>

@@ -20,7 +20,7 @@ interface IProps {
 export const Table: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
-      <TableComponent data={props.data} select={{ isUse: true, onChange: () => {} }}>
+      <TableComponent data={{ nodes: props.data }} select={{ isUse: true, onSelect: () => {} }}>
         <TableComponent.Column>
           <TableComponent.Head label={'Артикул'} />
           <TableComponent.Cell>

@@ -13,7 +13,7 @@ import { useCreateRequest } from '../../requests/create.request.ts';
 import { useUpdateRequest } from '../../requests/update.request.ts';
 
 import { schema } from './schema.ts';
-import { context } from '../../widget.context.tsx';
+import { context } from '../../drawer.context.tsx';
 
 import s from './modify.module.scss';
 

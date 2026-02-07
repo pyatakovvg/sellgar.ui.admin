@@ -3,10 +3,10 @@ import React from 'react';
 import { BrandModifyControllerInterface } from './classes/controller/brand-modify-controller.interface.ts';
 
 interface IProps {
-  uuid?: string;
+  uuid: string;
   controller: BrandModifyControllerInterface;
-  onCancel(): void;
   onSuccess(): void;
+  onCancel(): void;
 }
 
 export const context = React.createContext({} as IProps);

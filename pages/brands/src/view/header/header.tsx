@@ -16,7 +16,7 @@ export const Header = () => {
         </Typography>
       </div>
       <div>
-        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => navigate.hash({ modal: {} })}>
+        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => navigate.hash({ brand: {} })}>
           Добавить бренд
         </Button>
       </div>

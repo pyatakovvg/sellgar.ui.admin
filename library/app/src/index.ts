@@ -6,6 +6,7 @@ export { Route, useLoaderData, useLoaderRevalidate } from './common/route';
 export { Router, useNavigate, useLocation } from './common/router';
 export { PublicRoutes } from './common/public-routes';
 export { PrivateRoutes } from './common/private-routes';
+export { createWidget, useWidgetController } from './common/widget';
 
 export {
   Application,

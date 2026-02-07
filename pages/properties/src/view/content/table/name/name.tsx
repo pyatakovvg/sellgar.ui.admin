@@ -1,12 +1,13 @@
 import { Typography } from '@sellgar/kit';
 import { useCellData } from '@sellgar/kit';
+import { PropertyEntity } from '@library/domain';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
 export const Name: React.FC = () => {
-  const { data } = useCellData();
+  const { data } = useCellData<PropertyEntity>();
 
   return (
     <div className={s.wrapper}>

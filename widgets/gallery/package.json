@@ -9,16 +9,16 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
-    "@floating-ui/dom": "1.7.4",
-    "@floating-ui/react": "0.27.16",
+    "@floating-ui/dom": "1.7.5",
+    "@floating-ui/react": "0.27.17",
     "@react-input/mask": "2.0.4",
     "@react-input/number-format": "2.0.3",
     "@tanstack/react-table": "8.21.3",
     "@tanstack/react-virtual": "3.13.18",
-    "@tiptap/core": "3.17.1",
-    "@tiptap/pm": "3.17.1",
-    "@tiptap/react": "3.17.1",
-    "@tiptap/starter-kit": "3.17.1",
+    "@tiptap/core": "3.19.0",
+    "@tiptap/pm": "3.19.0",
+    "@tiptap/react": "3.19.0",
+    "@tiptap/starter-kit": "3.19.0",
     "classnames": "2.5.1",
     "formik": "2.4.9",
     "moment": "2.30.1",
@@ -32,6 +32,6 @@
   "devDependencies": {
     "@types/moment": "2.13.0",
     "@types/moment-timezone": "0.5.30",
-    "@types/react": "19.2.9"
+    "@types/react": "19.2.13"
   }
 }

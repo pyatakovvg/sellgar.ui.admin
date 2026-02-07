@@ -12,7 +12,7 @@
     "@hookform/resolvers": "5.2.2",
     "@library/app": "0.0.1",
     "@library/push": "0.0.1",
-    "@sellgar/kit": "0.0.172",
+    "@sellgar/kit": "0.0.175",
     "classnames": "2.5.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -21,7 +21,7 @@
     "yup": "1.7.1"
   },
   "devDependencies": {
-    "@types/react": "19.2.9",
+    "@types/react": "19.2.13",
     "@types/react-dom": "19.2.3"
   }
 }
