@@ -10,8 +10,6 @@ export class CheckAuthGuard implements GuardInterface {
   constructor(@inject(AdminControllerInterface) private readonly adminController: AdminControllerInterface) {}
 
   async beforePrivate(app: ApplicationControllerInterface) {
-    console.log('CheckAuthGuard beforePrivate', app);
-
     if (!app.authStore.isAuth) {
       const profile = await this.adminController.getProfile();
 
@@ -19,9 +17,5 @@ export class CheckAuthGuard implements GuardInterface {
     }
 
     app.authStore.setAuth(true);
-  }
-
-  async beforePublic(app: ApplicationControllerInterface) {
-    console.log('CheckAuthGuard beforePublic', app);
   }
 }

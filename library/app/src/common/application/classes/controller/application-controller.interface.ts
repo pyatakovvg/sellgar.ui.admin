@@ -6,6 +6,6 @@ import { RevalidateServiceInterface } from '../services/revalidate/revalidate-se
 export abstract class ApplicationControllerInterface {
   abstract authStore: AuthStoreInterface;
   abstract dataStore: DataStoreInterface;
-  abstract navigateService: NavigateServiceInterface;
-  abstract revalidateService: RevalidateServiceInterface;
+  abstract navigateService: Omit<NavigateServiceInterface, 'setRouter'>;
+  abstract revalidateService: Omit<RevalidateServiceInterface, 'setRouter'>;
 }
