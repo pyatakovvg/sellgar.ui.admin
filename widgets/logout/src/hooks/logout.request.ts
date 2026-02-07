@@ -1,13 +1,10 @@
-import { useNavigate, useRequest } from '@library/app';
+import { useNavigate, useRequest, useWidgetController } from '@library/app';
 
-import React from 'react';
-
-import { context } from '../widget.context.tsx';
+import { LogoutControllerInterface } from '../classes/controller/logout-controller.interface.ts';
 
 export const useLogout = () => {
-  const { controller } = React.useContext(context);
-
   const navigate = useNavigate();
+  const controller = useWidgetController(LogoutControllerInterface);
 
   return useRequest(async () => {
     try {

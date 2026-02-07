@@ -1,20 +1,20 @@
 import { Button, Icon, Animate } from '@sellgar/kit';
+import { useWidgetController } from '@library/app';
 
 import React from 'react';
 import { observer } from 'mobx-react';
 
 import { Confirm } from './confirm';
 
-import { context } from '../widget.context.tsx';
-
 import { useLogout } from '../hooks/logout.request.ts';
+import { LogoutControllerInterface } from '../classes/controller/logout-controller.interface.ts';
 
-export const WidgetView = observer(() => {
+export const WidgetView: React.FC = observer(() => {
   const [isConfirm, setConfirm] = React.useState(false);
 
-  const logout = useLogout();
+  const controller = useWidgetController(LogoutControllerInterface);
 
-  const { controller } = React.useContext(context);
+  const logout = useLogout();
 
   const handleExit = () => {
     setConfirm(true);
