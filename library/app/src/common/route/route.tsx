@@ -11,10 +11,12 @@ import { RouteInterface, type IOptions } from './route.interface.ts';
 
 const Wrapper: React.FC<React.PropsWithChildren> = (props) => {
   const navigation = ReactRouter.useNavigation();
+  const location = ReactRouter.useLocation();
   const inProcess = Boolean(navigation.location);
   const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
+  const isSamePath = navigation.location?.pathname === location.pathname;
 
-  if (inProcess) {
+  if (inProcess && !isSamePath) {
     return applicationContext.options.components?.loading;
   }
   return props.children;
