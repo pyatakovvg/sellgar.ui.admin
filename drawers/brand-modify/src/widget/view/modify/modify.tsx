@@ -13,7 +13,6 @@ import { useCreateRequest } from '../../requests/create.request.ts';
 import { useUpdateRequest } from '../../requests/update.request.ts';
 
 import { schema } from './schema.ts';
-import { context } from '../../drawer.context.tsx';
 
 import s from './modify.module.scss';
 
@@ -25,8 +24,6 @@ interface IForm {
 
 export const Modify = () => {
   const data = useAwaitLoaderData<BrandEntity>();
-
-  const { onSuccess, onCancel } = React.useContext(context);
 
   const createRequest = useCreateRequest();
   const updateRequest = useUpdateRequest();
@@ -48,13 +45,10 @@ export const Modify = () => {
         description: values.description,
       });
     }
-
-    onSuccess();
   };
 
   const handleReset = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    onCancel();
   };
 
   return (

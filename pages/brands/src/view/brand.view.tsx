@@ -1,4 +1,4 @@
-import { Drawer as BrandModifyDrawer } from '@drawer/brand-modify';
+import { BrandDrawer } from '@drawer/brand-modify';
 
 import React from 'react';
 
@@ -16,7 +16,7 @@ export const BrandView = () => {
       <div className={s.content}>
         <Content />
       </div>
-      <BrandModifyDrawer onSuccess={() => null} onCancel={() => null} />
+      <BrandDrawer />
     </div>
   );
 };

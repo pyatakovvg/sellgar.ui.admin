@@ -1,1 +1,1 @@
-export { Drawer } from './drawer.tsx';
+export { BrandDrawer } from './brand.drawer.tsx';
