@@ -4,8 +4,7 @@ export const useLoaderRevalidate = () => {
   const { revalidate, state } = useRevalidator();
   const navigation = useNavigation();
   const inProcess = Boolean(navigation.location);
+  const inLoading = state !== 'idle';
 
-  console.log(123, 1, state);
-
-  return { revalidate, inProcess };
+  return { revalidate, inProcess: inProcess || inLoading };
 };

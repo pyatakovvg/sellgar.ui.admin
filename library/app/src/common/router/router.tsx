@@ -2,7 +2,12 @@ import React from 'react';
 import * as ReactRouter from 'react-router-dom';
 
 import { contextProvider } from '../context';
-import { ApplicationContext, ApplicationControllerInterface, NavigateServiceInterface } from '../application';
+import {
+  ApplicationContext,
+  ApplicationControllerInterface,
+  NavigateServiceInterface,
+  RevalidateServiceInterface,
+} from '../application';
 import { PublicRoutesInterface } from '../public-routes';
 import { PrivateRoutesInterface } from '../private-routes';
 
@@ -35,8 +40,11 @@ export class Router implements RouterInterface {
         basename: this.options.baseUrl?.replace(/\/$/, ''),
       },
     );
-    const navigateService = applicationContext.container.getContainer().get(NavigateServiceInterface);
+    const container = applicationContext.container.getContainer();
+    const navigateService = container.get(NavigateServiceInterface);
+    const revalidateService = container.get(RevalidateServiceInterface);
     navigateService.setRouter(router);
+    revalidateService.setRouter(router);
 
     return router;
   }
