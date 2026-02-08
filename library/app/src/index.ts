@@ -17,6 +17,7 @@ export {
   useContainer,
   GuardInterface,
   NavigateServiceInterface,
+  LocationServiceInterface,
   RevalidateServiceInterface,
 } from './common/application';
 

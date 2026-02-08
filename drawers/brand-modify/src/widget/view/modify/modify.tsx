@@ -1,5 +1,5 @@
 import { BrandEntity } from '@library/domain';
-import { useAwaitLoaderData } from '@library/app';
+import { useWidgetController, useWidgetLoaderData } from '@library/app';
 
 import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,6 +15,7 @@ import { useUpdateRequest } from '../../requests/update.request.ts';
 import { schema } from './schema.ts';
 
 import s from './modify.module.scss';
+import { BrandModifyControllerInterface } from '../../classes/controller/brand-modify-controller.interface.ts';
 
 interface IForm {
   code: string;
@@ -23,8 +24,9 @@ interface IForm {
 }
 
 export const Modify = () => {
-  const data = useAwaitLoaderData<BrandEntity>();
+  const [data] = useWidgetLoaderData<[BrandEntity]>();
 
+  const controller = useWidgetController(BrandModifyControllerInterface);
   const createRequest = useCreateRequest();
   const updateRequest = useUpdateRequest();
 
@@ -49,6 +51,7 @@ export const Modify = () => {
 
   const handleReset = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    await controller.close();
   };
 
   return (

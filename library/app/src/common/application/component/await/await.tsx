@@ -4,7 +4,7 @@ import { Await as AwaitRouter } from 'react-router-dom';
 interface IProps {
   error: React.ReactNode;
   fallback: React.ReactNode;
-  loader: React.Usable<any>;
+  loader: React.Usable<any> | null;
 }
 
 export const Await: React.FC<React.PropsWithChildren<IProps>> = (props) => {

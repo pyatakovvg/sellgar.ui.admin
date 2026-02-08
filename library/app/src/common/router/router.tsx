@@ -6,6 +6,7 @@ import {
   ApplicationContext,
   ApplicationControllerInterface,
   NavigateServiceInterface,
+  LocationServiceInterface,
   RevalidateServiceInterface,
 } from '../application';
 import { PublicRoutesInterface } from '../public-routes';
@@ -42,8 +43,10 @@ export class Router implements RouterInterface {
     );
     const container = applicationContext.container.getContainer();
     const navigateService = container.get(NavigateServiceInterface);
+    const locationService = container.get(LocationServiceInterface);
     const revalidateService = container.get(RevalidateServiceInterface);
     navigateService.setRouter(router);
+    locationService.setRouter(router);
     revalidateService.setRouter(router);
 
     return router;

@@ -2,6 +2,7 @@ import React from 'react';
 import { Container, ContainerModule, ServiceIdentifier } from 'inversify';
 
 import { useContainer, Await } from '../application';
+
 import { WidgetControllersContext } from './widget-controllers.context.ts';
 import { WidgetLoaderDataProvider } from './widget-loader-data.provider.tsx';
 
@@ -41,6 +42,7 @@ export function createWidget(options: WidgetFactoryOptions) {
     const [isReady, setIsReady] = React.useState(false);
     const controllersRef = React.useRef<Map<ServiceIdentifier, unknown> | null>(null);
     const pendingPromiseRef = React.useRef<Promise<void> | null>(null);
+
     if (!pendingPromiseRef.current) {
       pendingPromiseRef.current = new Promise<void>(() => {});
     }
@@ -72,15 +74,20 @@ export function createWidget(options: WidgetFactoryOptions) {
       };
     }, [container, options.containerModule, options.controller]);
 
-    const loaderPromises = isReady
-      ? (options.controller?.map((controllerId) => {
-          const controller = controllersRef.current?.get(controllerId);
-          const loader = (controller as { loader?: () => Promise<unknown> } | undefined)?.loader;
-          return loader ? loader() : undefined;
-        }) ?? [])
-      : [];
+    const loaderPromise = React.useMemo(() => {
+      if (!isReady) {
+        return pendingPromiseRef.current;
+      }
 
-    const loaderPromise = isReady ? Promise.all(loaderPromises) : pendingPromiseRef.current;
+      const loaderPromises =
+        options.controller?.map((controllerId) => {
+          const controller = controllersRef.current?.get(controllerId);
+          const loader = (controller as { loader?: () => Promise<unknown> } | undefined)?.loader?.bind(controller);
+          return loader ? loader() : undefined;
+        }) ?? [];
+
+      return Promise.all(loaderPromises);
+    }, [isReady, options.controller]);
 
     return (
       <WidgetControllersContext.Provider value={controllersRef.current}>

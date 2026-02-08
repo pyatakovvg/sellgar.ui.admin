@@ -10,5 +10,6 @@ export { useAwaitLoaderData } from './hooks/await-loader-data.hook.ts';
 export { useLoadContainerModule } from './hooks/load-container-module.hook.ts';
 
 export { NavigateServiceInterface } from './classes/services/navigate/navigate-service.interface.ts';
+export { LocationServiceInterface } from './classes/services/location/location-service.interface.ts';
 export { RevalidateServiceInterface } from './classes/services/revalidate/revalidate-service.interface.ts';
 export { ApplicationControllerInterface } from './classes/controller/application-controller.interface.ts';
