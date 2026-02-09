@@ -1,4 +1,9 @@
-import { NavigateServiceInterface, LocationServiceInterface } from '@library/app';
+import {
+  NavigateServiceInterface,
+  LocationServiceInterface,
+  RevalidateServiceInterface,
+  WidgetRevalidateServiceInterface,
+} from '@library/app';
 import { BrandServiceInterface, CreateBrandDto, UpdateBrandDto } from '@library/domain';
 
 import { inject, injectable } from 'inversify';
@@ -11,6 +16,9 @@ export class BrandModifyController implements BrandModifyControllerInterface {
     @inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface,
     @inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
     @inject(LocationServiceInterface) private readonly locationService: LocationServiceInterface,
+    @inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
+    @inject(WidgetRevalidateServiceInterface)
+    private readonly widgetRevalidateService: WidgetRevalidateServiceInterface,
   ) {}
 
   async loader() {
@@ -24,14 +32,24 @@ export class BrandModifyController implements BrandModifyControllerInterface {
   }
 
   async create(brand: CreateBrandDto) {
-    return await this.brandService.create(brand);
+    await this.brandService.create(brand);
+
+    await this.revalidateService.revalidate();
+    await this.navigateService.hash({ brand: false });
   }
 
   async update(uuid: string, brand: UpdateBrandDto) {
-    return await this.brandService.update(uuid, brand);
+    await this.brandService.update(uuid, brand);
+
+    await this.revalidateService.revalidate();
+    await this.navigateService.hash({ brand: false });
   }
 
   async close() {
     await this.navigateService.hash({ brand: false });
+  }
+
+  refresh() {
+    this.widgetRevalidateService.revalidate(BrandModifyControllerInterface);
   }
 }

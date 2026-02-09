@@ -1,23 +1,18 @@
-import { Typography } from '@sellgar/kit';
+import { Typography, Drawer } from '@sellgar/kit';
 
 import React from 'react';
 
-interface IProps {
-  isEdit: boolean;
-}
+import s from './default.module.scss';
 
-export const Header: React.FC<IProps> = (props) => {
-  if (props.isEdit) {
-    return (
-      <Typography size={'body-l'}>
-        <h6>Редактировать бренд</h6>
-      </Typography>
-    );
-  }
+interface IProps {}
 
+export const Header: React.FC<IProps> = () => {
   return (
-    <Typography size={'body-l'}>
-      <h6>Новый бренд</h6>
-    </Typography>
+    <div className={s.wrapper}>
+      <Typography size={'body-l'}>
+        <p>Бренд товара</p>
+      </Typography>
+      <Drawer.Close />
+    </div>
   );
 };

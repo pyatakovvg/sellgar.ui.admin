@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, ContainerModule, ServiceIdentifier } from 'inversify';
 
-import { useContainer, Await } from '../application';
+import { useContainer, Await, WidgetRevalidateServiceInterface } from '../application';
 
 import { WidgetControllersContext } from './widget-controllers.context.ts';
 import { WidgetLoaderDataProvider } from './widget-loader-data.provider.tsx';
@@ -42,6 +42,8 @@ export function createWidget(options: WidgetFactoryOptions) {
     const [isReady, setIsReady] = React.useState(false);
     const controllersRef = React.useRef<Map<ServiceIdentifier, unknown> | null>(null);
     const pendingPromiseRef = React.useRef<Promise<void> | null>(null);
+    const [reloadToken, setReloadToken] = React.useState(0);
+    const revalidateService = container.get(WidgetRevalidateServiceInterface);
 
     if (!pendingPromiseRef.current) {
       pendingPromiseRef.current = new Promise<void>(() => {});
@@ -49,6 +51,7 @@ export function createWidget(options: WidgetFactoryOptions) {
 
     React.useLayoutEffect(() => {
       let isMounted = true;
+      const handler = () => setReloadToken((value) => value + 1);
 
       if (options.containerModule) {
         retainModule(container, options.containerModule);
@@ -65,14 +68,19 @@ export function createWidget(options: WidgetFactoryOptions) {
         setIsReady(true);
       }
 
+      const keys = options.controller ?? [];
+      keys.forEach((key) => revalidateService.register(key, handler));
+
       return () => {
         isMounted = false;
         controllersRef.current = null;
+        const removeKeys = options.controller ?? [];
+        removeKeys.forEach((key) => revalidateService.unregister(key, handler));
         if (options.containerModule) {
           releaseModule(container, options.containerModule);
         }
       };
-    }, [container, options.containerModule, options.controller]);
+    }, [container, options.containerModule, options.controller, revalidateService]);
 
     const loaderPromise = React.useMemo(() => {
       if (!isReady) {
@@ -87,7 +95,7 @@ export function createWidget(options: WidgetFactoryOptions) {
         }) ?? [];
 
       return Promise.all(loaderPromises);
-    }, [isReady, options.controller]);
+    }, [isReady, options.controller, reloadToken]);
 
     return (
       <WidgetControllersContext.Provider value={controllersRef.current}>

@@ -13,6 +13,8 @@ import { LocationService } from './services/location/location.service.ts';
 import { LocationServiceInterface } from './services/location/location-service.interface.ts';
 import { RevalidateService } from './services/revalidate/revalidate.service.ts';
 import { RevalidateServiceInterface } from './services/revalidate/revalidate-service.interface.ts';
+import { WidgetRevalidateService } from './services/widget-revalidate/widget-revalidate.service.ts';
+import { WidgetRevalidateServiceInterface } from './services/widget-revalidate/widget-revalidate-service.interface.ts';
 
 export const containerModule = new ContainerModule((container) => {
   container.bind(AuthStoreInterface).to(AuthStore);
@@ -20,6 +22,7 @@ export const containerModule = new ContainerModule((container) => {
   container.bind(NavigateServiceInterface).to(NavigateService).inSingletonScope();
   container.bind(LocationServiceInterface).to(LocationService).inSingletonScope();
   container.bind(RevalidateServiceInterface).to(RevalidateService).inSingletonScope();
+  container.bind(WidgetRevalidateServiceInterface).to(WidgetRevalidateService).inSingletonScope();
 
   container.bind(ApplicationControllerInterface).to(ApplicationController).inSingletonScope();
 });

@@ -1,21 +1,12 @@
-
 .wrapper {
-
   display: flex;
   flex-direction: row;
   flex: 1 0;
-  align-items: flex-end;
+  gap: var(--numbers-12);
+  align-items: center;
 }
 
-.header {
-
-  display: flex;
-  flex-direction: column;
-  flex: 1 0;
-  color: var(--text-base-primary);
-}
-
-.content {
-
-  display: block;
+.icon {
+  color: var(--icon-accent-blue-accent);
+  font-size: var(--numbers-24);
 }

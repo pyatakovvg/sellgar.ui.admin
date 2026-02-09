@@ -1,11 +1,6 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  flex: 0 0;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0;
+  flex: 1 0 auto;
+  justify-content: space-between;
 }

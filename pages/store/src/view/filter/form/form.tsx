@@ -1,4 +1,4 @@
-import { Field, Label, Input, Icon, Button } from '@sellgar/kit';
+import { Field, Input, Icon, Button } from '@sellgar/kit';
 import { useNavigate } from '@library/app';
 
 import React from 'react';
@@ -24,18 +24,20 @@ export const Form = () => {
           control={control}
           render={({ field }) => (
             <Field>
-              <Field.Label>
-                <Label label={'Поиск по ключевым словам'} />
-              </Field.Label>
               <Field.Content>
-                <Input {...field} leadIcon={<Icon icon={'search-line'} />} />
+                <Input
+                  {...field}
+                  size={'xs'}
+                  placeholder={'Поиск по ключевым словам'}
+                  leadIcon={<Icon icon={'search-line'} />}
+                />
               </Field.Content>
             </Field>
           )}
         />
       </div>
       <div className={s.button}>
-        <Button target={'info'} onClick={() => onSubmit()}>
+        <Button target={'info'} size={'sm'} onClick={() => onSubmit()}>
           Фильтр
         </Button>
       </div>

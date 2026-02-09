@@ -1,0 +1,8 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  padding: var(--numbers-16) var(--numbers-24);
+  border-top: var(--numbers-1) solid var(--border-base-divider);
+  background: var(--background-button-secondary);
+}

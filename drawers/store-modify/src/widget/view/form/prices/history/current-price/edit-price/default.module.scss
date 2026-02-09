@@ -1,0 +1,25 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  align-items: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.control {
+  display: block;
+  margin: 0 0 0 16px;
+}
+
+.reset {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  color: var(--icon-status-destructive);
+  cursor: pointer;
+}

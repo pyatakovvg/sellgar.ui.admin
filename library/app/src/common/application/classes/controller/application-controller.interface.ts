@@ -3,6 +3,7 @@ import { DataStoreInterface } from '../stores/data/data-store.interface.ts';
 import { NavigateServiceInterface } from '../services/navigate/navigate-service.interface.ts';
 import { LocationServiceInterface } from '../services/location/location-service.interface.ts';
 import { RevalidateServiceInterface } from '../services/revalidate/revalidate-service.interface.ts';
+import { WidgetRevalidateServiceInterface } from '../services/widget-revalidate/widget-revalidate-service.interface.ts';
 
 export abstract class ApplicationControllerInterface {
   abstract authStore: AuthStoreInterface;
@@ -10,4 +11,5 @@ export abstract class ApplicationControllerInterface {
   abstract navigateService: Omit<NavigateServiceInterface, 'setRouter'>;
   abstract locationService: Omit<LocationServiceInterface, 'setRouter'>;
   abstract revalidateService: Omit<RevalidateServiceInterface, 'setRouter'>;
+  abstract widgetRevalidateService: WidgetRevalidateServiceInterface;
 }

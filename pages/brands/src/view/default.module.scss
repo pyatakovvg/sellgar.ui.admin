@@ -11,6 +11,13 @@
   flex: 0 0 auto;
 }
 
+.filter {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  margin: var(--numbers-24) 0 0;
+}
+
 .content {
   display: flex;
   flex-direction: column;

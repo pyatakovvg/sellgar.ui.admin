@@ -29,7 +29,7 @@ export const Table: React.FC<IProps> = (props) => {
             <Info />
           </TableComponent.Cell>
         </TableComponent.Column>
-        <TableComponent.Column width={60} pinRight>
+        <TableComponent.Column width={60}>
           <TableComponent.Cell>
             <Actions />
           </TableComponent.Cell>

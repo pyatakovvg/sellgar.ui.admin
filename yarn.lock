@@ -1290,6 +1290,23 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@drawer/store-modify@workspace:drawers/store-modify":
+  version: 0.0.0-use.local
+  resolution: "@drawer/store-modify@workspace:drawers/store-modify"
+  dependencies:
+    "@library/app": 0.0.1
+    "@library/design": 0.0.1
+    "@library/domain": 0.0.1
+    "@sellgar/kit": 0.0.175
+    "@types/react": 19.2.13
+    "@types/react-dom": 19.2.3
+    classnames: 2.5.1
+    react: 19.2.4
+    react-dom: 19.2.4
+    react-router-dom: 7.13.0
+  languageName: unknown
+  linkType: soft
+
 "@emnapi/runtime@npm:^1.2.0, @emnapi/runtime@npm:^1.7.0":
   version: 1.8.1
   resolution: "@emnapi/runtime@npm:1.8.1"

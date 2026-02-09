@@ -1,0 +1,30 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  & + & {
+    margin: var(--numbers-12) 0 0;
+  }
+}
+
+.variant {
+  color: var(--text-base-primary);
+}
+
+.product {
+  color: var(--text-base-secondary);
+  margin: var(--numbers-2 0 0);
+}

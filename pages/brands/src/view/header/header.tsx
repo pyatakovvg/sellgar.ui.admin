@@ -1,25 +1,16 @@
-import { Typography, Icon, Button } from '@sellgar/kit';
-import { useNavigate } from '@library/app';
+import { Typography, Icon } from '@sellgar/kit';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
 export const Header = () => {
-  const navigate = useNavigate();
-
   return (
     <div className={s.wrapper}>
-      <div className={s.header}>
-        <Typography size={'h6'} weight={'semi-bold'}>
-          <h6>Бренд</h6>
-        </Typography>
-      </div>
-      <div>
-        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => navigate.hash({ brand: {} })}>
-          Добавить бренд
-        </Button>
-      </div>
+      <Icon className={s.icon} icon={'copyright-line'} />
+      <Typography size={'h6'} weight={'semi-bold'}>
+        <h2 className={s.text}>Бренды</h2>
+      </Typography>
     </div>
   );
 };

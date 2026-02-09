@@ -13,3 +13,4 @@ export { NavigateServiceInterface } from './classes/services/navigate/navigate-s
 export { LocationServiceInterface } from './classes/services/location/location-service.interface.ts';
 export { RevalidateServiceInterface } from './classes/services/revalidate/revalidate-service.interface.ts';
 export { ApplicationControllerInterface } from './classes/controller/application-controller.interface.ts';
+export { WidgetRevalidateServiceInterface } from './classes/services/widget-revalidate/widget-revalidate-service.interface.ts';

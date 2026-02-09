@@ -2,25 +2,26 @@ import { Scrollbar } from '@sellgar/kit';
 
 import React from 'react';
 
-import { Header } from './header';
-import { Navigate } from './navigate';
+import { Aside } from './aside';
+import { LayoutSlot, LayoutSlotProvider } from './layout-slot';
 
 import s from './default.module.scss';
 
-export const NavigateLayout: React.FC<React.PropsWithChildren> = (props) => {
+const NavigateLayoutComponent: React.FC<React.PropsWithChildren> = (props) => {
   return (
-    <div className={s.wrapper}>
-      <div className={s.header}>
-        <Header />
+    <LayoutSlotProvider>
+      <div className={s.wrapper}>
+        <Aside />
+        <Scrollbar className={s.content}>{props.children}</Scrollbar>
       </div>
-      <div className={s.context}>
-        <div className={s.aside}>
-          <Navigate />
-        </div>
-        <div className={s.content}>
-          <Scrollbar className={s.outlet}>{props.children}</Scrollbar>
-        </div>
-      </div>
-    </div>
+    </LayoutSlotProvider>
   );
 };
+
+type TNavigateLayout = typeof NavigateLayoutComponent & {
+  Slot: typeof LayoutSlot;
+};
+
+export const NavigateLayout: TNavigateLayout = Object.assign(NavigateLayoutComponent, {
+  Slot: LayoutSlot,
+});

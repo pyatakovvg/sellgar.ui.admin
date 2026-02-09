@@ -1,3 +1,5 @@
+import { StoreDrawer } from '@drawer/store-modify';
+
 import React from 'react';
 
 import { Header } from './header';
@@ -18,6 +20,7 @@ export const ProductsView = () => {
       <div className={s.content}>
         <Content />
       </div>
+      <StoreDrawer />
     </div>
   );
 };

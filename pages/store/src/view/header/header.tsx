@@ -1,11 +1,18 @@
 import { Typography, Button, Icon } from '@sellgar/kit';
+import { NavigateLayout } from '@layout/navigate';
+import { useNavigate } from '@library/app';
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 
 import s from './default.module.scss';
 
 export const Header = () => {
+  const navigate = useNavigate();
+
+  const handleNewProduct = () => {
+    navigate.hash({ store: {} });
+  };
+
   return (
     <div className={s.wrapper}>
       <div className={s.header}>
@@ -13,13 +20,11 @@ export const Header = () => {
           <h6>Товары на складе</h6>
         </Typography>
       </div>
-      <div className={s.content}>
-        <NavLink to={'/store/create'}>
-          <Button size={'sm'} leadIcon={<Icon icon={'add-line'} />}>
-            Добавить товар на склад
-          </Button>
-        </NavLink>
-      </div>
+      <NavigateLayout.Slot>
+        <Button size={'sm'} leadIcon={<Icon icon={'add-line'} />} onClick={() => handleNewProduct()}>
+          Добавить товар на склад
+        </Button>
+      </NavigateLayout.Slot>
     </div>
   );
 };

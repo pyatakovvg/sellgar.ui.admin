@@ -19,6 +19,7 @@ export {
   NavigateServiceInterface,
   LocationServiceInterface,
   RevalidateServiceInterface,
+  WidgetRevalidateServiceInterface,
 } from './common/application';
 
 export { ApplicationControllerInterface } from './common/application/classes/controller/application-controller.interface.ts';

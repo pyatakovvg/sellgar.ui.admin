@@ -15,7 +15,6 @@ export class CheckAuthGuard implements GuardInterface {
 
       app.dataStore.set(ProfileEntity, profile);
     }
-
     app.authStore.setAuth(true);
   }
 }

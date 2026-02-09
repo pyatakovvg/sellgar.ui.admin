@@ -11,7 +11,11 @@ export const Actions: React.FC = () => {
   const { data } = useCellData<StoreEntity>();
 
   const handleClick = () => {
-    navigate.location('/store/' + data.uuid);
+    navigate.hash({
+      store: {
+        uuid: data.uuid,
+      },
+    });
   };
 
   return (
