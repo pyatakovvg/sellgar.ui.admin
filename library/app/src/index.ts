@@ -15,6 +15,7 @@ export {
   useRequest,
   useLoadContainerModule,
   useContainer,
+  useDataStore,
   GuardInterface,
   NavigateServiceInterface,
   LocationServiceInterface,

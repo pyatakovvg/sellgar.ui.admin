@@ -1,4 +1,6 @@
 import { Sidebar, MenuItem, User } from '@sellgar/kit';
+import { useDataStore } from '@library/app';
+import { ProfileEntity } from '@library/domain';
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -9,6 +11,8 @@ import s from './default.module.scss';
 
 export const Aside = () => {
   const slotContext = React.useContext(layoutSlotContext);
+  const dataStore = useDataStore();
+  const profile = dataStore.get(ProfileEntity);
 
   return (
     <div className={s.wrapper}>
@@ -16,7 +20,7 @@ export const Aside = () => {
         <Sidebar.Top>
           <Sidebar.Block>
             <Sidebar.Cell>
-              <User name={'Test'} caption={'pyatakov.viktor@gmail.com'} />
+              <User name={'Профиль'} caption={profile?.user.login} />
             </Sidebar.Cell>
           </Sidebar.Block>
         </Sidebar.Top>
