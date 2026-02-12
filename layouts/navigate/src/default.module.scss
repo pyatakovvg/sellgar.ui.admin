@@ -2,5 +2,13 @@
   display: grid;
   flex: 1 0;
   grid-template-columns: var(--numbers-280) 1fr;
+  height: 100%;
   overlay: auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  overflow: auto;
 }

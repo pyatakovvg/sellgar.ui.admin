@@ -13,14 +13,84 @@ export const Content = () => {
 
   return (
     <div className={s.wrapper}>
-      <div className={s.table}>
-        <div className={s.content}>
-          <Table data={brand.data} />
-        </div>
-        <div className={s.footer}>
-          <Caption caption={`Всего записей: ${brand.meta.totalRows}`} />
-        </div>
-      </div>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
+      <p>jhgjhggj</p>
     </div>
+    // <div className={s.wrapper}>
+    //   <div className={s.table}>
+    //     <div className={s.content}>
+    // <Table data={brand.data} />
+    //     </div>
+    //     <div className={s.footer}>
+    //       <Caption caption={`Всего записей: ${brand.meta.totalRows}`} />
+    //     </div>
+    //   </div>
+    // </div>
   );
 };

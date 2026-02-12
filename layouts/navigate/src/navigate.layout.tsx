@@ -12,7 +12,7 @@ const NavigateLayoutComponent: React.FC<React.PropsWithChildren> = (props) => {
     <LayoutSlotProvider>
       <div className={s.wrapper}>
         <Aside />
-        <Scrollbar className={s.content}>{props.children}</Scrollbar>
+        <div className={s.content}>{props.children}</div>
       </div>
     </LayoutSlotProvider>
   );
