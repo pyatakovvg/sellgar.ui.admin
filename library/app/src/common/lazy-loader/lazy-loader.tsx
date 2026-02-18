@@ -10,8 +10,6 @@ import { LazyLoaderProvider } from './lazy-loader.provider.tsx';
 
 import { LazyLoaderInterface } from './lazy-loader.interface.ts';
 
-const lastInstance: Set<any> = new Set<any>();
-
 export type LoaderArgs = ReactRouter.LoaderFunctionArgs;
 
 export class LazyLoader implements LazyLoaderInterface {
@@ -19,6 +17,7 @@ export class LazyLoader implements LazyLoaderInterface {
 
   private instance: any;
   private isCreated: boolean = false;
+  private isDestroyed: boolean = false;
   private lastArgs?: ReactRouter.LoaderFunctionArgs;
 
   constructor(private readonly ClassModule: new () => any) {}
@@ -76,19 +75,10 @@ export class LazyLoader implements LazyLoaderInterface {
 
     this.lastArgs = args;
 
-    if (lastInstance.size) {
-      lastInstance.forEach((instance) => {
-        this.unloadMetaData(args, instance);
-
-        lastInstance.delete(instance);
-      });
-    }
-
     this.loadMetaData();
 
     this.instance = new this.ClassModule();
-
-    lastInstance.add(this.instance);
+    this.isDestroyed = false;
   }
 
   async loader(args: ReactRouter.LoaderFunctionArgs) {
@@ -107,7 +97,7 @@ export class LazyLoader implements LazyLoaderInterface {
   }
 
   remove() {
-    lastInstance.delete(this.instance);
+    this.instance = undefined;
   }
 
   render() {
@@ -117,7 +107,8 @@ export class LazyLoader implements LazyLoaderInterface {
       this.isCreated = true;
       return () => {
         this.isCreated = false;
-        if (this.instance) {
+        if (this.instance && !this.isDestroyed) {
+          this.isDestroyed = true;
           this.unloadMetaData(this.lastArgs, this.instance);
           this.remove();
         }
