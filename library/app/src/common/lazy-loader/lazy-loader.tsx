@@ -18,6 +18,7 @@ export class LazyLoader implements LazyLoaderInterface {
   private instance: any;
   private isCreated: boolean = false;
   private isDestroyed: boolean = false;
+  private destroyPromise: Promise<void> | null = null;
   private lastArgs?: ReactRouter.LoaderFunctionArgs;
 
   constructor(private readonly ClassModule: new () => any) {}
@@ -41,31 +42,57 @@ export class LazyLoader implements LazyLoaderInterface {
     }
   }
 
-  private unloadMetaData(args: ReactRouter.LoaderFunctionArgs | undefined, instance: any) {
+  private async unloadMetaData(args: ReactRouter.LoaderFunctionArgs | undefined, instance: any) {
     const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
     const metaData = Reflect.getMetadata(MODULE_METADATA_KEY, instance.constructor) as ModuleMetadata;
 
-    if (metaData) {
-      if (metaData.imports) {
-        metaData.imports.forEach((containerModule) => {
-          applicationContext.container.unbind(containerModule);
-        });
-      }
-
-      if (metaData.controllers) {
-        metaData.controllers.forEach(async (controller) => {
-          let controllerInstance: any;
-          try {
-            controllerInstance = this.controller.get(controller);
-          } catch (error) {
-            return void 0;
-          }
-          controllerInstance.destructor?.(args);
-
-          this.controller.remove(controller);
-        });
-      }
+    if (!metaData) {
+      return;
     }
+
+    const controllerIds = metaData.controllers ?? [];
+    const controllerEntries = controllerIds
+      .map((controller) => {
+        try {
+          const controllerInstance = this.controller.get(controller) as { destructor?: (args?: unknown) => unknown };
+          return { controller, controllerInstance };
+        } catch (error) {
+          return null;
+        }
+      })
+      .filter((entry): entry is { controller: any; controllerInstance: { destructor?: (args?: unknown) => unknown } } =>
+        Boolean(entry),
+      );
+
+    await Promise.allSettled(
+      controllerEntries.map(({ controllerInstance }) => Promise.resolve(controllerInstance.destructor?.(args))),
+    );
+
+    controllerEntries.forEach(({ controller }) => {
+      this.controller.remove(controller);
+    });
+
+    (metaData.imports ?? []).forEach((containerModule) => {
+      applicationContext.container.unbind(containerModule);
+    });
+  }
+
+  private destroy(args: ReactRouter.LoaderFunctionArgs | undefined) {
+    if (this.destroyPromise) {
+      return this.destroyPromise;
+    }
+
+    const instance = this.instance;
+    if (!instance) {
+      return Promise.resolve();
+    }
+
+    this.destroyPromise = this.unloadMetaData(args, instance).finally(() => {
+      this.remove();
+      this.destroyPromise = null;
+    });
+
+    return this.destroyPromise;
   }
 
   create(args: ReactRouter.LoaderFunctionArgs) {
@@ -117,8 +144,7 @@ export class LazyLoader implements LazyLoaderInterface {
         this.isCreated = false;
         if (this.instance && !this.isDestroyed) {
           this.isDestroyed = true;
-          this.unloadMetaData(this.lastArgs, this.instance);
-          this.remove();
+          void this.destroy(this.lastArgs);
         }
       };
     }, [handleRevalidate, metaData.controllers, revalidateService]);
