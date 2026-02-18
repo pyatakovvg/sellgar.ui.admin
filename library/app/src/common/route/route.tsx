@@ -81,8 +81,15 @@ export class Route implements RouteInterface {
               return await lazyLoader.loader.call(lazyLoader, args);
             },
             shouldRevalidate: (args: ReactRouter.ShouldRevalidateFunctionArgs) => {
-              if (args.currentUrl.pathname === args.nextUrl.pathname && args.currentUrl.search === args.nextUrl.search) {
+              const isSamePathAndSearch =
+                args.currentUrl.pathname === args.nextUrl.pathname && args.currentUrl.search === args.nextUrl.search;
+
+              if (isSamePathAndSearch && args.currentUrl.hash !== args.nextUrl.hash) {
                 return false;
+              }
+
+              if (isSamePathAndSearch && args.currentUrl.hash === args.nextUrl.hash) {
+                return true;
               }
 
               return args.defaultShouldRevalidate;

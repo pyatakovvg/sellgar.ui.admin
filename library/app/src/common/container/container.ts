@@ -3,29 +3,35 @@ import * as inversify from 'inversify';
 import { ContainerInterface } from './container.interface.ts';
 
 export class Container implements ContainerInterface {
-  private readonly cache: Set<inversify.ContainerModule> = new Set();
+  private readonly moduleRefCount: Map<inversify.ContainerModule, number> = new Map();
   private readonly container: inversify.Container = new inversify.Container();
 
   bind(module: inversify.ContainerModule) {
-    if (this.cache.has(module)) {
-      return void 0;
+    const current = this.moduleRefCount.get(module) ?? 0;
+
+    if (current === 0) {
+      console.info('Container: container load');
+      this.container.loadSync(module);
     }
-    this.cache.add(module);
 
-    console.info('Container: container load');
-
-    this.container.loadSync(module);
+    this.moduleRefCount.set(module, current + 1);
   }
 
   unbind(module: inversify.ContainerModule) {
-    if (!this.cache.has(module)) {
+    const current = this.moduleRefCount.get(module) ?? 0;
+
+    if (current === 0) {
       return void 0;
     }
-    this.cache.delete(module);
 
-    console.info('Container: container unload');
+    if (current === 1) {
+      this.moduleRefCount.delete(module);
+      console.info('Container: container unload');
+      this.container.unloadSync(module);
+      return void 0;
+    }
 
-    this.container.unloadSync(module);
+    this.moduleRefCount.set(module, current - 1);
   }
 
   getContainer() {
