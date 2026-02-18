@@ -15,7 +15,7 @@ const lastInstance: Set<any> = new Set<any>();
 export type LoaderArgs = ReactRouter.LoaderFunctionArgs;
 
 export class LazyLoader implements LazyLoaderInterface {
-  private static controller = new Controller();
+  private readonly controller = new Controller();
 
   private instance: any;
   private isCreated: boolean = false;
@@ -36,7 +36,7 @@ export class LazyLoader implements LazyLoaderInterface {
 
       if (metaData.controllers) {
         metaData.controllers.forEach((controller: any) => {
-          LazyLoader.controller.set(controller);
+          this.controller.set(controller);
         });
       }
     }
@@ -57,13 +57,13 @@ export class LazyLoader implements LazyLoaderInterface {
         metaData.controllers.forEach(async (controller) => {
           let controllerInstance: any;
           try {
-            controllerInstance = LazyLoader.controller.get(controller);
+            controllerInstance = this.controller.get(controller);
           } catch (error) {
             return void 0;
           }
           controllerInstance.destructor?.(args);
 
-          LazyLoader.controller.remove(controller);
+          this.controller.remove(controller);
         });
       }
     }
@@ -96,7 +96,7 @@ export class LazyLoader implements LazyLoaderInterface {
 
     return await Promise.all(
       metaData.controllers.map((controller) => {
-        const controllerInstance = LazyLoader.controller.get(controller);
+        const controllerInstance = this.controller.get(controller);
 
         if (!controllerInstance) {
           return void 0;
@@ -124,6 +124,6 @@ export class LazyLoader implements LazyLoaderInterface {
       };
     }, []);
 
-    return <LazyLoaderProvider controller={LazyLoader.controller}>{metaData.view}</LazyLoaderProvider>;
+    return <LazyLoaderProvider controller={this.controller}>{metaData.view}</LazyLoaderProvider>;
   }
 }

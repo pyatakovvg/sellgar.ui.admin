@@ -24,7 +24,7 @@ const app = new Application({
   layout: (outlet) => <AppLayout>{outlet}</AppLayout>,
   components: {
     splash: <Splash />,
-    loading: <Loading />,
+    fallback: <Loading />,
     notFound: <NotFound />,
     exception: <Exception />,
   },
