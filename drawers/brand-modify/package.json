@@ -12,14 +12,14 @@
     "@library/app": "0.0.1",
     "@library/design": "0.0.1",
     "@library/domain": "0.0.1",
-    "@sellgar/kit": "0.0.175",
+    "@sellgar/kit": "0.0.177",
     "classnames": "2.5.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-router-dom": "7.13.0"
   },
   "devDependencies": {
-    "@types/react": "19.2.13",
+    "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3"
   }
 }
