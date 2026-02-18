@@ -10,8 +10,8 @@ export type NavigateSearchParams = (
 
 export abstract class NavigateServiceInterface {
   abstract setRouter(router: DataRouter): void;
-  abstract location: NavigateLocation;
   abstract replace: NavigateReplace;
-  abstract hash: NavigateHash;
+  abstract location: NavigateLocation;
+  abstract hashParams: NavigateHash;
   abstract searchParams: NavigateSearchParams;
 }

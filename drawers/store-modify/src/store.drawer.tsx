@@ -12,8 +12,8 @@ export const StoreDrawer: React.FC = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    setOpen('store' in location.hash);
-  }, [location.hash]);
+    setOpen('store' in location.hashParams.hash);
+  }, [location.hashParams.hash]);
 
   return (
     <Drawer
@@ -21,8 +21,7 @@ export const StoreDrawer: React.FC = () => {
       isOverlayClosable={true}
       open={isOpen}
       onClose={() => {
-        navigate.hash({ store: false });
-        setOpen(false);
+        navigate.hashParams({ store: void 0 });
       }}
     >
       <Widget />

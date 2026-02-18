@@ -21,16 +21,6 @@ const Content: React.FC<React.PropsWithChildren> = (props) => {
 export const Danger: React.FC<IProps> = (props) => {
   const close = useCloseMessage();
 
-  // React.useEffect(() => {
-  //   let timer: NodeJS.Timeout;
-  //   if (props.push.autoClose) {
-  //     timer = setTimeout(() => handleClose(), (props?.push.timeoutClose ?? 4) * 1000);
-  //   }
-  //   return () => {
-  //     clearTimeout(timer);
-  //   };
-  // }, []);
-
   const handleClose = () => {
     close(props.push.uuid);
   };

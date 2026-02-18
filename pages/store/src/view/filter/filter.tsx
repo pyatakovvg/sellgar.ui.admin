@@ -1,4 +1,4 @@
-import { useNavigate } from '@library/app';
+import { useLocation } from '@library/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
@@ -6,11 +6,11 @@ import * as ReactHookForm from 'react-hook-form';
 import { Form } from './form';
 
 export const Filter = () => {
-  const navigate = useNavigate();
+  const location = useLocation();
 
   const methods = ReactHookForm.useForm({
     defaultValues: {
-      search: navigate.query.getParam('search') ?? undefined,
+      search: location.searchParams.search.search ?? undefined,
     },
   });
 

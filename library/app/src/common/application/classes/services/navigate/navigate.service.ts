@@ -1,8 +1,10 @@
 import { injectable } from 'inversify';
 import type { DataRouter } from 'react-router-dom';
 
+import { createHashFromObject } from './utils/hash.utils.ts';
+import { parseHashToObject } from '../location/utils/hash.utils.ts';
+
 import { NavigateServiceInterface } from './navigate-service.interface.ts';
-import { createHashFromObject, parseHashToObject } from '../../../../router/hooks/navigate/hash/hash.utils.ts';
 
 @injectable()
 export class NavigateService implements NavigateServiceInterface {
@@ -32,7 +34,7 @@ export class NavigateService implements NavigateServiceInterface {
     return (to, options) => this.navigate(to, options, true);
   }
 
-  get hash(): NavigateServiceInterface['hash'] {
+  get hashParams(): NavigateServiceInterface['hashParams'] {
     return (to, options) => this.navigateHash(to, options);
   }
 
@@ -41,8 +43,8 @@ export class NavigateService implements NavigateServiceInterface {
   }
 
   private navigateHash(
-    to: Parameters<NavigateServiceInterface['hash']>[0],
-    options: Parameters<NavigateServiceInterface['hash']>[1],
+    to: Parameters<NavigateServiceInterface['hashParams']>[0],
+    options: Parameters<NavigateServiceInterface['hashParams']>[1],
   ): Promise<void> {
     const merge = options?.merge ?? true;
     const base = merge ? parseHashToObject(window.location.hash) : {};
@@ -63,11 +65,26 @@ export class NavigateService implements NavigateServiceInterface {
     const clearUndefined = options?.clearUndefined ?? true;
     const replace = options?.replace ?? true;
 
-    const baseUrl = new URL(window.location.href);
-    const newParams = new URLSearchParams(merge ? baseUrl.search : '');
+    const routerLocation = this.router?.state.location;
+    const routerBasename = (this.router as { basename?: string } | undefined)?.basename;
+    const normalizedBasename = routerBasename
+      ? `/${routerBasename.replace(/^\/*/, '').replace(/\/*$/, '')}`
+      : undefined;
+    const basePathname = routerLocation?.pathname ?? window.location.pathname;
+    const pathname =
+      normalizedBasename && normalizedBasename !== '/' && basePathname.startsWith(normalizedBasename)
+        ? basePathname.slice(normalizedBasename.length) || '/'
+        : basePathname;
+    const baseSearch = merge ? routerLocation?.search ?? window.location.search : '';
+    const baseHash = routerLocation?.hash ?? window.location.hash;
+    const newParams = new URLSearchParams(baseSearch);
+
+    const isEmptyString = (value: unknown): value is string => {
+      return typeof value === 'string' && value.trim() === '';
+    };
 
     Object.entries(params).forEach(([key, value]) => {
-      if (value === null || value === undefined) {
+      if (value === null || value === undefined || isEmptyString(value)) {
         if (clearUndefined) {
           newParams.delete(key);
         }
@@ -77,7 +94,7 @@ export class NavigateService implements NavigateServiceInterface {
       if (Array.isArray(value)) {
         newParams.delete(key);
         value.forEach((item) => {
-          if (item !== null && item !== undefined) {
+          if (item !== null && item !== undefined && !isEmptyString(item)) {
             const encodedValue = encodeURIComponent(typeof item === 'object' ? JSON.stringify(item) : String(item));
             newParams.append(key, encodedValue);
           }
@@ -97,7 +114,8 @@ export class NavigateService implements NavigateServiceInterface {
       newParams.set(key, stringValue);
     });
 
-    const target = `${baseUrl.pathname}?${newParams.toString()}${baseUrl.hash}`;
+    const search = newParams.toString();
+    const target = search ? `${pathname}?${search}${baseHash}` : `${pathname}${baseHash}`;
     return this.navigate(target, undefined, replace);
   }
 

@@ -1,7 +1,7 @@
 import * as ReactRouter from 'react-router-dom';
 
 import { useLocation } from '../../location';
-import { createHashFromObject } from './hash.utils.ts';
+import { createHashFromObject } from '../../../../application/classes/services/navigate/utils/hash.utils.ts';
 
 export const useHash = () => {
   const location = useLocation();
@@ -9,20 +9,35 @@ export const useHash = () => {
   const navigate = ReactRouter.useNavigate();
 
   return (to: Record<string, any>, options?: Omit<ReactRouter.NavigateOptions, 'replace' | 'viewTransition'>) => {
-    const newHash = createHashFromObject({ ...location.hash, ...to });
+    const currentHash = location.hashParams?.hash ?? {};
+    const newHash = createHashFromObject({ ...currentHash, ...to });
 
     if (newHash === '') {
-      return window.history.replaceState(
-        locationReactRouter.state,
-        '',
-        locationReactRouter.pathname + locationReactRouter.search,
+      return navigate(
+        {
+          pathname: locationReactRouter.pathname,
+          search: locationReactRouter.search,
+          hash: '',
+        },
+        {
+          ...options,
+          replace: true,
+          viewTransition: true,
+        },
       );
     }
 
-    return navigate(`#${newHash}`, {
-      ...options,
-      replace: true,
-      viewTransition: true,
-    });
+    return navigate(
+      {
+        pathname: locationReactRouter.pathname,
+        search: locationReactRouter.search,
+        hash: `#${newHash}`,
+      },
+      {
+        ...options,
+        replace: true,
+        viewTransition: true,
+      },
+    );
   };
 };

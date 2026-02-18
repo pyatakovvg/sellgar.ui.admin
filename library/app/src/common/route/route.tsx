@@ -1,5 +1,6 @@
 import React from 'react';
 import * as ReactRouter from 'react-router-dom';
+import * as ReactRouterCore from 'react-router';
 
 import { contextProvider } from '../context';
 import { ApplicationContext } from '../application';
@@ -7,19 +8,34 @@ import { LazyLoader, LazyLoaderInterface } from '../lazy-loader';
 
 import { RouteProvider } from './route.provider.tsx';
 
-import { RouteInterface, type IOptions } from './route.interface.ts';
+import { RouteInterface } from './route.interface.ts';
+import type { IOptions, IOptionsWithModule, IOptionsWithRoutes } from './route.interface.ts';
 
-const Wrapper: React.FC<React.PropsWithChildren> = (props) => {
+const Wrapper: React.FC<React.PropsWithChildren<IOptionsWithModule>> = (props) => {
   const navigation = ReactRouter.useNavigation();
-  const location = ReactRouter.useLocation();
+  const matches = ReactRouter.useMatches();
+  const dataRouterContext = React.useContext(ReactRouterCore.UNSAFE_DataRouterContext);
   const inProcess = Boolean(navigation.location);
   const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
-  const isSamePath = navigation.location?.pathname === location.pathname;
+  const router = dataRouterContext?.router;
+  const currentLeafId = matches[matches.length - 1]?.id;
+  const nextMatches =
+    navigation.location && router
+      ? ReactRouterCore.matchRoutes(router.routes, navigation.location, router.basename)
+      : null;
+  const nextLeafId = nextMatches?.[nextMatches.length - 1]?.route.id;
+  const isSamePath = !navigation.location || (currentLeafId && nextLeafId && currentLeafId === nextLeafId);
 
   if (inProcess && !isSamePath) {
-    return applicationContext.options.components?.loading;
+    if (!!props.fallback) {
+      return <>{props.fallback}</>;
+    } else if (!!applicationContext.options.components?.fallback) {
+      return <>{applicationContext.options.components.fallback}</>;
+    }
+    return null;
   }
-  return props.children;
+
+  return <>{props.children}</>;
 };
 
 export class Route implements RouteInterface {
@@ -35,7 +51,7 @@ export class Route implements RouteInterface {
     });
   }
 
-  private createRouteWithModule(options: IOptions): ReactRouter.RouteObject {
+  private createRouteWithModule(options: IOptionsWithModule): ReactRouter.RouteObject {
     const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
     const components = applicationContext.options.components;
 
@@ -64,8 +80,15 @@ export class Route implements RouteInterface {
 
               return await lazyLoader.loader.call(lazyLoader, args);
             },
+            shouldRevalidate: (args: ReactRouter.ShouldRevalidateFunctionArgs) => {
+              if (args.currentUrl.pathname === args.nextUrl.pathname && args.currentUrl.search === args.nextUrl.search) {
+                return false;
+              }
+
+              return args.defaultShouldRevalidate;
+            },
             Component: () => (
-              <Wrapper>
+              <Wrapper {...options}>
                 <RouteProvider>{lazyLoader.render.call(lazyLoader)}</RouteProvider>
               </Wrapper>
             ),
@@ -82,7 +105,7 @@ export class Route implements RouteInterface {
     };
   }
 
-  private createRouteWithRoutes(options: IOptions): ReactRouter.RouteObject {
+  private createRouteWithRoutes(options: IOptionsWithRoutes): ReactRouter.RouteObject {
     const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
     const components = applicationContext.options.components;
 

@@ -12,7 +12,7 @@ export abstract class GuardInterface {
 
 export interface IComponents {
   splash: React.ReactNode;
-  loading: React.ReactNode;
+  fallback?: React.ReactNode;
   exception: React.ReactNode;
   notFound: React.ReactNode;
   forbidden: React.ReactNode;

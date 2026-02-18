@@ -3,16 +3,17 @@ import * as ReactRouter from 'react-router-dom';
 
 type TBreadcrumb = string | Function;
 
-interface IOptionsWithModule {
+export interface IOptionsWithModule {
   path?: string;
   breadcrumb?: TBreadcrumb;
+  fallback?: React.ReactNode;
   module: () => Promise<any>;
 }
 
-interface IOptionsWithRoutes {
-  path: string;
+export interface IOptionsWithRoutes {
   breadcrumb?: TBreadcrumb;
   layout?(outlet: React.ReactNode): React.ReactNode;
+  path: string;
   routes: RouteInterface[];
 }
 

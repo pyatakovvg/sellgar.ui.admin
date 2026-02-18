@@ -12,8 +12,7 @@ export const Form = () => {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((values) => {
-    console.log(123, values);
-    navigate.query.setParams({ search: values.search });
+    navigate.searchParams.setParams({ search: values.search });
   });
 
   return (
