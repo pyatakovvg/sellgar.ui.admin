@@ -1,4 +1,4 @@
-import { useNavigate } from '@library/app';
+import { useLocation, useNavigate } from '@library/app';
 import { Button, Icon } from '@sellgar/kit';
 
 import React from 'react';
@@ -9,11 +9,12 @@ import { Form } from './form';
 import s from './default.module.scss';
 
 export const Filter = () => {
+  const location = useLocation();
   const navigate = useNavigate();
 
   const methods = ReactHookForm.useForm({
     defaultValues: {
-      search: navigate.query.getParam('search') ?? undefined,
+      search: location.searchParams.search.search ?? undefined,
     },
   });
 
@@ -21,7 +22,7 @@ export const Filter = () => {
     <ReactHookForm.FormProvider {...methods}>
       <div className={s.wrapper}>
         <Form />
-        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => navigate.hash({ brand: {} })}>
+        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => navigate.hashParams({ brand: {} })}>
           Добавить бренд
         </Button>
       </div>

@@ -12,8 +12,8 @@ export const BrandDrawer: React.FC = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    setOpen('brand' in location.hash);
-  }, [location.hash]);
+    setOpen('brand' in location.hashParams.hash);
+  }, [location.hashParams.hash]);
 
   return (
     <Drawer
@@ -21,8 +21,7 @@ export const BrandDrawer: React.FC = () => {
       isOverlayClosable={true}
       open={isOpen}
       onClose={() => {
-        navigate.hash({ brand: false });
-        setOpen(false);
+        navigate.hashParams({ brand: void 0 });
       }}
     >
       <Widget />

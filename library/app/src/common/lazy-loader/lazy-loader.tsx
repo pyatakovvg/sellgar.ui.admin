@@ -1,8 +1,8 @@
 import React from 'react';
-import ReactRouter from 'react-router-dom';
+import * as ReactRouter from 'react-router-dom';
 
 import { contextProvider } from '../context';
-import { ApplicationContext } from '../application';
+import { ApplicationContext, RevalidateServiceInterface } from '../application';
 import { Controller } from '../module/controller';
 import { MODULE_METADATA_KEY, type ModuleMetadata } from '../module';
 
@@ -102,10 +102,18 @@ export class LazyLoader implements LazyLoaderInterface {
 
   render() {
     const metaData = Reflect.getMetadata(MODULE_METADATA_KEY, this.ClassModule) as ModuleMetadata;
+    const revalidate = ReactRouter.useRevalidator();
+    const applicationContext = contextProvider.get<ApplicationContext>(ApplicationContext);
+    const revalidateService = applicationContext.container.getContainer().get(RevalidateServiceInterface);
+    const handleRevalidate = React.useCallback(() => revalidate.revalidate(), [revalidate]);
 
     React.useEffect(() => {
+      const keys = metaData.controllers ?? [];
+      keys.forEach((key) => revalidateService.register(key, handleRevalidate));
+
       this.isCreated = true;
       return () => {
+        keys.forEach((key) => revalidateService.unregister(key, handleRevalidate));
         this.isCreated = false;
         if (this.instance && !this.isDestroyed) {
           this.isDestroyed = true;
@@ -113,7 +121,7 @@ export class LazyLoader implements LazyLoaderInterface {
           this.remove();
         }
       };
-    }, []);
+    }, [handleRevalidate, metaData.controllers, revalidateService]);
 
     return <LazyLoaderProvider controller={this.controller}>{metaData.view}</LazyLoaderProvider>;
   }
