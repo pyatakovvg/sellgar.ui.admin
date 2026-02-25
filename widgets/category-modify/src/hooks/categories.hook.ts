@@ -1,9 +1,8 @@
-import React from 'react';
-
-import { context } from '../widget.context.tsx';
+import { useWidgetController } from '@library/app';
+import { CategoryControllerInterface } from '../classes/controller/category-controller.interface.ts';
 
 export const useCategories = () => {
-  const { controller } = React.useContext(context);
+  const controller = useWidgetController(CategoryControllerInterface);
 
   return controller.formStore.categories;
 };

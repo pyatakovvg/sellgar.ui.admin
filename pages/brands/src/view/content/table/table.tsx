@@ -15,26 +15,24 @@ interface IProps {
 
 export const Table: React.FC<IProps> = (props) => {
   return (
-    <div className={s.wrapper}>
-      <TableComponent data={{ nodes: props.data }}>
-        <TableComponent.Column>
-          <TableComponent.Head label={'Наименование'} />
-          <TableComponent.Cell>
-            <Name />
-          </TableComponent.Cell>
-        </TableComponent.Column>
-        <TableComponent.Column>
-          <TableComponent.Head label={'Описание'} />
-          <TableComponent.Cell>
-            <Info />
-          </TableComponent.Cell>
-        </TableComponent.Column>
-        <TableComponent.Column width={60}>
-          <TableComponent.Cell>
-            <Actions />
-          </TableComponent.Cell>
-        </TableComponent.Column>
-      </TableComponent>
-    </div>
+    <TableComponent data={{ nodes: props.data }} useInternalScroll={false} select={{ isUse: true, onSelect: () => {} }}>
+      <TableComponent.Column width={600}>
+        <TableComponent.Head label={'Наименование'} />
+        <TableComponent.Cell>
+          <Name />
+        </TableComponent.Cell>
+      </TableComponent.Column>
+      <TableComponent.Column>
+        <TableComponent.Head label={'Описание'} />
+        <TableComponent.Cell>
+          <Info />
+        </TableComponent.Cell>
+      </TableComponent.Column>
+      <TableComponent.Column width={60}>
+        <TableComponent.Cell>
+          <Actions />
+        </TableComponent.Cell>
+      </TableComponent.Column>
+    </TableComponent>
   );
 };

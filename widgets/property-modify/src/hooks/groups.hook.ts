@@ -1,9 +1,8 @@
-import React from 'react';
-
-import { context } from '../widget.context.tsx';
+import { useWidgetController } from '@library/app';
+import { PropertyModifyControllerInterface } from '../classes/controller/property-modify-controller.interface.ts';
 
 export const useGroups = () => {
-  const { controller } = React.useContext(context);
+  const controller = useWidgetController(PropertyModifyControllerInterface);
 
   return controller.formStore.groups;
 };

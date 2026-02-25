@@ -1,10 +1,7 @@
 import React from 'react';
 
-import { UnitControllerInterface } from './classes/controller/unit-controller.interface.ts';
-
 interface IProps {
   uuid?: string;
-  controller: UnitControllerInterface;
   onCancel(): void;
   onSuccess(): void;
 }

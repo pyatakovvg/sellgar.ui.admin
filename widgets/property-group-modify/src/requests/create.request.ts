@@ -1,13 +1,10 @@
-import { useRequest } from '@library/app';
-
-import React from 'react';
+import { useRequest, useWidgetController } from '@library/app';
 
 import { CreatePropertyGroupDto } from '../classes/controller/dto/create-property-group.dto.ts';
-
-import { context } from '../widget.context.tsx';
+import { PropertyGroupModifyControllerInterface } from '../classes/controller/property-group-modify-controller.interface.ts';
 
 export const useCreateRequest = () => {
-  const { controller } = React.useContext(context);
+  const controller = useWidgetController(PropertyGroupModifyControllerInterface);
 
   return useRequest(async (data: CreatePropertyGroupDto) => {
     return await controller.create(data);

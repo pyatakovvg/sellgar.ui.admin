@@ -76,7 +76,7 @@ export class Route implements RouteInterface {
 
           return {
             loader: async (args: ReactRouter.LoaderFunctionArgs) => {
-              lazyLoader.create.call(lazyLoader, args);
+              await lazyLoader.create.call(lazyLoader, args);
 
               return await lazyLoader.loader.call(lazyLoader, args);
             },

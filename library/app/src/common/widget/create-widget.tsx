@@ -5,11 +5,12 @@ import { useContainer, Await, WidgetRevalidateServiceInterface } from '../applic
 
 import { WidgetControllersContext } from './widget-controllers.context.ts';
 import { WidgetLoaderDataProvider } from './widget-loader-data.provider.tsx';
+import { Provider as WidgetLoaderDataContextProvider } from './widget-loader-data.context.ts';
 
-interface WidgetFactoryOptions {
+interface WidgetFactoryOptions<TProps extends object = Record<string, never>> {
   containerModule?: ContainerModule;
   controller?: ServiceIdentifier[];
-  view: React.ReactElement;
+  view: React.ReactElement | React.ComponentType<TProps>;
   fallback?: React.ReactNode;
   error?: React.ReactNode;
 }
@@ -36,71 +37,94 @@ const releaseModule = (container: Container, module: ContainerModule) => {
   moduleRefCount.set(module, current - 1);
 };
 
-export function createWidget(options: WidgetFactoryOptions) {
-  return function Widget() {
+export function createWidget<TProps extends object = Record<string, never>>(options: WidgetFactoryOptions<TProps>) {
+  return function Widget(props: TProps) {
     const container = useContainer();
-    const [isReady, setIsReady] = React.useState(false);
+    const controllerIds = React.useMemo(() => options.controller ?? [], [options.controller]);
+    const hasControllers = controllerIds.length > 0;
+    const hasContainerModule = Boolean(options.containerModule);
+    const requiresBootstrap = hasControllers || hasContainerModule;
+    const [isReady, setIsReady] = React.useState(!requiresBootstrap);
     const controllersRef = React.useRef<Map<ServiceIdentifier, unknown> | null>(null);
     const pendingPromiseRef = React.useRef<Promise<void> | null>(null);
     const [reloadToken, setReloadToken] = React.useState(0);
-    const revalidateService = container.get(WidgetRevalidateServiceInterface);
 
     if (!pendingPromiseRef.current) {
       pendingPromiseRef.current = new Promise<void>(() => {});
     }
 
     React.useLayoutEffect(() => {
+      if (!requiresBootstrap) {
+        return;
+      }
+
       let isMounted = true;
       const handler = () => setReloadToken((value) => value + 1);
 
-      if (options.containerModule) {
+      if (hasContainerModule && options.containerModule) {
         retainModule(container, options.containerModule);
       }
 
-      const controllerIds = options.controller ?? [];
       const controllers = new Map<ServiceIdentifier, unknown>();
       for (const controllerId of controllerIds) {
         controllers.set(controllerId, container.get(controllerId));
       }
+
+      const revalidateService = hasControllers ? container.get(WidgetRevalidateServiceInterface) : null;
 
       if (isMounted) {
         controllersRef.current = controllers;
         setIsReady(true);
       }
 
-      const keys = options.controller ?? [];
-      keys.forEach((key) => revalidateService.register(key, handler));
+      if (revalidateService) {
+        controllerIds.forEach((key) => revalidateService.register(key, handler));
+      }
 
       return () => {
         isMounted = false;
         controllersRef.current = null;
-        const removeKeys = options.controller ?? [];
-        removeKeys.forEach((key) => revalidateService.unregister(key, handler));
-        if (options.containerModule) {
+        if (revalidateService) {
+          controllerIds.forEach((key) => revalidateService.unregister(key, handler));
+        }
+        if (hasContainerModule && options.containerModule) {
           releaseModule(container, options.containerModule);
         }
       };
-    }, [container, options.containerModule, options.controller, revalidateService]);
+    }, [container, controllerIds, hasContainerModule, hasControllers, options.containerModule, requiresBootstrap]);
 
     const loaderPromise = React.useMemo(() => {
+      if (!requiresBootstrap || !hasControllers) {
+        return Promise.resolve([]);
+      }
+
       if (!isReady) {
         return pendingPromiseRef.current;
       }
 
-      const loaderPromises =
-        options.controller?.map((controllerId) => {
-          const controller = controllersRef.current?.get(controllerId);
-          const loader = (controller as { loader?: () => Promise<unknown> } | undefined)?.loader?.bind(controller);
-          return loader ? loader() : undefined;
-        }) ?? [];
+      const loaderPromises = controllerIds.map((controllerId) => {
+        const controller = controllersRef.current?.get(controllerId);
+        const loader = (controller as { loader?: () => Promise<unknown> } | undefined)?.loader?.bind(controller);
+        return loader ? loader() : undefined;
+      });
 
       return Promise.all(loaderPromises);
-    }, [isReady, options.controller, reloadToken]);
+    }, [controllerIds, hasControllers, isReady, reloadToken, requiresBootstrap]);
+
+    const widgetView = React.isValidElement(options.view) ? options.view : React.createElement(options.view, props);
+
+    if (!requiresBootstrap) {
+      return (
+        <WidgetControllersContext.Provider value={null}>
+          <WidgetLoaderDataContextProvider value={{}}>{widgetView}</WidgetLoaderDataContextProvider>
+        </WidgetControllersContext.Provider>
+      );
+    }
 
     return (
       <WidgetControllersContext.Provider value={controllersRef.current}>
         <Await error={options.error} fallback={options.fallback} loader={loaderPromise}>
-          <WidgetLoaderDataProvider>{options.view}</WidgetLoaderDataProvider>
+          <WidgetLoaderDataProvider>{widgetView}</WidgetLoaderDataProvider>
         </Await>
       </WidgetControllersContext.Provider>
     );

@@ -21,7 +21,7 @@ export const Table: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <TableComponent data={{ nodes: props.data }} select={{ isUse: true, onSelect: () => {} }}>
-        <TableComponent.Column>
+        <TableComponent.Column width={200}>
           <TableComponent.Head label={'Артикул'} />
           <TableComponent.Cell>
             <Article />

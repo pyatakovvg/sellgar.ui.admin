@@ -4,7 +4,11 @@ import { ContainerModule } from 'inversify';
 import { RouterInterface } from '../router';
 import { ApplicationControllerInterface } from './classes/controller/application-controller.interface.ts';
 
+export type GuardHook = 'router' | 'private' | 'public';
+export type GuardRunStage = 'init' | 'navigation' | 'navigate';
+
 export abstract class GuardInterface {
+  runOn?: Partial<Record<GuardHook, GuardRunStage>>;
   beforeRouter?(app: ApplicationControllerInterface): Promise<void>;
   beforePrivate?(app: ApplicationControllerInterface): Promise<void>;
   beforePublic?(app: ApplicationControllerInterface): Promise<void>;

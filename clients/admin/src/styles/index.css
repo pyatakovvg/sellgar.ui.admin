@@ -5,26 +5,24 @@ body {
   overflow: hidden;
 }
 
-:root {
-  #root {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    flex: 1 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    background: var(--background-surface-neutral);
-    z-index: 0;
-  }
+#root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--background-surface-neutral);
+  z-index: 0;
+}
 
-  #sw {
-    position: fixed;
-    right: var(--numbers-24);
-    bottom: var(--numbers-24);
-    display: flex;
-    flex-direction: column;
-    flex: 1 0;
-    z-index: 90;
-  }
+#sw {
+  position: fixed;
+  right: var(--numbers-24);
+  bottom: var(--numbers-24);
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  z-index: 90;
 }

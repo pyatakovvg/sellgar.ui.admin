@@ -4,6 +4,8 @@
   flex: 1 0;
   gap: var(--numbers-12);
   align-items: center;
+  padding: var(--numbers-24) var(--numbers-24) 0;
+  background: var(--background-surface-neutral);
 }
 
 .icon {

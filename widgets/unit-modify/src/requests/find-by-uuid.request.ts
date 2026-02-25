@@ -1,11 +1,8 @@
-import { useRequest } from '@library/app';
-
-import React from 'react';
-
-import { context } from '../widget.context.tsx';
+import { useRequest, useWidgetController } from '@library/app';
+import { UnitControllerInterface } from '../classes/controller/unit-controller.interface.ts';
 
 export const useFindByUuidRequest = () => {
-  const { controller } = React.useContext(context);
+  const controller = useWidgetController(UnitControllerInterface);
 
   return useRequest((uuid: string) => controller.findByUuid(uuid));
 };

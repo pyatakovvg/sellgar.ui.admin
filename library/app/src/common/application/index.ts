@@ -1,6 +1,11 @@
 export { Application } from './application.tsx';
 export { ApplicationContext } from './application.context.tsx';
-export { ApplicationInterface, GuardInterface } from './application.interface.tsx';
+export {
+  ApplicationInterface,
+  GuardInterface,
+  type GuardHook,
+  type GuardRunStage,
+} from './application.interface.tsx';
 
 export { Await } from './component/await';
 

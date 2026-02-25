@@ -24,5 +24,6 @@ export {
   RevalidateServiceInterface,
   WidgetRevalidateServiceInterface,
 } from './common/application';
+export type { GuardHook, GuardRunStage } from './common/application';
 
 export { ApplicationControllerInterface } from './common/application/classes/controller/application-controller.interface.ts';

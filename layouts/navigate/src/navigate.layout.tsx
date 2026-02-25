@@ -1,18 +1,26 @@
-import { Scrollbar } from '@sellgar/kit';
-
 import React from 'react';
 
-import { Aside } from './aside';
+import { Mobile } from './mobile';
+import { Desktop } from './desktop';
 import { LayoutSlot, LayoutSlotProvider } from './layout-slot';
+
+import { useScreenSize } from './screen-size.hook.ts';
 
 import s from './default.module.scss';
 
 const NavigateLayoutComponent: React.FC<React.PropsWithChildren> = (props) => {
+  const { isMobile, isTablet, isDesktop } = useScreenSize();
+
   return (
     <LayoutSlotProvider>
       <div className={s.wrapper}>
-        <Aside />
-        <div className={s.content}>{props.children}</div>
+        {isDesktop ? (
+          <Desktop>{props.children}</Desktop>
+        ) : isTablet ? (
+          <Desktop>{props.children}</Desktop>
+        ) : (
+          isMobile && <Mobile>{props.children}</Mobile>
+        )}
       </div>
     </LayoutSlotProvider>
   );

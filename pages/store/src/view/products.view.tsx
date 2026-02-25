@@ -1,3 +1,4 @@
+import { StickyLayout } from '@sellgar/kit';
 import { StoreDrawer } from '@drawer/store-modify';
 
 import React from 'react';
@@ -10,17 +11,18 @@ import s from './default.module.scss';
 
 export const ProductsView = () => {
   return (
-    <div className={s.wrapper}>
-      <div className={s.header}>
+    <StickyLayout className={s.wrapper}>
+      <StickyLayout.Sticky direction={['left']} offset={24}>
         <Header />
-      </div>
-      <div className={s.filter}>
+      </StickyLayout.Sticky>
+      <StickyLayout.Sticky direction={['left']} offset={24}>
         <Filter />
-      </div>
-      <div className={s.content}>
+      </StickyLayout.Sticky>
+      <StickyLayout.Static>
         <Content />
-      </div>
+      </StickyLayout.Static>
+
       <StoreDrawer />
-    </div>
+    </StickyLayout>
   );
 };

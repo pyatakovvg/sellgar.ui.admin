@@ -3,24 +3,5 @@
   flex-direction: column;
   flex: 1 0;
   padding: 24px;
-}
-
-.header {
-  display: flex;
-  flex-direction: row;
-  flex: 0 0 auto;
-}
-
-.filter {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 auto;
-  margin: var(--numbers-24) 0 0;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0;
-  margin: var(--numbers-24) 0 0;
+  gap: var(--numbers-24);
 }

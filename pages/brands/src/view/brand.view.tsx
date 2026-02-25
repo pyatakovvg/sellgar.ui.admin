@@ -1,5 +1,5 @@
 import { BrandDrawer } from '@drawer/brand-modify';
-import { PageStickyStack } from '@library/design';
+import { StickyLayout } from '@library/design';
 
 import React from 'react';
 
@@ -12,23 +12,18 @@ import s from './default.module.scss';
 export const BrandView = () => {
   return (
     <>
-      <PageStickyStack className={s.wrapper}>
-        <PageStickyStack.Item className={s.header} sticky={true} scale={true} scaleMin={0.6} stickyOffset={16}>
+      <StickyLayout className={s.wrapper}>
+        <StickyLayout.Sticky direction={['left']} autoOffset zIndex={10}>
           <Header />
-        </PageStickyStack.Item>
-        <PageStickyStack.Item className={s.filter} sticky={true} stickyOffset={16}>
+        </StickyLayout.Sticky>
+        <StickyLayout.Sticky autoOffset direction={['top', 'left']} zIndex={10}>
           <Filter />
-        </PageStickyStack.Item>
-        <PageStickyStack.Item className={s.filter}>
-          <div style={{ height: 300, background: 'red' }}></div>
-        </PageStickyStack.Item>
-        <PageStickyStack.Item className={s.content} sticky={true} stickyOffset={16}>
+        </StickyLayout.Sticky>
+        <StickyLayout.Static zIndex={0}>
           <Content />
-        </PageStickyStack.Item>
-        <PageStickyStack.Item className={s.filter}>
-          <div style={{ height: 300, background: 'red' }}></div>
-        </PageStickyStack.Item>
-      </PageStickyStack>
+        </StickyLayout.Static>
+      </StickyLayout>
+
       <BrandDrawer />
     </>
   );

@@ -12,3 +12,19 @@
   flex: 1 0;
   overflow: auto;
 }
+
+.content2 {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  background: red;
+  overflow: auto;
+}
+
+.content3 {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  background: blue;
+  overflow: auto;
+}

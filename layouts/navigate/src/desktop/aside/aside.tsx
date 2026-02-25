@@ -5,12 +5,12 @@ import { ProfileEntity } from '@library/domain';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-import { layoutSlotContext } from '../layout-slot';
+// import { layoutSlotContext } from '../layout-slot';
 
 import s from './default.module.scss';
 
 export const Aside = () => {
-  const slotContext = React.useContext(layoutSlotContext);
+  // const slotContext = React.useContext(layoutSlotContext);
   const dataStore = useDataStore();
   const profile = dataStore.get(ProfileEntity);
 
@@ -26,7 +26,7 @@ export const Aside = () => {
         </Sidebar.Top>
         <Sidebar.Divider />
         <Sidebar.Middle>
-          <div className={s.slot} ref={slotContext?.setNode ?? undefined} />
+          {/*<div className={s.slot} ref={slotContext?.setNode ?? undefined} />*/}
           <Sidebar.Block>
             <Sidebar.Additional>Компания</Sidebar.Additional>
             <Sidebar.Cell>

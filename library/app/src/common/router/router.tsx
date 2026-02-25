@@ -28,7 +28,7 @@ export class Router implements RouterInterface {
             loader: async () => {
               const controller = applicationContext.container.getContainer().get(ApplicationControllerInterface);
 
-              await applicationContext.guardRunner.runOnce('router', applicationContext.guards, controller);
+              await applicationContext.guardRunner.run('router', applicationContext.guards, controller);
             },
           }),
           hydrateFallbackElement: components?.splash ?? null,
