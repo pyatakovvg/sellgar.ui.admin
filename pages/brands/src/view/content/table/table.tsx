@@ -7,8 +7,6 @@ import { Name } from './name';
 import { Info } from './info';
 import { Actions } from './actions';
 
-import s from './default.module.scss';
-
 interface IProps {
   data: BrandEntity[];
 }
