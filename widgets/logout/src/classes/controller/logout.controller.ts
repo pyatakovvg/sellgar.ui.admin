@@ -1,18 +1,17 @@
 import { AuthServiceInterface, ProfileEntity } from '@library/domain';
-import { ApplicationControllerInterface } from '@library/app';
-
-import { injectable, inject } from 'inversify';
+import { ApplicationStoreInterface, Controller, Inject, SessionRuntimeStateInterface } from '@tiyn/app';
 
 import { LogoutControllerInterface } from './logout-controller.interface.ts';
 
 import { LogoutStoreInterface } from '../store/logout/logout-store.interface.ts';
 
-@injectable()
+@Controller()
 export class LogoutController implements LogoutControllerInterface {
   constructor(
-    @inject(LogoutStoreInterface) readonly logoutStore: LogoutStoreInterface,
-    @inject(AuthServiceInterface) private readonly authService: AuthServiceInterface,
-    @inject(ApplicationControllerInterface) private readonly applicationController: ApplicationControllerInterface,
+    @Inject(LogoutStoreInterface) readonly logoutStore: LogoutStoreInterface,
+    @Inject(AuthServiceInterface) private readonly authService: AuthServiceInterface,
+    @Inject(ApplicationStoreInterface) private readonly store: ApplicationStoreInterface,
+    @Inject(SessionRuntimeStateInterface) private readonly session: SessionRuntimeStateInterface,
   ) {}
 
   async logout() {
@@ -21,8 +20,8 @@ export class LogoutController implements LogoutControllerInterface {
     try {
       await this.authService.signOut();
 
-      this.applicationController.dataStore.clear();
-      this.applicationController.authStore.setAuth(false);
+      this.store.clear();
+      this.session.setAnonymous();
     } catch (error) {
       this.logoutStore.setProcess(false);
       throw error;

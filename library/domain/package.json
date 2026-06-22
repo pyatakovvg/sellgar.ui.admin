@@ -9,16 +9,16 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
-    "@library/app": "0.0.1",
+    "@tiyn/app": "0.0.1",
     "class-transformer": "0.5.1",
-    "class-validator": "0.14.3",
-    "inversify": "7.11.0",
+    "class-validator": "0.15.1",
+    "inversify": "8.1.1",
     "inversify-inject-decorators": "3.1.0",
-    "lodash": "4.17.23",
+    "lodash": "4.18.1",
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/lodash": "4.17.23",
+    "@types/lodash": "4.17.24",
     "@types/reflect-metadata": "0.1.0"
   }
 }

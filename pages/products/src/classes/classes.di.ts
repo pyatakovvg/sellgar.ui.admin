@@ -1,8 +1,10 @@
-import { ContainerModule } from 'inversify';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
 
 import { ProductsController } from './controller/products.controller.ts';
 import { ProductsControllerInterface } from './controller/products-controller.interface.ts';
 
-export const containerModule = new ContainerModule((container) => {
-  container.bind<ProductsControllerInterface>(ProductsControllerInterface).to(ProductsController);
-});
+export class ProductsBindings implements BindingModuleInterface {
+  register(registry: BindingRegistryInterface): void {
+    registry.bind(ProductsControllerInterface).to(ProductsController);
+  }
+}

@@ -1,12 +1,12 @@
-import { useRequest, useWidgetController } from '@library/app';
+import { useController } from '@tiyn/app';
 import { CreateBrandDto } from '@library/domain';
 
 import { BrandModifyControllerInterface } from '../classes/controller/brand-modify-controller.interface.ts';
 
 export const useCreateRequest = () => {
-  const controller = useWidgetController(BrandModifyControllerInterface);
+  const controller = useController(BrandModifyControllerInterface);
 
-  return useRequest(async (brand: CreateBrandDto) => {
+  return (async (brand: CreateBrandDto) => {
     await controller.create(brand);
   });
 };

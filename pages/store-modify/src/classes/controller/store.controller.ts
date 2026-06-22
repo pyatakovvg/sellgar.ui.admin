@@ -1,4 +1,3 @@
-import { LoaderArgs } from '@library/app';
 import {
   StoreEntity,
   StoreServiceInterface,
@@ -7,7 +6,7 @@ import {
   ShopServiceInterface,
 } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject, type ControllerLoaderArgs } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -21,18 +20,18 @@ import { StoreControllerInterface } from './store-controller.interface.ts';
 import { CreateDto } from './dto/create.dto.ts';
 import { UpdateDto } from './dto/update.dto.ts';
 
-@injectable()
+@Controller()
 export class StoreController implements StoreControllerInterface {
   constructor(
-    @inject(ShopStoreInterface) readonly shopStore: ShopStoreInterface,
-    @inject(ProcessStoreInterface) readonly processStore: ProcessStoreInterface,
-    @inject(VariantsStoreInterface) readonly variantsStore: VariantsStoreInterface,
-    @inject(CurrencyStoreInterface) readonly currencyStore: CurrencyStoreInterface,
+    @Inject(ShopStoreInterface) readonly shopStore: ShopStoreInterface,
+    @Inject(ProcessStoreInterface) readonly processStore: ProcessStoreInterface,
+    @Inject(VariantsStoreInterface) readonly variantsStore: VariantsStoreInterface,
+    @Inject(CurrencyStoreInterface) readonly currencyStore: CurrencyStoreInterface,
 
-    @inject(ShopServiceInterface) private readonly shopService: ShopServiceInterface,
-    @inject(StoreServiceInterface) private readonly storeService: StoreServiceInterface,
-    @inject(CurrencyServiceInterface) private readonly currencyService: CurrencyServiceInterface,
-    @inject(VariantServiceInterface) private readonly productVariantService: VariantServiceInterface,
+    @Inject(ShopServiceInterface) private readonly shopService: ShopServiceInterface,
+    @Inject(StoreServiceInterface) private readonly storeService: StoreServiceInterface,
+    @Inject(CurrencyServiceInterface) private readonly currencyService: CurrencyServiceInterface,
+    @Inject(VariantServiceInterface) private readonly productVariantService: VariantServiceInterface,
   ) {}
 
   async create(dto: CreateDto, cb: (result: StoreEntity) => Promise<void>) {
@@ -70,7 +69,7 @@ export class StoreController implements StoreControllerInterface {
     }
   }
 
-  async loader(args: LoaderArgs) {
+  async loader(args: ControllerLoaderArgs) {
     const shops = await this.shopService.findAll();
     const currencies = await this.currencyService.findAll();
     const variants = await this.productVariantService.findAll();

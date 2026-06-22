@@ -1,11 +1,11 @@
 import { Widget } from '@widget/category-modify';
 import { Drawer } from '@sellgar/kit';
-import { useLoaderRevalidate, useLocation, useNavigate } from '@library/app';
+import { useRevalidate, useLocation, useNavigate } from '@tiyn/app';
 
 import React from 'react';
 
 export const Modify = () => {
-  const { revalidate } = useLoaderRevalidate();
+  const revalidate = useRevalidate();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -13,17 +13,17 @@ export const Modify = () => {
   const [isOpen, setOpen] = React.useState(false);
 
   const handleCloseModal = () => {
-    navigate.hash({ modal: false });
+    void navigate.hashParams({ modal: void 0 }, { merge: true });
   };
 
   React.useEffect(() => {
-    setOpen('modal' in location.hash);
-  }, [location.hash]);
+    setOpen('modal' in location.hashParams);
+  }, [location.hashParams]);
 
   return (
     <Drawer open={isOpen} onClose={() => handleCloseModal()}>
       <Widget
-        uuid={location.hash.modal?.uuid}
+        uuid={(location.hashParams.modal as { uuid?: string } | undefined)?.uuid}
         onSuccess={async () => {
           await revalidate();
           handleCloseModal();

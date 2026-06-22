@@ -1,8 +1,10 @@
 import { MessageProvider, Message } from '@library/message';
+import { Layout } from '@tiyn/app';
+import type { LayoutViewProps } from '@tiyn/app';
 
 import React from 'react';
 
-export const AppLayout: React.FC<React.PropsWithChildren> = (props) => {
+const AppLayoutView: React.FC<LayoutViewProps> = (props) => {
   return (
     <MessageProvider>
       {props.children}
@@ -10,3 +12,8 @@ export const AppLayout: React.FC<React.PropsWithChildren> = (props) => {
     </MessageProvider>
   );
 };
+
+@Layout({
+  view: AppLayoutView,
+})
+export class AppLayout {}

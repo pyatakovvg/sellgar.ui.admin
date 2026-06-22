@@ -1,15 +1,11 @@
-import { Module } from '@library/app';
-
-import React from 'react';
+import { Module, UseBindings } from '@tiyn/app';
 
 import { SignInView } from './view';
 
-import { containerModule } from './classes/classes.di.ts';
-import { SignInControllerInterface } from './classes/controller/sign-in-controller.interface.ts';
+import { SignInBindings } from './classes/classes.di.ts';
 
+@UseBindings(SignInBindings)
 @Module({
-  imports: [containerModule],
-  controllers: [SignInControllerInterface],
-  view: <SignInView />,
+  view: SignInView,
 })
 export class SignInModule {}

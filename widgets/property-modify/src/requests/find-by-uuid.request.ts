@@ -1,8 +1,8 @@
-import { useRequest, useWidgetController } from '@library/app';
+import { useController } from '@tiyn/app';
 import { PropertyModifyControllerInterface } from '../classes/controller/property-modify-controller.interface.ts';
 
 export const useFindByUuidRequest = () => {
-  const controller = useWidgetController(PropertyModifyControllerInterface);
+  const controller = useController(PropertyModifyControllerInterface);
 
-  return useRequest((uuid?: string) => controller.findByUuid(uuid));
+  return ((uuid?: string) => controller.findByUuid(uuid));
 };

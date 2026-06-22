@@ -1,27 +1,20 @@
 import React from 'react';
-import { createWidget } from '@library/app';
+import { UseBindings, Widget as WidgetDeclaration, WidgetDefinition, WidgetHost } from '@tiyn/app';
 
 import { WidgetView } from './view';
-import { Provider } from './widget.context.tsx';
-import { containerModule } from './classes/classes.di.ts';
-import { UnitControllerInterface } from './classes/controller/unit-controller.interface.ts';
+import { Provider, type UnitModifyWidgetProps } from './widget.context.tsx';
+import { UnitModifyBindings } from './classes/classes.di.ts';
 
-interface IProps {
-  uuid?: string;
-  onCancel(): void;
-  onSuccess(): void;
-}
+@UseBindings(UnitModifyBindings)
+@WidgetDeclaration<UnitModifyWidgetProps>({
+  view: WidgetView,
+})
+class UnitModifyWidget extends WidgetDefinition<UnitModifyWidgetProps> {}
 
-const WidgetFactory = createWidget({
-  containerModule,
-  controller: [UnitControllerInterface],
-  view: <WidgetView />,
-});
-
-export const Widget: React.FC<IProps> = (props) => {
+export const Widget: React.FC<UnitModifyWidgetProps> = (props) => {
   return (
-    <Provider value={{ uuid: props.uuid, onCancel: props.onCancel, onSuccess: props.onSuccess }}>
-      <WidgetFactory />
+    <Provider value={props}>
+      <WidgetHost token={UnitModifyWidget} props={props} />
     </Provider>
   );
 };

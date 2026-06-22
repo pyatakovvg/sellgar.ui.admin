@@ -1,21 +1,18 @@
+import { StoreModifyFrame } from '@drawer/store-modify';
 import { StoreEntity } from '@library/domain';
 import { Button, Icon, useCellData } from '@sellgar/kit';
-import { useNavigate } from '@library/app';
+import { useFrame } from '@tiyn/app';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
 export const Actions: React.FC = () => {
-  const navigate = useNavigate();
+  const storeModifyFrame = useFrame(StoreModifyFrame);
   const { data } = useCellData<StoreEntity>();
 
   const handleClick = () => {
-    navigate.hashParams({
-      store: {
-        uuid: data.uuid,
-      },
-    });
+    void storeModifyFrame.open({ uuid: data.uuid });
   };
 
   return (

@@ -1,12 +1,12 @@
-import { useRequest, useWidgetController } from '@library/app';
+import { useController } from '@tiyn/app';
 import { UpdateCategoryDto } from '@library/domain';
 
 import { CategoryControllerInterface } from '../classes/controller/category-controller.interface.ts';
 
 export const useUpdateRequest = () => {
-  const controller = useWidgetController(CategoryControllerInterface);
+  const controller = useController(CategoryControllerInterface);
 
-  return useRequest(async (uuid: string, data: UpdateCategoryDto) => {
+  return (async (uuid: string, data: UpdateCategoryDto) => {
     return await controller.update(uuid, data);
   });
 };

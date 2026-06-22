@@ -1,12 +1,12 @@
-import { useNavigate, useRequest, useWidgetController } from '@library/app';
+import { useNavigate, useController } from '@tiyn/app';
 
 import { LogoutControllerInterface } from '../classes/controller/logout-controller.interface.ts';
 
 export const useLogout = () => {
   const navigate = useNavigate();
-  const controller = useWidgetController(LogoutControllerInterface);
+  const controller = useController(LogoutControllerInterface);
 
-  return useRequest(async () => {
+  return (async () => {
     try {
       await controller.logout();
 

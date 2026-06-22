@@ -1,10 +1,9 @@
 import { Page } from '@library/design';
 import { Drawer, Button } from '@sellgar/kit';
 import { StoreEntity } from '@library/domain';
-import { useNavigate, useWidgetLoaderData } from '@library/app';
+import { useFrame, useLoaderData, useNavigate } from '@tiyn/app';
 
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FormProvider, useForm } from 'react-hook-form';
 
@@ -17,12 +16,13 @@ import { useUpdateRequest } from '../requests/update.request.ts';
 import { Form } from './form';
 
 import { schema, IFormData } from './form.schema.ts';
+import { StoreControllerInterface } from '../classes/controller/store-controller.interface.ts';
 
 export const ModifyView = () => {
-  const { uuid } = useParams<{ uuid: string }>();
-  const [data] = useWidgetLoaderData<[StoreEntity]>();
+  const data = useLoaderData(StoreControllerInterface) as StoreEntity | undefined;
 
   const navigate = useNavigate();
+  const frame = useFrame();
 
   const inProcess = useProcess();
   const currency = useCurrency();
@@ -51,13 +51,15 @@ export const ModifyView = () => {
 
   const handleSubmit = methods.handleSubmit(
     async (values) => {
-      if (uuid) {
-        await updateRequest({ uuid, ...values }, async () => {
-          navigate.location('/store');
+      if (data) {
+        await updateRequest({ uuid: data.uuid, ...values }, async () => {
+          await frame.close();
+          await navigate.to('/store');
         });
       } else {
         await createRequest(values, async (result) => {
-          navigate.location('/store/' + result.uuid);
+          await frame.close();
+          await navigate.to('/store/' + result.uuid);
         });
       }
     },

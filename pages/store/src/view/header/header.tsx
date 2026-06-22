@@ -1,16 +1,17 @@
+import { StoreModifyFrame } from '@drawer/store-modify';
 import { Typography, Button, Icon } from '@sellgar/kit';
 import { NavigateLayout } from '@layout/navigate';
-import { useNavigate } from '@library/app';
+import { useFrame } from '@tiyn/app';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
 export const Header = () => {
-  const navigate = useNavigate();
+  const storeModifyFrame = useFrame(StoreModifyFrame);
 
   const handleNewProduct = () => {
-    navigate.hash({ store: {} });
+    void storeModifyFrame.open({});
   };
 
   return (

@@ -5,22 +5,27 @@ import {
   UnitServiceInterface,
 } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject, type WidgetControllerLoaderArgs } from '@tiyn/app';
 
 import { CreatePropertyDto } from './dto/create-property.dto.ts';
 import { UpdatePropertyDto } from './dto/update-property.dto.ts';
 
 import { FormStoreInterface } from '../store/form/form-store.interface.ts';
 import { PropertyModifyControllerInterface } from './property-modify-controller.interface.ts';
+import { type PropertyModifyWidgetProps } from '../../widget.context.tsx';
 
-@injectable()
+@Controller()
 export class PropertyModifyController implements PropertyModifyControllerInterface {
   constructor(
-    @inject(FormStoreInterface) public readonly formStore: FormStoreInterface,
-    @inject(UnitServiceInterface) private readonly unitService: UnitServiceInterface,
-    @inject(PropertyServiceInterface) private readonly propertyService: PropertyServiceInterface,
-    @inject(PropertyGroupServiceInterface) private readonly propertyGroupService: PropertyGroupServiceInterface,
+    @Inject(FormStoreInterface) public readonly formStore: FormStoreInterface,
+    @Inject(UnitServiceInterface) private readonly unitService: UnitServiceInterface,
+    @Inject(PropertyServiceInterface) private readonly propertyService: PropertyServiceInterface,
+    @Inject(PropertyGroupServiceInterface) private readonly propertyGroupService: PropertyGroupServiceInterface,
   ) {}
+
+  async loader(args: WidgetControllerLoaderArgs<PropertyModifyWidgetProps>) {
+    return await this.findByUuid(args.props.uuid);
+  }
 
   async findByUuid(uuid?: string) {
     const units = await this.unitService.findAll();

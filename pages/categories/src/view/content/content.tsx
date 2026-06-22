@@ -1,14 +1,15 @@
-import { useLoaderData } from '@library/app';
+import { useLoaderData } from '@tiyn/app';
 import { CategoryResultEntity } from '@library/domain';
 
 import React from 'react';
 
 import { Table } from './table';
+import { CategoryControllerInterface } from '../../classes/controller/category-controller.interface.ts';
 
 import s from './default.module.scss';
 
 export const Content = () => {
-  const [data] = useLoaderData<[CategoryResultEntity]>();
+  const data = useLoaderData(CategoryControllerInterface) as CategoryResultEntity;
 
   return (
     <div className={s.wrapper}>

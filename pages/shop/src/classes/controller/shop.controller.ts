@@ -1,12 +1,12 @@
 import { ShopServiceInterface } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject } from '@tiyn/app';
 
 import { ShopControllerInterface } from './shop-controller.interface.ts';
 
-@injectable()
+@Controller()
 export class ShopController implements ShopControllerInterface {
-  constructor(@inject(ShopServiceInterface) private readonly shopService: ShopServiceInterface) {}
+  constructor(@Inject(ShopServiceInterface) private readonly shopService: ShopServiceInterface) {}
 
   async loader() {
     return await this.shopService.findAll();

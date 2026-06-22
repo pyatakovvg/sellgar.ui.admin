@@ -1,4 +1,4 @@
-import { ContainerModule } from 'inversify';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
 
 import { LogoutController } from './controller/logout.controller.ts';
 import { LogoutControllerInterface } from './controller/logout-controller.interface.ts';
@@ -6,8 +6,9 @@ import { LogoutControllerInterface } from './controller/logout-controller.interf
 import { LogoutStore } from './store/logout/logout.store.ts';
 import { LogoutStoreInterface } from './store/logout/logout-store.interface.ts';
 
-export const containerModule = new ContainerModule((container) => {
-  container.bind<LogoutControllerInterface>(LogoutControllerInterface).to(LogoutController);
-
-  container.bind<LogoutStoreInterface>(LogoutStoreInterface).to(LogoutStore);
-});
+export class LogoutBindings implements BindingModuleInterface {
+  register(registry: BindingRegistryInterface): void {
+    registry.bind(LogoutControllerInterface).to(LogoutController);
+    registry.bind(LogoutStoreInterface).to(LogoutStore);
+  }
+}

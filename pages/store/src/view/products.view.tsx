@@ -1,5 +1,4 @@
 import { StickyLayout } from '@sellgar/kit';
-import { StoreDrawer } from '@drawer/store-modify';
 
 import React from 'react';
 
@@ -21,8 +20,6 @@ export const ProductsView = () => {
       <StickyLayout.Static>
         <Content />
       </StickyLayout.Static>
-
-      <StoreDrawer />
     </StickyLayout>
   );
 };

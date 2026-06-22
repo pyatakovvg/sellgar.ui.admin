@@ -1,12 +1,12 @@
 import { ProductServiceInterface, logger } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject } from '@tiyn/app';
 
 import { ProductsControllerInterface } from './products-controller.interface.ts';
 
-@injectable()
+@Controller()
 export class ProductsController implements ProductsControllerInterface {
-  constructor(@inject(ProductServiceInterface) private readonly productService: ProductServiceInterface) {}
+  constructor(@Inject(ProductServiceInterface) private readonly productService: ProductServiceInterface) {}
 
   @logger()
   async loader() {

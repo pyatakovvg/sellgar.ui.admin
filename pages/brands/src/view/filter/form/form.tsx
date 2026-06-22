@@ -1,5 +1,5 @@
 import { Field, Input, Icon, Button } from '@sellgar/kit';
-import { useNavigate } from '@library/app';
+import { useNavigate } from '@tiyn/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
@@ -12,7 +12,7 @@ export const Form = () => {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((values) => {
-    navigate.query.setParams({ search: values.search });
+    void navigate.searchParams({ search: values.search }, { merge: true });
   });
 
   return (

@@ -1,14 +1,15 @@
 import { ProductResultEntity } from '@library/domain';
-import { useLoaderData } from '@library/app';
+import { useLoaderData } from '@tiyn/app';
 
 import React from 'react';
 
 import { Table } from './table';
+import { ProductsControllerInterface } from '../../classes/controller/products-controller.interface.ts';
 
 import s from './default.module.scss';
 
 export const Content = () => {
-  const [result] = useLoaderData<[ProductResultEntity]>();
+  const result = useLoaderData(ProductsControllerInterface) as ProductResultEntity;
 
   return (
     <div className={s.wrapper}>

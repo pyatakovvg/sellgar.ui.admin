@@ -1,4 +1,5 @@
-import { useLocation, useNavigate } from '@library/app';
+import { BrandModifyFrame } from '@drawer/brand-modify';
+import { useFrame, useLocation } from '@tiyn/app';
 import { Button, Icon } from '@sellgar/kit';
 
 import React from 'react';
@@ -10,11 +11,11 @@ import s from './default.module.scss';
 
 export const Filter = () => {
   const location = useLocation();
-  const navigate = useNavigate();
+  const brandModifyFrame = useFrame(BrandModifyFrame);
 
   const methods = ReactHookForm.useForm({
     defaultValues: {
-      search: location.searchParams.search.search ?? undefined,
+      search: (location.searchParams.search as { search?: string } | undefined)?.search ?? undefined,
     },
   });
 
@@ -22,7 +23,7 @@ export const Filter = () => {
     <ReactHookForm.FormProvider {...methods}>
       <div className={s.wrapper}>
         <Form />
-        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => navigate.hashParams({ brand: {} })}>
+        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => void brandModifyFrame.open({})}>
           Добавить бренд
         </Button>
       </div>

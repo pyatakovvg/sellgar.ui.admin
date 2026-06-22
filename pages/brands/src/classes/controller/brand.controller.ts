@@ -1,12 +1,12 @@
 import { BrandServiceInterface } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject } from '@tiyn/app';
 
 import { BrandsControllerInterface } from './brand-controller.interface.ts';
 
-@injectable()
+@Controller()
 export class BrandController implements BrandsControllerInterface {
-  constructor(@inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface) {
+  constructor(@Inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface) {
     console.log('BrandController: constructor');
   }
 

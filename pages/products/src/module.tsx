@@ -1,15 +1,11 @@
-import { Module } from '@library/app';
-
-import React from 'react';
+import { Module, UseBindings } from '@tiyn/app';
 
 import { ProductsView } from './view';
 
-import { containerModule } from './classes/classes.di.ts';
-import { ProductsControllerInterface } from './classes/controller/products-controller.interface.ts';
+import { ProductsBindings } from './classes/classes.di.ts';
 
+@UseBindings(ProductsBindings)
 @Module({
-  imports: [containerModule],
-  controllers: [ProductsControllerInterface],
-  view: <ProductsView />,
+  view: ProductsView,
 })
 export class ProductsModule {}

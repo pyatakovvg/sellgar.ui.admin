@@ -1,15 +1,11 @@
-import { Module } from '@library/app';
-
-import React from 'react';
+import { Module, UseBindings } from '@tiyn/app';
 
 import { DashboardView } from './view';
 
-import { containerModule } from './classes/classes.di.ts';
-import { DashboardConstructorInterface } from './classes/constructor/dashboard-constructor.interface.ts';
+import { DashboardBindings } from './classes/classes.di.ts';
 
+@UseBindings(DashboardBindings)
 @Module({
-  imports: [containerModule],
-  controllers: [DashboardConstructorInterface],
-  view: <DashboardView />,
+  view: DashboardView,
 })
 export class DashboardModule {}

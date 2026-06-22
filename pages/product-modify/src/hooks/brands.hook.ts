@@ -1,4 +1,4 @@
-import { useController } from '@library/app';
+import { useController } from '@tiyn/app';
 
 import { ProductControllerInterface } from '../classes/controller/product-controller.interface.ts';
 

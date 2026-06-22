@@ -1,12 +1,12 @@
 import { UnitServiceInterface } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject } from '@tiyn/app';
 
 import { UnitsControllerInterface } from './units-controller.interface.ts';
 
-@injectable()
+@Controller()
 export class UnitsController implements UnitsControllerInterface {
-  constructor(@inject(UnitServiceInterface) private readonly unitService: UnitServiceInterface) {}
+  constructor(@Inject(UnitServiceInterface) private readonly unitService: UnitServiceInterface) {}
 
   async loader() {
     return await this.unitService.findAll();

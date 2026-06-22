@@ -3,13 +3,14 @@
     "types": ["reflect-metadata"],
 
     "target": "ESNext",
+    "ignoreDeprecations": "6.0",
     "useDefineForClassFields": true,
     "module": "ESNext",
     "skipLibCheck": true,
     "esModuleInterop": true,
 
     /* Bundler mode */
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "noEmit": false,

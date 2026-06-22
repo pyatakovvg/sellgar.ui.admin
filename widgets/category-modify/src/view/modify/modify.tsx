@@ -1,5 +1,5 @@
 import { CategoryEntity } from '@library/domain';
-import { useAwaitLoaderData } from '@library/app';
+import { useLoaderData } from '@tiyn/app';
 
 import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,6 +14,7 @@ import { useUpdateRequest } from '../../requests/update.request.ts';
 
 import { schema } from './schema.ts';
 import { context } from '../../widget.context.tsx';
+import { CategoryControllerInterface } from '../../classes/controller/category-controller.interface.ts';
 
 import s from './modify.module.scss';
 
@@ -25,7 +26,7 @@ interface IForm {
 }
 
 export const Modify = () => {
-  const data = useAwaitLoaderData<CategoryEntity>();
+  const data = useLoaderData(CategoryControllerInterface) as CategoryEntity;
 
   const { onSuccess, onCancel } = React.useContext(context);
 

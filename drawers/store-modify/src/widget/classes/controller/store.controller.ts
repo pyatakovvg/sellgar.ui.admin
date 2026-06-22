@@ -1,4 +1,3 @@
-import { LocationServiceInterface } from '@library/app';
 import {
   StoreEntity,
   StoreServiceInterface,
@@ -7,7 +6,7 @@ import {
   ShopServiceInterface,
 } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject, type FrameControllerLoaderArgs } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -17,23 +16,23 @@ import { VariantsStoreInterface } from '../store/variants/variants-store.interfa
 import { CurrencyStoreInterface } from '../store/currency/currency-store.interface.ts';
 
 import { StoreControllerInterface } from './store-controller.interface.ts';
+import { type StoreModifyFrameParams } from '../../../store-modify.frame.tsx';
 
 import { CreateDto } from './dto/create.dto.ts';
 import { UpdateDto } from './dto/update.dto.ts';
 
-@injectable()
+@Controller()
 export class StoreController implements StoreControllerInterface {
   constructor(
-    @inject(ShopStoreInterface) readonly shopStore: ShopStoreInterface,
-    @inject(ProcessStoreInterface) readonly processStore: ProcessStoreInterface,
-    @inject(VariantsStoreInterface) readonly variantsStore: VariantsStoreInterface,
-    @inject(CurrencyStoreInterface) readonly currencyStore: CurrencyStoreInterface,
+    @Inject(ShopStoreInterface) readonly shopStore: ShopStoreInterface,
+    @Inject(ProcessStoreInterface) readonly processStore: ProcessStoreInterface,
+    @Inject(VariantsStoreInterface) readonly variantsStore: VariantsStoreInterface,
+    @Inject(CurrencyStoreInterface) readonly currencyStore: CurrencyStoreInterface,
 
-    @inject(ShopServiceInterface) private readonly shopService: ShopServiceInterface,
-    @inject(StoreServiceInterface) private readonly storeService: StoreServiceInterface,
-    @inject(CurrencyServiceInterface) private readonly currencyService: CurrencyServiceInterface,
-    @inject(VariantServiceInterface) private readonly productVariantService: VariantServiceInterface,
-    @inject(LocationServiceInterface) private readonly locationService: LocationServiceInterface,
+    @Inject(ShopServiceInterface) private readonly shopService: ShopServiceInterface,
+    @Inject(StoreServiceInterface) private readonly storeService: StoreServiceInterface,
+    @Inject(CurrencyServiceInterface) private readonly currencyService: CurrencyServiceInterface,
+    @Inject(VariantServiceInterface) private readonly productVariantService: VariantServiceInterface,
   ) {}
 
   async create(dto: CreateDto, cb: (result: StoreEntity) => Promise<void>) {
@@ -71,9 +70,7 @@ export class StoreController implements StoreControllerInterface {
     }
   }
 
-  async loader() {
-    const hashParams = this.locationService.location.hashParams;
-
+  async loader(args: FrameControllerLoaderArgs<StoreModifyFrameParams>) {
     const shops = await this.shopService.findAll();
     const currencies = await this.currencyService.findAll();
     const variants = await this.productVariantService.findAll();
@@ -82,8 +79,8 @@ export class StoreController implements StoreControllerInterface {
     this.variantsStore.setVariants(variants.data);
     this.currencyStore.setCurrency(currencies.data);
 
-    if (hashParams.store?.uuid) {
-      return await this.storeService.findByUuid(hashParams.store.uuid);
+    if (args.props.uuid) {
+      return await this.storeService.findByUuid(args.props.uuid);
     }
   }
 }

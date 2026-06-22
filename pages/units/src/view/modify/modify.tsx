@@ -1,6 +1,6 @@
 import { Drawer } from '@sellgar/kit';
 import { Widget } from '@widget/unit-modify';
-import { useLoaderRevalidate } from '@library/app';
+import { useRevalidate } from '@tiyn/app';
 
 import React from 'react';
 
@@ -8,7 +8,7 @@ import { context } from './modify.context.ts';
 
 export const Modify = () => {
   const { uuid, isOpen, onClose } = React.useContext(context);
-  const { revalidate } = useLoaderRevalidate();
+  const revalidate = useRevalidate();
 
   return (
     <Drawer open={isOpen} onClose={onClose}>

@@ -1,10 +1,10 @@
 import React from 'react';
 
-interface IProps {
+export interface PropertyModifyWidgetProps {
   uuid?: string;
   onCancel(): void;
   onSuccess(): void;
 }
 
-export const context = React.createContext({} as IProps);
+export const context = React.createContext({} as PropertyModifyWidgetProps);
 export const Provider = context.Provider;

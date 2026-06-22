@@ -1,5 +1,5 @@
 import { Field, Label } from '@sellgar/kit';
-import { useLoaderData } from '@library/app';
+import { useLoaderData } from '@tiyn/app';
 import { StoreEntity } from '@library/domain';
 
 import React from 'react';
@@ -7,6 +7,7 @@ import { observer } from 'mobx-react';
 
 import { Price } from './price';
 import { CurrentPrice } from './current-price';
+import { StoreControllerInterface } from '../../../../classes/controller/store-controller.interface.ts';
 
 import s from './default.module.scss';
 
@@ -15,7 +16,7 @@ interface IProps {
 }
 
 export const History: React.FC<IProps> = observer((props) => {
-  const [data] = useLoaderData<[StoreEntity]>();
+  const data = useLoaderData(StoreControllerInterface) as StoreEntity;
 
   return (
     <div className={s.wrapper}>

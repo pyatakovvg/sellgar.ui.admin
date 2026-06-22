@@ -1,4 +1,4 @@
-import { useRequest, useController } from '@library/app';
+import { useController } from '@tiyn/app';
 
 import { CreateProductDto } from '../classes/controller/dto/create-product.dto.ts';
 import { ProductControllerInterface } from '../classes/controller/product-controller.interface.ts';
@@ -6,5 +6,5 @@ import { ProductControllerInterface } from '../classes/controller/product-contro
 export const useCreate = () => {
   const controller = useController(ProductControllerInterface);
 
-  return useRequest((dto: CreateProductDto) => controller.create(dto));
+  return ((dto: CreateProductDto) => controller.create(dto));
 };

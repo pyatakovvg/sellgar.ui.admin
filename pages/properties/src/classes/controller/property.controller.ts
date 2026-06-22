@@ -1,15 +1,15 @@
 import { PropertyGroupServiceInterface } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject } from '@tiyn/app';
 
 import { PropertyStoreInterface } from '../store/property-store.interface.ts';
 import { PropertyControllerInterface } from './property-controller.interface.ts';
 
-@injectable()
+@Controller()
 export class PropertyController implements PropertyControllerInterface {
   constructor(
-    @inject(PropertyStoreInterface) private readonly propertyStore: PropertyStoreInterface,
-    @inject(PropertyGroupServiceInterface) private readonly propertyGroupService: PropertyGroupServiceInterface,
+    @Inject(PropertyStoreInterface) private readonly propertyStore: PropertyStoreInterface,
+    @Inject(PropertyGroupServiceInterface) private readonly propertyGroupService: PropertyGroupServiceInterface,
   ) {}
 
   getData() {

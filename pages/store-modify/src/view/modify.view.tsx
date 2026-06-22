@@ -1,7 +1,7 @@
 import { Page } from '@library/design';
 import { Button } from '@sellgar/kit';
 import { StoreEntity } from '@library/domain';
-import { useNavigate, useLoaderData } from '@library/app';
+import { useNavigate, useLoaderData } from '@tiyn/app';
 
 import React from 'react';
 import { useParams } from 'react-router-dom';
@@ -15,12 +15,13 @@ import { useCreateRequest } from '../requests/create.request.ts';
 import { useUpdateRequest } from '../requests/update.request.ts';
 
 import { Form } from './form';
+import { StoreControllerInterface } from '../classes/controller/store-controller.interface.ts';
 
 import { schema, IFormData } from './form.schema.ts';
 
 export const ModifyView = () => {
   const { uuid } = useParams<{ uuid: string }>();
-  const [data] = useLoaderData<[StoreEntity]>();
+  const data = useLoaderData(StoreControllerInterface) as StoreEntity | undefined;
 
   const navigate = useNavigate();
 
@@ -53,11 +54,11 @@ export const ModifyView = () => {
     async (values) => {
       if (uuid) {
         await updateRequest({ uuid, ...values }, async () => {
-          navigate.location('/store');
+          await navigate.to('/store');
         });
       } else {
         await createRequest(values, async (result) => {
-          navigate.location('/store/' + result.uuid);
+          await navigate.to('/store/' + result.uuid);
         });
       }
     },

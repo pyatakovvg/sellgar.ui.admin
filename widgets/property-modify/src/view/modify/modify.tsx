@@ -1,5 +1,5 @@
 import { PropertyEntity } from '@library/domain';
-import { useAwaitLoaderData } from '@library/app';
+import { useLoaderData } from '@tiyn/app';
 
 import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,11 +14,12 @@ import { useUpdateRequest } from '../../requests/update.request.ts';
 
 import { schema, IFormData } from './schema.ts';
 import { context } from '../../widget.context.tsx';
+import { PropertyModifyControllerInterface } from '../../classes/controller/property-modify-controller.interface.ts';
 
 import s from './modify.module.scss';
 
 export const Modify = () => {
-  const data = useAwaitLoaderData<PropertyEntity>();
+  const data = useLoaderData(PropertyModifyControllerInterface) as PropertyEntity;
 
   const { onSuccess, onCancel } = React.useContext(context);
 

@@ -1,4 +1,4 @@
-import { ContainerModule } from 'inversify';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
 
 import { ShopStore } from './store/shop/shop.store.ts';
 import { ShopStoreInterface } from './store/shop/shop-store.interface.ts';
@@ -12,11 +12,12 @@ import { CurrencyStoreInterface } from './store/currency/currency-store.interfac
 import { StoreController } from './controller/store.controller.ts';
 import { StoreControllerInterface } from './controller/store-controller.interface.ts';
 
-export const containerModule = new ContainerModule((container) => {
-  container.bind(ShopStoreInterface).to(ShopStore);
-  container.bind(ProcessStoreInterface).to(ProcessStore);
-  container.bind(VariantsStoreInterface).to(VariantsStore);
-  container.bind(CurrencyStoreInterface).to(CurrencyStore);
-
-  container.bind(StoreControllerInterface).to(StoreController);
-});
+export class StoreModifyBindings implements BindingModuleInterface {
+  register(registry: BindingRegistryInterface): void {
+    registry.bind(ShopStoreInterface).to(ShopStore);
+    registry.bind(ProcessStoreInterface).to(ProcessStore);
+    registry.bind(VariantsStoreInterface).to(VariantsStore);
+    registry.bind(CurrencyStoreInterface).to(CurrencyStore);
+    registry.bind(StoreControllerInterface).to(StoreController);
+  }
+}

@@ -1,10 +1,10 @@
-import { useRequest, useWidgetController } from '@library/app';
+import { useController } from '@tiyn/app';
 
 import { UpdateUnitDto } from '../classes/controller/dto/update-unit.dto.ts';
 import { UnitControllerInterface } from '../classes/controller/unit-controller.interface.ts';
 
 export const useUpdateRequest = () => {
-  const controller = useWidgetController(UnitControllerInterface);
+  const controller = useController(UnitControllerInterface);
 
-  return useRequest((uuid: string, data: UpdateUnitDto) => controller.update(uuid, data));
+  return ((uuid: string, data: UpdateUnitDto) => controller.update(uuid, data));
 };

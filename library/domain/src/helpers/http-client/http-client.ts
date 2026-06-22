@@ -1,6 +1,4 @@
 import { injectable, inject } from 'inversify';
-import axios, { AxiosError, AxiosInstance } from 'axios';
-import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 import { ForbiddenException } from './exeptions/forbidden.exception.ts';
 import { UnauthorizedException } from './exeptions/unauthorized.exception.ts';
@@ -9,69 +7,162 @@ import { InternalServerErrorException } from './exeptions/internal-server-error.
 
 import { DeviceServiceInterface } from '../device';
 
-import { HttpClientInterface } from './http-client.interface.ts';
+import { HttpClientInterface, type HttpRequestConfig } from './http-client.interface.ts';
 
 import { httpLogger } from '../../decorators';
 
 @injectable()
 export class HttpClient implements HttpClientInterface {
-  private readonly _axios: AxiosInstance;
   private readonly _controller = new AbortController();
 
-  constructor(@inject(DeviceServiceInterface) private readonly deviceService: DeviceServiceInterface) {
-    this._axios = this.getInstance();
+  constructor(@inject(DeviceServiceInterface) private readonly deviceService: DeviceServiceInterface) {}
 
-    this._axios.interceptors.request.use(this._requestFulfilled, this._rejected);
-    this._axios.interceptors.response.use(this._responseFulfilled, this._rejected);
-  }
+  private async request<R = unknown, D = unknown>(
+    method: string,
+    url: string,
+    data?: D,
+    config: HttpRequestConfig<D> = {},
+  ): Promise<R> {
+    const requestUrl = this.createUrl(url, config.params);
+    const headers = this.createHeaders(config.headers, data);
 
-  private getInstance(): AxiosInstance {
-    return axios.create({
-      withCredentials: true,
-      signal: this._controller.signal,
-      headers: {
-        'X-Device-Id': this.deviceService.getUniqueId(),
-      },
-    });
-  }
+    try {
+      const response = await fetch(requestUrl, {
+        method,
+        credentials: config.withCredentials === false ? 'same-origin' : 'include',
+        headers,
+        signal: config.signal ?? this._controller.signal,
+        body: this.createBody(data),
+      });
 
-  private _requestFulfilled(config: InternalAxiosRequestConfig) {
-    return config;
-  }
+      const result = await this.parseResponse(response);
 
-  private _responseFulfilled(response: AxiosResponse) {
-    return response.data;
-  }
-
-  private _rejected(error: any) {
-    if (error instanceof AxiosError) {
-      if (error.response) {
-        switch (error.code) {
-          case AxiosError.ERR_NETWORK:
-            switch (error.response.status) {
-              case 0:
-                throw new ServiceUnavailableException(error.message);
-              default:
-                throw new ServiceUnavailableException(error.response.data);
-            }
-          case AxiosError.ERR_BAD_REQUEST:
-            switch (error.response.status) {
-              case 401: {
-                throw new UnauthorizedException(error.response.data);
-              }
-              case 403:
-                throw new ForbiddenException(error.response.data);
-            }
-        }
-      } else {
-        switch (error.code) {
-          case AxiosError.ERR_NETWORK: {
-            throw new ServiceUnavailableException(error.message);
-          }
-        }
+      if (!response.ok) {
+        this.throwResponseError(response, result);
       }
+
+      return result as R;
+    } catch (error) {
+      if (error instanceof ForbiddenException || error instanceof UnauthorizedException) {
+        throw error;
+      }
+      if (error instanceof ServiceUnavailableException || error instanceof InternalServerErrorException) {
+        throw error;
+      }
+
+      throw new ServiceUnavailableException(error instanceof Error ? error.message : String(error));
     }
-    throw new InternalServerErrorException(error.message);
+  }
+
+  private createUrl(url: string, params?: object): string {
+    if (!params || Object.keys(params).length === 0) {
+      return url;
+    }
+
+    const target = new URL(url, globalThis.location?.origin);
+
+    for (const [key, value] of Object.entries(params) as [string, unknown][]) {
+      if (value === undefined || value === null || value === '') {
+        continue;
+      }
+
+      if (Array.isArray(value)) {
+        for (const item of value) {
+          target.searchParams.append(key, String(item));
+        }
+        continue;
+      }
+
+      if (typeof value === 'object') {
+        target.searchParams.set(key, JSON.stringify(value));
+        continue;
+      }
+
+      target.searchParams.set(key, String(value));
+    }
+
+    return target.toString();
+  }
+
+  private createHeaders<D>(headers: HeadersInit | undefined, data?: D): Headers {
+    const result = new Headers(headers);
+
+    result.set('X-Device-Id', this.deviceService.getUniqueId());
+
+    if (data !== undefined && this.shouldUseJsonBody(data) && !result.has('Content-Type')) {
+      result.set('Content-Type', 'application/json');
+    }
+
+    if (data instanceof FormData && result.get('Content-Type') === 'multipart/form-data') {
+      result.delete('Content-Type');
+    }
+
+    return result;
+  }
+
+  private createBody<D>(data?: D): BodyInit | undefined {
+    if (data === undefined) {
+      return undefined;
+    }
+
+    if (!this.shouldUseJsonBody(data)) {
+      return data as BodyInit;
+    }
+
+    return JSON.stringify(data);
+  }
+
+  private shouldUseJsonBody(data: unknown): boolean {
+    return !(data instanceof FormData || data instanceof Blob || data instanceof URLSearchParams || typeof data === 'string');
+  }
+
+  private async parseResponse(response: Response): Promise<unknown> {
+    if (response.status === 204) {
+      return undefined;
+    }
+
+    const contentType = response.headers.get('Content-Type') ?? '';
+
+    if (contentType.includes('application/json')) {
+      return await response.json();
+    }
+
+    const text = await response.text();
+
+    return text === '' ? undefined : text;
+  }
+
+  private throwResponseError(response: Response, data: unknown): never {
+    const payload = this.createExceptionPayload(data);
+
+    switch (response.status) {
+      case 0:
+        throw new ServiceUnavailableException(payload);
+      case 401:
+        throw new UnauthorizedException(payload);
+      case 403:
+        throw new ForbiddenException(payload);
+      case 503:
+        throw new ServiceUnavailableException(payload);
+      default:
+        throw new InternalServerErrorException(payload);
+    }
+  }
+
+  private createExceptionPayload(data: unknown): string | Record<string, any> | undefined {
+    if (data === undefined) {
+      return undefined;
+    }
+
+    if (typeof data === 'string') {
+      return data;
+    }
+
+    if (data && typeof data === 'object') {
+      return data as Record<string, any>;
+    }
+
+    return String(data);
   }
 
   @httpLogger()
@@ -80,27 +171,27 @@ export class HttpClient implements HttpClientInterface {
   }
 
   @httpLogger()
-  get<T = any, R = T, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
-    return this._axios.get<T, R, D>(url, config);
+  get<T = any, R = T, D = any>(url: string, config?: HttpRequestConfig<D>): Promise<R> {
+    return this.request<R, D>('GET', url, undefined, config);
   }
 
   @httpLogger()
-  post<T = any, R = T, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
-    return this._axios.post<T, R, D>(url, data, config);
+  post<T = any, R = T, D = any>(url: string, data?: D, config?: HttpRequestConfig<D>): Promise<R> {
+    return this.request<R, D>('POST', url, data, config);
   }
 
   @httpLogger()
-  put<T = any, R = T, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
-    return this._axios.put<T, R, D>(url, data, config);
+  put<T = any, R = T, D = any>(url: string, data?: D, config?: HttpRequestConfig<D>): Promise<R> {
+    return this.request<R, D>('PUT', url, data, config);
   }
 
   @httpLogger()
-  patch<T = any, R = T, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R> {
-    return this._axios.patch<T, R, D>(url, data, config);
+  patch<T = any, R = T, D = any>(url: string, data?: D, config?: HttpRequestConfig<D>): Promise<R> {
+    return this.request<R, D>('PATCH', url, data, config);
   }
 
   @httpLogger()
-  delete<T = any, R = T, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R> {
-    return this._axios.delete<T, R, D>(url, config);
+  delete<T = any, R = T, D = any>(url: string, config?: HttpRequestConfig<D>): Promise<R> {
+    return this.request<R, D>('DELETE', url, undefined, config);
   }
 }

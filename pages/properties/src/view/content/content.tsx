@@ -1,16 +1,17 @@
 import { Typography } from '@sellgar/kit';
-import { useLoaderData } from '@library/app';
+import { useLoaderData } from '@tiyn/app';
 import { PropertyGroupEntity } from '@library/domain';
 
 import React from 'react';
 
 import { Table } from './table';
 import { Actions } from './actions';
+import { PropertyControllerInterface } from '../../classes/controller/property-controller.interface.ts';
 
 import s from './default.module.scss';
 
 export const Content = () => {
-  const [data] = useLoaderData<[PropertyGroupEntity][]>();
+  const data = useLoaderData(PropertyControllerInterface) as PropertyGroupEntity[];
 
   return data.map((group) => {
     return (

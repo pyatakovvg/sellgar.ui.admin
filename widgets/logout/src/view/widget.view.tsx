@@ -1,5 +1,5 @@
 import { Button, Icon, Animate } from '@sellgar/kit';
-import { useWidgetController } from '@library/app';
+import { useController } from '@tiyn/app';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -12,7 +12,7 @@ import { LogoutControllerInterface } from '../classes/controller/logout-controll
 export const WidgetView: React.FC = observer(() => {
   const [isConfirm, setConfirm] = React.useState(false);
 
-  const controller = useWidgetController(LogoutControllerInterface);
+  const controller = useController(LogoutControllerInterface);
 
   const logout = useLogout();
 

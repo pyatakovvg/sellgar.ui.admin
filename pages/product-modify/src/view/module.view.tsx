@@ -1,5 +1,5 @@
 import { Page } from '@library/design';
-import { useLoaderData, useNavigate } from '@library/app';
+import { useLoaderData, useNavigate } from '@tiyn/app';
 import { ProductEntity } from '@library/domain';
 
 import React from 'react';
@@ -8,6 +8,7 @@ import * as ReactHookFormResolver from '@hookform/resolvers/yup';
 
 import { Content } from './content';
 import { Controls } from './controls';
+import { ProductControllerInterface } from '../classes/controller/product-controller.interface.ts';
 
 import { useCreate } from '../requests/create.hook.ts';
 import { useUpdate } from '../requests/update.hook.ts';
@@ -16,7 +17,7 @@ import { IFormData, schema } from './schema.ts';
 
 export const ModuleView = () => {
   const navigate = useNavigate();
-  const [data] = useLoaderData<[ProductEntity]>();
+  const data = useLoaderData(ProductControllerInterface) as ProductEntity | undefined;
 
   const methods = ReactHookForm.useForm<IFormData>({
     mode: 'onBlur',
@@ -39,7 +40,7 @@ export const ModuleView = () => {
       } else {
         const result = await create(values);
 
-        navigate.location('/products/' + result?.uuid);
+        await navigate.to('/products/' + result?.uuid);
       }
     },
     (errors) => console.log(123, errors),

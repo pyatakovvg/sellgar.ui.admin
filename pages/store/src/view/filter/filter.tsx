@@ -1,4 +1,4 @@
-import { useLocation } from '@library/app';
+import { useLocation } from '@tiyn/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
@@ -10,7 +10,7 @@ export const Filter = () => {
 
   const methods = ReactHookForm.useForm({
     defaultValues: {
-      search: location.searchParams.search.search ?? undefined,
+      search: (location.searchParams.search as { search?: string } | undefined)?.search ?? undefined,
     },
   });
 

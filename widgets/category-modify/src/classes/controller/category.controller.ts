@@ -1,17 +1,23 @@
 import { CategoryEntity, CategoryServiceInterface, CreateCategoryDto, UpdateCategoryDto } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject } from '@tiyn/app';
+import type { WidgetControllerLoaderArgs } from '@tiyn/app';
 
 import { FormStoreInterface } from '../store/form/form-store.interface.ts';
 
 import { CategoryControllerInterface } from './category-controller.interface.ts';
+import { type CategoryModifyWidgetProps } from '../../widget.context.tsx';
 
-@injectable()
+@Controller()
 export class CategoryController implements CategoryControllerInterface {
   constructor(
-    @inject(FormStoreInterface) public readonly formStore: FormStoreInterface,
-    @inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface,
+    @Inject(FormStoreInterface) public readonly formStore: FormStoreInterface,
+    @Inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface,
   ) {}
+
+  async loader(args: WidgetControllerLoaderArgs<CategoryModifyWidgetProps>) {
+    return await this.findByUuid(args.props.uuid);
+  }
 
   async findByUuid(uuid?: string) {
     const result = await this.categoryService.findAll();

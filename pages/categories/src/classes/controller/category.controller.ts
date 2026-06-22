@@ -1,12 +1,12 @@
 import { CategoryServiceInterface } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject } from '@tiyn/app';
 
 import { CategoryControllerInterface } from './category-controller.interface.ts';
 
-@injectable()
+@Controller()
 export class CategoryController implements CategoryControllerInterface {
-  constructor(@inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface) {}
+  constructor(@Inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface) {}
 
   async loader() {
     return await this.categoryService.findAll();

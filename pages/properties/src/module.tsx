@@ -1,15 +1,11 @@
-import { Module } from '@library/app';
-
-import React from 'react';
+import { Module, UseBindings } from '@tiyn/app';
 
 import { PropertyView } from './view';
 
-import { containerModule } from './classes/classes.di.ts';
-import { PropertyControllerInterface } from './classes/controller/property-controller.interface.ts';
+import { PropertiesBindings } from './classes/classes.di.ts';
 
+@UseBindings(PropertiesBindings)
 @Module({
-  imports: [containerModule],
-  controllers: [PropertyControllerInterface],
-  view: <PropertyView />,
+  view: PropertyView,
 })
 export class ClassModule {}

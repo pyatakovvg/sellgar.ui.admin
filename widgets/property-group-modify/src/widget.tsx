@@ -1,27 +1,20 @@
 import React from 'react';
-import { createWidget } from '@library/app';
+import { UseBindings, Widget as WidgetDeclaration, WidgetDefinition, WidgetHost } from '@tiyn/app';
 
 import { WidgetView } from './view';
-import { Provider } from './widget.context.tsx';
-import { containerModule } from './classes/classes.di.ts';
-import { PropertyGroupModifyControllerInterface } from './classes/controller/property-group-modify-controller.interface.ts';
+import { Provider, type PropertyGroupModifyWidgetProps } from './widget.context.tsx';
+import { PropertyGroupModifyBindings } from './classes/classes.di.ts';
 
-interface IProps {
-  uuid?: string;
-  onCancel(): void;
-  onSuccess(): void;
-}
+@UseBindings(PropertyGroupModifyBindings)
+@WidgetDeclaration<PropertyGroupModifyWidgetProps>({
+  view: WidgetView,
+})
+class PropertyGroupModifyWidget extends WidgetDefinition<PropertyGroupModifyWidgetProps> {}
 
-const WidgetFactory = createWidget({
-  containerModule,
-  controller: [PropertyGroupModifyControllerInterface],
-  view: <WidgetView />,
-});
-
-export const Widget: React.FC<IProps> = (props) => {
+export const Widget: React.FC<PropertyGroupModifyWidgetProps> = (props) => {
   return (
-    <Provider value={{ uuid: props.uuid, onCancel: props.onCancel, onSuccess: props.onSuccess }}>
-      <WidgetFactory />
+    <Provider value={props}>
+      <WidgetHost token={PropertyGroupModifyWidget} props={props} />
     </Provider>
   );
 };

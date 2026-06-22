@@ -1,13 +1,11 @@
-import { ApplicationControllerInterface } from '@library/app';
 import { ProfileEntity } from '@library/domain';
-
-import { injectable, inject } from 'inversify';
+import { ApplicationStoreInterface, Controller, Inject } from '@tiyn/app';
 
 import { DashboardConstructorInterface } from './dashboard-constructor.interface.ts';
 
-@injectable()
+@Controller()
 export class DashboardConstructor implements DashboardConstructorInterface {
-  constructor(@inject(ApplicationControllerInterface) private applicationController: ApplicationControllerInterface) {
-    console.log(applicationController.dataStore.get(ProfileEntity));
+  constructor(@Inject(ApplicationStoreInterface) private readonly store: ApplicationStoreInterface) {
+    console.log(this.store.get(ProfileEntity));
   }
 }

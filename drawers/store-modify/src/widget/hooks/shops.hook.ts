@@ -1,9 +1,9 @@
-import { useWidgetController } from '@library/app';
+import { useController } from '@tiyn/app';
 
 import { StoreControllerInterface } from '../classes/controller/store-controller.interface.ts';
 
 export const useShops = () => {
-  const controller = useWidgetController(StoreControllerInterface);
+  const controller = useController(StoreControllerInterface);
 
   return controller.shopStore.shops;
 };

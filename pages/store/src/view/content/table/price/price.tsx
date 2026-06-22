@@ -1,3 +1,4 @@
+import { StoreEntity } from '@library/domain';
 import { Typography, useCellData } from '@sellgar/kit';
 import { amountFormat } from '@utils/format';
 
@@ -6,7 +7,7 @@ import React from 'react';
 import s from './default.module.scss';
 
 export const Price: React.FC = () => {
-  const { data } = useCellData();
+  const { data } = useCellData<StoreEntity>();
 
   return (
     <div className={s.wrapper}>

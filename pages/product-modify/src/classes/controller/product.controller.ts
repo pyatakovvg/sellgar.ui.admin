@@ -5,9 +5,8 @@ import {
   PropertyServiceInterface,
   logger,
 } from '@library/domain';
-import { LoaderArgs } from '@library/app';
 
-import { inject, injectable } from 'inversify';
+import { Controller, Inject, type ControllerLoaderArgs } from '@tiyn/app';
 
 import { FormStoreInterface } from '../store/form/form-store.interface.ts';
 import { ProductControllerInterface } from './product-controller.interface.ts';
@@ -15,14 +14,14 @@ import { ProductControllerInterface } from './product-controller.interface.ts';
 import { CreateProductDto } from './dto/create-product.dto.ts';
 import { UpdateProductDto } from './dto/update-product.dto.ts';
 
-@injectable()
+@Controller()
 export class ProductController implements ProductControllerInterface {
   constructor(
-    @inject(FormStoreInterface) public formStore: FormStoreInterface,
-    @inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface,
-    @inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface,
-    @inject(PropertyServiceInterface) private readonly propertyService: PropertyServiceInterface,
-    @inject(ProductServiceInterface) private readonly productService: ProductServiceInterface,
+    @Inject(FormStoreInterface) public formStore: FormStoreInterface,
+    @Inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface,
+    @Inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface,
+    @Inject(PropertyServiceInterface) private readonly propertyService: PropertyServiceInterface,
+    @Inject(ProductServiceInterface) private readonly productService: ProductServiceInterface,
   ) {}
 
   @logger()
@@ -61,7 +60,7 @@ export class ProductController implements ProductControllerInterface {
     });
   }
 
-  async loader(args: LoaderArgs) {
+  async loader(args: ControllerLoaderArgs) {
     return await this.findByUuid(args.params?.uuid);
   }
 }

@@ -1,14 +1,17 @@
 import React from 'react';
 
-import { createWidget } from '@library/app';
+import { UseBindings, Widget as WidgetDeclaration, WidgetDefinition, WidgetHost } from '@tiyn/app';
 
 import { WidgetView } from './view';
-import { containerModule } from './classes/classes.di.ts';
-import { LogoutControllerInterface } from './classes/controller/logout-controller.interface.ts';
+import { LogoutBindings } from './classes/classes.di.ts';
 
-export const Widget = createWidget({
-  containerModule,
-  controller: [LogoutControllerInterface],
+@UseBindings(LogoutBindings)
+@WidgetDeclaration({
   fallback: <p>loading...</p>,
-  view: <WidgetView />,
-});
+  view: WidgetView,
+})
+class LogoutWidget extends WidgetDefinition {}
+
+export const Widget: React.FC = () => {
+  return <WidgetHost token={LogoutWidget} />;
+};

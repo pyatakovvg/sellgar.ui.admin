@@ -1,5 +1,5 @@
 import { BrandEntity } from '@library/domain';
-import { useWidgetLoaderData } from '@library/app';
+import { useLoaderData } from '@tiyn/app';
 
 import React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,6 +12,7 @@ import { useCreateRequest } from '../../requests/create.request.ts';
 import { useUpdateRequest } from '../../requests/update.request.ts';
 
 import { schema } from './schema.ts';
+import { BrandModifyControllerInterface } from '../../classes/controller/brand-modify-controller.interface.ts';
 
 import s from './modify.module.scss';
 
@@ -22,7 +23,7 @@ interface IForm {
 }
 
 export const Modify = () => {
-  const [data] = useWidgetLoaderData<[BrandEntity]>();
+  const data = useLoaderData(BrandModifyControllerInterface) as BrandEntity | undefined;
 
   const createRequest = useCreateRequest();
   const updateRequest = useUpdateRequest();

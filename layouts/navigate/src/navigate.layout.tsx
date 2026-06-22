@@ -1,3 +1,6 @@
+import { Layout } from '@tiyn/app';
+import type { LayoutViewProps } from '@tiyn/app';
+
 import React from 'react';
 
 import { Mobile } from './mobile';
@@ -8,7 +11,7 @@ import { useScreenSize } from './screen-size.hook.ts';
 
 import s from './default.module.scss';
 
-const NavigateLayoutComponent: React.FC<React.PropsWithChildren> = (props) => {
+const NavigateLayoutView: React.FC<LayoutViewProps> = (props) => {
   const { isMobile, isTablet, isDesktop } = useScreenSize();
 
   return (
@@ -26,10 +29,9 @@ const NavigateLayoutComponent: React.FC<React.PropsWithChildren> = (props) => {
   );
 };
 
-type TNavigateLayout = typeof NavigateLayoutComponent & {
-  Slot: typeof LayoutSlot;
-};
-
-export const NavigateLayout: TNavigateLayout = Object.assign(NavigateLayoutComponent, {
-  Slot: LayoutSlot,
-});
+@Layout({
+  view: NavigateLayoutView,
+})
+export class NavigateLayout {
+  static Slot = LayoutSlot;
+}

@@ -1,19 +1,18 @@
 import { AuthServiceInterface, ProfileServiceInterface, ProfileEntity } from '@library/domain';
-import { ApplicationControllerInterface } from '@library/app';
-
-import { inject, injectable } from 'inversify';
+import { ApplicationStoreInterface, Controller, Inject, SessionRuntimeStateInterface } from '@tiyn/app';
 
 import { SignInControllerInterface } from './sign-in-controller.interface.ts';
 
 import { FormStoreInterface } from '../store/form-store.interface.ts';
 
-@injectable()
+@Controller()
 export class SignInController implements SignInControllerInterface {
   constructor(
-    @inject(FormStoreInterface) readonly formStore: FormStoreInterface,
-    @inject(AuthServiceInterface) private readonly authService: AuthServiceInterface,
-    @inject(ProfileServiceInterface) private readonly profileService: ProfileServiceInterface,
-    @inject(ApplicationControllerInterface) private readonly applicationController: ApplicationControllerInterface,
+    @Inject(FormStoreInterface) readonly formStore: FormStoreInterface,
+    @Inject(AuthServiceInterface) private readonly authService: AuthServiceInterface,
+    @Inject(ProfileServiceInterface) private readonly profileService: ProfileServiceInterface,
+    @Inject(ApplicationStoreInterface) private readonly store: ApplicationStoreInterface,
+    @Inject(SessionRuntimeStateInterface) private readonly session: SessionRuntimeStateInterface,
   ) {}
 
   async signIn(login: string, password: string) {
@@ -23,9 +22,10 @@ export class SignInController implements SignInControllerInterface {
       await this.authService.signIn(login, password);
       const profile = await this.profileService.get();
 
-      this.applicationController.dataStore.set(ProfileEntity, profile);
-      this.applicationController.authStore.setAuth(true);
+      this.store.set(ProfileEntity, profile);
+      this.session.setAuthenticated();
     } catch (error) {
+      this.session.setAnonymous();
       console.error(error);
       throw error;
     } finally {

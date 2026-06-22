@@ -1,5 +1,5 @@
 import { Sidebar, MenuItem, User } from '@sellgar/kit';
-import { useDataStore } from '@library/app';
+import { ApplicationStoreInterface, useDependency } from '@tiyn/app';
 import { ProfileEntity } from '@library/domain';
 
 import React from 'react';
@@ -11,7 +11,7 @@ import s from './default.module.scss';
 
 export const Aside = () => {
   // const slotContext = React.useContext(layoutSlotContext);
-  const dataStore = useDataStore();
+  const dataStore = useDependency(ApplicationStoreInterface);
   const profile = dataStore.get(ProfileEntity);
 
   return (

@@ -9,19 +9,19 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
-    "@hookform/resolvers": "5.2.2",
-    "@library/app": "0.0.1",
+    "@hookform/resolvers": "5.4.0",
     "@library/push": "0.0.1",
     "@sellgar/kit": "0.0.180",
+    "@tiyn/app": "0.0.1",
     "classnames": "2.5.1",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "react-hook-form": "7.71.2",
-    "react-router-dom": "7.13.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "react-hook-form": "7.80.0",
+    "react-router-dom": "7.18.0",
     "yup": "1.7.1"
   },
   "devDependencies": {
-    "@types/react": "19.2.14",
+    "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3"
   }
 }

@@ -1,5 +1,5 @@
 import { Typography, Icon, Button } from '@sellgar/kit';
-import { useNavigate } from '@library/app';
+import { useNavigate } from '@tiyn/app';
 
 import React from 'react';
 
@@ -16,7 +16,7 @@ export const Header = () => {
         </Typography>
       </div>
       <div>
-        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => navigate.hash({ modal: {} })}>
+        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => navigate.hashParams({ modal: {} }, { merge: true })}>
           Добавить категорию
         </Button>
       </div>

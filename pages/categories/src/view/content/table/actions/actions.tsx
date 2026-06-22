@@ -1,5 +1,5 @@
 import { Button, Icon, useCellData } from '@sellgar/kit';
-import { useNavigate } from '@library/app';
+import { useNavigate } from '@tiyn/app';
 import { CategoryEntity } from '@library/domain';
 
 import React from 'react';
@@ -17,7 +17,7 @@ export const Actions: React.FC = () => {
         style={'ghost'}
         size={'sm'}
         leadIcon={<Icon icon={'more-2-fill'} />}
-        onClick={() => navigate.hash({ modal: { uuid: data.uuid } })}
+        onClick={() => navigate.hashParams({ modal: { uuid: data.uuid } }, { merge: true })}
       />
     </div>
   );
