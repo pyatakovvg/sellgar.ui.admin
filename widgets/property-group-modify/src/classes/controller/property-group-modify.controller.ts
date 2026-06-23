@@ -1,4 +1,4 @@
-import { PropertyEntity, PropertyGroupServiceInterface } from '@library/domain';
+import { PropertyGroupServiceInterface } from '@library/domain';
 
 import { Controller, Inject, type WidgetControllerLoaderArgs } from '@tiyn/app';
 

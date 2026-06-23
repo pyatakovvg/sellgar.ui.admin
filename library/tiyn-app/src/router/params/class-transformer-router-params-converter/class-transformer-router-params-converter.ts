@@ -7,7 +7,7 @@ import {
   RouterParamsConverterInterface,
   type RouterParamsConstructor,
   type RouterParamsObjectOptions,
-} from '../router-params-converter/router-params-converter.interface.ts';
+} from '../router-params-converter';
 
 @Injectable()
 export class ClassTransformerRouterParamsConverter extends RouterParamsConverterInterface {

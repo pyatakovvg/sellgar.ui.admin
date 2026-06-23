@@ -3,9 +3,9 @@ import { Frame, FrameDefinition, HashFrameSource, UseBindings } from '@tiyn/app'
 import React from 'react';
 
 import { BrandModifyBindings } from './widget/classes/classes.di.ts';
-import { Exception } from './widget/view/exception';
-import { Fallback } from './widget/view/fallback';
-import { Modify } from './widget/view/modify';
+import { Exception } from './widget/view';
+import { Fallback } from './widget/view';
+import { Modify } from './widget/view';
 import { BrandModifyFrameShell } from './shell';
 
 export interface BrandModifyFrameParams {

@@ -3,9 +3,9 @@ import { Frame, FrameDefinition, HashFrameSource, UseBindings } from '@tiyn/app'
 import React from 'react';
 
 import { StoreModifyBindings } from './widget/classes/classes.di.ts';
-import { Exception } from './widget/view/exception';
-import { Fallback } from './widget/view/fallback';
-import { ModifyView } from './widget/view/modify.view.tsx';
+import { Exception } from './widget/view';
+import { Fallback } from './widget/view';
+import { ModifyView } from './widget/view';
 import { StoreModifyFrameShell } from './shell';
 
 export interface StoreModifyFrameParams {
