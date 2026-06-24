@@ -92,7 +92,7 @@ clients/{host-name}/
 Это одна структура с optional-каталогами. Каталоги не создаются заранее, если в
 них нет файлов.
 
-## Public Boundary
+## Публичная Граница
 
 Host package не является обычным reusable package.
 

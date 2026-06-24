@@ -1,4 +1,4 @@
-# Структура Frame Package
+# Структура Frame-Пакета
 
 Этот документ фиксирует целевую структуру каталогов для `frames/*`.
 Он нужен для двух сценариев:
@@ -165,7 +165,7 @@ src/
       exception.tsx
 ```
 
-## Public API
+## Публичный API
 
 `src/index.ts` экспортирует только то, что нужно внешним потребителям.
 
@@ -347,7 +347,7 @@ export class OrderDetailsFrameParams {
 Package root не экспортирует params по умолчанию. Если внешний код должен
 типизировать `frame.open(...)`, export добавляется явно и осознанно.
 
-## Data Structures
+## Структуры Данных
 
 Frame data structures лежат рядом с владельцем contract.
 

@@ -1,68 +1,68 @@
-## AGENTS
+# AGENTS
 
-### Назначение
-Краткий контекст проекта для быстрой ориентации.
+## Назначение
 
-### Кратко
+Краткий контекст проекта для агентской работы в `sellgar.ui.admin`.
+
+## Кратко
+
 - Монорепа Yarn workspaces, основной клиент: `clients/admin` (Vite + React 19).
-- Каркас: `@library/app` (Router/Module/Application), DI: `inversify`, домен: `@library/domain`.
-- UI‑обвязки: `@library/design`, уведомления: `@library/message`, пуши: `@library/push`.
+- Runtime приложения: `@tiyn/app`; DI bindings лежат рядом с application/pages/frames/widgets.
+- UI kit: `@sellgar/kit`; иконки брать из `@sellgar/kit/icons`, не из font-class API.
+- Домен и HTTP: `@library/domain`.
+- Вся документация пишется на русском языке; paths, package names, команды и API identifiers оставлять как code literals.
 
-### Входные точки
-- `clients/admin/src/main.tsx` → `clients/admin/src/bootstrap.tsx`.
-- DI контейнер: `clients/admin/src/container.module.ts`.
-- Service Worker: `clients/admin/src/sw/service-worker.tsx`.
-- Глобальные стили: `clients/admin/src/styles/index.css` (контейнер `#sw`).
+## Входные точки
 
-### Роутинг и страницы
-- Маршруты: `clients/admin/src/bootstrap.tsx`.
-- Страницы как модули: `pages/*/src/module.tsx`.
-- Приватные/публичные: `PrivateRoutes` / `PublicRoutes` в `@library/app`.
-- Хлебные крошки: `library/app/src/components/breadcrumbs/*` (через `breadcrumb` в маршрутах).
+- `clients/admin/src/main.tsx` - глобальные стили и bootstrap.
+- `clients/admin/src/bootstrap.tsx` - создание `AdminApplication`, React root, service worker.
+- `clients/admin/src/application/admin.application.tsx` - layouts, policies, routes, frames.
+- `clients/admin/src/application/bindings/admin.bindings.ts` - host-level bindings.
+- `clients/admin/src/sw/service-worker.tsx` - UI обновления service worker.
+- `clients/admin/src/styles/index.css` - глобальные стили.
 
-### Авторизация
-- `PrivateRoutes` запускает `loader` и грузит профиль через `ApplicationControllerInterface`.
-- 401 ведет на `/sign-in` через `clients/admin/src/components/exception/exception.tsx`.
+## Роутинг
 
-### Лейауты
-- `layouts/app` — обертка и провайдер сообщений.
-- `layouts/base` — базовый каркас.
-- `layouts/navigate` — меню и крошки.
+- Route tree описан в `AdminApplication`.
+- Публичный route: `/sign-in`.
+- Приватные routes под `NavigateLayout`: `/`, `/shops`, `/products`, `/store`, `/brands`, `/categories`, `/units`, `/properties`.
+- Hash frames подключаются в route config через `frames: [...]`.
+- Drawer/modal формы для списковых страниц должны жить во `frames/*`, а не во `widgets/*`.
 
-### Запросы и ошибки
-- HTTP слой: `library/domain/src/helpers/http-client/http-client.ts`.
-- Ошибки роутинга: `clients/admin/src/components/exception/exception.tsx`.
+## Пакеты
 
-### Скрипты
-- Запуск админки: `yarn dev:admin_ui`
-- Сборка админки: `yarn build:admin_ui`
+- `clients/admin` - host и composition root. Не складывать сюда feature logic.
+- `layouts/*` - layout-пакеты.
+- `pages/*` - route-level feature pages.
+- `frames/*` - цельные drawer/modal workflows с собственными bindings/controller/view.
+- `widgets/*` - встраиваемые reusable widgets.
+- `library/*` - общие слои. `library/design` не должен зависеть от domain/pages/widgets.
+- `utils/*` - чистые утилиты.
 
-### UI
-- Большинство страниц используют `@library/design` (`Page`, `Form`).
+## Структура feature-пакета
 
-### Основные каталоги
-- `clients/admin` — приложение админки.
-- `pages/*` — страницы (module/view/controller/store/requests).
-- `widgets/*` — виджеты (modify/logout и т.п.).
-- `library/*` — общие библиотеки.
-- `utils/*` — утилиты (format/generate).
+- `src/index.ts` - public export.
+- `src/module.tsx` или `src/*frame.tsx` - декларация module/frame.
+- `src/classes/*` - controller/interface/bindings.
+- `src/view/*` - UI слой.
+- `src/requests/*` и `src/hooks/*` - feature-specific запросы и хуки.
 
-### Карта зависимостей
-- `clients/admin` → `layouts/*`, `pages/*`, `library/*`, `widgets/*`.
-- `pages/*` → `@library/app`, `@library/design`, `@library/domain`, `@sellgar/kit`.
-- `widgets/*` → `@library/app`, `@library/design`, `@library/domain`.
-- `layouts/*` → `@library/design`, `@library/message`, `@widget/logout`.
-- `library/*` — базовый слой, без зависимостей на pages/widgets.
+## Runtime правила
 
-### Структура модуля страницы
-- `src/module.tsx` — регистрация модуля (`@Module`) и DI.
-- `src/classes/*` — контроллеры/сторы/DI‑бинды.
-- `src/view/*` — UI слой (header/content/filters/modify).
-- `src/requests/*` — сетевые запросы (если есть).
-- `src/hooks/*` — хуки данных/процессов (если есть).
+- Pages используют `@Module` и `@UseBindings`.
+- Frames используют `@Frame`, `HashFrameSource`, `FrameDefinition`, `@UseBindings`.
+- Для hash-frame loader id приходит через `FrameControllerLoaderArgs<T>['props']`; не читать его из route params без проверки.
+- Табличное открытие drawer делать через click row, если действие является основным для строки.
+- Для таблиц использовать актуальный компонент `Table` из `@sellgar/kit`.
 
-### Точки расширения
-- Страница: `pages/<name>` + маршрут в `clients/admin/src/bootstrap.tsx`.
-- Виджет: `widgets/<name>` + подключение в нужный view/layout.
-- Доменная модель: `library/domain/src/classes/<entity>` + экспорт в `library/domain/src/index.ts`.
-- DI бинды: соответствующий `container.module.ts` в приложении/модуле.
+## Скрипты
+
+- Запуск админки: `yarn dev:admin_ui`.
+- Сборка админки: `yarn build:admin_ui`.
+- Тесты: `yarn test`.
+
+## Документация
+
+- Общая карта: `README.md`, `docs/architecture.md`.
+- Правила разработки: `docs/development`.
+- Агентские инструкции: `docs/agent`.
