@@ -1,95 +1,109 @@
+import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
-import tsconfigPaths from 'vite-tsconfig-paths';
-import reactSWC from '@vitejs/plugin-react-swc';
-import { defineConfig, PluginOption } from 'vite';
-import { visualizer } from 'rollup-plugin-visualizer';
+import reactSwc from '@vitejs/plugin-react-swc';
 
-// https://vitejs.dev/config/
+function createCodeSplittingGroups(mapping: Record<string, string[]>) {
+  const entries = Object.entries(mapping);
+
+  return entries.map(([name, packages], index) => ({
+    name,
+    test: (id: string) => packages.some((pkg) => id.includes(pkg)),
+    priority: entries.length - index,
+  }));
+}
+
+const ONE_DAY = 60 * 60 * 24;
+const MAXIMUM_CACHE_FILE_SIZE = 10 * 1024 * 1024;
+
 export default defineConfig({
+  cacheDir: '/tmp/.vite',
   build: {
+    modulePreload: false,
     outDir: 'build',
-    minify: 'terser',
+    chunkSizeWarningLimit: 1000,
     sourcemap: process.env.SOURCE_MAP === 'true',
-    terserOptions: {
-      compress: {
-        keep_classnames: true,
-        keep_fnames: true,
-        keep_fargs: true,
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: createCodeSplittingGroups({
+            'react.vendor': ['react', 'react-dom', 'react-router-dom'],
+            'app.vendor': ['@tiyn/app'],
+            'domain.vendor': ['@library/domain'],
+            'kit.vendor': ['@sellgar/kit'],
+          }),
+        },
       },
-      mangle: false,
     },
   },
   optimizeDeps: {
-    force: true,
-    esbuildOptions: {
-      jsx: 'automatic',
-      keepNames: true,
+    include: ['nanoid/non-secure'],
+  },
+  css: {
+    transformer: 'lightningcss',
+    lightningcss: {
+      drafts: {
+        customMedia: true,
+      },
+      cssModules: true,
     },
   },
   plugins: [
-    tsconfigPaths(),
-
-    reactSWC({
+    reactSwc({
       tsDecorators: true,
-      devTarget: 'esnext',
     }),
-
     VitePWA({
       minify: true,
       registerType: 'prompt',
-      manifest: {
-        id: '/',
-        lang: 'ru',
-        name: 'Sellgar',
-        short_name: 'SG',
-        theme_color: 'white',
-        display: 'fullscreen',
-        background_color: '#ffffff',
-        start_url: '.',
-        screenshots: [{ src: 'pwa/pwa-512x512.png', sizes: '512x512', form_factor: 'wide' }],
-        icons: [
-          {
-            src: 'pwa/pwa-64x64.png',
-            sizes: '64x64',
-            type: 'image/png',
-          },
-          {
-            src: 'pwa/pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: 'pwa/pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-          },
-          {
-            src: 'pwa/maskable-icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'maskable',
-          },
-        ],
-      },
-      workbox: {
-        globDirectory: 'build',
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-        globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js'],
-        maximumFileSizeToCacheInBytes: 9000000,
-      },
       devOptions: {
         enabled: true,
         type: 'module',
       },
+      manifest: {
+        id: '/terminals-management',
+        lang: 'ru',
+        name: 'Tiyn management terminals',
+        short_name: 'TmT',
+        theme_color: '#ffffff',
+        display: 'fullscreen',
+        background_color: '#ffffff',
+        start_url: '.',
+      },
+      workbox: {
+        skipWaiting: false,
+        clientsClaim: false,
+        cleanupOutdatedCaches: true,
+        maximumFileSizeToCacheInBytes: MAXIMUM_CACHE_FILE_SIZE,
+        runtimeCaching: [
+          {
+            urlPattern: /.*\.(ico|png|svg|webp|webm)/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'static-images-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: ONE_DAY,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: /.*\.(ttf|woff|woff2|eot)/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'static-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: ONE_DAY * 365,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+        ],
+      },
     }),
-
-    process.env.NODE_ENV === 'production' &&
-      (visualizer({
-        template: 'treemap', // or sunburst
-        open: true,
-        gzipSize: true,
-        brotliSize: true,
-        filename: 'build/analyse.html', // will be saved in project's root
-      }) as PluginOption),
   ],
 });

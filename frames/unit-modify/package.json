@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@frame/unit-modify",
+  "version": "0.0.1",
+  "description": "List components",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@library/design": "0.0.1",
+    "@library/domain": "0.0.1",
+    "@sellgar/kit": "0.0.181",
+    "@tiyn/app": "0.0.1",
+    "classnames": "2.5.1",
+    "mobx": "6.16.1",
+    "mobx-react": "9.2.2",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@types/reflect-metadata": "0.1.0"
+  }
+}

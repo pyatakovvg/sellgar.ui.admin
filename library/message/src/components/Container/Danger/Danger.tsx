@@ -26,8 +26,8 @@ export const Danger: React.FC<IProps> = (props) => {
   };
 
   return (
-    <Notification
-      style={'destructive'}
+    <Notification.Default
+      status={'destructive'}
       title={props.push.title}
       slot={<Content>{props.push.content}</Content>}
       onClose={handleClose}

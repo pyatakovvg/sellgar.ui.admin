@@ -26,8 +26,8 @@ export const Success: React.FC<IProps> = (props) => {
   };
 
   return (
-    <Notification
-      style={'success'}
+    <Notification.Default
+      status={'success'}
       title={props.push.title}
       slot={<Content>{props.push.content}</Content>}
       onClose={handleClose}

@@ -1,15 +1,15 @@
 import { Button, Icon, Typography } from '@sellgar/kit';
+import { PropertyGroupModifyFrame } from '@frame/property-group-modify';
+import { PropertyModifyFrame } from '@frame/property-modify';
+import { useFrame } from '@tiyn/app';
 
 import React from 'react';
-
-import { context as modifyContext } from '../modify';
-import { context as modifyGroupContext } from '../modify-group';
 
 import s from './default.module.scss';
 
 export const Header = () => {
-  const { onOpen: onModifyOpen } = React.useContext(modifyContext);
-  const { onOpen: onModifyGroupOpen } = React.useContext(modifyGroupContext);
+  const propertyFrame = useFrame(PropertyModifyFrame);
+  const propertyGroupFrame = useFrame(PropertyGroupModifyFrame);
 
   return (
     <div className={s.wrapper}>
@@ -23,13 +23,13 @@ export const Header = () => {
           size={'sm'}
           style={'secondary'}
           leadIcon={<Icon icon={'add-line'} />}
-          onClick={() => onModifyGroupOpen()}
+          onClick={() => void propertyGroupFrame.open({})}
         >
           Добавить группу
         </Button>
       </div>
       <div className={s.link}>
-        <Button size={'sm'} leadIcon={<Icon icon={'add-line'} />} onClick={() => onModifyOpen()}>
+        <Button size={'sm'} leadIcon={<Icon icon={'add-line'} />} onClick={() => void propertyFrame.open({})}>
           Добавить свойство
         </Button>
       </div>

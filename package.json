@@ -5,25 +5,35 @@
     "update": "yarn upgrade-interactive",
     "audit": "yarn npm audit -A -R --environment production --severity moderate",
     "dev:admin_ui": "yarn workspace @client/admin start",
-    "build:admin_ui": "yarn workspaces foreach --from '@client/admin' -R -t run build"
+    "build:admin_ui": "yarn workspaces foreach --from '@client/admin' -R -t run build",
+    "test": "vitest run --cache=false",
+    "test:ui": "vitest --ui",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@testing-library/user-event": "14.6.1",
     "@types/node": "26.0.0",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@types/reflect-metadata": "0.1.0",
     "@typescript-eslint/eslint-plugin": "8.62.0",
     "@typescript-eslint/parser": "8.62.0",
+    "@vitest/ui": "4.1.9",
     "eslint": "10.5.0",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.6",
     "jiti": "2.7.0",
+    "jsdom": "29.1.1",
     "prettier": "3.8.4",
     "stylelint": "17.13.0",
     "stylelint-config-prettier": "9.0.5",
     "stylelint-prettier": "5.0.3",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vitest": "4.1.9"
   },
   "resolutions": {
     "@babel/runtime": ">=7.26.10"
@@ -32,14 +42,14 @@
     "clients/**/*",
     "helpers/*",
     "library/*",
-    "drawers/*",
+    "frames/*",
     "pages/**/*",
     "utils/**/*",
     "widgets/**/*",
     "layouts/**/*"
   ],
   "engines": {
-    "node": "^22"
+    "node": ">=24"
   },
   "packageManager": "yarn@4.10.3"
 }

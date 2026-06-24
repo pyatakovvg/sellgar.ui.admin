@@ -1,9 +1,9 @@
 import { Button, Icon } from '@sellgar/kit';
 import { PropertyGroupEntity } from '@library/domain';
+import { PropertyGroupModifyFrame } from '@frame/property-group-modify';
+import { useFrame } from '@tiyn/app';
 
 import React from 'react';
-
-import { context } from '../../modify-group';
 
 import s from './default.module.scss';
 
@@ -12,7 +12,7 @@ interface IProps {
 }
 
 export const Actions: React.FC<IProps> = (props) => {
-  const { onOpen } = React.useContext(context);
+  const frame = useFrame(PropertyGroupModifyFrame);
 
   return (
     <div className={s.wrapper}>
@@ -21,7 +21,7 @@ export const Actions: React.FC<IProps> = (props) => {
         style={'ghost'}
         size={'sm'}
         leadIcon={<Icon icon={Icon.editLine} />}
-        onClick={() => onOpen(props.data.uuid)}
+        onClick={() => void frame.open({ uuid: props.data.uuid })}
       />
     </div>
   );

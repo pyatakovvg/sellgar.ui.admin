@@ -1,4 +1,5 @@
-import { Field, Label, Caption, Input, Select, SelectTree, Textarea, Typography } from '@sellgar/kit';
+import { CategoryEntity } from '@library/domain';
+import { Field, Label, Caption, Input, Select, Textarea, Typography } from '@sellgar/kit';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
@@ -8,11 +9,26 @@ import { useCategories } from '../../../hooks/categories.hook.ts';
 
 import s from './product.module.scss';
 
+type CategoryOption = CategoryEntity & {
+  label: string;
+};
+
+const flattenCategories = (items: CategoryEntity[], level = 0): CategoryOption[] => {
+  return items.flatMap((item) => [
+    {
+      ...item,
+      label: `${'  '.repeat(level)}${item.name}`,
+    },
+    ...flattenCategories(item.children ?? [], level + 1),
+  ]);
+};
+
 export const Product = () => {
   const { control } = ReactHookForm.useFormContext();
 
   const brands = useBrands();
   const categories = useCategories();
+  const categoryOptions = React.useMemo(() => flattenCategories(categories), [categories]);
 
   return (
     <div className={s.wrapper}>
@@ -56,11 +72,10 @@ export const Product = () => {
                     <Label label={'Категория'} />
                   </Field.Label>
                   <Field.Content>
-                    <SelectTree
-                      accessor={'children'}
+                    <Select
                       optionKey={'uuid'}
-                      optionValue={'name'}
-                      options={categories}
+                      optionValue={'label'}
+                      options={categoryOptions}
                       target={error?.message ? 'destructive' : undefined}
                       value={field.value}
                       onChange={(value) => field.onChange(value)}

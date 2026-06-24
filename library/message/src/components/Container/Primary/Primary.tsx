@@ -26,8 +26,8 @@ export const Primary: React.FC<IProps> = (props) => {
   };
 
   return (
-    <Notification
-      style={'info'}
+    <Notification.Default
+      status={'info'}
       title={props.push.title}
       slot={<Content>{props.push.content}</Content>}
       onClose={handleClose}

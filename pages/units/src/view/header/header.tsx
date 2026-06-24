@@ -1,13 +1,13 @@
 import { Typography, Icon, Button } from '@sellgar/kit';
+import { UnitModifyFrame } from '@frame/unit-modify';
+import { useFrame } from '@tiyn/app';
 
 import React from 'react';
-
-import { context } from '../modify';
 
 import s from './default.module.scss';
 
 export const Header = () => {
-  const { onOpen } = React.useContext(context);
+  const frame = useFrame(UnitModifyFrame);
 
   return (
     <div className={s.wrapper}>
@@ -17,7 +17,7 @@ export const Header = () => {
         </Typography>
       </div>
       <div>
-        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => onOpen()}>
+        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => void frame.open({})}>
           Добавить измерение
         </Button>
       </div>

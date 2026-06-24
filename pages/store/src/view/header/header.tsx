@@ -1,4 +1,4 @@
-import { StoreModifyFrame } from '@drawer/store-modify';
+import { StoreModifyFrame } from '@frame/store-modify';
 import { Typography, Button, Icon } from '@sellgar/kit';
 import { NavigateLayout } from '@layout/navigate';
 import { useFrame } from '@tiyn/app';

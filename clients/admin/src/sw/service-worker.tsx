@@ -44,9 +44,9 @@ export const RegisterAndUpdateServiceWorker = () => {
   }
 
   return ReactDOM.createPortal(
-    <Notification
+    <Notification.Default
       onClose={close}
-      style={'info'}
+      status={'info'}
       title={'Доступно обновление приложения'}
       slot={
         <div className={s.controls}>

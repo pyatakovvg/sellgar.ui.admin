@@ -1,4 +1,4 @@
-import { StoreModifyFrame } from '@drawer/store-modify';
+import { StoreModifyFrame } from '@frame/store-modify';
 import { StoreEntity } from '@library/domain';
 import { Button, Icon, useCellData } from '@sellgar/kit';
 import { useFrame } from '@tiyn/app';

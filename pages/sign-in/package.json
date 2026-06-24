@@ -11,7 +11,7 @@
   "dependencies": {
     "@hookform/resolvers": "5.4.0",
     "@library/push": "0.0.1",
-    "@sellgar/kit": "0.0.180",
+    "@sellgar/kit": "0.0.181",
     "@tiyn/app": "0.0.1",
     "classnames": "2.5.1",
     "react": "19.2.7",

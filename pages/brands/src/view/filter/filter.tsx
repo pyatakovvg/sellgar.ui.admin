@@ -1,4 +1,4 @@
-import { BrandModifyFrame } from '@drawer/brand-modify';
+import { BrandModifyFrame } from '@frame/brand-modify';
 import { useFrame, useLocation } from '@tiyn/app';
 import { Button, Icon } from '@sellgar/kit';
 

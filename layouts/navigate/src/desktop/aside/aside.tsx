@@ -1,22 +1,49 @@
 import { Sidebar, MenuItem, User } from '@sellgar/kit';
+import {
+  CopyrightLineIcon,
+  DashboardLineIcon,
+  FileTextLineIcon,
+  Home2LineIcon,
+  LinksLineIcon,
+  Settings3LineIcon,
+  ShoppingBag3LineIcon,
+  StockLineIcon,
+  StoreLineIcon,
+  UnsplashLineIcon,
+} from '@sellgar/kit/icons';
 import { ApplicationStoreInterface, useDependency } from '@tiyn/app';
 import { ProfileEntity } from '@library/domain';
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-// import { layoutSlotContext } from '../layout-slot';
-
 import s from './default.module.scss';
 
+interface NavigationItemProps {
+  readonly caption: string;
+  readonly icon: React.ReactNode;
+  readonly to: string;
+}
+
+const NavigationItem: React.FC<NavigationItemProps> = ({ caption, icon, to }) => {
+  return (
+    <Sidebar.Cell>
+      <NavLink className={s.link} to={to} viewTransition={true}>
+        {({ isActive, isPending }) => (
+          <MenuItem leadIcon={icon} caption={caption} isActive={isActive} isPending={isPending} />
+        )}
+      </NavLink>
+    </Sidebar.Cell>
+  );
+};
+
 export const Aside = () => {
-  // const slotContext = React.useContext(layoutSlotContext);
   const dataStore = useDependency(ApplicationStoreInterface);
   const profile = dataStore.get(ProfileEntity);
 
   return (
     <div className={s.wrapper}>
-      <Sidebar>
+      <Sidebar open={true}>
         <Sidebar.Top>
           <Sidebar.Block>
             <Sidebar.Cell>
@@ -26,115 +53,30 @@ export const Aside = () => {
         </Sidebar.Top>
         <Sidebar.Divider />
         <Sidebar.Middle>
-          {/*<div className={s.slot} ref={slotContext?.setNode ?? undefined} />*/}
           <Sidebar.Block>
             <Sidebar.Additional>Компания</Sidebar.Additional>
-            <Sidebar.Cell>
-              <NavLink className={s.link} to={'/'} viewTransition={true}>
-                {({ isActive, isPending }) => {
-                  return (
-                    <MenuItem leadIcon={'home-2-line'} caption={'Главная'} isActive={isActive} isPending={isPending} />
-                  );
-                }}
-              </NavLink>
-            </Sidebar.Cell>
-            <Sidebar.Cell>
-              <NavLink className={s.link} to={'/shops'} viewTransition={true}>
-                {({ isActive, isPending }) => {
-                  return (
-                    <MenuItem leadIcon={'store-line'} caption={'Магазины'} isActive={isActive} isPending={isPending} />
-                  );
-                }}
-              </NavLink>
-            </Sidebar.Cell>
-            <Sidebar.Cell>
-              <NavLink className={s.link} to={'/products'} viewTransition={true}>
-                {({ isActive, isPending }) => (
-                  <MenuItem
-                    leadIcon={'shopping-bag-3-line'}
-                    caption={'Товары'}
-                    isActive={isActive}
-                    isPending={isPending}
-                  />
-                )}
-              </NavLink>
-            </Sidebar.Cell>
-            <Sidebar.Cell>
-              <NavLink className={s.link} to={'/store'} viewTransition={true}>
-                {({ isActive, isPending }) => (
-                  <MenuItem leadIcon={'unsplash-line'} caption={'Склад'} isActive={isActive} isPending={isPending} />
-                )}
-              </NavLink>
-            </Sidebar.Cell>
+            <NavigationItem to={'/'} icon={<Home2LineIcon />} caption={'Главная'} />
+            <NavigationItem to={'/shops'} icon={<StoreLineIcon />} caption={'Магазины'} />
+            <NavigationItem to={'/products'} icon={<ShoppingBag3LineIcon />} caption={'Товары'} />
+            <NavigationItem to={'/store'} icon={<UnsplashLineIcon />} caption={'Склад'} />
           </Sidebar.Block>
 
           <Sidebar.Block>
             <Sidebar.Additional>Параметры</Sidebar.Additional>
-            <Sidebar.Cell>
-              <NavLink className={s.link} to={'/brands'} viewTransition={true}>
-                {({ isActive, isPending }) => (
-                  <MenuItem leadIcon={'copyright-line'} caption={'Бренды'} isActive={isActive} isPending={isPending} />
-                )}
-              </NavLink>
-            </Sidebar.Cell>
-            <Sidebar.Cell>
-              <NavLink className={s.link} to={'/categories'} viewTransition={true}>
-                {({ isActive, isPending }) => (
-                  <MenuItem
-                    leadIcon={'dashboard-line'}
-                    caption={'Категории'}
-                    isActive={isActive}
-                    isPending={isPending}
-                  />
-                )}
-              </NavLink>
-            </Sidebar.Cell>
-            <Sidebar.Cell>
-              <NavLink className={s.link} to={'/units'} viewTransition={true}>
-                {({ isActive, isPending }) => (
-                  <MenuItem
-                    leadIcon={'links-line'}
-                    caption={'Единица измерения'}
-                    isActive={isActive}
-                    isPending={isPending}
-                  />
-                )}
-              </NavLink>
-            </Sidebar.Cell>
-            <Sidebar.Cell>
-              <NavLink className={s.link} to={'/properties'} viewTransition={true}>
-                {({ isActive, isPending }) => (
-                  <MenuItem leadIcon={'stock-line'} caption={'Свойства'} isActive={isActive} isPending={isPending} />
-                )}
-              </NavLink>
-            </Sidebar.Cell>
+            <NavigationItem to={'/brands'} icon={<CopyrightLineIcon />} caption={'Бренды'} />
+            <NavigationItem to={'/categories'} icon={<DashboardLineIcon />} caption={'Категории'} />
+            <NavigationItem to={'/units'} icon={<LinksLineIcon />} caption={'Единица измерения'} />
+            <NavigationItem to={'/properties'} icon={<StockLineIcon />} caption={'Свойства'} />
           </Sidebar.Block>
 
           <Sidebar.Block>
             <Sidebar.Additional>Хранилище</Sidebar.Additional>
-            <Sidebar.Cell>
-              <NavLink className={s.link} to={'/files'} viewTransition={true}>
-                {({ isActive, isPending }) => (
-                  <MenuItem leadIcon={'file-text-line'} caption={'Файлы'} isActive={isActive} isPending={isPending} />
-                )}
-              </NavLink>
-            </Sidebar.Cell>
+            <NavigationItem to={'/files'} icon={<FileTextLineIcon />} caption={'Файлы'} />
           </Sidebar.Block>
         </Sidebar.Middle>
 
         <Sidebar.Bottom>
-          <Sidebar.Cell>
-            <NavLink className={s.link} to={'/settings'} viewTransition={true}>
-              {({ isActive, isPending }) => (
-                <MenuItem
-                  leadIcon={'settings-3-line'}
-                  caption={'Настройки'}
-                  isActive={isActive}
-                  isPending={isPending}
-                />
-              )}
-            </NavLink>
-          </Sidebar.Cell>
+          <NavigationItem to={'/settings'} icon={<Settings3LineIcon />} caption={'Настройки'} />
         </Sidebar.Bottom>
       </Sidebar>
     </div>

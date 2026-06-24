@@ -1,36 +1,54 @@
 import { BrandEntity } from '@library/domain';
 import { Table as TableComponent } from '@sellgar/kit';
+import { BrandModifyFrame } from '@frame/brand-modify';
+import { useFrame } from '@tiyn/app';
 
 import React from 'react';
 
 import { Name } from './name';
 import { Info } from './info';
-import { Actions } from './actions';
 
 interface IProps {
   data: BrandEntity[];
 }
 
 export const Table: React.FC<IProps> = (props) => {
+  const brandModifyFrame = useFrame(BrandModifyFrame);
+
   return (
-    <TableComponent data={{ nodes: props.data }} useInternalScroll={false} select={{ isUse: true, onSelect: () => {} }}>
-      <TableComponent.Column width={600}>
-        <TableComponent.Head label={'Наименование'} />
-        <TableComponent.Cell>
-          <Name />
-        </TableComponent.Cell>
-      </TableComponent.Column>
-      <TableComponent.Column>
-        <TableComponent.Head label={'Описание'} />
-        <TableComponent.Cell>
-          <Info />
-        </TableComponent.Cell>
-      </TableComponent.Column>
-      <TableComponent.Column width={60}>
-        <TableComponent.Cell>
-          <Actions />
-        </TableComponent.Cell>
-      </TableComponent.Column>
+    <TableComponent
+      data={{ nodes: props.data }}
+      layout={{ scroll: 'external' }}
+      row={{
+        handlers: {
+          click: ({ row }) => void brandModifyFrame.open({ uuid: row.uuid }),
+        },
+      }}
+    >
+      {({ Column }) => (
+        <>
+          <Column width={600}>
+            {({ Head, Cell }) => (
+              <>
+                <Head label={'Наименование'} />
+                <Cell>
+                  <Name />
+                </Cell>
+              </>
+            )}
+          </Column>
+          <Column>
+            {({ Head, Cell }) => (
+              <>
+                <Head label={'Описание'} />
+                <Cell>
+                  <Info />
+                </Cell>
+              </>
+            )}
+          </Column>
+        </>
+      )}
     </TableComponent>
   );
 };

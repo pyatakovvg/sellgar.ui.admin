@@ -4,8 +4,12 @@ import type { ApplicationConfiguratorInterface } from '@tiyn/app';
 import { AppLayout } from '@layout/app';
 import { BaseLayout } from '@layout/base';
 import { NavigateLayout } from '@layout/navigate';
-import { BrandModifyFrame } from '@drawer/brand-modify';
-import { StoreModifyFrame } from '@drawer/store-modify';
+import { BrandModifyFrame } from '@frame/brand-modify';
+import { CategoryModifyFrame } from '@frame/category-modify';
+import { PropertyGroupModifyFrame } from '@frame/property-group-modify';
+import { PropertyModifyFrame } from '@frame/property-modify';
+import { StoreModifyFrame } from '@frame/store-modify';
+import { UnitModifyFrame } from '@frame/unit-modify';
 
 import { Exception, Failed } from './components/exception';
 import { Loading } from './components/loading';
@@ -109,14 +113,17 @@ export class AdminApplication extends Application {
               }),
               new Route({
                 path: '/categories',
+                frames: [CategoryModifyFrame],
                 load: () => import('@page/categories'),
               }),
               new Route({
                 path: '/units',
+                frames: [UnitModifyFrame],
                 load: () => import('@page/units'),
               }),
               new Route({
                 path: '/properties',
+                frames: [PropertyModifyFrame, PropertyGroupModifyFrame],
                 load: () => import('@page/properties'),
               }),
             ],

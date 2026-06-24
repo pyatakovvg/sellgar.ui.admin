@@ -1,12 +1,13 @@
 import { Typography, Icon, Button } from '@sellgar/kit';
-import { useNavigate } from '@tiyn/app';
+import { CategoryModifyFrame } from '@frame/category-modify';
+import { useFrame } from '@tiyn/app';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
 export const Header = () => {
-  const navigate = useNavigate();
+  const frame = useFrame(CategoryModifyFrame);
 
   return (
     <div className={s.wrapper}>
@@ -16,7 +17,7 @@ export const Header = () => {
         </Typography>
       </div>
       <div>
-        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => navigate.hashParams({ modal: {} }, { merge: true })}>
+        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => void frame.open({})}>
           Добавить категорию
         </Button>
       </div>

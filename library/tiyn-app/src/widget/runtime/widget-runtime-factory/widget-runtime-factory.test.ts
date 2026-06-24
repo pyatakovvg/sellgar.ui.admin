@@ -6,7 +6,6 @@ import { describe, expect, it } from 'vitest';
 import { Controller } from '../../../controller/contract/controller';
 
 import { BindingModuleInterface } from '../../../di/binding/binding-module';
-import { Injectable } from '../../../di/injection/decorators';
 import { UseBindings } from '../../../di/composition/use-bindings';
 import { ApplicationScope } from '../../../runtime/scope/kind';
 import { RuntimeProviderInstanceInterface } from '../../../runtime/provider/runtime-provider-instance';
