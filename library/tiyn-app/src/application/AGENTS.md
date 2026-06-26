@@ -13,6 +13,9 @@ application features.
   application scope.
 - `SessionRuntimeStateInterface` хранит только phase/revision сессии.
 - `ApplicationStoreInterface` хранит resolved application-level data.
+- `ApplicationInitializerContextInterface.errors` - application-level доступ к
+  `RuntimeErrorsInterface`. Initializer может подписаться на ошибки и положить
+  unsubscribe в `context.disposables`.
 - Auth-specific recovery и profile semantics принадлежат host/domain слоям.
 - Feature-specific state, route logic, widgets и frame поведение здесь не
   размещать.

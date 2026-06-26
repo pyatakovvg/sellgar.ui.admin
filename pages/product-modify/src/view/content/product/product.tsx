@@ -49,7 +49,12 @@ export const Product = () => {
                     <Label label={'Название товара'} />
                   </Field.Label>
                   <Field.Content>
-                    <Input size={'md'} {...field} target={error?.message ? 'destructive' : undefined} />
+                    <Input
+                      size={'md'}
+                      {...field}
+                      value={field.value ?? ''}
+                      target={error?.message ? 'destructive' : undefined}
+                    />
                   </Field.Content>
                   {error?.message && (
                     <Field.Caption>
@@ -134,7 +139,14 @@ export const Product = () => {
                     <Label label={'Основное описание'} />
                   </Field.Label>
                   <Field.Content>
-                    <Textarea {...field} target={error?.message ? 'destructive' : undefined} />
+                    <Textarea
+                      {...field}
+                      value={field.value ?? ''}
+                      target={error?.message ? 'destructive' : undefined}
+                      onInput={(event: React.FormEvent<HTMLTextAreaElement>) =>
+                        field.onChange(event.currentTarget.value)
+                      }
+                    />
                   </Field.Content>
                   {error?.message && (
                     <Field.Caption>

@@ -35,7 +35,7 @@ export class HttpClient implements HttpClientInterface {
         body: this.createBody(data),
       });
 
-      const result = await this.parseResponse(response);
+      const result = await this.parseResponse(response, config.responseType);
 
       if (!response.ok) {
         this.throwResponseError(response, result);
@@ -116,9 +116,17 @@ export class HttpClient implements HttpClientInterface {
     return !(data instanceof FormData || data instanceof Blob || data instanceof URLSearchParams || typeof data === 'string');
   }
 
-  private async parseResponse(response: Response): Promise<unknown> {
+  private async parseResponse(response: Response, responseType?: HttpRequestConfig['responseType']): Promise<unknown> {
     if (response.status === 204) {
       return undefined;
+    }
+
+    if (response.ok && responseType === 'blob') {
+      return await response.blob();
+    }
+
+    if (response.ok && responseType === 'text') {
+      return await response.text();
     }
 
     const contentType = response.headers.get('Content-Type') ?? '';

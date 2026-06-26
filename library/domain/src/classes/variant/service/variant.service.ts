@@ -5,6 +5,7 @@ import { VariantGatewayInterface } from '../gateway/variant-gateway.interface.ts
 
 import { CreateProductDto } from '../gateway/dto/create-product.dto.ts';
 import { UpdateProductDto } from '../gateway/dto/update-product.dto.ts';
+import { AddVariantImageDto } from '../gateway/dto/add-variant-image.dto.ts';
 
 import { VariantEntity, ProductVariantResultEntity } from '../variant.entity.ts';
 
@@ -26,5 +27,13 @@ export class VariantService implements VariantServiceInterface {
 
   async create(dto: CreateProductDto): Promise<VariantEntity> {
     return await this.productGateway.create(dto);
+  }
+
+  async addImage(variantUuid: string, dto: AddVariantImageDto): Promise<VariantEntity> {
+    return await this.productGateway.addImage(variantUuid, dto);
+  }
+
+  async removeImage(variantUuid: string, imageUuid: string): Promise<VariantEntity> {
+    return await this.productGateway.removeImage(variantUuid, imageUuid);
   }
 }

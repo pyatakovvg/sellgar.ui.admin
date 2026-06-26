@@ -21,6 +21,11 @@ class Variant {
   @IsOptional()
   uuid?: string;
 
+  @ValidateNested({ each: true })
+  @Type(() => VariantImage)
+  @IsOptional()
+  images?: VariantImage[];
+
   @IsString()
   name: string;
 
@@ -30,6 +35,30 @@ class Variant {
   @ValidateNested()
   @Type(() => Property)
   properties: Property[];
+}
+
+class VariantImage {
+  @IsUUID()
+  @IsOptional()
+  uuid?: string;
+
+  @IsString()
+  @IsOptional()
+  localId?: string;
+
+  @IsUUID()
+  @IsOptional()
+  imageUuid?: string;
+
+  file?: File;
+
+  @IsString()
+  @IsOptional()
+  fileName?: string;
+
+  @IsString()
+  @IsOptional()
+  alt?: string | null;
 }
 
 export class CreateProductDto {

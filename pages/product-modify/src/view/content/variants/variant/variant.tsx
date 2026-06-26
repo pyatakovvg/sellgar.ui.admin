@@ -64,7 +64,7 @@ export const Variant: React.FC<IProps> = (props) => {
                     <Label label={'Наименование'} />
                   </Field.Label>
                   <Field.Content>
-                    <Input {...field} target={error?.message ? 'destructive' : undefined} />
+                    <Input {...field} value={field.value ?? ''} target={error?.message ? 'destructive' : undefined} />
                   </Field.Content>
                   {error?.message && (
                     <Field.Caption>
@@ -87,7 +87,14 @@ export const Variant: React.FC<IProps> = (props) => {
                     <Label label={'Описание'} />
                   </Field.Label>
                   <Field.Content>
-                    <Textarea {...field} target={error?.message ? 'destructive' : undefined} />
+                    <Textarea
+                      {...field}
+                      value={field.value ?? ''}
+                      target={error?.message ? 'destructive' : undefined}
+                      onInput={(event: React.FormEvent<HTMLTextAreaElement>) =>
+                        field.onChange(event.currentTarget.value)
+                      }
+                    />
                   </Field.Content>
                   {error?.message && (
                     <Field.Caption>

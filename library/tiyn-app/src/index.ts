@@ -291,7 +291,23 @@ export type {
   RuntimeProviderContextInterface,
   RuntimeProviderPhase,
 } from './runtime/provider/runtime-provider';
-export { RuntimeScopeProvider, useDependency, useRuntimeScope, type RuntimeScopeProviderProps } from './runtime/react';
+export {
+  RuntimeScopeProvider,
+  useDependency,
+  useRuntimeError,
+  useRuntimeErrors,
+  useRuntimeOperation,
+  useRuntimeScope,
+  type RuntimeOperation,
+  type RuntimeScopeProviderProps,
+} from './runtime/react';
+export {
+  RuntimeErrors,
+  RuntimeErrorsBindings,
+  RuntimeErrorsInterface,
+  type RuntimeErrorHandler,
+  type RuntimeErrorPredicate,
+} from './runtime/errors';
 export { RuntimeScope } from './runtime/scope/base';
 export { RuntimeScopeInterface } from './runtime/scope/contract';
 export { ApplicationScope, FrameScope, ModuleScope, WidgetScope } from './runtime/scope/kind';

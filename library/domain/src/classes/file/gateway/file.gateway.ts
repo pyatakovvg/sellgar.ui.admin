@@ -9,7 +9,7 @@ import { GetAllFileFilterDto } from './dto/get-all-file-filter.dto.ts';
 
 import { FileGatewayInterface } from './file-gateway.interface.ts';
 
-import { FileResultEntity } from '../file.entity.ts';
+import { FileEntity, FileResultEntity } from '../file.entity.ts';
 
 @injectable()
 export class FileGateway implements FileGatewayInterface {
@@ -29,11 +29,41 @@ export class FileGateway implements FileGatewayInterface {
     return resultInstance;
   }
 
-  upload(formData: FormData) {
-    return this.httpClient.post(this.config.get('GATEWAY_API') + '/v1/files/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+  async upload(files: File[], folderUuid?: string) {
+    const formData = new FormData();
+
+    for (const file of files) {
+      formData.append('files', file);
+    }
+
+    if (folderUuid) {
+      formData.append('folderUuid', folderUuid);
+    }
+
+    const result = await this.httpClient.post<FileEntity[]>(this.config.get('GATEWAY_API') + '/v1/files', formData);
+    const resultInstance = plainToInstance(FileEntity, result);
+
+    await Promise.all(resultInstance.map((file) => validateOrReject(file)));
+
+    return resultInstance;
+  }
+
+  async delete(uuid: string) {
+    const result = await this.httpClient.delete<FileEntity>(this.config.get('GATEWAY_API') + '/v1/files/' + uuid);
+    const resultInstance = plainToInstance(FileEntity, result);
+
+    await validateOrReject(resultInstance);
+
+    return resultInstance;
+  }
+
+  async download(uuid: string) {
+    return await this.httpClient.get<Blob>(this.config.get('GATEWAY_API') + '/v1/files/' + uuid, {
+      responseType: 'blob',
     });
+  }
+
+  getPublicImageUrl(uuid: string) {
+    return this.config.get('CDN_IMAGES_URL').replace(/\/$/, '') + '/' + uuid;
   }
 }

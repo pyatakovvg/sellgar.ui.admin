@@ -1,4 +1,4 @@
-import { Application, Route, Router, UseBindings } from '@tiyn/app';
+import { Application, Route, Router, UseBindings, UserRequestFeature, UserRequestPresentation } from '@tiyn/app';
 import type { ApplicationConfiguratorInterface } from '@tiyn/app';
 
 import { AppLayout } from '@layout/app';
@@ -17,7 +17,8 @@ import { NotFound } from './components/not-found';
 import { Splash } from './components/splash';
 
 import { AdminBindings } from './bindings';
-import { ResolveAuthStateInitializer } from './initializers';
+import { RegisterUnauthorizedRecoveryInitializer, ResolveAuthStateInitializer } from './initializers';
+import { AlertUserRequestView } from './presentations/user-request';
 import { RequireAnonymousSessionPolicy, RequireAuthenticatedSessionPolicy } from './policies';
 
 @UseBindings(AdminBindings)
@@ -32,7 +33,14 @@ export class AdminApplication extends Application {
     });
 
     app.layouts([AppLayout]);
-    app.initializers([ResolveAuthStateInitializer]);
+    app.features([
+      UserRequestFeature.configure({
+        presentation: UserRequestPresentation.define((registry) => {
+          registry.alert(AlertUserRequestView);
+        }),
+      }),
+    ]);
+    app.initializers([RegisterUnauthorizedRecoveryInitializer, ResolveAuthStateInitializer]);
 
     app.router(
       new Router({

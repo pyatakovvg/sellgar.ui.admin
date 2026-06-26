@@ -1,18 +1,22 @@
 import {
-  ProductServiceInterface,
   BrandServiceInterface,
   CategoryServiceInterface,
-  PropertyServiceInterface,
+  FileServiceInterface,
   logger,
+  ProductEntity,
+  ProductServiceInterface,
+  PropertyServiceInterface,
 } from '@library/domain';
 
-import { Controller, Inject, type ControllerLoaderArgs } from '@tiyn/app';
+import { Controller, type ControllerLoaderArgs, Inject } from '@tiyn/app';
 
 import { FormStoreInterface } from '../store/form/form-store.interface.ts';
 import { ProductControllerInterface } from './product-controller.interface.ts';
 
 import { CreateProductDto } from './dto/create-product.dto.ts';
 import { UpdateProductDto } from './dto/update-product.dto.ts';
+
+type VariantImageFormData = NonNullable<CreateProductDto['variants'][number]['images']>[number];
 
 @Controller()
 export class ProductController implements ProductControllerInterface {
@@ -22,6 +26,7 @@ export class ProductController implements ProductControllerInterface {
     @Inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface,
     @Inject(PropertyServiceInterface) private readonly propertyService: PropertyServiceInterface,
     @Inject(ProductServiceInterface) private readonly productService: ProductServiceInterface,
+    @Inject(FileServiceInterface) private readonly fileService: FileServiceInterface,
   ) {}
 
   @logger()
@@ -35,7 +40,7 @@ export class ProductController implements ProductControllerInterface {
     this.formStore.setProperties(properties.data);
 
     if (uuid) {
-      return await this.productService.findByUuid(uuid);
+      return this.toFormProduct(await this.productService.findByUuid(uuid));
     }
   }
 
@@ -58,6 +63,35 @@ export class ProductController implements ProductControllerInterface {
       categoryUuid: dto.categoryUuid,
       variants: dto.variants,
     });
+  }
+
+  getFileImageUrl(fileUuid: string) {
+    return this.fileService.getPublicImageUrl(fileUuid);
+  }
+
+  addGalleryImages(currentImages: VariantImageFormData[], files: File[]): VariantImageFormData[] {
+    return currentImages.concat(
+      files.map((file) => ({
+        localId: globalThis.crypto.randomUUID(),
+        file,
+        fileName: file.name,
+        alt: null,
+      })),
+    );
+  }
+
+  private toFormProduct(product: ProductEntity): ProductEntity {
+    return {
+      ...product,
+      variants:
+        product.variants?.map((variant) => ({
+          ...variant,
+          images: variant.images?.map((image) => ({
+            ...image,
+            fileName: image.image?.fileName,
+          })),
+        })) ?? [],
+    };
   }
 
   async loader(args: ControllerLoaderArgs) {

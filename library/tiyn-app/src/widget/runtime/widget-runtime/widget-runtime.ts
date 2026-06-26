@@ -20,6 +20,7 @@ import {
   type RuntimeOperationGuard,
   type RuntimeOperationResult,
 } from '../../../runtime/operation';
+import { RuntimeErrorsInterface } from '../../../runtime/errors';
 import { RevalidateServiceInterface } from '../../../revalidate/contract/revalidate-service';
 import { RuntimeRevalidateService } from '../../../revalidate/runtime/revalidate-service';
 
@@ -140,25 +141,29 @@ export class WidgetRuntime<TProps extends object = Record<string, never>> {
     });
 
     try {
-      const result = await executeRuntimeOperation(this.createOperationGuard(), async () => {
-        this.throwIfAborted(abortController.signal, 'Widget action был прерван.');
+      const result = await executeRuntimeOperation(
+        this.createOperationGuard(),
+        async () => {
+          this.throwIfAborted(abortController.signal, 'Widget action был прерван.');
 
-        const actionArgs = this.createWidgetControllerActionArgs(payload, abortController.signal);
-        const actionResult = await executeGuardedMethod({
-          context: actionArgs,
-          execute: () => {
-            return action.call(controller, actionArgs);
-          },
-          method: 'action',
-          scope: widgetRuntime.scope,
-          target: controller,
-          token: controllerToken,
-        });
+          const actionArgs = this.createWidgetControllerActionArgs(payload, abortController.signal);
+          const actionResult = await executeGuardedMethod({
+            context: actionArgs,
+            execute: () => {
+              return action.call(controller, actionArgs);
+            },
+            method: 'action',
+            scope: widgetRuntime.scope,
+            target: controller,
+            token: controllerToken,
+          });
 
-        this.throwIfAborted(abortController.signal, 'Widget action был прерван.');
+          this.throwIfAborted(abortController.signal, 'Widget action был прерван.');
 
-        return actionResult;
-      });
+          return actionResult;
+        },
+        this.getRuntimeErrors(),
+      );
 
       const actionResult = this.applyActionOperationResult(result);
 
@@ -317,11 +322,15 @@ export class WidgetRuntime<TProps extends object = Record<string, never>> {
     const widgetRuntime = this.createWidgetRuntime();
 
     this.currentWidgetRuntime = widgetRuntime;
-    this.loadPromise = executeRuntimeOperation(this.createOperationGuard(), async () => {
-      await this.loadWidgetRuntime(widgetRuntime, abortController.signal);
+    this.loadPromise = executeRuntimeOperation(
+      this.createOperationGuard(),
+      async () => {
+        await this.loadWidgetRuntime(widgetRuntime, abortController.signal);
 
-      this.throwIfAborted(abortController.signal);
-    })
+        this.throwIfAborted(abortController.signal);
+      },
+      this.getRuntimeErrors(),
+    )
       .then(async (result) => {
         if (result.type === 'interrupted') {
           if (this.stateMachine.toIdle(sessionId)) {
@@ -394,19 +403,23 @@ export class WidgetRuntime<TProps extends object = Record<string, never>> {
     });
 
     try {
-      const result = await executeRuntimeOperation(this.createOperationGuard(), async () => {
-        this.throwIfAborted(abortController.signal, 'Widget revalidation был прерван.');
-        await this.runProviderBeforeLoad(widgetRuntime, abortController.signal);
-        this.throwIfAborted(abortController.signal, 'Widget revalidation был прерван.');
+      const result = await executeRuntimeOperation(
+        this.createOperationGuard(),
+        async () => {
+          this.throwIfAborted(abortController.signal, 'Widget revalidation был прерван.');
+          await this.runProviderBeforeLoad(widgetRuntime, abortController.signal);
+          this.throwIfAborted(abortController.signal, 'Widget revalidation был прерван.');
 
-        const loaderData = await this.loadControllers(widgetRuntime, abortController.signal, controllerToken);
+          const loaderData = await this.loadControllers(widgetRuntime, abortController.signal, controllerToken);
 
-        this.throwIfAborted(abortController.signal, 'Widget revalidation был прерван.');
-        await this.runProviderBeforeRender(widgetRuntime, abortController.signal);
-        this.throwIfAborted(abortController.signal, 'Widget revalidation был прерван.');
+          this.throwIfAborted(abortController.signal, 'Widget revalidation был прерван.');
+          await this.runProviderBeforeRender(widgetRuntime, abortController.signal);
+          this.throwIfAborted(abortController.signal, 'Widget revalidation был прерван.');
 
-        return loaderData;
-      });
+          return loaderData;
+        },
+        this.getRuntimeErrors(),
+      );
 
       this.applyRevalidateOperationResult(widgetRuntime, result, controllerToken);
       this.setRevalidateState(controllerToken, DEFAULT_REVALIDATE_STATE);
@@ -656,6 +669,10 @@ export class WidgetRuntime<TProps extends object = Record<string, never>> {
 
   private createOperationGuard(): RuntimeOperationGuard | null {
     return this.session === null ? null : createRuntimeRevisionGuard(this.session);
+  }
+
+  private getRuntimeErrors(): RuntimeErrorsInterface {
+    return this.ownerScope.get(RuntimeErrorsInterface);
   }
 }
 

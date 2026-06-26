@@ -1,3 +1,5 @@
+import type { RuntimeErrorsInterface } from '../errors';
+
 export interface RuntimeRevisionSource {
   readonly revision: number;
 }
@@ -34,6 +36,7 @@ export const createRuntimeRevisionGuard = (source: RuntimeRevisionSource): Runti
 export const executeRuntimeOperation = async <TValue>(
   guard: RuntimeOperationGuard | null,
   operation: () => TValue | Promise<TValue>,
+  errors?: RuntimeErrorsInterface,
 ): Promise<RuntimeOperationResult<TValue>> => {
   try {
     return {
@@ -41,6 +44,8 @@ export const executeRuntimeOperation = async <TValue>(
       value: await operation(),
     };
   } catch (error) {
+    await errors?.emit(error);
+
     if (guard?.isInterrupted()) {
       return {
         error,

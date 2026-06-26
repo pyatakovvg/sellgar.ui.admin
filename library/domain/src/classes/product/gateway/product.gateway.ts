@@ -45,7 +45,7 @@ export class ProductGateway implements ProductGatewayInterface {
 
   @logger()
   async create(dto: CreateProductDto) {
-    const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/products', dto);
+    const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/products', this.createProductFormData(dto));
     const resultInstance = plainToInstance(ProductEntity, result);
 
     await validateOrReject(resultInstance);
@@ -55,11 +55,45 @@ export class ProductGateway implements ProductGatewayInterface {
 
   @logger()
   async update(uuid: string, dto: UpdateProductDto) {
-    const result = await this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/products/' + uuid, dto);
+    const result = await this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/products/' + uuid, this.createProductFormData(dto));
     const resultInstance = plainToInstance(ProductEntity, result);
 
     await validateOrReject(resultInstance);
 
     return resultInstance;
+  }
+
+  private createProductFormData(dto: CreateProductDto | UpdateProductDto) {
+    const formData = new FormData();
+    const payload = {
+      ...dto,
+      variants: dto.variants.map((variant) => ({
+        ...variant,
+        images: variant.images?.map((image) => {
+          if (image.file) {
+            const localId = image.localId ?? globalThis.crypto.randomUUID();
+
+            formData.append(`gallery:${localId}`, image.file, image.file.name);
+
+            return {
+              localId,
+              fileName: image.fileName ?? image.file.name,
+              alt: image.alt ?? null,
+            };
+          }
+
+          return {
+            uuid: image.uuid,
+            imageUuid: image.imageUuid,
+            fileName: image.fileName,
+            alt: image.alt ?? null,
+          };
+        }),
+      })),
+    };
+
+    formData.append('payload', JSON.stringify(payload));
+
+    return formData;
   }
 }

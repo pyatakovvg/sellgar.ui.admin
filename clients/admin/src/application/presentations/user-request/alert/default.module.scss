@@ -1,0 +1,32 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  min-width: 320px;
+  max-width: 420px;
+  padding: var(--numbers-24);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  gap: 8px;
+  color: var(--text-base-primary);
+}
+
+.title,
+.description {
+  margin: 0;
+}
+
+.description {
+  color: var(--text-base-secondary);
+}
+
+.control {
+  display: flex;
+  flex: 1 0;
+  justify-content: flex-end;
+  margin: var(--numbers-32) 0 0;
+}

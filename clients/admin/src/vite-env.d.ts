@@ -20,6 +20,7 @@ declare interface Window {
   env: {
     NODE_ENV: 'development' | 'production' | 'test';
 
-    GATEWAY_API: string;
-  };
-}
+	    GATEWAY_API: string;
+	    CDN_IMAGES_URL: string;
+	  };
+	}

@@ -166,6 +166,7 @@
 - [Policies](./08-policies-revalidate-errors.md#policies)
 - [Boundary decisions](./08-policies-revalidate-errors.md#boundary-decisions)
 - [Runtime operation flow](./08-policies-revalidate-errors.md#runtime-operation-flow)
+- [Runtime errors](./08-policies-revalidate-errors.md#runtime-errors)
 - [Unauthorized recovery](./08-policies-revalidate-errors.md#unauthorized-recovery)
 - [Revalidate route/module](./08-policies-revalidate-errors.md#revalidate-routemodule)
 - [Revalidate widget](./08-policies-revalidate-errors.md#revalidate-widget)
@@ -210,6 +211,8 @@ internal source files из feature/application packages. Публичная гр
   `NavItem`, `useRoutePending`, route matching через `location.matches(...)`;
 - runtime-local revalidate через `useRevalidate` и
   `RevalidateServiceInterface`;
+- runtime error bus: `RuntimeErrorsInterface`, `useRuntimeErrors`,
+  `useRuntimeError`, `useRuntimeOperation`;
 - widget runtime, `WidgetHost`, unified controller hooks и preload;
 - frame declaration, `HashFrameSource`, shell, providers, frame controllers,
   unified controller hooks, frame-local actions, `useFrame`,

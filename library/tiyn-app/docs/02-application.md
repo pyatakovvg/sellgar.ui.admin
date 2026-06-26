@@ -189,6 +189,7 @@ Context initializer-а:
 interface ApplicationInitializerContextInterface {
   readonly app: ApplicationControllerInterface;
   readonly disposables: DisposableRegistryInterface;
+  readonly errors: RuntimeErrorsInterface;
   readonly session: SessionRuntimeStateInterface;
   readonly signal: AbortSignal;
 }
@@ -201,13 +202,18 @@ interface ApplicationInitializerContextInterface {
 
 ```ts
 execute(context: ApplicationInitializerContextInterface): void {
-  const subscription = this.gateway.onUnauthorized(() => {
-    context.session.setAnonymous();
-  });
-
-  context.disposables.add(subscription);
+  context.disposables.add(
+    context.errors.on(UnauthorizedException, () => {
+      context.session.setAnonymous();
+    }),
+  );
 }
 ```
+
+`errors` - общий runtime error bus. Initializer может подписаться на конкретный
+class exception, predicate или все ошибки через `subscribe(...)`. Ошибка
+initializer-а перед переходом application в failed state также публикуется в
+`RuntimeErrorsInterface`.
 
 ## Порядок Инициализаторов
 

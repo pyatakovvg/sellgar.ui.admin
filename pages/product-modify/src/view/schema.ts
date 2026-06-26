@@ -7,9 +7,14 @@ interface IForm {
   description: string;
   variants: {
     images: {
-      file: File;
-      preview: string;
+      uuid?: string;
+      localId?: string;
+      imageUuid?: string;
+      file?: File;
+      fileName?: string;
+      alt?: string | null;
     }[];
+    uuid?: string;
     name: string;
     description: string;
     properties: {
@@ -30,10 +35,15 @@ export const schema = yup.object({
     yup.object({
       images: yup.array().of(
         yup.object({
-          file: yup.mixed().required('Необходимо выбрать'),
-          preview: yup.string().required('Необходимо выбрать'),
+          uuid: yup.string().optional(),
+          localId: yup.string().optional(),
+          imageUuid: yup.string().optional(),
+          file: yup.mixed<File>().optional(),
+          fileName: yup.string().optional(),
+          alt: yup.string().nullable().optional(),
         }),
       ),
+      uuid: yup.string().optional(),
       name: yup.string().required('Необходимо заполнить'),
       description: yup.string().required('Необходимо заполнить'),
       properties: yup.array().of(

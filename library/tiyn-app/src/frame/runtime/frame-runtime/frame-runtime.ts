@@ -20,6 +20,7 @@ import {
   executeRuntimeOperation,
   type RuntimeOperationResult,
 } from '../../../runtime/operation';
+import { RuntimeErrorsInterface } from '../../../runtime/errors';
 import { FrameScope } from '../../../runtime/scope/kind';
 import {
   RuntimeProviderPipeline,
@@ -174,6 +175,7 @@ export class FrameRuntime<TProps extends object = Record<string, never>> {
 
           return actionResult;
         },
+        this.getRuntimeErrors(),
       );
 
       const actionResult = this.applyActionOperationResult(result);
@@ -339,12 +341,16 @@ export class FrameRuntime<TProps extends object = Record<string, never>> {
       throw error;
     }
 
-    this.loadPromise = executeRuntimeOperation(operationGuard, async () => {
-      await this.executePolicies('canActivate', frameRuntime);
-      await this.loadFrameRuntime(frameRuntime);
+    this.loadPromise = executeRuntimeOperation(
+      operationGuard,
+      async () => {
+        await this.executePolicies('canActivate', frameRuntime);
+        await this.loadFrameRuntime(frameRuntime);
 
-      this.throwIfAborted(abortController.signal);
-    })
+        this.throwIfAborted(abortController.signal);
+      },
+      this.getRuntimeErrors(),
+    )
       .then((result) => {
         if (!this.isLoadSessionActive(sessionId)) {
           return;
@@ -437,6 +443,7 @@ export class FrameRuntime<TProps extends object = Record<string, never>> {
 
           return loaderData;
         },
+        this.getRuntimeErrors(),
       );
 
       this.applyRevalidateOperationResult(frameRuntime, result, controllerToken);
@@ -639,6 +646,7 @@ export class FrameRuntime<TProps extends object = Record<string, never>> {
   private createPolicyContext(frameRuntime: ActiveFrameRuntime<TProps>): RouteRuntimeContextInterface {
     return {
       app: frameRuntime.loadOptions.app,
+      errors: this.getRuntimeErrors(),
       params: frameRuntime.loadOptions.location.params,
       request: createProviderRequest(frameRuntime.loadOptions.location, frameRuntime.loadOptions.signal),
       session: frameRuntime.loadOptions.session,
@@ -735,6 +743,10 @@ export class FrameRuntime<TProps extends object = Record<string, never>> {
     return (
       this.loadSessionCounter === sessionId && this.snapshot.phase !== 'disposed' && this.snapshot.phase !== 'disposing'
     );
+  }
+
+  private getRuntimeErrors(): RuntimeErrorsInterface {
+    return this.ownerScope.get(RuntimeErrorsInterface);
   }
 
   private applyActionOperationResult(result: RuntimeOperationResult<unknown>): unknown {

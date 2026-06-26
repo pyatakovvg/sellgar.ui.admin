@@ -6,7 +6,7 @@
 
 Пакет содержит framework runtime приложения: application lifecycle, router,
 module/widget/frame runtime, DI facade, runtime providers, policies, guards,
-revalidate, application events, reporting и встроенные features.
+revalidate, runtime errors, application events, reporting и встроенные features.
 
 Источник истины: `src/index.ts`, текущий код в `src/*`, тесты рядом с
 runtime-срезами и локальные `AGENTS.md` выбранного слоя. `types/` не является
@@ -35,7 +35,7 @@ runtime-срезами и локальные `AGENTS.md` выбранного с
 - [src/frame/AGENTS.md](src/frame/AGENTS.md) - `@Frame`, `HashFrameSource`,
   frame navigation, frame service/runtime/hooks.
 - [src/runtime/AGENTS.md](src/runtime/AGENTS.md) - runtime scopes, providers,
-  operation guards и shared context.
+  operation guards, runtime errors и shared context.
 - [src/controller/AGENTS.md](src/controller/AGENTS.md) - generic controller
   contracts, action transport, loader data и route hooks.
 - [src/di/AGENTS.md](src/di/AGENTS.md) - DI facade, tokens, binding registry,
@@ -65,6 +65,9 @@ runtime-срезами и локальные `AGENTS.md` выбранного с
 - Inversify и React Router должны оставаться за facade/adapter слоями.
 - Domain contracts, permissions model, auth-specific recovery, route screens,
   visual business widgets и UI labels здесь не размещать.
+- Runtime error bus является framework primitive. Доменные решения о том, что
+  делать с конкретной ошибкой, подключаются в host application через initializer
+  или view hook, а не в domain/request layer.
 - Новую framework primitive добавлять только при понятной runtime-роли и
   повторяемом сценарии.
 

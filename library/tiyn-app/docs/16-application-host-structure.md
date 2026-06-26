@@ -187,7 +187,8 @@ Route tree не должен импортировать private files feature pa
 - application policies;
 - application-level UI services;
 - domain gateways/services;
-- runtime config и request executor;
+- runtime config;
+- application-level runtime error handlers;
 - application-level widget/frame providers, если они подключаются в route tree.
 
 Недопустимо:
@@ -206,7 +207,7 @@ Initializers запускаются на application startup и живут в ap
 Допустимо:
 
 - восстановить session/profile state;
-- зарегистрировать unauthorized recovery handler;
+- зарегистрировать runtime error handlers, например unauthorized recovery;
 - положить application-level facts в `ApplicationStoreInterface`;
 - подписаться на application-level external events через `context.disposables`;
 - использовать `context.signal` для отмены async операций.
@@ -221,6 +222,11 @@ Initializers запускаются на application startup и живут в ap
 
 Navigation после изменения session state должна быть следствием route policies,
 а не ручным redirect внутри initializer.
+
+Если initializer показывает host-level dialog, подключай его через
+`UserRequestServiceInterface` и presentation из application composition. UI
+компоненты берутся из локального design kit; runtime logic не переносится в
+view component.
 
 ## `application/policies`
 

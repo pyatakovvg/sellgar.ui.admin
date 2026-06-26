@@ -35,6 +35,7 @@ import {
   executeRuntimeOperation,
   type RuntimeOperationResult,
 } from '../../../runtime/operation';
+import { RuntimeErrorsInterface } from '../../../runtime/errors';
 import { isFirstAvailableRouteDefault, type Route } from '../../declaration/route';
 import { RouterParamsConverterInterface } from '../../params/router-params-converter';
 import { NavigateServiceInterface } from '../../service/navigate-service';
@@ -123,43 +124,47 @@ export class RouteRuntime {
 
       const operationGuard = createRuntimeRevisionGuard(this.session);
       const location = createRouteLocation(args, this.basePath);
-      const result = await executeRuntimeOperation(operationGuard, async () => {
-        this.appScope.get(RouterServiceControllerInterface).syncLocation(location);
+      const result = await executeRuntimeOperation(
+        operationGuard,
+        async () => {
+          this.appScope.get(RouterServiceControllerInterface).syncLocation(location);
 
-        await this.executePolicies('canMatch', args, this.loaderPolicies);
-        await this.redirectFirstAvailableDefaultRoute(args);
+          await this.executePolicies('canMatch', args, this.loaderPolicies);
+          await this.redirectFirstAvailableDefaultRoute(args);
 
-        if (this.moduleRuntime === null) {
+          if (this.moduleRuntime === null) {
+            await this.executePolicies('canActivate', args, this.loaderPolicies);
+
+            await this.runProviderBeforeLoad(args);
+            await this.runProviderBeforeRender(args);
+            await this.loadFrameRuntimes(args, this.appScope, location);
+            await this.handleLoaderSessionTransition(args, operationGuard.revision);
+
+            return null;
+          }
+
+          const moduleRuntime = this.getModuleRuntime();
+
           await this.executePolicies('canActivate', args, this.loaderPolicies);
 
           await this.runProviderBeforeLoad(args);
+
+          const loaderData = await moduleRuntime.load(
+            {
+              params: args.params,
+              request: args.request,
+            },
+            this.createModuleReporter('route.module.discard_cleanup_failed'),
+          );
+
           await this.runProviderBeforeRender(args);
-          await this.loadFrameRuntimes(args, this.appScope, location);
+          await this.loadFrameRuntimes(args, this.getRuntimeScope(), location);
           await this.handleLoaderSessionTransition(args, operationGuard.revision);
 
-          return null;
-        }
-
-        const moduleRuntime = this.getModuleRuntime();
-
-        await this.executePolicies('canActivate', args, this.loaderPolicies);
-
-        await this.runProviderBeforeLoad(args);
-
-        const loaderData = await moduleRuntime.load(
-          {
-            params: args.params,
-            request: args.request,
-          },
-          this.createModuleReporter('route.module.discard_cleanup_failed'),
-        );
-
-        await this.runProviderBeforeRender(args);
-        await this.loadFrameRuntimes(args, this.getRuntimeScope(), location);
-        await this.handleLoaderSessionTransition(args, operationGuard.revision);
-
-        return loaderData;
-      });
+          return loaderData;
+        },
+        this.appScope.get(RuntimeErrorsInterface),
+      );
 
       return await this.applyLoaderOperationResult(args, operationGuard.revision, result);
     } finally {
@@ -170,23 +175,27 @@ export class RouteRuntime {
   async action(args: ActionFunctionArgs): Promise<unknown> {
     const operationGuard = createRuntimeRevisionGuard(this.session);
     let request: ControllerActionRequest | null = null;
-    const result = await executeRuntimeOperation(operationGuard, async () => {
-      await this.executePolicies('canMatch', args, this.actionPolicies);
+    const result = await executeRuntimeOperation(
+      operationGuard,
+      async () => {
+        await this.executePolicies('canMatch', args, this.actionPolicies);
 
-      const actionRequest = await parseControllerActionRequest(args.request);
+        const actionRequest = await parseControllerActionRequest(args.request);
 
-      request = actionRequest;
-      const moduleRuntime = this.getModuleRuntime();
+        request = actionRequest;
+        const moduleRuntime = this.getModuleRuntime();
 
-      await this.executePolicies('canAction', args, this.actionPolicies);
+        await this.executePolicies('canAction', args, this.actionPolicies);
 
-      const value = await moduleRuntime.actionActive(
-        actionRequest.controllerKey,
-        createControllerActionArgs(args.request, args.params, actionRequest.payload),
-      );
+        const value = await moduleRuntime.actionActive(
+          actionRequest.controllerKey,
+          createControllerActionArgs(args.request, args.params, actionRequest.payload),
+        );
 
-      return createControllerActionResultEnvelope(actionRequest.submitId, value);
-    });
+        return createControllerActionResultEnvelope(actionRequest.submitId, value);
+      },
+      this.appScope.get(RuntimeErrorsInterface),
+    );
 
     return await this.applyActionOperationResult(args, operationGuard.revision, request, result);
   }
@@ -574,6 +583,7 @@ export class RouteRuntime {
   private createPolicyContext(args: ActionFunctionArgs | LoaderFunctionArgs): RouteRuntimeContextInterface {
     return {
       app: this.app,
+      errors: this.appScope.get(RuntimeErrorsInterface),
       params: args.params,
       request: args.request,
       session: this.session,

@@ -1,6 +1,6 @@
 # Аудит Публичного API `@tiyn/app`
 
-Дата сверки: 2026-06-19.
+Дата сверки: 2026-06-26.
 
 Документ фиксирует результат размещения документации в `library/tiyn-app/docs`
 и сверки с текущим пакетом `library/tiyn-app`.
@@ -34,6 +34,9 @@
   runtime-local revalidate;
 - Runtime providers/scopes: `@Provider`, `RuntimeProviderInterface`,
   `RuntimeScope`, application/module/widget/frame scopes;
+- Runtime errors: `RuntimeErrorsInterface`, `RuntimeErrorsBindings`,
+  `RuntimeErrors`, `useRuntimeErrors`, `useRuntimeError`,
+  `useRuntimeOperation`;
 - Policies/guards: `Policy`, `PolicyInterface`, `PolicyDescriptorBuilder`,
   `Guard`, `GuardInterface`, `UseGuards`, `useGuard`, `Guarded`;
 - Встроенные features: notification и user-request.

@@ -21,18 +21,28 @@ export class ProductService implements ProductServiceInterface {
   }
 
   async update(uuid: string, dto: UpdateProductDto) {
-    const dtoInstance = plainToInstance(UpdateProductDto, dto);
+    const dtoInstance = plainToInstance(UpdateProductDto, this.createValidationDto(dto));
 
     await validateOrReject(dtoInstance);
 
-    return this.productGateway.update(uuid, dtoInstance);
+    return this.productGateway.update(uuid, dto);
   }
 
   async create(dto: CreateProductDto) {
-    const dtoInstance = plainToInstance(CreateProductDto, dto);
+    const dtoInstance = plainToInstance(CreateProductDto, this.createValidationDto(dto));
 
     await validateOrReject(dtoInstance);
 
-    return await this.productGateway.create(dtoInstance);
+    return await this.productGateway.create(dto);
+  }
+
+  private createValidationDto<T extends CreateProductDto | UpdateProductDto>(dto: T): T {
+    return {
+      ...dto,
+      variants: dto.variants.map((variant) => ({
+        ...variant,
+        images: variant.images?.map(({ file: _file, ...image }) => image),
+      })),
+    };
   }
 }

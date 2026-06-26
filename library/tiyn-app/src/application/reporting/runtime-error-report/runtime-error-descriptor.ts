@@ -27,6 +27,11 @@ const RUNTIME_ERROR_DESCRIPTORS: Record<RuntimeErrorCode, RuntimeErrorDescriptor
     severity: 'critical',
     source: 'application.initializer',
   },
+  'application.runtime_error_handler.failed': {
+    phase: 'application.runtime_error',
+    severity: 'error',
+    source: 'application.runtime_error',
+  },
   'frame.provider_before_render_failed': {
     phase: 'frame.provider.before_render',
     severity: 'error',

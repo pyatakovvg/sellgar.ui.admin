@@ -43,12 +43,7 @@ export const ModuleView = () => {
         await navigate.to('/products/' + result?.uuid);
       }
     },
-    (errors) => console.log(123, errors),
   );
-
-  // React.useEffect(() => {
-  console.log(123, methods.formState.isDirty);
-  // }, [methods.formState]);
 
   return (
     <ReactHookForm.FormProvider {...methods}>

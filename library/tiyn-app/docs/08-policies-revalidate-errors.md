@@ -5,6 +5,7 @@
 - policies управляют доступом к route boundary;
 - revalidate обновляет active data;
 - runtime operation flow отделяет lifecycle interruption от exception;
+- runtime errors публикуют ошибки runtime/view operations для host-обработчиков;
 - runtime reporter фиксирует ошибки runtime-слоя.
 
 ## Policies
@@ -177,31 +178,132 @@ action interrupted
 создавать `RuntimeOperationResult` вручную и не должен ловить 401 в module,
 widget или frame ради управления navigation.
 
+## Runtime Errors
+
+`RuntimeErrorsInterface` - application-level bus для ошибок, которые возникли в
+runtime operations или в view operations, явно обёрнутых через runtime hook.
+
+Контракт:
+
+```ts
+export abstract class RuntimeErrorsInterface {
+  abstract emit(error: unknown): Promise<void>;
+  abstract on<TError>(errorType: DependencyConstructor<TError>, handler: RuntimeErrorHandler<TError>): () => void;
+  abstract on<TError>(predicate: RuntimeErrorPredicate<TError>, handler: RuntimeErrorHandler<TError>): () => void;
+  abstract subscribe(handler: RuntimeErrorHandler): () => void;
+}
+```
+
+Framework emit-ит ошибки из:
+
+- application initializers;
+- route loader/action operations;
+- frame load/action/revalidate operations;
+- widget load/action/revalidate operations.
+
+Для view-слоя есть hooks:
+
+```tsx
+const runRuntimeOperation = useRuntimeOperation();
+
+await runRuntimeOperation(async () => {
+  await userGateway.save(payload);
+});
+```
+
+Если operation бросит ошибку, hook сначала отправит её в
+`RuntimeErrorsInterface`, затем пробросит дальше. View всё ещё может показать
+локальную ошибку формы, но application-level обработчики тоже получат событие.
+
+Подписка в application initializer:
+
+```ts
+@Initializer()
+export class RegisterRuntimeLoggingInitializer implements ApplicationInitializerInterface {
+  execute(context: ApplicationInitializerContextInterface): void {
+    context.disposables.add(
+      context.errors.subscribe((error) => {
+        logger.error(error);
+      }),
+    );
+  }
+}
+```
+
+Подписка может быть по class exception или predicate:
+
+```ts
+context.errors.on(UnauthorizedException, async () => {
+  context.session.setAnonymous();
+});
+
+context.errors.on(isValidationException, (error) => {
+  reportValidation(error);
+});
+```
+
+`RuntimeErrorsInterface` не заменяет `RuntimeErrorReporterInterface`.
+
+```text
+RuntimeErrorsInterface
+  application-level реакция на саму ошибку: session recovery, dialog, logging,
+  sentry bridge, analytics
+
+RuntimeErrorReporterInterface
+  framework diagnostics: где упал runtime, какой code/severity, какой lifecycle
+  phase
+```
+
+Domain/request layer должен бросать нормальные exceptions и не выполнять
+application recovery сам. Framework публикует ошибку, host решает реакцию.
+
 ## Unauthorized Recovery
 
-`401 Unauthorized` является операционной ошибкой request pipeline. Framework не
+`401 Unauthorized` является доменной ошибкой request pipeline. Framework не
 знает бизнес-смысл 401 и не содержит auth-specific recovery.
 
 Application composition root подключает recovery через initializer:
 
-```text
-RegisterUnauthorizedRecoveryInitializer
-  регистрирует handler в RequestExecutor
+```ts
+@Initializer()
+export class RegisterUnauthorizedRecoveryInitializer implements ApplicationInitializerInterface {
+  private recoveryInProgress: Promise<void> | null = null;
 
-RequestExecutor
-  lock-ит unauthorized recovery
-  синхронизирует active, pending и новые recoverable requests с текущим
-  recovery promise
+  constructor(
+    @Inject(RuntimeErrorsInterface)
+    private readonly runtimeErrors: RuntimeErrorsInterface,
+    @Inject(SessionRuntimeStateInterface)
+    private readonly session: SessionRuntimeStateInterface,
+    @Inject(UserRequestServiceInterface)
+    private readonly userRequestService: UserRequestServiceInterface,
+  ) {}
 
-Recovery handler
-  переводит SessionRuntimeState в anonymous
-  при необходимости показывает application-specific dialog
+  execute(context: ApplicationInitializerContextInterface): void {
+    context.disposables.add(
+      this.runtimeErrors.on(UnauthorizedException, async () => {
+        if (!this.recoveryInProgress) {
+          this.recoveryInProgress = this.recover().finally(() => {
+            this.recoveryInProgress = null;
+          });
+        }
 
-SessionRevalidationBoundary
-  инвалидирует active routes и запускает revalidate
+        await this.recoveryInProgress;
+      }),
+    );
+  }
 
-Route policies
-  выбирают redirect/forbidden/notFound/error через обычные policy handlers
+  private async recover(): Promise<void> {
+    if (this.session.phase === 'authenticated') {
+      await this.userRequestService.alert({
+        title: 'Сессия завершена',
+        description: 'Срок действия авторизации истёк. Выполните вход снова.',
+        applyText: 'Ок',
+      });
+    }
+
+    this.session.setAnonymous();
+  }
+}
 ```
 
 Сохранение и восстановление текущего URL также принадлежит route policy

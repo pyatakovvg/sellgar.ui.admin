@@ -20,17 +20,18 @@ export class FileService implements FileServiceInterface {
   }
 
   async upload(files: File[], folderUuid?: string) {
-    const formData = new FormData();
+    return await this.fileGateway.upload(files, folderUuid);
+  }
 
-    if (folderUuid) {
-      formData.append('folderUuid', folderUuid);
-    }
+  async delete(uuid: string) {
+    return await this.fileGateway.delete(uuid);
+  }
 
-    for (let index in files) {
-      const file = files[index];
-      formData.append(`files`, file);
-    }
+  async download(uuid: string) {
+    return await this.fileGateway.download(uuid);
+  }
 
-    return await this.fileGateway.upload(formData);
+  getPublicImageUrl(uuid: string) {
+    return this.fileGateway.getPublicImageUrl(uuid);
   }
 }

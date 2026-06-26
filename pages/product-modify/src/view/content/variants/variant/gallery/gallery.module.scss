@@ -26,6 +26,22 @@
   border: var(--numbers-1) solid var(--border-base-divider);
   border-radius: var(--measurements-radius-lg);
   overflow: hidden;
+  cursor: pointer;
+}
+
+.primary {
+  border-color: var(--border-base-brand);
+}
+
+.primaryMarker {
+  position: absolute;
+  top: var(--numbers-4);
+  left: var(--numbers-4);
+  width: var(--numbers-8);
+  height: var(--numbers-8);
+  border-radius: 999px;
+  background: var(--icon-accent-purple-accent);
+  box-shadow: 0 0 0 var(--numbers-2) var(--background-input-normal);
 }
 
 .remove {
@@ -40,7 +56,30 @@
   height: var(--numbers-78);
 }
 
+.pending {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--numbers-4);
+  padding: var(--numbers-6);
+  color: var(--icon-base-quaternary);
+  background: var(--background-base-secondary);
+}
+
+.pendingName {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--text-base-secondary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .add {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
@@ -59,6 +98,20 @@
     color: var(--icon-accent-purple-accent);
     border-color: var(--border-base-brand);
   }
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.disabled {
+  opacity: 0.56;
+  pointer-events: none;
 }
 
 .placeholder {

@@ -11,4 +11,9 @@ export abstract class ProductControllerInterface {
   abstract findByUuid(uuid?: string): Promise<ProductEntity | void>;
   abstract create(dto: CreateProductDto): Promise<ProductEntity>;
   abstract update(uuid: string, dto: UpdateProductDto): Promise<ProductEntity>;
+  abstract getFileImageUrl(fileUuid: string): string;
+  abstract addGalleryImages(
+    currentImages: NonNullable<CreateProductDto['variants'][number]['images']>,
+    files: File[],
+  ): NonNullable<CreateProductDto['variants'][number]['images']>;
 }
