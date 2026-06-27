@@ -1,14 +1,15 @@
-import { Injectable } from '../../../di/injection/decorators';
+import { RuntimeErrorReporterInterface } from '../../../application/reporting/runtime-error-reporter';
+import { Inject, Injectable, Optional } from '../../../di/injection/decorators';
 
 import {
   RuntimeErrorsInterface,
+  type RuntimeErrorConstructor,
   type RuntimeErrorHandler,
-  type RuntimeErrorPredicate,
 } from './runtime-errors.interface.ts';
 
-interface RuntimeErrorSubscription<TError = unknown> {
-  readonly handler: RuntimeErrorHandler<TError>;
-  readonly predicate: RuntimeErrorPredicate<TError>;
+interface RuntimeErrorSubscription {
+  readonly errorType: RuntimeErrorConstructor;
+  readonly handler: RuntimeErrorHandler<Error>;
 }
 
 @Injectable()
@@ -16,38 +17,45 @@ export class RuntimeErrors extends RuntimeErrorsInterface {
   private readonly listeners = new Set<RuntimeErrorHandler>();
   private readonly subscriptions = new Set<RuntimeErrorSubscription>();
 
+  constructor(
+    @Inject(RuntimeErrorReporterInterface)
+    @Optional()
+    private readonly reporter?: RuntimeErrorReporterInterface,
+  ) {
+    super();
+  }
+
   async emit(error: unknown): Promise<void> {
-    const handlers: Promise<void>[] = [];
+    const calls: Promise<void>[] = [];
 
     for (const listener of this.listeners) {
-      handlers.push(Promise.resolve(listener(error)));
+      calls.push(this.callHandler(listener, error));
     }
 
     for (const subscription of this.subscriptions) {
-      if (subscription.predicate(error)) {
-        handlers.push(Promise.resolve(subscription.handler(error)));
+      if (error instanceof subscription.errorType) {
+        calls.push(this.callHandler(subscription.handler as RuntimeErrorHandler, error));
       }
     }
 
-    await Promise.all(handlers);
+    await Promise.all(calls);
   }
 
-  on<TError>(
-    errorTypeOrPredicate: RuntimeErrorPredicate<TError> | (new (...args: any[]) => TError),
+  on<TError extends Error>(
+    errorType: RuntimeErrorConstructor<TError>,
     handler: RuntimeErrorHandler<TError>,
   ): () => void {
-    const predicate = isClassConstructor(errorTypeOrPredicate)
-      ? (error: unknown): error is TError => error instanceof errorTypeOrPredicate
-      : errorTypeOrPredicate;
-    const subscription: RuntimeErrorSubscription<TError> = {
-      handler,
-      predicate,
+    assertRuntimeErrorConstructor(errorType);
+
+    const subscription: RuntimeErrorSubscription = {
+      errorType,
+      handler: (error) => handler(error as TError),
     };
 
-    this.subscriptions.add(subscription as RuntimeErrorSubscription);
+    this.subscriptions.add(subscription);
 
     return () => {
-      this.subscriptions.delete(subscription as RuntimeErrorSubscription);
+      this.subscriptions.delete(subscription);
     };
   }
 
@@ -58,18 +66,60 @@ export class RuntimeErrors extends RuntimeErrorsInterface {
       this.listeners.delete(handler);
     };
   }
+
+  private async callHandler(handler: RuntimeErrorHandler, error: unknown): Promise<void> {
+    try {
+      await handler(error);
+    } catch (handlerError) {
+      await this.reportHandlerError(handlerError);
+    }
+  }
+
+  private async reportHandlerError(error: unknown): Promise<void> {
+    if (!this.reporter) {
+      fallbackReportHandlerError(error);
+      return;
+    }
+
+    try {
+      await this.reporter.report({
+        code: 'application.runtime_error_handler.failed',
+        error,
+      });
+    } catch {
+      fallbackReportHandlerError(error);
+    }
+  }
 }
 
-const isClassConstructor = <TValue>(value: unknown): value is new (...args: any[]) => TValue => {
+const assertRuntimeErrorConstructor = <TError extends Error>(
+  errorType: RuntimeErrorConstructor<TError>,
+): void => {
+  if (isRuntimeErrorConstructor(errorType)) {
+    return;
+  }
+
+  throw new Error('Runtime error subscription expects an error class constructor.');
+};
+
+const isRuntimeErrorConstructor = (value: unknown): boolean => {
+  if (value === Error) {
+    return true;
+  }
+
   if (!value || typeof value !== 'function') {
     return false;
   }
 
-  if (value === Error || value.prototype instanceof Error) {
-    return true;
-  }
+  return value.prototype instanceof Error;
+};
 
-  const source = Function.prototype.toString.call(value);
-
-  return source.startsWith('class ');
+const fallbackReportHandlerError = (error: unknown): void => {
+  globalThis.console.error({
+    code: 'application.runtime_error_handler.failed',
+    error,
+    phase: 'application.runtime_error',
+    severity: 'error',
+    source: 'application.runtime_error',
+  });
 };

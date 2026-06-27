@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { RuntimeErrors } from '../errors';
+
 import { createRuntimeRevisionGuard, executeRuntimeOperation, type RuntimeRevisionSource } from './';
 
 describe('runtime operation', () => {
@@ -21,6 +23,30 @@ describe('runtime operation', () => {
 
     expect(result).toEqual({
       error,
+      type: 'failed',
+    });
+  });
+
+  it('keeps operation error when runtime error handler rejects', async () => {
+    const operationError = new Error('Операция завершилась с ошибкой.');
+    const errors = new RuntimeErrors({
+      report: () => {},
+    });
+
+    errors.subscribe(() => {
+      throw new Error('Runtime error handler завершился с ошибкой.');
+    });
+
+    const result = await executeRuntimeOperation(
+      null,
+      () => {
+        throw operationError;
+      },
+      errors,
+    );
+
+    expect(result).toEqual({
+      error: operationError,
       type: 'failed',
     });
   });

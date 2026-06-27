@@ -163,7 +163,7 @@ export class RouteRuntime {
 
           return loaderData;
         },
-        this.appScope.get(RuntimeErrorsInterface),
+        this.getRuntimeErrors(),
       );
 
       return await this.applyLoaderOperationResult(args, operationGuard.revision, result);
@@ -194,7 +194,7 @@ export class RouteRuntime {
 
         return createControllerActionResultEnvelope(actionRequest.submitId, value);
       },
-      this.appScope.get(RuntimeErrorsInterface),
+      this.getRuntimeErrors(),
     );
 
     return await this.applyActionOperationResult(args, operationGuard.revision, request, result);
@@ -583,7 +583,7 @@ export class RouteRuntime {
   private createPolicyContext(args: ActionFunctionArgs | LoaderFunctionArgs): RouteRuntimeContextInterface {
     return {
       app: this.app,
-      errors: this.appScope.get(RuntimeErrorsInterface),
+      errors: this.getRuntimeErrors(),
       params: args.params,
       request: args.request,
       session: this.session,
@@ -610,6 +610,10 @@ export class RouteRuntime {
       case 'error':
         throw decision.error;
     }
+  }
+
+  private getRuntimeErrors(): RuntimeErrorsInterface {
+    return this.appScope.get(RuntimeErrorsInterface);
   }
 
   private redirectAndSaveLocation(to: string, key: string | undefined, shouldReplace = false): never {

@@ -34,9 +34,8 @@
   runtime-local revalidate;
 - Runtime providers/scopes: `@Provider`, `RuntimeProviderInterface`,
   `RuntimeScope`, application/module/widget/frame scopes;
-- Runtime errors: `RuntimeErrorsInterface`, `RuntimeErrorsBindings`,
-  `RuntimeErrors`, `useRuntimeErrors`, `useRuntimeError`,
-  `useRuntimeOperation`;
+- Runtime errors: `RuntimeErrorsInterface`, `useRuntimeErrors`,
+  `useRuntimeError`, `useRuntimeOperation`;
 - Policies/guards: `Policy`, `PolicyInterface`, `PolicyDescriptorBuilder`,
   `Guard`, `GuardInterface`, `UseGuards`, `useGuard`, `Guarded`;
 - Встроенные features: notification и user-request.

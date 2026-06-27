@@ -182,6 +182,8 @@ widget или frame ради управления navigation.
 
 `RuntimeErrorsInterface` - application-level bus для ошибок, которые возникли в
 runtime operations или в view operations, явно обёрнутых через runtime hook.
+Framework публикует любые ошибки runtime operation; фильтрация по бизнес-смыслу
+принадлежит host application handler-ам.
 
 Контракт:
 
@@ -189,7 +191,6 @@ runtime operations или в view operations, явно обёрнутых чер
 export abstract class RuntimeErrorsInterface {
   abstract emit(error: unknown): Promise<void>;
   abstract on<TError>(errorType: DependencyConstructor<TError>, handler: RuntimeErrorHandler<TError>): () => void;
-  abstract on<TError>(predicate: RuntimeErrorPredicate<TError>, handler: RuntimeErrorHandler<TError>): () => void;
   abstract subscribe(handler: RuntimeErrorHandler): () => void;
 }
 ```
@@ -214,6 +215,13 @@ await runRuntimeOperation(async () => {
 Если operation бросит ошибку, hook сначала отправит её в
 `RuntimeErrorsInterface`, затем пробросит дальше. View всё ещё может показать
 локальную ошибку формы, но application-level обработчики тоже получат событие.
+`emit(...)` ждёт завершения handlers. Если logging, analytics или sentry bridge
+не должны блокировать runtime flow, handler сам запускает эту работу
+fire-and-forget.
+
+Если handler бросит ошибку, исходная ошибка runtime operation не заменяется.
+Ошибка handler-а репортится через `RuntimeErrorReporterInterface` с кодом
+`application.runtime_error_handler.failed`.
 
 Подписка в application initializer:
 
@@ -230,15 +238,11 @@ export class RegisterRuntimeLoggingInitializer implements ApplicationInitializer
 }
 ```
 
-Подписка может быть по class exception или predicate:
+Фильтрованная подписка работает только по class exception:
 
 ```ts
 context.errors.on(UnauthorizedException, async () => {
   context.session.setAnonymous();
-});
-
-context.errors.on(isValidationException, (error) => {
-  reportValidation(error);
 });
 ```
 

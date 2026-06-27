@@ -14,7 +14,7 @@ renderable view helper.
 - Shared render helpers должны оставаться framework-level.
 - `useRuntimeErrors`, `useRuntimeError` и `useRuntimeOperation` нужны view-слою,
   когда операция запускается из React, но ошибка должна пройти через общий
-  runtime error bus.
+  runtime error bus. `useRuntimeError` подписывается только на class exception.
 
 ## Проверка
 

@@ -1,12 +1,7 @@
 import React from 'react';
 
-import type { DependencyConstructor } from '../../di/binding/binding-builder';
 import type { DependencyToken } from '../../di/token/dependency-token';
-import {
-  RuntimeErrorsInterface,
-  type RuntimeErrorHandler,
-  type RuntimeErrorPredicate,
-} from '../errors';
+import { RuntimeErrorsInterface, type RuntimeErrorConstructor, type RuntimeErrorHandler } from '../errors';
 
 import type { RuntimeScopeInterface } from '../scope/contract';
 
@@ -39,15 +34,15 @@ export const useRuntimeErrors = (): RuntimeErrorsInterface => {
   return useDependency(RuntimeErrorsInterface);
 };
 
-export const useRuntimeError = <TError,>(
-  errorTypeOrPredicate: DependencyConstructor<TError> | RuntimeErrorPredicate<TError>,
+export const useRuntimeError = <TError extends Error>(
+  errorType: RuntimeErrorConstructor<TError>,
   handler: RuntimeErrorHandler<TError>,
 ): void => {
   const errors = useRuntimeErrors();
 
   React.useEffect(() => {
-    return errors.on(errorTypeOrPredicate as DependencyConstructor<TError>, handler);
-  }, [errorTypeOrPredicate, errors, handler]);
+    return errors.on(errorType, handler);
+  }, [errorType, errors, handler]);
 };
 
 export type RuntimeOperation = <TValue>(operation: () => TValue | Promise<TValue>) => Promise<TValue>;

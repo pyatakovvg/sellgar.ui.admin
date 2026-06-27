@@ -66,8 +66,8 @@ runtime-срезами и локальные `AGENTS.md` выбранного с
 - Domain contracts, permissions model, auth-specific recovery, route screens,
   visual business widgets и UI labels здесь не размещать.
 - Runtime error bus является framework primitive. Доменные решения о том, что
-  делать с конкретной ошибкой, подключаются в host application через initializer
-  или view hook, а не в domain/request layer.
+  делать с конкретной class exception, подключаются в host application через
+  initializer или view hook, а не в domain/request layer.
 - Новую framework primitive добавлять только при понятной runtime-роли и
   повторяемом сценарии.
 

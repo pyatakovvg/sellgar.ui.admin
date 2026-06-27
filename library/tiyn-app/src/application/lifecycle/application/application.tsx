@@ -7,7 +7,7 @@ import { ExceptionProvider } from '../../../react/router/exception';
 import { RevalidateBindings } from '../../../revalidate/binding/revalidate-bindings';
 import { RouterRuntime } from '../../../router/runtime/router-runtime';
 import { RouterServiceBindings } from '../../../router/service/router-service';
-import { RuntimeErrorsBindings, RuntimeErrorsInterface } from '../../../runtime/errors';
+import { RuntimeErrorsInterface } from '../../../runtime/errors';
 import { ApplicationScope } from '../../../runtime/scope/kind';
 import { WidgetRuntimeFactoryBindings } from '../../../widget/runtime/widget-runtime-factory';
 import type { DependencyConstructor } from '../../../di/binding/binding-builder';
@@ -47,7 +47,6 @@ interface AutoBindableApplicationScope {
 @UseBindings(
   ApplicationEventBusBindings,
   ApplicationStoreBindings,
-  RuntimeErrorsBindings,
   RuntimeErrorReporterBindings,
   FrameBindings,
   RevalidateBindings,
@@ -86,8 +85,8 @@ export abstract class Application extends ApplicationControllerInterface {
     this.setState('composing');
 
     try {
-	      this.scope.bindSession(this.session);
-	      this.scope.bindRouterRuntime(this.routerRuntime);
+      this.scope.bindSession(this.session);
+      this.scope.bindRouterRuntime(this.routerRuntime);
       this.scope.activate(this);
       this.configure(this.config);
 
@@ -231,14 +230,14 @@ export abstract class Application extends ApplicationControllerInterface {
       }
 
       this.setState('ready');
-	    } catch (error) {
-	      await this.emitRuntimeError(error);
-	      this.reportError({
-	        code: 'application.initializer.failed',
-	        error,
-	      });
-	      this.fail(error);
-	      throw error;
+    } catch (error) {
+      await this.scope.get(RuntimeErrorsInterface).emit(error);
+      this.reportError({
+        code: 'application.initializer.failed',
+        error,
+      });
+      this.fail(error);
+      throw error;
     }
   }
 
@@ -283,17 +282,6 @@ export abstract class Application extends ApplicationControllerInterface {
   private assertInitializerToken(initializerToken: ApplicationInitializerToken): void {
     if (!isApplicationInitializerToken(initializerToken)) {
       throw new Error('Initializer class must be decorated with @Initializer().');
-    }
-  }
-
-  private async emitRuntimeError(error: unknown): Promise<void> {
-    try {
-      await this.scope.get(RuntimeErrorsInterface).emit(error);
-    } catch (emitError) {
-      this.reportError({
-        code: 'application.runtime_error_handler.failed',
-        error: emitError,
-      });
     }
   }
 

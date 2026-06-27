@@ -211,7 +211,7 @@ execute(context: ApplicationInitializerContextInterface): void {
 ```
 
 `errors` - общий runtime error bus. Initializer может подписаться на конкретный
-class exception, predicate или все ошибки через `subscribe(...)`. Ошибка
+class exception через `on(...)` или на все ошибки через `subscribe(...)`. Ошибка
 initializer-а перед переходом application в failed state также публикуется в
 `RuntimeErrorsInterface`.
 

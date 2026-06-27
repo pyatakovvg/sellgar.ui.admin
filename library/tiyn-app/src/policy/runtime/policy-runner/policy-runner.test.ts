@@ -6,6 +6,7 @@ import type { ApplicationControllerInterface } from '../../../application/lifecy
 import type { SessionRuntimeStateInterface } from '../../../application/session/session-runtime-state';
 import type { DependencyToken } from '../../../di/token/dependency-token';
 import type { RuntimeContextInterface } from '../../../runtime/context';
+import type { RuntimeErrorsInterface } from '../../../runtime/errors';
 import type { RuntimeScope } from '../../../runtime/scope/base';
 import { ApplicationScope } from '../../../runtime/scope/kind';
 import { PolicyDescriptorBuilder } from '../../declaration/policy-descriptor-builder';
@@ -305,11 +306,18 @@ const createFixture = (): Fixture => {
 const createTestRuntimeContext = (): TestRuntimeContext => {
   return {
     app: {} as ApplicationControllerInterface,
+    errors: createRuntimeErrorsMock(),
     requestId: 'request:1',
     session: {} as SessionRuntimeStateInterface,
     signal: new AbortController().signal,
   };
 };
+
+const createRuntimeErrorsMock = (): RuntimeErrorsInterface => ({
+  emit: vi.fn(),
+  on: vi.fn(() => vi.fn()),
+  subscribe: vi.fn(() => vi.fn()),
+});
 
 class TestRuntimeScope {
   private readonly values = new Map<DependencyToken<unknown>, unknown>();

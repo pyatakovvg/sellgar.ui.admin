@@ -1,7 +1,6 @@
 export {
   RuntimeErrors,
-  RuntimeErrorsBindings,
   RuntimeErrorsInterface,
+  type RuntimeErrorConstructor,
   type RuntimeErrorHandler,
-  type RuntimeErrorPredicate,
 } from './runtime-errors';

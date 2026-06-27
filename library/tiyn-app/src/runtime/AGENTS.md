@@ -13,11 +13,13 @@ runtime providers, React scope context и runtime scopes.
   handler.
 - Runtime operation flow должен различать completed, failed и interrupted
   operations.
-- Runtime errors дают единый канал для ошибок из initializer, route, frame,
+- Runtime errors дают единый канал для всех ошибок из initializer, route, frame,
   widget и view operations. Framework только публикует ошибку; доменную реакцию
   выбирает host/application layer.
-- `RuntimeErrorsInterface.on(...)` допустим для подписки по class exception или
-  predicate. `subscribe(...)` используется для общей интеграции вроде logging.
+- `RuntimeErrorsInterface.on(...)` допустим только для подписки по class
+  exception. `subscribe(...)` используется для общей интеграции вроде logging.
+- `RuntimeErrorsInterface.emit(...)` await-able. Долгие logging/analytics
+  handlers сами должны запускать тяжёлую работу без блокировки runtime flow.
 - `executeRuntimeOperation(...)` должен emit-ить ошибку до возврата failed или
   interrupted, чтобы application-level recovery видел любой runtime request.
 - Не добавлять business state или фича-specific lifecycle.
