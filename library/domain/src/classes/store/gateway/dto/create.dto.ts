@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsUUID, IsString, IsNumber, IsBoolean, ValidateNested, IsOptional, Matches } from 'class-validator';
+import { IsUUID, IsString, IsBoolean, ValidateNested, IsOptional, Matches } from 'class-validator';
 
 class CurrentPrice {
   @IsString()
@@ -37,13 +37,6 @@ class StoreOfferDto {
   @ValidateNested()
   @Type(() => CurrentPrice)
   currentPrice: CurrentPrice;
-
-  @IsNumber()
-  quantity: number;
-
-  @IsOptional()
-  @IsNumber()
-  reserved?: number;
 
   @IsBoolean()
   showing: boolean;

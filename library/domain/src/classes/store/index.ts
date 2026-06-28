@@ -1,4 +1,13 @@
-export { StoreProductEntity, StoreProductResultEntity } from './store.entity.ts';
+export {
+  StoreInventoryMovementEntity,
+  StoreOfferEntity,
+  StoreOfferInventoryEntity,
+  StoreProductEntity,
+  StoreProductResultEntity,
+} from './store.entity.ts';
+export { AdjustInventoryDto } from './gateway/dto/adjust-inventory.dto.ts';
+export { ReceiptInventoryDto } from './gateway/dto/receipt-inventory.dto.ts';
+export { WriteOffInventoryDto } from './gateway/dto/write-off-inventory.dto.ts';
 
 export { StoreGateway } from './gateway/store.gateway.ts';
 export { StoreGatewayInterface } from './gateway/store-gateway.interface.ts';

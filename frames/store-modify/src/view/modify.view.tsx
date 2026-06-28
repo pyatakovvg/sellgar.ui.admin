@@ -45,7 +45,6 @@ export const ModifyView = () => {
         : {
             currencyCode: currency[0].code,
           },
-      count: firstOffer?.currentInventory?.quantity,
       showing: data?.showing ?? false,
     },
     resolver: yupResolver(schema),

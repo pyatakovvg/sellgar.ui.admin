@@ -136,7 +136,7 @@ export class StorePriceHistoryEntity {
   createdAt: string;
 }
 
-export class StoreInventoryEntity {
+export class StoreOfferInventoryEntity {
   @Expose()
   @IsUUID()
   uuid: string;
@@ -160,6 +160,51 @@ export class StoreInventoryEntity {
   @Expose()
   @IsDateString()
   updatedAt: string;
+}
+
+export class StoreInventoryMovementEntity {
+  @Expose()
+  @IsUUID()
+  uuid: string;
+
+  @Expose()
+  @IsUUID()
+  offerUuid: string;
+
+  @Expose()
+  @IsString()
+  type: string;
+
+  @Expose()
+  @IsNumber()
+  quantityDelta: number;
+
+  @Expose()
+  @IsNumber()
+  reservedDelta: number;
+
+  @Expose()
+  @IsString()
+  sourceType: string;
+
+  @Expose()
+  @IsOptional()
+  @IsUUID()
+  sourceUuid?: string | null;
+
+  @Expose()
+  @IsOptional()
+  @IsString()
+  reason?: string | null;
+
+  @Expose()
+  @IsOptional()
+  @IsUUID()
+  createdBy?: string | null;
+
+  @Expose()
+  @IsDateString()
+  createdAt: string;
 }
 
 export class StoreOfferEntity {
@@ -229,15 +274,16 @@ export class StoreOfferEntity {
   currentPrice?: StorePriceHistoryEntity | null;
 
   @Expose()
+  @IsOptional()
   @ValidateNested()
-  @Type(() => StoreInventoryEntity)
-  inventory: StoreInventoryEntity[];
+  @Type(() => StoreOfferInventoryEntity)
+  inventory?: StoreOfferInventoryEntity | null;
 
   @Expose()
   @IsOptional()
-  @ValidateNested()
-  @Type(() => StoreInventoryEntity)
-  currentInventory?: StoreInventoryEntity | null;
+  @ValidateNested({ each: true })
+  @Type(() => StoreInventoryMovementEntity)
+  inventoryMovements?: StoreInventoryMovementEntity[];
 
   @Expose()
   @IsDateString()

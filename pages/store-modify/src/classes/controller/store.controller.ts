@@ -107,7 +107,6 @@ export class StoreController implements StoreControllerInterface {
           variantUuid: dto.variantUuid,
           article: dto.article,
           currentPrice: dto.currentPrice,
-          quantity: dto.count,
           showing: dto.showing,
         },
       ],

@@ -8,7 +8,6 @@ interface IForm {
     value: string;
     currencyCode: string;
   };
-  count: number;
   showing: boolean;
 }
 
@@ -20,7 +19,6 @@ export const schema = yup.object({
     value: yup.string().matches(/^\d+(\.\d{1,2})?$/, 'Некорректная цена').required('Необходимо заполнить'),
     currencyCode: yup.string().required('Необходимо выбрать'),
   }),
-  count: yup.number().required('Необходимо заполнить'),
   showing: yup.boolean().required('Необходимо выбрать'),
 }) as yup.ObjectSchema<IForm>;
 

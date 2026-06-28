@@ -1,4 +1,4 @@
-import { Field, Label, Caption, InputNumeral, Input, Checkbox } from '@sellgar/kit';
+import { Field, Label, Caption, Input, Checkbox } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -49,29 +49,6 @@ export const Common: React.FC = () => {
                   </Field.Label>
                   <Field.Content>
                     <Input {...field} />
-                  </Field.Content>
-                  {!!error?.message && (
-                    <Field.Caption>
-                      <Caption state={'destructive'} caption={error.message} />
-                    </Field.Caption>
-                  )}
-                </Field>
-              );
-            }}
-          />
-        </div>
-        <div className={s.field}>
-          <Controller
-            name={'count'}
-            control={control}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <Field>
-                  <Field.Label>
-                    <Label label={'Количество на складе'} />
-                  </Field.Label>
-                  <Field.Content>
-                    <InputNumeral {...field} onChange={(value) => field.onChange(value)} />
                   </Field.Content>
                   {!!error?.message && (
                     <Field.Caption>

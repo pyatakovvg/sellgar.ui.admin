@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsUUID, IsString, IsNumber, IsBoolean, ValidateNested, Matches } from 'class-validator';
+import { IsUUID, IsString, IsBoolean, ValidateNested, Matches } from 'class-validator';
 
 class CurrentPrice {
   @IsString()
@@ -23,9 +23,6 @@ export class CreateDto {
   @ValidateNested()
   @Type(() => CurrentPrice)
   currentPrice: CurrentPrice;
-
-  @IsNumber()
-  count: number;
 
   @IsBoolean()
   showing: boolean;

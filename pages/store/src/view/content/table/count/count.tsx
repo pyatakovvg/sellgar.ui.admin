@@ -7,7 +7,7 @@ import s from './default.module.scss';
 
 export const Count: React.FC = () => {
   const { data } = useCellData<StoreProductEntity>();
-  const quantity = data.offers.reduce((sum, offer) => sum + (offer.currentInventory?.quantity ?? 0), 0);
+  const quantity = data.offers.reduce((sum, offer) => sum + (offer.inventory?.quantity ?? 0), 0);
 
   return (
     <div className={s.wrapper}>
