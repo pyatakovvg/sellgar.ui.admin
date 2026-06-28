@@ -57,6 +57,7 @@ export class ProductController implements ProductControllerInterface {
   async update(uuid: string, dto: UpdateProductDto) {
     return await this.productService.update(uuid, {
       uuid,
+      version: dto.version,
       name: dto.name,
       description: dto.description,
       brandUuid: dto.brandUuid,

@@ -5,6 +5,7 @@ export * from './helpers/storage';
 
 export * from './classes/person';
 export * from './classes/auth';
+export * from './classes/catalog-status.enum.ts';
 export * from './classes/brand';
 export * from './classes/category';
 export * from './classes/unit';

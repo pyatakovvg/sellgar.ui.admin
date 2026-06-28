@@ -1,5 +1,5 @@
 import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsString, ValidateNested, IsDateString } from 'class-validator';
+import { IsUUID, IsString, ValidateNested, IsDateString, IsNumber } from 'class-validator';
 
 import { MetaEntity } from '../../meta.entity.ts';
 
@@ -7,6 +7,10 @@ export class UnitEntity {
   @Expose()
   @IsUUID()
   uuid: string;
+
+  @Expose()
+  @IsNumber()
+  version: number;
 
   @Expose()
   @IsString()

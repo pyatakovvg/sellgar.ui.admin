@@ -33,6 +33,7 @@ export const ModuleView = () => {
       if (data?.uuid) {
         const result = await update(data.uuid, {
           uuid: data.uuid,
+          version: data.version,
           ...values,
         });
 

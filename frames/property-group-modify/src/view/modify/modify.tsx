@@ -1,4 +1,4 @@
-import { PropertyEntity } from '@library/domain';
+import { PropertyGroupEntity } from '@library/domain';
 import { useFrame, useLoaderData, useRevalidate } from '@tiyn/app';
 
 import React from 'react';
@@ -18,7 +18,7 @@ import { PropertyGroupModifyControllerInterface } from '../../classes/controller
 import s from './modify.module.scss';
 
 export const Modify = () => {
-  const data = useLoaderData(PropertyGroupModifyControllerInterface) as PropertyEntity | undefined;
+  const data = useLoaderData(PropertyGroupModifyControllerInterface) as PropertyGroupEntity | undefined;
 
   const frame = useFrame();
   const revalidate = useRevalidate();
@@ -32,6 +32,7 @@ export const Modify = () => {
     if (data) {
       await updateRequest(data.uuid, {
         uuid: data.uuid,
+        version: data.version,
         name: values.name,
         description: values.description,
       });

@@ -38,6 +38,7 @@ export const Modify = () => {
     if (data) {
       await updateRequest(data.uuid, {
         uuid: data.uuid,
+        version: data.version,
         code: values.code,
         name: values.name,
         description: values.description,
