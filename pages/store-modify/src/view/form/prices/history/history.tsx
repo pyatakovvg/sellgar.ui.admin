@@ -1,6 +1,6 @@
 import { Field, Label } from '@sellgar/kit';
 import { useLoaderData } from '@tiyn/app';
-import { StoreEntity } from '@library/domain';
+import { StoreProductEntity } from '@library/domain';
 
 import React from 'react';
 import { observer } from 'mobx-react';
@@ -16,7 +16,7 @@ interface IProps {
 }
 
 export const History: React.FC<IProps> = observer((props) => {
-  const data = useLoaderData(StoreControllerInterface) as StoreEntity;
+  const data = useLoaderData(StoreControllerInterface) as StoreProductEntity;
   const firstOffer = data.offers[0];
   const prices = firstOffer?.prices ?? [];
 

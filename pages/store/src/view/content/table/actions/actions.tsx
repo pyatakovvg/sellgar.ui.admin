@@ -1,5 +1,5 @@
 import { StoreModifyFrame } from '@frame/store-modify';
-import { StoreEntity } from '@library/domain';
+import { StoreProductEntity } from '@library/domain';
 import { Button, Icon, useCellData } from '@sellgar/kit';
 import { useFrame } from '@tiyn/app';
 
@@ -9,7 +9,7 @@ import s from './default.module.scss';
 
 export const Actions: React.FC = () => {
   const storeModifyFrame = useFrame(StoreModifyFrame);
-  const { data } = useCellData<StoreEntity>();
+  const { data } = useCellData<StoreProductEntity>();
 
   const handleClick = () => {
     void storeModifyFrame.open({ uuid: data.uuid });

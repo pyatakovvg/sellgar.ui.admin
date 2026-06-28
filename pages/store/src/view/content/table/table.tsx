@@ -1,4 +1,4 @@
-import { StoreEntity } from '@library/domain';
+import { StoreProductEntity } from '@library/domain';
 import { Table as TableComponent } from '@sellgar/kit';
 import { StoreModifyFrame } from '@frame/store-modify';
 import { useFrame } from '@tiyn/app';
@@ -15,7 +15,7 @@ import { Price } from './price';
 import s from './default.module.scss';
 
 interface IProps {
-  data: StoreEntity[];
+  data: StoreProductEntity[];
 }
 
 export const Table: React.FC<IProps> = (props) => {

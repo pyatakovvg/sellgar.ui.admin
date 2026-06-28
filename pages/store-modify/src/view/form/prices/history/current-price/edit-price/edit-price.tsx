@@ -9,7 +9,7 @@ import { UpdateProductStoreDto } from '../../../../../../classes/store/form/dto/
 import s from './default.module.scss';
 
 interface IProps {
-  value: number;
+  value: string;
   onReset?(): void;
 }
 
@@ -41,7 +41,7 @@ export const EditPrice: React.FC<IProps> = (props) => {
                       </div>
                     )
                   }
-                  onChange={(event) => field.onChange(InputNumeral.unFormat(event.target.value))}
+                  onChange={(event) => field.onChange(String(InputNumeral.unFormat(event.target.value)))}
                 />
               </Field.Content>
               {error?.message && (

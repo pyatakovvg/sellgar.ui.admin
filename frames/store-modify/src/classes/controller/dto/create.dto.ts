@@ -1,9 +1,10 @@
 import { Type } from 'class-transformer';
-import { IsUUID, IsString, IsNumber, IsBoolean, ValidateNested } from 'class-validator';
+import { IsUUID, IsString, IsNumber, IsBoolean, ValidateNested, Matches } from 'class-validator';
 
 class CurrentPrice {
-  @IsNumber()
-  value: number;
+  @IsString()
+  @Matches(/^\d+(\.\d{1,2})?$/)
+  value: string;
 
   @IsString()
   currencyCode: string;

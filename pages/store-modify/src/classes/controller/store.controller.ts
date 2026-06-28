@@ -1,5 +1,5 @@
 import {
-  StoreEntity,
+  StoreProductEntity,
   StoreServiceInterface,
   VariantServiceInterface,
   CurrencyServiceInterface,
@@ -34,7 +34,7 @@ export class StoreController implements StoreControllerInterface {
     @Inject(VariantServiceInterface) private readonly productVariantService: VariantServiceInterface,
   ) {}
 
-  async create(dto: CreateDto, cb: (result: StoreEntity) => Promise<void>) {
+  async create(dto: CreateDto, cb: (result: StoreProductEntity) => Promise<void>) {
     this.processStore.setProcess(true);
 
     try {
@@ -51,7 +51,7 @@ export class StoreController implements StoreControllerInterface {
     }
   }
 
-  async update(dto: UpdateDto, cb: (result: StoreEntity) => Promise<void>) {
+  async update(dto: UpdateDto, cb: (result: StoreProductEntity) => Promise<void>) {
     this.processStore.setProcess(true);
 
     try {

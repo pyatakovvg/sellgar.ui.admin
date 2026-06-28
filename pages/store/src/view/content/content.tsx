@@ -1,4 +1,4 @@
-import { StoreResultEntity } from '@library/domain';
+import { StoreProductResultEntity } from '@library/domain';
 import { useLoaderData } from '@tiyn/app';
 
 import React from 'react';
@@ -9,7 +9,7 @@ import { StoreControllerInterface } from '../../classes/controller/store-control
 import s from './default.module.scss';
 
 export const Content = () => {
-  const result = useLoaderData(StoreControllerInterface) as StoreResultEntity;
+  const result = useLoaderData(StoreControllerInterface) as StoreProductResultEntity;
 
   return (
     <div className={s.wrapper}>

@@ -5,7 +5,7 @@ interface IForm {
   shopUuid: string;
   variantUuid: string;
   currentPrice: {
-    value: number;
+    value: string;
     currencyCode: string;
   };
   count: number;
@@ -17,7 +17,7 @@ export const schema = yup.object({
   shopUuid: yup.string().required('Необходимо выбрать'),
   variantUuid: yup.string().required('Необходимо выбрать'),
   currentPrice: yup.object({
-    value: yup.number().required('Необходимо заполнить'),
+    value: yup.string().matches(/^\d+(\.\d{1,2})?$/, 'Некорректная цена').required('Необходимо заполнить'),
     currencyCode: yup.string().required('Необходимо выбрать'),
   }),
   count: yup.number().required('Необходимо заполнить'),

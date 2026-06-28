@@ -1,11 +1,11 @@
 import { CreateDto } from '../gateway/dto/create.dto.ts';
 import { UpdateDto } from '../gateway/dto/update.dto.ts';
 
-import { StoreEntity, StoreResultEntity } from '../store.entity.ts';
+import { StoreProductEntity, StoreProductResultEntity } from '../store.entity.ts';
 
 export abstract class StoreServiceInterface {
-  abstract findAll(query: any): Promise<StoreResultEntity>;
-  abstract findByUuid(uuid: string): Promise<StoreEntity>;
-  abstract create(dto: CreateDto): Promise<StoreEntity>;
-  abstract update(dto: UpdateDto): Promise<StoreEntity>;
+  abstract findAll(query: any): Promise<StoreProductResultEntity>;
+  abstract findByUuid(uuid: string): Promise<StoreProductEntity>;
+  abstract create(dto: CreateDto): Promise<StoreProductEntity>;
+  abstract update(dto: UpdateDto): Promise<StoreProductEntity>;
 }

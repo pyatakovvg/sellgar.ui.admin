@@ -1,4 +1,4 @@
-export { StoreEntity, StoreResultEntity } from './store.entity.ts';
+export { StoreProductEntity, StoreProductResultEntity } from './store.entity.ts';
 
 export { StoreGateway } from './gateway/store.gateway.ts';
 export { StoreGatewayInterface } from './gateway/store-gateway.interface.ts';

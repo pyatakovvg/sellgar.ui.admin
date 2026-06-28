@@ -1,6 +1,6 @@
 import { Page } from '@library/design';
 import { Button } from '@sellgar/kit';
-import { StoreEntity } from '@library/domain';
+import { StoreProductEntity } from '@library/domain';
 import { useNavigate, useLoaderData } from '@tiyn/app';
 
 import React from 'react';
@@ -21,7 +21,7 @@ import { schema, IFormData } from './form.schema.ts';
 
 export const ModifyView = () => {
   const { uuid } = useParams<{ uuid: string }>();
-  const data = useLoaderData(StoreControllerInterface) as StoreEntity | undefined;
+  const data = useLoaderData(StoreControllerInterface) as StoreProductEntity | undefined;
 
   const navigate = useNavigate();
 

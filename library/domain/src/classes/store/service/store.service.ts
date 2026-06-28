@@ -7,27 +7,27 @@ import { StoreGatewayInterface } from '../gateway/store-gateway.interface.ts';
 import { CreateDto } from './dto/create.dto.ts';
 import { UpdateDto } from './dto/update.dto.ts';
 
-import { StoreEntity, StoreResultEntity } from '../store.entity.ts';
+import { StoreProductEntity, StoreProductResultEntity } from '../store.entity.ts';
 
 @injectable()
 export class StoreService implements StoreServiceInterface {
   constructor(@inject(StoreGatewayInterface) private readonly storeGateway: StoreGatewayInterface) {}
 
-  async findAll(query: any): Promise<StoreResultEntity> {
+  async findAll(query: any): Promise<StoreProductResultEntity> {
     return await this.storeGateway.findAll(query);
   }
 
-  async findByUuid(uuid: string): Promise<StoreEntity> {
+  async findByUuid(uuid: string): Promise<StoreProductEntity> {
     return await this.storeGateway.findByUuid(uuid);
   }
 
-  async update(dto: UpdateDto): Promise<StoreEntity> {
+  async update(dto: UpdateDto): Promise<StoreProductEntity> {
     await validateOrReject(dto);
 
     return this.storeGateway.update(dto);
   }
 
-  async create(dto: CreateDto): Promise<StoreEntity> {
+  async create(dto: CreateDto): Promise<StoreProductEntity> {
     await validateOrReject(dto);
 
     return await this.storeGateway.create(dto);

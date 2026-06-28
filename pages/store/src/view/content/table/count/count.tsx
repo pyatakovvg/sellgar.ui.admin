@@ -1,12 +1,12 @@
 import { Typography, useCellData } from '@sellgar/kit';
-import { StoreEntity } from '@library/domain';
+import { StoreProductEntity } from '@library/domain';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
 export const Count: React.FC = () => {
-  const { data } = useCellData<StoreEntity>();
+  const { data } = useCellData<StoreProductEntity>();
   const quantity = data.offers.reduce((sum, offer) => sum + (offer.currentInventory?.quantity ?? 0), 0);
 
   return (

@@ -1,6 +1,6 @@
 import { Page } from '@library/design';
 import { Drawer, Button } from '@sellgar/kit';
-import { StoreEntity } from '@library/domain';
+import { StoreProductEntity } from '@library/domain';
 import { useFrame, useLoaderData, useNavigate } from '@tiyn/app';
 
 import React from 'react';
@@ -19,7 +19,7 @@ import { schema, IFormData } from './form.schema.ts';
 import { StoreControllerInterface } from '../classes/controller/store-controller.interface.ts';
 
 export const ModifyView = () => {
-  const data = useLoaderData(StoreControllerInterface) as StoreEntity | undefined;
+  const data = useLoaderData(StoreControllerInterface) as StoreProductEntity | undefined;
 
   const navigate = useNavigate();
   const frame = useFrame();

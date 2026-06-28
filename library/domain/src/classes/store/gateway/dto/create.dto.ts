@@ -1,15 +1,16 @@
 import { Type } from 'class-transformer';
-import { IsUUID, IsString, IsNumber, IsBoolean, ValidateNested, IsOptional } from 'class-validator';
+import { IsUUID, IsString, IsNumber, IsBoolean, ValidateNested, IsOptional, Matches } from 'class-validator';
 
 class CurrentPrice {
-  @IsNumber()
-  value: number;
+  @IsString()
+  @Matches(/^\d+(\.\d{1,2})?$/)
+  value: string;
 
   @IsString()
   currencyCode: string;
 }
 
-class StoreVariantOfferDto {
+class StoreOfferDto {
   @IsOptional()
   @IsUUID()
   uuid?: string;
@@ -73,6 +74,6 @@ export class CreateDto {
   showing: boolean;
 
   @ValidateNested()
-  @Type(() => StoreVariantOfferDto)
-  offers: StoreVariantOfferDto[];
+  @Type(() => StoreOfferDto)
+  offers: StoreOfferDto[];
 }

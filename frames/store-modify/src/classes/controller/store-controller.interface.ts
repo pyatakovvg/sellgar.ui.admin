@@ -1,4 +1,4 @@
-import { StoreEntity } from '@library/domain';
+import { StoreProductEntity } from '@library/domain';
 import { FrameControllerInterface, type FrameControllerLoaderArgs } from '@tiyn/app';
 import { type StoreModifyFrameParams } from '../../store-modify.frame.tsx';
 
@@ -16,7 +16,7 @@ export abstract class StoreControllerInterface extends FrameControllerInterface<
   abstract readonly variantsStore: VariantsStoreInterface;
   abstract readonly currencyStore: CurrencyStoreInterface;
 
-  abstract loader(args: FrameControllerLoaderArgs<StoreModifyFrameParams>): Promise<StoreEntity | undefined>;
-  abstract create(dto: CreateDto, cb: (result: StoreEntity) => Promise<void>): Promise<void>;
-  abstract update(dto: UpdateDto, cb: (result: StoreEntity) => Promise<void>): Promise<void>;
+  abstract loader(args: FrameControllerLoaderArgs<StoreModifyFrameParams>): Promise<StoreProductEntity | undefined>;
+  abstract create(dto: CreateDto, cb: (result: StoreProductEntity) => Promise<void>): Promise<void>;
+  abstract update(dto: UpdateDto, cb: (result: StoreProductEntity) => Promise<void>): Promise<void>;
 }

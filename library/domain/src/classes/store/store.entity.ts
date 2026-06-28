@@ -19,6 +19,12 @@ export enum StoreProductStatus {
   ARCHIVED = 'archived',
 }
 
+export enum StoreOfferStatus {
+  ACTIVE = 'active',
+  DISABLED = 'disabled',
+  ARCHIVED = 'archived',
+}
+
 export class ShopSnapshotEntity {
   @Expose()
   @IsUUID()
@@ -99,8 +105,8 @@ export class StorePriceHistoryEntity {
   offerUuid: string;
 
   @Expose()
-  @IsNumber()
-  value: number;
+  @IsString()
+  value: string;
 
   @Expose()
   @IsString()
@@ -156,7 +162,7 @@ export class StoreInventoryEntity {
   updatedAt: string;
 }
 
-export class StoreVariantOfferEntity {
+export class StoreOfferEntity {
   @Expose()
   @IsUUID()
   uuid: string;
@@ -168,6 +174,10 @@ export class StoreVariantOfferEntity {
   @IsUUID()
   @Expose()
   storeProductUuid: string;
+
+  @Expose()
+  @IsUUID()
+  productUuid: string;
 
   @Expose()
   @IsUUID()
@@ -200,8 +210,8 @@ export class StoreVariantOfferEntity {
   descriptionOverride?: string | null;
 
   @Expose()
-  @IsEnum(StoreProductStatus)
-  status: StoreProductStatus;
+  @IsEnum(StoreOfferStatus)
+  status: StoreOfferStatus;
 
   @Expose()
   @IsBoolean()
@@ -238,7 +248,7 @@ export class StoreVariantOfferEntity {
   updatedAt: string;
 }
 
-export class StoreEntity {
+export class StoreProductEntity {
   @IsUUID()
   @Expose()
   uuid: string;
@@ -291,8 +301,8 @@ export class StoreEntity {
 
   @Expose()
   @ValidateNested()
-  @Type(() => StoreVariantOfferEntity)
-  offers: StoreVariantOfferEntity[];
+  @Type(() => StoreOfferEntity)
+  offers: StoreOfferEntity[];
 
   @Expose()
   @IsDateString()
@@ -303,11 +313,11 @@ export class StoreEntity {
   updatedAt: string;
 }
 
-export class StoreResultEntity {
+export class StoreProductResultEntity {
   @Expose()
   @ValidateNested()
-  @Type(() => StoreEntity)
-  data: StoreEntity[];
+  @Type(() => StoreProductEntity)
+  data: StoreProductEntity[];
 
   @Expose()
   @ValidateNested()
