@@ -1,4 +1,4 @@
-import { PriceEntity } from '@library/domain';
+import { StorePriceHistoryEntity } from '@library/domain';
 
 import React from 'react';
 
@@ -6,8 +6,8 @@ import { EditPrice } from './edit-price';
 import { ShowPrice } from './show-price';
 
 interface IProps {
-  data: PriceEntity;
-  prevPrice?: PriceEntity;
+  data: StorePriceHistoryEntity;
+  prevPrice?: StorePriceHistoryEntity;
   onEdit(): void;
 }
 

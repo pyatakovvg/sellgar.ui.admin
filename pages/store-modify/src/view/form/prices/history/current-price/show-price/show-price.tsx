@@ -1,4 +1,4 @@
-import { PriceEntity } from '@library/domain';
+import { StorePriceHistoryEntity } from '@library/domain';
 import { Typography, Icon, InputNumeral } from '@sellgar/kit';
 
 import React from 'react';
@@ -8,8 +8,8 @@ import cn from 'classnames';
 import s from './default.module.scss';
 
 interface IProps {
-  data: PriceEntity;
-  prevPrice?: PriceEntity;
+  data: StorePriceHistoryEntity;
+  prevPrice?: StorePriceHistoryEntity;
   onEdit(): void;
 }
 
@@ -42,7 +42,7 @@ export const ShowPrice: React.FC<IProps> = (props) => {
         </div>
         <div className={s.currency}>
           <Typography size={'caption-l'} weight={'regular'}>
-            <p>{props.data.currency.name}</p>
+            <p>{props.data.currency.value ?? props.data.currency.name}</p>
           </Typography>
         </div>
         <div className={s.date}>

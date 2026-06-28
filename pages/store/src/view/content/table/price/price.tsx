@@ -8,14 +8,25 @@ import s from './default.module.scss';
 
 export const Price: React.FC = () => {
   const { data } = useCellData<StoreEntity>();
+  const currentPrice = data.offers[0]?.currentPrice;
+
+  if (!currentPrice) {
+    return (
+      <div className={s.wrapper}>
+        <Typography size={'caption-m'} weight={'bold'}>
+          <p className={s.price}>---</p>
+        </Typography>
+      </div>
+    );
+  }
 
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-m'} weight={'bold'}>
-        <p className={s.price}>{amountFormat(data.currentPrice.value, { hundredthsAfterDecimal: true })}</p>
+        <p className={s.price}>{amountFormat(currentPrice.value, { hundredthsAfterDecimal: true })}</p>
       </Typography>
       <Typography size={'caption-s'} weight={'medium'}>
-        <span className={s.currency}>{data.currentPrice.currency.name}</span>
+        <span className={s.currency}>{currentPrice.currency?.value ?? currentPrice.currency?.name ?? currentPrice.currencyCode}</span>
       </Typography>
     </div>
   );

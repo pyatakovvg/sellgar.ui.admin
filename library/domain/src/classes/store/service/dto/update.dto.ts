@@ -1,8 +1,11 @@
-import { IsUUID } from 'class-validator';
+import { IsNumber, IsUUID } from 'class-validator';
 
 import { CreateDto } from './create.dto.ts';
 
 export class UpdateDto extends CreateDto {
   @IsUUID()
   uuid: string;
+
+  @IsNumber()
+  expectedVersion: number;
 }

@@ -42,7 +42,7 @@ export class StoreController implements StoreControllerInterface {
 
       await validateOrReject(data);
 
-      const result = await this.storeService.create(data);
+      const result = await this.storeService.create(this.toStoreProductDto(data));
 
       await cb(result);
     } catch (error) {
@@ -59,7 +59,11 @@ export class StoreController implements StoreControllerInterface {
 
       await validateOrReject(data);
 
-      const result = await this.storeService.update(data);
+      const result = await this.storeService.update({
+        uuid: data.uuid,
+        expectedVersion: data.expectedVersion,
+        ...this.toStoreProductDto(data, data.offerUuid),
+      });
 
       await cb(result);
     } catch (error) {
@@ -81,5 +85,32 @@ export class StoreController implements StoreControllerInterface {
     if (args.params?.uuid) {
       return await this.storeService.findByUuid(args.params.uuid);
     }
+  }
+
+  private toStoreProductDto(dto: CreateDto, offerUuid?: string) {
+    const variant = this.variantsStore.variants.find((item) => item.uuid === dto.variantUuid);
+    const productUuid = variant?.product?.uuid;
+
+    if (!productUuid) {
+      throw new Error('Не удалось определить товар по выбранному варианту');
+    }
+
+    return {
+      commandId: crypto.randomUUID(),
+      shopUuid: dto.shopUuid,
+      productUuid,
+      article: dto.article,
+      showing: dto.showing,
+      offers: [
+        {
+          uuid: offerUuid,
+          variantUuid: dto.variantUuid,
+          article: dto.article,
+          currentPrice: dto.currentPrice,
+          quantity: dto.count,
+          showing: dto.showing,
+        },
+      ],
+    };
   }
 }

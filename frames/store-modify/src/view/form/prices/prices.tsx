@@ -8,8 +8,9 @@ import { History } from './history';
 
 export const Prices: React.FC = () => {
   const [data] = useLoaderData<[StoreEntity]>();
+  const firstOffer = data.offers[0];
 
-  const [isEdit, setEdit] = React.useState(() => !data.currentPrice);
+  const [isEdit, setEdit] = React.useState(() => !firstOffer?.currentPrice);
 
   if (isEdit) {
     return <Price />;

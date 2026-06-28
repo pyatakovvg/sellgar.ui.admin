@@ -19,24 +19,24 @@ export class StoreGateway implements StoreGatewayInterface {
   ) {}
 
   async findAll(query: any): Promise<StoreResultEntity> {
-    return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store', {
+    return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store/products', {
       params: query,
     });
   }
 
   async findByUuid(uuid: string): Promise<StoreEntity> {
-    return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store/' + uuid);
+    return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store/products/' + uuid);
   }
 
   async create(dto: CreateDto): Promise<StoreEntity> {
     await validateOrReject(dto);
 
-    return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/store', dto);
+    return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/store/products', dto);
   }
 
   async update(dto: UpdateDto): Promise<StoreEntity> {
     await validateOrReject(dto);
 
-    return this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/store', dto);
+    return this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/store/products/' + dto.uuid, dto);
   }
 }

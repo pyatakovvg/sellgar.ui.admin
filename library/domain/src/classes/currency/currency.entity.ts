@@ -1,5 +1,5 @@
 import { Type, Expose } from 'class-transformer';
-import { IsDateString, IsString, IsNumber, ValidateNested } from 'class-validator';
+import { IsDateString, IsString, IsNumber, ValidateNested, IsOptional } from 'class-validator';
 
 import { MetaEntity } from '../../meta.entity.ts';
 
@@ -11,6 +11,11 @@ export class CurrencyEntity {
   @Expose()
   @IsString()
   name: string;
+
+  @Expose()
+  @IsOptional()
+  @IsString()
+  value?: string;
 
   @Expose()
   @IsNumber()

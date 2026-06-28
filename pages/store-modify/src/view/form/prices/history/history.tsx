@@ -17,6 +17,8 @@ interface IProps {
 
 export const History: React.FC<IProps> = observer((props) => {
   const data = useLoaderData(StoreControllerInterface) as StoreEntity;
+  const firstOffer = data.offers[0];
+  const prices = firstOffer?.prices ?? [];
 
   return (
     <div className={s.wrapper}>
@@ -26,10 +28,10 @@ export const History: React.FC<IProps> = observer((props) => {
         </Field.Label>
         <Field.Content>
           <div className={s.fields}>
-            {data.prices.map((price, index) => (
+            {prices.map((price, index) => (
               <div key={price.uuid} className={s.field}>
-                {index === 0 && <CurrentPrice data={price} prevPrice={data.prices[index + 1]} onEdit={props.onEdit} />}
-                {index > 0 && <Price data={price} prevPrice={data.prices[index + 1]} />}
+                {index === 0 && <CurrentPrice data={price} prevPrice={prices[index + 1]} onEdit={props.onEdit} />}
+                {index > 0 && <Price data={price} prevPrice={prices[index + 1]} />}
               </div>
             ))}
           </div>

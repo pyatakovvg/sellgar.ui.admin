@@ -11,7 +11,7 @@ export const Shop: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-m'} weight={'medium'}>
-        <p className={s.value}>{data.shop.name}</p>
+        <p className={s.value}>{data.shopSnapshot?.name ?? data.shopUuid}</p>
       </Typography>
     </div>
   );

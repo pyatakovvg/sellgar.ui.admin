@@ -56,7 +56,7 @@ export const Table: React.FC<IProps> = (props) => {
             <Column>
               {({ Head, Cell }) => (
                 <>
-                  <Head label={'Категория'} />
+                  <Head label={'Статус'} />
                   <Cell>
                     <Category />
                   </Cell>

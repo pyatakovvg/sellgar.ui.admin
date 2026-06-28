@@ -31,20 +31,22 @@ export const ModifyView = () => {
   const createRequest = useCreateRequest();
   const updateRequest = useUpdateRequest();
 
+  const firstOffer = data?.offers?.[0];
+
   const methods = useForm<IFormData>({
     defaultValues: {
       article: data?.article,
       shopUuid: data?.shopUuid,
-      variantUuid: data?.variantUuid,
-      currentPrice: data?.currentPrice
+      variantUuid: firstOffer?.variantUuid,
+      currentPrice: firstOffer?.currentPrice
         ? {
-            value: data?.currentPrice?.value,
-            currencyCode: data?.currentPrice?.currency.code,
+            value: firstOffer.currentPrice.value,
+            currencyCode: firstOffer.currentPrice.currencyCode,
           }
         : {
             currencyCode: currency[0].code,
           },
-      count: data?.count,
+      count: firstOffer?.currentInventory?.quantity,
       showing: data?.showing ?? false,
     },
     resolver: yupResolver(schema),
@@ -53,7 +55,7 @@ export const ModifyView = () => {
   const handleSubmit = methods.handleSubmit(
     async (values) => {
       if (uuid) {
-        await updateRequest({ uuid, ...values }, async () => {
+        await updateRequest({ uuid, offerUuid: firstOffer?.uuid, expectedVersion: data!.version, ...values }, async () => {
           await navigate.to('/store');
         });
       } else {
