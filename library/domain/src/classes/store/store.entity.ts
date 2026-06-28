@@ -11,7 +11,10 @@ import {
 } from 'class-validator';
 
 import { MetaEntity } from '../../meta.entity.ts';
+import { CatalogStatus } from '../catalog-status.enum.ts';
 import { CurrencyEntity } from '../currency/currency.entity.ts';
+import { ShopStatus } from '../shop/shop-status.enum.ts';
+import { VariantImageEntity, VariantPropertyEntity } from '../variant/variant.entity.ts';
 
 export enum StoreProductStatus {
   ACTIVE = 'active',
@@ -25,74 +28,127 @@ export enum StoreOfferStatus {
   ARCHIVED = 'archived',
 }
 
-export class ShopSnapshotEntity {
+export class StoreShopEntity {
   @Expose()
   @IsUUID()
-  shopUuid: string;
-
-  @Expose()
-  @IsNumber()
-  sourceVersion: number;
+  uuid: string;
 
   @Expose()
   @IsString()
   name: string;
 
   @Expose()
-  @IsString()
-  status: string;
+  @IsEnum(ShopStatus)
+  status: ShopStatus;
 
   @Expose()
   @IsDateString()
-  syncedAt: string;
+  createdAt: string;
+
+  @Expose()
+  @IsDateString()
+  updatedAt: string;
 }
 
-export class ProductSnapshotEntity {
+export class StoreBrandEntity {
   @Expose()
   @IsUUID()
-  productUuid: string;
-
-  @Expose()
-  @IsNumber()
-  sourceVersion: number;
+  uuid: string;
 
   @Expose()
   @IsString()
   name: string;
 
   @Expose()
-  @IsString()
-  status: string;
+  @IsDateString()
+  createdAt: string;
 
   @Expose()
   @IsDateString()
-  syncedAt: string;
+  updatedAt: string;
 }
 
-export class VariantSnapshotEntity {
+export class StoreCategoryEntity {
   @Expose()
   @IsUUID()
-  variantUuid: string;
-
-  @Expose()
-  @IsUUID()
-  productUuid: string;
-
-  @Expose()
-  @IsNumber()
-  sourceVersion: number;
+  uuid: string;
 
   @Expose()
   @IsString()
   name: string;
 
   @Expose()
-  @IsString()
-  status: string;
+  @IsDateString()
+  createdAt: string;
 
   @Expose()
   @IsDateString()
-  syncedAt: string;
+  updatedAt: string;
+}
+
+export class StoreProductCatalogEntity {
+  @Expose()
+  @IsUUID()
+  uuid: string;
+
+  @Expose()
+  @IsString()
+  name: string;
+
+  @Expose()
+  @IsEnum(CatalogStatus)
+  status: CatalogStatus;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => StoreBrandEntity)
+  brand: StoreBrandEntity;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => StoreCategoryEntity)
+  category: StoreCategoryEntity;
+
+  @Expose()
+  @IsDateString()
+  createdAt: string;
+
+  @Expose()
+  @IsDateString()
+  updatedAt: string;
+}
+
+export class StoreVariantEntity {
+  @Expose()
+  @IsUUID()
+  uuid: string;
+
+  @Expose()
+  @IsString()
+  name: string;
+
+  @Expose()
+  @IsEnum(CatalogStatus)
+  status: CatalogStatus;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => VariantPropertyEntity)
+  properties: VariantPropertyEntity[];
+
+  @Expose()
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => VariantImageEntity)
+  images: VariantImageEntity[];
+
+  @Expose()
+  @IsDateString()
+  createdAt: string;
+
+  @Expose()
+  @IsDateString()
+  updatedAt: string;
 }
 
 export class StorePriceHistoryEntity {
@@ -101,16 +157,8 @@ export class StorePriceHistoryEntity {
   uuid: string;
 
   @Expose()
-  @IsUUID()
-  offerUuid: string;
-
-  @Expose()
   @IsString()
   value: string;
-
-  @Expose()
-  @IsString()
-  currencyCode: string;
 
   @Expose()
   @ValidateNested()
@@ -142,16 +190,16 @@ export class StoreOfferInventoryEntity {
   uuid: string;
 
   @Expose()
-  @IsUUID()
-  offerUuid: string;
-
-  @Expose()
   @IsNumber()
   quantity: number;
 
   @Expose()
   @IsNumber()
   reserved: number;
+
+  @Expose()
+  @IsNumber()
+  available: number;
 
   @Expose()
   @IsNumber()
@@ -216,44 +264,6 @@ export class StoreOfferEntity {
   @IsNumber()
   version: number;
 
-  @IsUUID()
-  @Expose()
-  storeProductUuid: string;
-
-  @Expose()
-  @IsUUID()
-  productUuid: string;
-
-  @Expose()
-  @IsUUID()
-  variantUuid: string;
-
-  @Expose()
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => VariantSnapshotEntity)
-  variantSnapshot?: VariantSnapshotEntity | null;
-
-  @Expose()
-  @IsOptional()
-  @IsString()
-  sku?: string | null;
-
-  @Expose()
-  @IsOptional()
-  @IsString()
-  article?: string | null;
-
-  @Expose()
-  @IsOptional()
-  @IsString()
-  titleOverride?: string | null;
-
-  @Expose()
-  @IsOptional()
-  @IsString()
-  descriptionOverride?: string | null;
-
   @Expose()
   @IsEnum(StoreOfferStatus)
   status: StoreOfferStatus;
@@ -261,6 +271,16 @@ export class StoreOfferEntity {
   @Expose()
   @IsBoolean()
   showing: boolean;
+
+  @Expose()
+  @IsOptional()
+  @IsString()
+  article?: string | null;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => StoreVariantEntity)
+  variant: StoreVariantEntity;
 
   @Expose()
   @ValidateNested()
@@ -304,46 +324,26 @@ export class StoreProductEntity {
   version: number;
 
   @Expose()
-  @IsUUID()
-  shopUuid: string;
-
-  @Expose()
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ShopSnapshotEntity)
-  shopSnapshot?: ShopSnapshotEntity | null;
-
-  @Expose()
-  @IsUUID()
-  productUuid: string;
-
-  @Expose()
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => ProductSnapshotEntity)
-  productSnapshot?: ProductSnapshotEntity | null;
-
-  @Expose()
-  @IsString()
-  article: string;
-
-  @Expose()
-  @IsOptional()
-  @IsString()
-  titleOverride?: string | null;
-
-  @Expose()
-  @IsOptional()
-  @IsString()
-  descriptionOverride?: string | null;
-
-  @Expose()
   @IsEnum(StoreProductStatus)
   status: StoreProductStatus;
 
   @Expose()
   @IsBoolean()
   showing: boolean;
+
+  @Expose()
+  @IsString()
+  article: string;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => StoreShopEntity)
+  shop: StoreShopEntity;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => StoreProductCatalogEntity)
+  product: StoreProductCatalogEntity;
 
   @Expose()
   @ValidateNested()

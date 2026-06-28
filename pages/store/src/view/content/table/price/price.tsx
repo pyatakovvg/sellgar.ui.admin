@@ -26,7 +26,7 @@ export const Price: React.FC = () => {
         <p className={s.price}>{amountFormat(currentPrice.value, { hundredthsAfterDecimal: true })}</p>
       </Typography>
       <Typography size={'caption-s'} weight={'medium'}>
-        <span className={s.currency}>{currentPrice.currency?.value ?? currentPrice.currency?.name ?? currentPrice.currencyCode}</span>
+        <span className={s.currency}>{currentPrice.currency.value}</span>
       </Typography>
     </div>
   );

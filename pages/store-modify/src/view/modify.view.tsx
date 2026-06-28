@@ -36,12 +36,12 @@ export const ModifyView = () => {
   const methods = useForm<IFormData>({
     defaultValues: {
       article: data?.article,
-      shopUuid: data?.shopUuid,
-      variantUuid: firstOffer?.variantUuid,
+      shopUuid: data?.shop.uuid,
+      variantUuid: firstOffer?.variant.uuid,
       currentPrice: firstOffer?.currentPrice
         ? {
             value: firstOffer.currentPrice.value,
-            currencyCode: firstOffer.currentPrice.currencyCode,
+            currencyCode: firstOffer.currentPrice.currency.code,
           }
         : {
             currencyCode: currency[0].code,

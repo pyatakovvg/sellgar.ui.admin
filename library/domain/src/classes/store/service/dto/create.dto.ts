@@ -20,19 +20,7 @@ class StoreOfferDto {
 
   @IsOptional()
   @IsString()
-  sku?: string | null;
-
-  @IsOptional()
-  @IsString()
   article?: string | null;
-
-  @IsOptional()
-  @IsString()
-  titleOverride?: string | null;
-
-  @IsOptional()
-  @IsString()
-  descriptionOverride?: string | null;
 
   @ValidateNested()
   @Type(() => CurrentPrice)
@@ -54,14 +42,6 @@ export class CreateDto {
 
   @IsString()
   article: string;
-
-  @IsOptional()
-  @IsString()
-  titleOverride?: string | null;
-
-  @IsOptional()
-  @IsString()
-  descriptionOverride?: string | null;
 
   @IsBoolean()
   showing: boolean;
