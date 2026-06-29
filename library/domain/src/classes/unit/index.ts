@@ -1,5 +1,8 @@
 export { UnitEntity, UnitResultEntity } from './unit.entity.ts';
 
+export { CreateUnitDto } from './service/dto/create-unit.dto.ts';
+export { UpdateUnitDto } from './service/dto/update-unit.dto.ts';
+
 export { UnitGateway } from './gateway/unit.gateway.ts';
 export { UnitGatewayInterface } from './gateway/unit-gateway.interface.ts';
 

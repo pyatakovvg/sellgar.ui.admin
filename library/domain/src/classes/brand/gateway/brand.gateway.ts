@@ -20,7 +20,7 @@ export class BrandGateway implements BrandGatewayInterface {
   ) {}
 
   async update(uuid: string, dto: UpdateBrandDto) {
-    const result = await this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/brands/' + uuid, dto);
+    const result = await this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/brands/' + uuid, this.createBrandFormData(dto));
     const resultInstance = plainToInstance(BrandEntity, result);
 
     await validateOrReject(resultInstance);
@@ -29,7 +29,7 @@ export class BrandGateway implements BrandGatewayInterface {
   }
 
   async create(dto: CreateBrandDto) {
-    const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/brands', dto);
+    const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/brands', this.createBrandFormData(dto));
     const resultInstance = plainToInstance(BrandEntity, result);
 
     await validateOrReject(resultInstance);
@@ -53,5 +53,36 @@ export class BrandGateway implements BrandGatewayInterface {
     await validateOrReject(resultInstance);
 
     return resultInstance;
+  }
+
+  private createBrandFormData(dto: CreateBrandDto | UpdateBrandDto) {
+    const formData = new FormData();
+    const image = dto.image?.file
+      ? {
+          localId: dto.image.localId ?? globalThis.crypto.randomUUID(),
+          fileName: dto.image.fileName ?? dto.image.file.name,
+          alt: dto.image.alt ?? null,
+        }
+      : dto.image
+        ? {
+            imageUuid: dto.image.imageUuid,
+            fileName: dto.image.fileName,
+            alt: dto.image.alt ?? null,
+          }
+        : null;
+
+    if (dto.image?.file && image?.localId) {
+      formData.append(`image:${image.localId}`, dto.image.file, dto.image.file.name);
+    }
+
+    formData.append(
+      'payload',
+      JSON.stringify({
+        ...dto,
+        image,
+      }),
+    );
+
+    return formData;
   }
 }

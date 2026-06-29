@@ -1,4 +1,4 @@
-import { StoreServiceInterface } from '@library/domain';
+import { StoreProductQueryDto, StoreServiceInterface } from '@library/domain';
 
 import { Controller, Inject, LocationServiceInterface } from '@tiyn/app';
 
@@ -12,8 +12,8 @@ export class StoreController implements StoreControllerInterface {
   ) {}
 
   async loader() {
-    const searchParams = this.locationService.location?.searchParams ?? {};
-    console.log(123, searchParams);
-    return await this.storeService.findAll(searchParams);
+    const query = this.locationService.searchToObject(StoreProductQueryDto);
+
+    return await this.storeService.findAll(query);
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Modify } from './modify';
+import { Content } from './content';
 
 export const FrameView: React.FC = () => {
-  return <Modify />;
+  return <Content />;
 };

@@ -1,7 +1,40 @@
 import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsString, ValidateNested, IsDateString, IsNumber } from 'class-validator';
+import { IsUUID, IsString, ValidateNested, IsDateString, IsNumber, IsOptional, IsBoolean } from 'class-validator';
 
 import { MetaEntity } from '../../meta.entity.ts';
+import { ImageEntity } from '../variant/variant.entity.ts';
+
+export class BrandImageEntity {
+  @Expose()
+  @IsUUID()
+  uuid: string;
+
+  @Expose()
+  @IsUUID()
+  brandUuid: string;
+
+  @Expose()
+  @IsUUID()
+  imageUuid: string;
+
+  @Expose()
+  @IsNumber()
+  sortOrder: number;
+
+  @Expose()
+  @IsBoolean()
+  isPrimary: boolean;
+
+  @Expose()
+  @IsString()
+  @IsOptional()
+  alt?: string | null;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => ImageEntity)
+  image: ImageEntity;
+}
 
 export class BrandEntity {
   @Expose()
@@ -23,6 +56,12 @@ export class BrandEntity {
   @Expose()
   @IsString()
   description: string;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => BrandImageEntity)
+  @IsOptional()
+  image?: BrandImageEntity | null;
 
   @Expose()
   @IsDateString()

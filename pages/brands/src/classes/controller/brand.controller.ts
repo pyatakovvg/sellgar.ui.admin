@@ -6,17 +6,9 @@ import { BrandsControllerInterface } from './brand-controller.interface.ts';
 
 @Controller()
 export class BrandController implements BrandsControllerInterface {
-  constructor(@Inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface) {
-    console.log('BrandController: constructor');
-  }
-
-  destructor() {
-    console.log('BrandController: destructor');
-  }
+  constructor(@Inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface) {}
 
   async loader() {
-    console.log('BrandController: loader');
-
     return await this.brandService.findAll();
   }
 }

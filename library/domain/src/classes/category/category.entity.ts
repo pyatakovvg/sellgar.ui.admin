@@ -1,7 +1,40 @@
 import { Type, Expose } from 'class-transformer';
-import { IsOptional, IsString, IsUUID, ValidateNested, IsDateString, IsNumber } from 'class-validator';
+import { IsOptional, IsString, IsUUID, ValidateNested, IsDateString, IsNumber, IsBoolean } from 'class-validator';
 
 import { MetaEntity } from '../../meta.entity.ts';
+import { ImageEntity } from '../variant/variant.entity.ts';
+
+export class CategoryImageEntity {
+  @Expose()
+  @IsUUID()
+  uuid: string;
+
+  @Expose()
+  @IsUUID()
+  categoryUuid: string;
+
+  @Expose()
+  @IsUUID()
+  imageUuid: string;
+
+  @Expose()
+  @IsNumber()
+  sortOrder: number;
+
+  @Expose()
+  @IsBoolean()
+  isPrimary: boolean;
+
+  @Expose()
+  @IsString()
+  @IsOptional()
+  alt?: string | null;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => ImageEntity)
+  image: ImageEntity;
+}
 
 export class CategoryEntity {
   @Expose()
@@ -28,6 +61,12 @@ export class CategoryEntity {
   @Expose()
   @IsString()
   description: string;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => CategoryImageEntity)
+  @IsOptional()
+  image?: CategoryImageEntity | null;
 
   @Expose()
   @IsOptional()

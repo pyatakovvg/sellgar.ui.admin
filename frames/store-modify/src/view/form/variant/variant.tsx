@@ -1,9 +1,11 @@
 import { Field, Label, Caption, Select } from '@sellgar/kit';
+import { useLoaderData } from '@tiyn/app';
+import { VariantEntity } from '@library/domain';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { useVariants } from '../../../hooks/variants.hook.ts';
+import { VariantListControllerInterface } from '../../../classes/controller/variant-list-controller.interface.ts';
 
 import { ValueTemplate } from './value-template';
 import { OptionTemplate } from './option-template';
@@ -11,7 +13,7 @@ import { OptionTemplate } from './option-template';
 import s from './default.module.scss';
 
 export const Variant: React.FC = () => {
-  const variants = useVariants();
+  const variants = useLoaderData(VariantListControllerInterface) as VariantEntity[];
 
   const { control } = useFormContext();
 

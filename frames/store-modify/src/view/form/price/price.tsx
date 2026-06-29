@@ -1,27 +1,14 @@
 import { Field, Label, Caption, Input } from '@sellgar/kit';
 
 import React from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
-
-import { useCurrency } from '../../../hooks/currency.hook.ts';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import { type IFormData } from '../../form.schema.ts';
 
 import s from './default.module.scss';
 
 export const Price: React.FC = () => {
-  const { control, setValue } = useFormContext<IFormData>();
-
-  const currency = useCurrency();
-
-  const currentCurrencyCode = useWatch({ name: 'currentPrice.currencyCode', control });
-  const handleCurrencyChange = (currencyCode?: string) => {
-    setValue('currentPrice.currencyCode', currencyCode!, {
-      shouldDirty: true,
-      shouldValidate: true,
-      shouldTouch: true,
-    });
-  };
+  const { control } = useFormContext<IFormData>();
 
   return (
     <div className={s.wrapper}>

@@ -1,20 +1,22 @@
-import { BrandServiceInterface, CreateBrandDto, UpdateBrandDto } from '@library/domain';
+import { BrandServiceInterface, CreateBrandDto, FileServiceInterface, UpdateBrandDto } from '@library/domain';
 
 import {
   Controller,
   FrameServiceInterface,
   Inject,
   RevalidateServiceInterface,
+  type FrameControllerActionArgs,
   type FrameControllerLoaderArgs,
 } from '@tiyn/app';
 
-import { BrandModifyControllerInterface } from './brand-modify-controller.interface.ts';
-import { type BrandModifyFrameParams } from '../../brand-modify.frame.tsx';
+import { BrandModifyActionPayload, BrandModifyControllerInterface } from './brand-modify-controller.interface.ts';
+import { BrandModifyFrameParams } from '../params';
 
 @Controller()
 export class BrandModifyController implements BrandModifyControllerInterface {
   constructor(
     @Inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface,
+    @Inject(FileServiceInterface) private readonly fileService: FileServiceInterface,
     @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
     @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
@@ -27,21 +29,22 @@ export class BrandModifyController implements BrandModifyControllerInterface {
     return await this.brandService.findByUuid(args.props.uuid);
   }
 
-  async create(brand: CreateBrandDto) {
-    await this.brandService.create(brand);
+  async action(args: FrameControllerActionArgs<BrandModifyFrameParams, BrandModifyActionPayload>) {
+    if (args.props.uuid) {
+      await this.brandService.update(args.props.uuid, args.payload as UpdateBrandDto);
+    } else {
+      await this.brandService.create(args.payload as CreateBrandDto);
+    }
 
     await this.revalidateService.revalidate();
     await this.frameService.close();
   }
 
-  async update(uuid: string, brand: UpdateBrandDto) {
-    await this.brandService.update(uuid, brand);
-
-    await this.revalidateService.revalidate();
-    await this.frameService.close();
+  getFileImageUrl(fileUuid: string) {
+    return this.fileService.getPublicImageUrl(fileUuid);
   }
 
-  async close() {
+  async toList() {
     await this.frameService.close();
   }
 }

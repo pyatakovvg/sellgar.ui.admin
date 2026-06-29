@@ -1,50 +1,44 @@
+import { CreatePropertyDto, PropertyServiceInterface, UpdatePropertyDto } from '@library/domain';
 import {
-  PropertyEntity,
-  PropertyServiceInterface,
-  PropertyGroupServiceInterface,
-  UnitServiceInterface,
-} from '@library/domain';
+  Controller,
+  FrameServiceInterface,
+  Inject,
+  RevalidateServiceInterface,
+  type FrameControllerActionArgs,
+  type FrameControllerLoaderArgs,
+} from '@tiyn/app';
 
-import { Controller, Inject, type FrameControllerLoaderArgs } from '@tiyn/app';
-
-import { CreatePropertyDto } from './dto/create-property.dto.ts';
-import { UpdatePropertyDto } from './dto/update-property.dto.ts';
-
-import { FormStoreInterface } from '../store/form/form-store.interface.ts';
-import { PropertyModifyControllerInterface } from './property-modify-controller.interface.ts';
-import { type PropertyModifyFrameParams } from '../../property-modify.frame.tsx';
+import { PropertyModifyActionPayload, PropertyModifyControllerInterface } from './property-modify-controller.interface.ts';
+import { PropertyModifyFrameParams } from '../params';
 
 @Controller()
 export class PropertyModifyController implements PropertyModifyControllerInterface {
   constructor(
-    @Inject(FormStoreInterface) public readonly formStore: FormStoreInterface,
-    @Inject(UnitServiceInterface) private readonly unitService: UnitServiceInterface,
     @Inject(PropertyServiceInterface) private readonly propertyService: PropertyServiceInterface,
-    @Inject(PropertyGroupServiceInterface) private readonly propertyGroupService: PropertyGroupServiceInterface,
+    @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
   async loader(args: FrameControllerLoaderArgs<PropertyModifyFrameParams>) {
-    return await this.findByUuid(args.props.uuid);
-  }
-
-  async findByUuid(uuid?: string) {
-    const units = await this.unitService.findAll();
-    const grouns = await this.propertyGroupService.findAll();
-
-    this.formStore.setUnits(units.data);
-    this.formStore.setGroups(grouns.data);
-
-    if (uuid) {
-      return await this.propertyService.findByUuid(uuid);
+    if (!args.props.uuid) {
+      return void 0;
     }
-    return new PropertyEntity();
+
+    return await this.propertyService.findByUuid(args.props.uuid);
   }
 
-  async create(data: CreatePropertyDto) {
-    return await this.propertyService.create(data);
+  async action(args: FrameControllerActionArgs<PropertyModifyFrameParams, PropertyModifyActionPayload>) {
+    if (args.props.uuid) {
+      await this.propertyService.update(args.props.uuid, args.payload as UpdatePropertyDto);
+    } else {
+      await this.propertyService.create(args.payload as CreatePropertyDto);
+    }
+
+    await this.revalidateService.revalidate();
+    await this.frameService.close();
   }
 
-  async update(uuid: string, data: UpdatePropertyDto) {
-    return await this.propertyService.update(uuid, data);
+  async toList() {
+    await this.frameService.close();
   }
 }

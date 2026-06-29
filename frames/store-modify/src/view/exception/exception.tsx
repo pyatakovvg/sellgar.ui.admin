@@ -1,10 +1,8 @@
 import React from 'react';
-import { useAsyncError } from 'react-router-dom';
+import { useException } from '@tiyn/app';
 
 export const Exception = () => {
-  const error = useAsyncError();
-
-  console.log(123, error);
+  useException();
 
   return <div>Exeption</div>;
 };

@@ -132,13 +132,13 @@ export class StoreVariantEntity {
   status: CatalogStatus;
 
   @Expose()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => VariantPropertyEntity)
   properties: VariantPropertyEntity[];
 
   @Expose()
   @IsOptional()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => VariantImageEntity)
   images: VariantImageEntity[];
 
@@ -283,7 +283,7 @@ export class StoreOfferEntity {
   variant: StoreVariantEntity;
 
   @Expose()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => StorePriceHistoryEntity)
   prices: StorePriceHistoryEntity[];
 
@@ -346,7 +346,7 @@ export class StoreProductEntity {
   product: StoreProductCatalogEntity;
 
   @Expose()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => StoreOfferEntity)
   offers: StoreOfferEntity[];
 
@@ -361,7 +361,7 @@ export class StoreProductEntity {
 
 export class StoreProductResultEntity {
   @Expose()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => StoreProductEntity)
   data: StoreProductEntity[];
 

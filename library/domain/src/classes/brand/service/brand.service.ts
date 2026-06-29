@@ -23,18 +23,31 @@ export class BrandService implements BrandServiceInterface {
   }
 
   async update(uuid: string, dto: UpdateBrandDto): Promise<BrandEntity> {
-    const dtoInstance = plainToInstance(UpdateBrandDto, dto);
+    const dtoInstance = plainToInstance(UpdateBrandDto, this.createValidationDto(dto));
 
     await validateOrReject(dtoInstance);
 
-    return await this.brandGateway.update(uuid, dtoInstance);
+    return await this.brandGateway.update(uuid, dto);
   }
 
   async create(dto: CreateBrandDto): Promise<BrandEntity> {
-    const dtoInstance = plainToInstance(CreateBrandDto, dto);
+    const dtoInstance = plainToInstance(CreateBrandDto, this.createValidationDto(dto));
 
     await validateOrReject(dtoInstance);
 
-    return await this.brandGateway.create(dtoInstance);
+    return await this.brandGateway.create(dto);
+  }
+
+  private createValidationDto<T extends CreateBrandDto | UpdateBrandDto>(dto: T): T {
+    if (!dto.image) {
+      return dto;
+    }
+
+    const { file: _file, ...image } = dto.image;
+
+    return {
+      ...dto,
+      image,
+    };
   }
 }

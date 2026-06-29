@@ -23,18 +23,31 @@ export class CategoryService implements CategoryServiceInterface {
   }
 
   async update(uuid: string, dto: UpdateCategoryDto): Promise<CategoryEntity> {
-    const dtoInstance = plainToInstance(UpdateCategoryDto, dto);
+    const dtoInstance = plainToInstance(UpdateCategoryDto, this.createValidationDto(dto));
 
     await validateOrReject(dtoInstance);
 
-    return await this.categoryGateway.update(uuid, dtoInstance);
+    return await this.categoryGateway.update(uuid, dto);
   }
 
   async create(dto: CreateCategoryDto): Promise<CategoryEntity> {
-    const dtoInstance = plainToInstance(CreateCategoryDto, dto);
+    const dtoInstance = plainToInstance(CreateCategoryDto, this.createValidationDto(dto));
 
     await validateOrReject(dtoInstance);
 
-    return await this.categoryGateway.create(dtoInstance);
+    return await this.categoryGateway.create(dto);
+  }
+
+  private createValidationDto<T extends CreateCategoryDto | UpdateCategoryDto>(dto: T): T {
+    if (!dto.image) {
+      return dto;
+    }
+
+    const { file: _file, ...image } = dto.image;
+
+    return {
+      ...dto,
+      image,
+    };
   }
 }

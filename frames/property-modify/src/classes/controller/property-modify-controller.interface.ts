@@ -1,18 +1,14 @@
-import { PropertyEntity } from '@library/domain';
-import { type FrameControllerInterface, type FrameControllerLoaderArgs } from '@tiyn/app';
-import { type PropertyModifyFrameParams } from '../../property-modify.frame.tsx';
+import { CreatePropertyDto, PropertyEntity, UpdatePropertyDto } from '@library/domain';
+import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@tiyn/app';
 
-import { CreatePropertyDto } from './dto/create-property.dto.ts';
-import { UpdatePropertyDto } from './dto/update-property.dto.ts';
+import { PropertyModifyFrameParams } from '../params';
 
-import { FormStoreInterface } from '../store/form/form-store.interface.ts';
+export type PropertyModifyActionPayload = CreatePropertyDto | UpdatePropertyDto;
 
-export abstract class PropertyModifyControllerInterface implements FrameControllerInterface<PropertyModifyFrameParams> {
-  abstract formStore: FormStoreInterface;
+export abstract class PropertyModifyControllerInterface extends FrameControllerInterface<PropertyModifyFrameParams> {
+  abstract loader(args: FrameControllerLoaderArgs<PropertyModifyFrameParams>): Promise<PropertyEntity | undefined>;
 
-  abstract loader(args: FrameControllerLoaderArgs<PropertyModifyFrameParams>): Promise<PropertyEntity>;
-  abstract findByUuid(uuid?: string): Promise<PropertyEntity>;
+  abstract action(args: FrameControllerActionArgs<PropertyModifyFrameParams, PropertyModifyActionPayload>): Promise<void>;
 
-  abstract create(data: CreatePropertyDto): Promise<PropertyEntity>;
-  abstract update(uuid: string, data: UpdatePropertyDto): Promise<PropertyEntity>;
+  abstract toList(): Promise<void>;
 }

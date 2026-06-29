@@ -22,7 +22,7 @@ export class CategoryGateway implements CategoryGatewayInterface {
   async update(uuid: string, updateCategoryDto: UpdateCategoryDto): Promise<CategoryEntity> {
     const result = await this.httpClient.patch(
       this.config.get('GATEWAY_API') + '/v2/categories/' + uuid,
-      updateCategoryDto,
+      this.createCategoryFormData(updateCategoryDto),
     );
     const resultInstance = plainToInstance(CategoryEntity, result);
 
@@ -32,7 +32,10 @@ export class CategoryGateway implements CategoryGatewayInterface {
   }
 
   async create(createCategoryDto: CreateCategoryDto): Promise<CategoryEntity> {
-    const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/categories', createCategoryDto);
+    const result = await this.httpClient.post(
+      this.config.get('GATEWAY_API') + '/v2/categories',
+      this.createCategoryFormData(createCategoryDto),
+    );
     const resultInstance = plainToInstance(CategoryEntity, result);
 
     await validateOrReject(resultInstance);
@@ -56,5 +59,36 @@ export class CategoryGateway implements CategoryGatewayInterface {
     await validateOrReject(resultInstance);
 
     return resultInstance;
+  }
+
+  private createCategoryFormData(dto: CreateCategoryDto | UpdateCategoryDto) {
+    const formData = new FormData();
+    const image = dto.image?.file
+      ? {
+          localId: dto.image.localId ?? globalThis.crypto.randomUUID(),
+          fileName: dto.image.fileName ?? dto.image.file.name,
+          alt: dto.image.alt ?? null,
+        }
+      : dto.image
+        ? {
+            imageUuid: dto.image.imageUuid,
+            fileName: dto.image.fileName,
+            alt: dto.image.alt ?? null,
+          }
+        : null;
+
+    if (dto.image?.file && image?.localId) {
+      formData.append(`image:${image.localId}`, dto.image.file, dto.image.file.name);
+    }
+
+    formData.append(
+      'payload',
+      JSON.stringify({
+        ...dto,
+        image,
+      }),
+    );
+
+    return formData;
   }
 }

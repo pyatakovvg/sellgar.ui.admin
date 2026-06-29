@@ -1,9 +1,11 @@
 import { Field, Label, Caption, Select } from '@sellgar/kit';
+import { useLoaderData } from '@tiyn/app';
+import { ShopEntity } from '@library/domain';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { useShops } from '../../../hooks/shops.hook.ts';
+import { ShopListControllerInterface } from '../../../classes/controller/shop-list-controller.interface.ts';
 
 // import { ValueTemplate } from './value-template';
 // import { OptionTemplate } from './option-template';
@@ -13,7 +15,7 @@ import { type IFormData } from '../../form.schema.ts';
 import s from './default.module.scss';
 
 export const Shop: React.FC = () => {
-  const shops = useShops();
+  const shops = useLoaderData(ShopListControllerInterface) as ShopEntity[];
 
   const { control } = useFormContext<IFormData>();
 

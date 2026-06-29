@@ -1,16 +1,14 @@
-import { PropertyGroupEntity } from '@library/domain';
-import { type FrameControllerInterface, type FrameControllerLoaderArgs } from '@tiyn/app';
-import { type PropertyGroupModifyFrameParams } from '../../property-group-modify.frame.tsx';
+import { CreatePropertyGroupDto, PropertyGroupEntity, UpdatePropertyGroupDto } from '@library/domain';
+import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@tiyn/app';
 
-import { CreatePropertyGroupDto } from './dto/create-property-group.dto.ts';
-import { UpdatePropertyGroupDto } from './dto/update-property-group.dto.ts';
+import { PropertyGroupModifyFrameParams } from '../params';
 
-export abstract class PropertyGroupModifyControllerInterface
-  implements FrameControllerInterface<PropertyGroupModifyFrameParams>
-{
+export type PropertyGroupModifyActionPayload = CreatePropertyGroupDto | UpdatePropertyGroupDto;
+
+export abstract class PropertyGroupModifyControllerInterface extends FrameControllerInterface<PropertyGroupModifyFrameParams> {
   abstract loader(args: FrameControllerLoaderArgs<PropertyGroupModifyFrameParams>): Promise<PropertyGroupEntity | undefined>;
-  abstract findByUuid(uuid?: string): Promise<PropertyGroupEntity>;
 
-  abstract create(data: CreatePropertyGroupDto): Promise<PropertyGroupEntity>;
-  abstract update(uuid: string, data: UpdatePropertyGroupDto): Promise<PropertyGroupEntity>;
+  abstract action(args: FrameControllerActionArgs<PropertyGroupModifyFrameParams, PropertyGroupModifyActionPayload>): Promise<void>;
+
+  abstract toList(): Promise<void>;
 }

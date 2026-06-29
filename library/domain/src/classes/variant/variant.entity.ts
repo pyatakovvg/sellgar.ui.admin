@@ -12,10 +12,6 @@ export class ImageEntity {
   uuid: string;
 
   @Expose()
-  @IsNumber()
-  version: number;
-
-  @Expose()
   @IsString()
   fileName: string;
 }

@@ -1,17 +1,25 @@
-import { PropertyGroupServiceInterface } from '@library/domain';
+import { CreatePropertyGroupDto, PropertyGroupServiceInterface, UpdatePropertyGroupDto } from '@library/domain';
+import {
+  Controller,
+  FrameServiceInterface,
+  Inject,
+  RevalidateServiceInterface,
+  type FrameControllerActionArgs,
+  type FrameControllerLoaderArgs,
+} from '@tiyn/app';
 
-import { Controller, Inject, type FrameControllerLoaderArgs } from '@tiyn/app';
-
-import { CreatePropertyGroupDto } from './dto/create-property-group.dto.ts';
-import { UpdatePropertyGroupDto } from './dto/update-property-group.dto.ts';
-
-import { PropertyGroupModifyControllerInterface } from './property-group-modify-controller.interface.ts';
-import { type PropertyGroupModifyFrameParams } from '../../property-group-modify.frame.tsx';
+import {
+  PropertyGroupModifyActionPayload,
+  PropertyGroupModifyControllerInterface,
+} from './property-group-modify-controller.interface.ts';
+import { PropertyGroupModifyFrameParams } from '../params';
 
 @Controller()
 export class PropertyGroupModifyController implements PropertyGroupModifyControllerInterface {
   constructor(
     @Inject(PropertyGroupServiceInterface) private readonly propertyGroupService: PropertyGroupServiceInterface,
+    @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
   async loader(args: FrameControllerLoaderArgs<PropertyGroupModifyFrameParams>) {
@@ -19,18 +27,21 @@ export class PropertyGroupModifyController implements PropertyGroupModifyControl
       return void 0;
     }
 
-    return await this.findByUuid(args.props.uuid);
+    return await this.propertyGroupService.findByUuid(args.props.uuid);
   }
 
-  async findByUuid(uuid: string) {
-    return await this.propertyGroupService.findByUuid(uuid);
+  async action(args: FrameControllerActionArgs<PropertyGroupModifyFrameParams, PropertyGroupModifyActionPayload>) {
+    if (args.props.uuid) {
+      await this.propertyGroupService.update(args.props.uuid, args.payload as UpdatePropertyGroupDto);
+    } else {
+      await this.propertyGroupService.create(args.payload as CreatePropertyGroupDto);
+    }
+
+    await this.revalidateService.revalidate();
+    await this.frameService.close();
   }
 
-  async create(data: CreatePropertyGroupDto) {
-    return await this.propertyGroupService.create(data);
-  }
-
-  async update(uuid: string, data: UpdatePropertyGroupDto) {
-    return await this.propertyGroupService.update(uuid, data);
+  async toList() {
+    await this.frameService.close();
   }
 }

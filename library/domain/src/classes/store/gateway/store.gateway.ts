@@ -4,11 +4,13 @@ import { validateOrReject } from 'class-validator';
 import { ConfigInterface } from '../../../helpers/config';
 import { HttpClientInterface } from '../../../helpers/http-client';
 
-import { AdjustInventoryDto } from './dto/adjust-inventory.dto.ts';
-import { CreateDto } from './dto/create.dto.ts';
-import { ReceiptInventoryDto } from './dto/receipt-inventory.dto.ts';
-import { UpdateDto } from './dto/update.dto.ts';
-import { WriteOffInventoryDto } from './dto/write-off-inventory.dto.ts';
+import { AdjustOfferInventoryDto } from './dto/adjust-offer-inventory.dto.ts';
+import { ArchiveStoreProductDto } from './dto/archive-store-product.dto.ts';
+import { CreateStoreProductDto } from './dto/create-store-product.dto.ts';
+import { ReceiptOfferInventoryDto } from './dto/receipt-offer-inventory.dto.ts';
+import { StoreProductQueryDto } from './dto/store-product-query.dto.ts';
+import { UpdateStoreProductDto } from './dto/update-store-product.dto.ts';
+import { WriteOffOfferInventoryDto } from './dto/write-off-offer-inventory.dto.ts';
 
 import { StoreOfferInventoryEntity, StoreProductEntity, StoreProductResultEntity } from '../store.entity.ts';
 
@@ -21,7 +23,7 @@ export class StoreGateway implements StoreGatewayInterface {
     @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
-  async findAll(query: any): Promise<StoreProductResultEntity> {
+  async findAll(query?: StoreProductQueryDto): Promise<StoreProductResultEntity> {
     return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store/products', {
       params: query,
     });
@@ -31,31 +33,37 @@ export class StoreGateway implements StoreGatewayInterface {
     return await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store/products/' + uuid);
   }
 
-  async create(dto: CreateDto): Promise<StoreProductEntity> {
+  async create(dto: CreateStoreProductDto): Promise<StoreProductEntity> {
     await validateOrReject(dto);
 
     return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/store/products', dto);
   }
 
-  async update(dto: UpdateDto): Promise<StoreProductEntity> {
+  async update(dto: UpdateStoreProductDto): Promise<StoreProductEntity> {
     await validateOrReject(dto);
 
     return this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/store/products/' + dto.uuid, dto);
   }
 
-  async receiptInventory(dto: ReceiptInventoryDto): Promise<StoreOfferInventoryEntity> {
+  async archive(dto: ArchiveStoreProductDto): Promise<StoreProductEntity> {
+    await validateOrReject(dto);
+
+    return this.httpClient.patch(this.config.get('GATEWAY_API') + `/v2/store/products/${dto.uuid}/archive`, dto);
+  }
+
+  async receiptInventory(dto: ReceiptOfferInventoryDto): Promise<StoreOfferInventoryEntity> {
     await validateOrReject(dto);
 
     return this.httpClient.post(this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/receipt`, dto);
   }
 
-  async writeOffInventory(dto: WriteOffInventoryDto): Promise<StoreOfferInventoryEntity> {
+  async writeOffInventory(dto: WriteOffOfferInventoryDto): Promise<StoreOfferInventoryEntity> {
     await validateOrReject(dto);
 
     return this.httpClient.post(this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/write-off`, dto);
   }
 
-  async adjustInventory(dto: AdjustInventoryDto): Promise<StoreOfferInventoryEntity> {
+  async adjustInventory(dto: AdjustOfferInventoryDto): Promise<StoreOfferInventoryEntity> {
     await validateOrReject(dto);
 
     return this.httpClient.post(this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/adjust`, dto);

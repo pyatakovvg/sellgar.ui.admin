@@ -1,8 +1,21 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreatePropertyDto {
+  @IsUUID()
+  groupUuid: string;
+
+  @IsUUID()
+  @IsOptional()
+  unitUuid?: string;
+
+  @IsString()
+  code: string;
+
   @IsString()
   name: string;
+
+  @IsString()
+  type: string;
 
   @IsString()
   description: string;
