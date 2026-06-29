@@ -1,23 +1,37 @@
-import { Button } from '@sellgar/kit';
 import { useController, useSubmit } from '@tiyn/app';
+import { Button } from '@sellgar/kit';
+import { ArrowLeftSLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 
-import { CategoryModifyControllerInterface } from '../../../../classes/controller/category-modify-controller.interface.ts';
 import { CATEGORY_MODIFY_FORM_ID } from '../../../../constants';
+
+import { CategoryModifyControllerInterface } from '../../../../classes/controller/category-modify-controller.interface.ts';
 
 import s from './default.module.scss';
 
 export const Controls: React.FC = () => {
-  const submit = useSubmit(CategoryModifyControllerInterface);
   const controller = useController(CategoryModifyControllerInterface);
+
+  const submit = useSubmit(CategoryModifyControllerInterface);
 
   return (
     <div className={s.wrapper}>
-      <Button type={'button'} disabled={submit.inProcess} size={'sm'} style={'secondary'} onClick={() => controller.toList()}>
-        Отмена
+      <Button
+        data-qa={'employee-edit.back.button'}
+        leadIcon={<ArrowLeftSLineIcon />}
+        style={'secondary'}
+        disabled={submit.inProcess}
+        onClick={() => controller.toList()}
+      >
+        Назад
       </Button>
-      <Button type={'submit'} form={CATEGORY_MODIFY_FORM_ID} disabled={submit.inProcess} size={'sm'}>
+      <Button
+        data-qa={'employee-edit.submit.button'}
+        type={'submit'}
+        form={CATEGORY_MODIFY_FORM_ID}
+        inProcess={submit.inProcess}
+      >
         Сохранить
       </Button>
     </div>

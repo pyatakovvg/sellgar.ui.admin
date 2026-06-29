@@ -1,6 +1,6 @@
-import { Form } from '@library/design';
+import { Form, ImageGallery } from '@library/design';
 import { CategoryEntity, CreateCategoryDto } from '@library/domain';
-import { Button, Caption, Field, Icon, Image, Input, Label, Select, Textarea } from '@sellgar/kit';
+import { Caption, Field, Input, Label, Select, Textarea } from '@sellgar/kit';
 import { useController, useLoaderData } from '@tiyn/app';
 
 import React from 'react';
@@ -42,87 +42,69 @@ export const Fields: React.FC<FieldsProps> = (props) => {
   const controller = useController(CategoryModifyControllerInterface);
   const category = useLoaderData(CategoryModifyControllerInterface) as CategoryEntity | undefined;
   const categories = useLoaderData(CategoryListControllerInterface) as CategoryEntity[];
-  const { control, setValue, watch } = useFormContext<IFormData>();
+  const { control } = useFormContext<IFormData>();
 
   const categoryOptions = React.useMemo(() => flattenCategories(categories, category?.uuid), [categories, category?.uuid]);
-  const image = watch('image') as CreateCategoryDto['image'] | undefined;
-  const objectUrl = React.useMemo(() => (image?.file ? URL.createObjectURL(image.file) : undefined), [image?.file]);
-  const src = objectUrl ?? (image?.imageUuid ? controller.getFileImageUrl(image.imageUuid) : undefined);
-
-  React.useEffect(() => {
-    return () => {
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
-      }
-    };
-  }, [objectUrl]);
-
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-
-    if (!file) {
-      return;
-    }
-
-    setValue(
-      'image',
-      {
-        localId: globalThis.crypto.randomUUID(),
-        file,
-        fileName: file.name,
-        alt: null,
-      },
-      { shouldDirty: true, shouldValidate: true },
-    );
-    event.target.value = '';
-  };
-
-  const handleImageRemove = () => {
-    setValue('image', null, { shouldDirty: true, shouldValidate: true });
-  };
 
   return (
     <div className={s.wrapper}>
-      <Form.Fields>
-        <Form.Fields.Field>
-          <Field>
-            <Field.Label>
-              <Label label={'Изображение'} />
-            </Field.Label>
-            <Field.Content>
-              <div className={s.imageControl}>
-                {src ? (
-                  <div className={s.preview}>
-                    <Image className={s.previewImage} src={src} />
-                    <Button
-                      type={'button'}
-                      shape={'pill'}
-                      size={'xs'}
-                      target={'destructive'}
-                      style={'secondary'}
-                      form={'icon'}
-                      leadIcon={<Icon icon={Icon.deleteBin5Line} />}
-                      onClick={handleImageRemove}
+      <Controller
+        name={'image'}
+        control={control}
+        disabled={props.inProcess}
+        render={({ field, fieldState: { error } }) => {
+          const image = field.value as CreateCategoryDto['image'] | undefined;
+          const items = image
+            ? [
+                {
+                  id: image.localId ?? image.imageUuid ?? 'image',
+                  src: image.imageUuid ? controller.getFileImageUrl(image.imageUuid) : undefined,
+                  file: image.file,
+                  fileName: image.fileName,
+                },
+              ]
+            : [];
+
+          return (
+            <Form.Fields>
+              <Form.Fields.Field>
+                <Field>
+                  <Field.Label>
+                    <Label label={'Изображение'} />
+                  </Field.Label>
+                  <Field.Content>
+                    <ImageGallery
+                      items={items}
+                      multiple={false}
                       disabled={props.inProcess}
+                      onSelect={(files) => {
+                        const file = files[0];
+
+                        if (!file) {
+                          return;
+                        }
+
+                        field.onChange({
+                          localId: globalThis.crypto.randomUUID(),
+                          file,
+                          fileName: file.name,
+                          alt: null,
+                        });
+                      }}
+                      onRemove={() => field.onChange(null)}
                     />
-                  </div>
-                ) : (
-                  <label className={s.addImage}>
-                    <input className={s.fileInput} type={'file'} accept={'image/*'} onChange={handleImageChange} disabled={props.inProcess} />
-                    <Icon icon={Icon.imageAddLine} />
-                  </label>
-                )}
-                {src && (
-                  <label className={s.replaceImage}>
-                    <input className={s.fileInput} type={'file'} accept={'image/*'} onChange={handleImageChange} disabled={props.inProcess} />
-                    <Icon icon={Icon.imageAddLine} />
-                  </label>
-                )}
-              </div>
-            </Field.Content>
-          </Field>
-        </Form.Fields.Field>
-      </Form.Fields>
+                  </Field.Content>
+                  {error?.message && (
+                    <Field.Caption>
+                      <Caption state={'destructive'} caption={error.message} />
+                    </Field.Caption>
+                  )}
+                </Field>
+              </Form.Fields.Field>
+            </Form.Fields>
+          );
+        }}
+      />
       <Controller
         name={'parentUuid'}
         control={control}

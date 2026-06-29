@@ -153,7 +153,7 @@ interface ActiveRouteRuntimeBoundaryProps {
 export const ActiveRouteRuntimeBoundary: React.FC<ActiveRouteRuntimeBoundaryProps> = ({ children, routerRuntime }) => {
   const matches = useMatches();
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (matches.length === 0) {
       return;
     }
@@ -180,7 +180,7 @@ export const RouterServiceLocationBoundary: React.FC<RouterServiceLocationBounda
   const location = useLocation();
   const matches = useMatches();
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     routerService.syncLocation({
       hash: location.hash,
       key: location.key,

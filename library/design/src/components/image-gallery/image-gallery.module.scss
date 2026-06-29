@@ -8,11 +8,11 @@
   display: flex;
   flex-direction: row;
   flex: 1 0;
-  gap: var(--numbers-16);
   flex-wrap: wrap;
+  gap: var(--numbers-16);
   padding: var(--numbers-16);
-  border-radius: var(--measurements-radius-xl);
   border: var(--numbers-1) solid var(--border-action-normal);
+  border-radius: var(--measurements-radius-xl);
   background: var(--background-input-normal);
 }
 
@@ -23,9 +23,9 @@
   flex: 0 0 auto;
   width: var(--numbers-80);
   height: var(--numbers-80);
+  overflow: hidden;
   border: var(--numbers-1) solid var(--border-base-divider);
   border-radius: var(--measurements-radius-lg);
-  overflow: hidden;
   cursor: pointer;
 }
 
@@ -46,8 +46,8 @@
 
 .remove {
   position: absolute;
-  bottom: var(--numbers-2);
   right: var(--numbers-2);
+  bottom: var(--numbers-2);
 }
 
 .img {
@@ -59,10 +59,10 @@
 .pending {
   display: flex;
   flex: 1 1 auto;
-  min-width: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-width: 0;
   gap: var(--numbers-4);
   padding: var(--numbers-6);
   color: var(--icon-base-quaternary);
@@ -79,7 +79,6 @@
 }
 
 .add {
-  position: relative;
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
@@ -87,8 +86,9 @@
   justify-content: center;
   width: var(--numbers-80);
   height: var(--numbers-80);
-  font-size: var(--numbers-20);
   color: var(--icon-base-quaternary);
+  font-size: var(--numbers-20);
+  background: transparent;
   border: var(--numbers-2) dashed var(--border-base-divider);
   border-radius: var(--measurements-radius-lg);
   cursor: pointer;
@@ -102,11 +102,15 @@
 
 .input {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
+  width: var(--numbers-1);
+  height: var(--numbers-1);
+  padding: 0;
+  margin: calc(var(--numbers-1) * -1);
+  overflow: hidden;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .disabled {
@@ -130,6 +134,6 @@
 }
 
 .contract {
-  color: var(--text-base-primary);
   padding: 0 var(--numbers-2);
+  color: var(--text-base-primary);
 }

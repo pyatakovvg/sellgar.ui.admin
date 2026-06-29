@@ -1,0 +1,49 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  background: var(--background-surface-default);
+  border-bottom: var(--numbers-1) solid transparent;
+  border-radius: 0 0 var(--measurements-radius-lg) var(--measurements-radius-md);
+  z-index: 20;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  justify-content: flex-start;
+  padding: 0 var(--numbers-24);
+  z-index: 0;
+}
+
+.control {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  background: var(--background-surface-default);
+  border-top: var(--numbers-1) solid transparent;
+  border-radius: var(--measurements-radius-lg) var(--measurements-radius-md) 0 0;
+  z-index: 20;
+}
+
+.controlScrolled {
+  border-top-color: var(--border-base-divider);
+}
+
+.headerScrolled {
+  border-bottom-color: var(--border-base-divider);
+}

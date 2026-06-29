@@ -5,7 +5,7 @@ import React from 'react';
 import { CategoryModifyBindings } from './classes/classes.di.ts';
 import { CategoryModifyFrameParams } from './classes/params';
 import { Exception, Fallback, FrameView } from './view';
-import { CategoryModifyFrameShell } from './shell.tsx';
+import { CategoryModifyFrameShell } from './shell';
 import { CATEGORY_MODIFY_FRAME_HASH_KEY } from './constants';
 import { MainLayout } from './layout/main';
 
