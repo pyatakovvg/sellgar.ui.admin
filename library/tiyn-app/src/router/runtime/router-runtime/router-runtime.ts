@@ -76,6 +76,7 @@ export class RouterRuntime extends RouterFrameAvailabilityInterface {
   private readonly routeFrames = new Map<RouteRuntimeId, readonly FrameConstructor[]>();
   private readonly routeRuntimes = new Map<RouteRuntimeId, RouteRuntimeHandle>();
   private readonly activeRouteIds = new Set<RouteRuntimeId>();
+  private readonly invalidatedRouteIds = new Set<RouteRuntimeId>();
   private readonly listeners = new Set<RouterRuntimeListener>();
   private routeLoadingCounter = 0;
   private frameNavigationScope: string | undefined;
@@ -218,7 +219,18 @@ export class RouterRuntime extends RouterFrameAvailabilityInterface {
 
   invalidateActiveRoutes(): void {
     clearFrameNavigationState(this.frameNavigationScope);
-    this.syncActiveRoutes([]);
+
+    const hadActiveRoutes = this.activeRouteIds.size > 0;
+
+    this.activeRouteIds.forEach((routeId) => {
+      this.invalidatedRouteIds.add(routeId);
+    });
+    this.activeRouteIds.clear();
+
+    if (hadActiveRoutes) {
+      this.notifyListeners();
+    }
+
     void this.disposeFrameRuntimes();
   }
 
@@ -272,6 +284,7 @@ export class RouterRuntime extends RouterFrameAvailabilityInterface {
     const frameRuntimes = this.frameRuntimes.drain();
 
     this.activeRouteIds.clear();
+    this.invalidatedRouteIds.clear();
     this.routeLoadingCounter = 0;
     this.routeExceptions.clear();
     this.routeExceptionResolvers.clear();
@@ -300,6 +313,7 @@ export class RouterRuntime extends RouterFrameAvailabilityInterface {
 
     nextActiveRouteIds.forEach((routeId) => {
       this.routeRuntimes.get(routeId)?.commit();
+      this.invalidatedRouteIds.delete(routeId);
     });
 
     this.routeRuntimes.forEach((routeRuntime, routeId) => {
@@ -309,10 +323,11 @@ export class RouterRuntime extends RouterFrameAvailabilityInterface {
 
       routeRuntime.discardPending();
 
-      if (!this.activeRouteIds.has(routeId)) {
+      if (!this.activeRouteIds.has(routeId) && !this.invalidatedRouteIds.has(routeId)) {
         return;
       }
 
+      this.invalidatedRouteIds.delete(routeId);
       void routeRuntime.dispose();
     });
 

@@ -162,7 +162,7 @@ describe('RouterRuntime', () => {
     expect(routerRuntime.getActiveFrames()).toEqual([]);
   });
 
-  it('invalidates active routes without unregistering route runtimes', async () => {
+  it('invalidates active route frames without disposing route runtimes before the next committed sync', async () => {
     const routerRuntime = new RouterRuntime();
     const routeRuntime = createRouteRuntimeHandle();
     const listener = vi.fn();
@@ -177,10 +177,30 @@ describe('RouterRuntime', () => {
     await waitForMicrotask();
 
     expect(routerRuntime.getActiveFrames()).toEqual([]);
-    expect(routeRuntime.discardPending).toHaveBeenCalledTimes(1);
-    expect(routeRuntime.dispose).toHaveBeenCalledTimes(1);
+    expect(routeRuntime.discardPending).not.toHaveBeenCalled();
+    expect(routeRuntime.dispose).not.toHaveBeenCalled();
     expect(listener).toHaveBeenCalledOnce();
     expect(routerRuntime.get('root.route:1')).toBe(routeRuntime);
+  });
+
+  it('disposes invalidated active routes on the next committed route sync', async () => {
+    const routerRuntime = new RouterRuntime();
+    const invalidatedRoute = createRouteRuntimeHandle();
+    const nextRoute = createRouteRuntimeHandle();
+
+    routerRuntime.register('root.route:1', invalidatedRoute, {
+      frames: [ParentFrame],
+    });
+    routerRuntime.register('root.route:2', nextRoute);
+    routerRuntime.syncActiveRoutes(['root.route:1']);
+    routerRuntime.invalidateActiveRoutes();
+    routerRuntime.syncActiveRoutes(['root.route:2']);
+
+    await waitForMicrotask();
+
+    expect(nextRoute.commit).toHaveBeenCalledTimes(1);
+    expect(invalidatedRoute.discardPending).toHaveBeenCalledTimes(1);
+    expect(invalidatedRoute.dispose).toHaveBeenCalledTimes(1);
   });
 
   it('resolves active frames through frame sources', () => {
