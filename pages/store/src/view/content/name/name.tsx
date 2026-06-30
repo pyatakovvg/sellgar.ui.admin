@@ -16,11 +16,6 @@ export const Name: React.FC = () => {
           <p className={s.name}>{data.product.name}</p>
         </Typography>
       </div>
-      <div className={s.additional}>
-        <Typography size={'caption-s'} weight={'medium'}>
-          <p className={s.variant}>{firstOffer?.variant.name ?? `Вариантов: ${data.offers.length}`}</p>
-        </Typography>
-      </div>
     </div>
   );
 };

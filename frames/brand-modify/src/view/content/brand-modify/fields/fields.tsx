@@ -151,10 +151,13 @@ export const Fields: React.FC<FieldsProps> = (props) => {
                 </Field.Label>
                 <Field.Content>
                   <Textarea
-                    {...field}
+                    value={field.value}
                     target={error?.message ? 'destructive' : undefined}
                     size={'md'}
                     placeholder={'Описание'}
+                    onChange={() => {
+                      console.log(576);
+                    }}
                   />
                 </Field.Content>
                 {error?.message && (

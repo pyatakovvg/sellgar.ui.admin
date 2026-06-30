@@ -11,7 +11,7 @@
   "dependencies": {
     "@library/design": "0.0.1",
     "@library/domain": "0.0.1",
-    "@sellgar/kit": "0.0.181",
+    "@sellgar/kit": "0.0.188",
     "@tiyn/app": "0.0.1",
     "classnames": "2.5.1",
     "mobx": "6.16.1",

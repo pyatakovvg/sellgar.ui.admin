@@ -1,10 +1,5 @@
 import { Button, Image, Typography } from '@sellgar/kit';
-import {
-  DeleteBin5LineIcon,
-  ImageAddLineIcon,
-  ImageEditLineIcon,
-  ImageLineIcon,
-} from '@sellgar/kit/icons';
+import { DeleteBin5LineIcon, ImageAddLineIcon, ImageEditLineIcon, ImageLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 
@@ -81,20 +76,17 @@ export const ImageGallery: React.FC<ImageGalleryProps> = (props) => {
     <div className={[s.wrapper, props.disabled ? s.disabled : undefined].filter(Boolean).join(' ')}>
       <div className={s.content}>
         {props.items.map((item) => (
-          <div
-            key={item.id}
-            className={[s.image, item.primary ? s.primary : undefined].filter(Boolean).join(' ')}
-          >
-            <span className={s.remove} onClick={(event) => handleRemove(event, item.id)}>
-              <Button
-                shape={'pill'}
+          <div key={item.id} className={[s.image, item.primary ? s.primary : undefined].filter(Boolean).join(' ')}>
+            <div className={s.remove}>
+              <Button.Icon
+                shape={'rounded'}
                 size={'xs'}
                 target={'destructive'}
-                style={'secondary'}
-                form={'icon'}
+                style={'ghost'}
                 leadIcon={<DeleteBin5LineIcon />}
+                onClick={(event) => handleRemove(event, item.id)}
               />
-            </span>
+            </div>
             {item.primary && <span className={s.primaryMarker} />}
             <Preview item={item} />
           </div>
@@ -125,8 +117,8 @@ export const ImageGallery: React.FC<ImageGalleryProps> = (props) => {
             </Typography>
             <Typography size={'caption-s'}>
               <p className={s.description}>
-                Перетащите файлы в эту область или воспользуйтесь кнопкой{' '}
-                <ImageAddLineIcon className={s.contract} /> для выбора
+                Перетащите файлы в эту область или воспользуйтесь кнопкой <ImageAddLineIcon className={s.contract} />{' '}
+                для выбора
               </p>
             </Typography>
           </div>

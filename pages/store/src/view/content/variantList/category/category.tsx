@@ -5,16 +5,14 @@ import React from 'react';
 
 import s from './default.module.scss';
 
-export const Article: React.FC = () => {
+export const Category: React.FC = () => {
   const { data } = useCellData<StoreProductEntity>();
 
   return (
     <div className={s.wrapper}>
-      <div className={s.content}>
-        <Typography size={'caption-s'} weight={'medium'}>
-          <p className={s.name}>#{data.article}</p>
-        </Typography>
-      </div>
+      <Typography size={'caption-m'} weight={'medium'}>
+        <p className={s.value}>{data.status}</p>
+      </Typography>
     </div>
   );
 };

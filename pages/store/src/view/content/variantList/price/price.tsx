@@ -1,4 +1,4 @@
-import { StoreProductEntity } from '@library/domain';
+import { StoreOfferEntity } from '@library/domain';
 import { Typography, useCellData } from '@sellgar/kit';
 import { amountFormat } from '@utils/format';
 
@@ -7,8 +7,8 @@ import React from 'react';
 import s from './default.module.scss';
 
 export const Price: React.FC = () => {
-  const { data } = useCellData<StoreProductEntity>();
-  const currentPrice = data.offers[0]?.currentPrice;
+  const { data } = useCellData<StoreOfferEntity>();
+  const currentPrice = data.currentPrice;
 
   if (!currentPrice) {
     return (

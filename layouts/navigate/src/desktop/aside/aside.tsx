@@ -13,6 +13,7 @@ import {
 } from '@sellgar/kit/icons';
 import { ApplicationStoreInterface, useDependency } from '@tiyn/app';
 import { ProfileEntity } from '@library/domain';
+import { WidgetView } from '@widget/theme';
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -76,6 +77,7 @@ export const Aside = () => {
         </Sidebar.Middle>
 
         <Sidebar.Bottom>
+          <WidgetView />
           <NavigationItem to={'/settings'} icon={<Settings3LineIcon />} caption={'Настройки'} />
         </Sidebar.Bottom>
       </Sidebar>

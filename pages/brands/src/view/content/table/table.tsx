@@ -18,7 +18,8 @@ export const Table: React.FC<IProps> = (props) => {
   return (
     <TableComponent
       data={{ nodes: props.data }}
-      layout={{ scroll: 'external' }}
+      surface="embedded"
+      layout={{ scroll: 'external', stickyHeader: true }}
       row={{
         handlers: {
           click: ({ row }) => void brandModifyFrame.open({ uuid: row.uuid }),

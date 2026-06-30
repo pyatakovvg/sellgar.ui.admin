@@ -1,0 +1,13 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  color: var(--text-base-primary);
+}
+
+.value {
+  display: block;
+  color: var(--text-base-primary);
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

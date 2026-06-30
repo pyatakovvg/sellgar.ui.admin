@@ -9,10 +9,10 @@
   flex-direction: row;
   flex: 1 0;
   flex-wrap: wrap;
-  gap: var(--numbers-16);
-  padding: var(--numbers-16);
-  border: var(--numbers-1) solid var(--border-action-normal);
-  border-radius: var(--measurements-radius-xl);
+  gap: var(--numbers-8);
+  padding: var(--numbers-10)  var(--numbers-10);
+  border: var(--numbers-1) solid var(--border-base-surface-neutral);
+  border-radius: var(--measurements-radius-lg);
   background: var(--background-input-normal);
 }
 
@@ -25,8 +25,12 @@
   height: var(--numbers-80);
   overflow: hidden;
   border: var(--numbers-1) solid var(--border-base-divider);
-  border-radius: var(--measurements-radius-lg);
+  border-radius: var(--measurements-radius-md);
   cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-base-brand);
+  }
 }
 
 .primary {
@@ -46,8 +50,8 @@
 
 .remove {
   position: absolute;
-  right: var(--numbers-2);
-  bottom: var(--numbers-2);
+  right: var(--numbers-1);
+  bottom: var(--numbers-1);
 }
 
 .img {

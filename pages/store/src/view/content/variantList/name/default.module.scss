@@ -1,0 +1,31 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  color: var(--text-base-primary);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.name {
+  color: var(--text-base-primary);
+}
+
+.additional {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.variant {
+  color: var(--text-base-secondary);
+
+  & + & {
+    margin: var(--numbers-4) 0 0;
+  }
+}

@@ -1,7 +1,7 @@
 import { Application, Route, Router, UseBindings, UserRequestFeature, UserRequestPresentation } from '@tiyn/app';
 import type { ApplicationConfiguratorInterface } from '@tiyn/app';
 
-import { AppLayout } from '@layout/app';
+import { MainLayout } from '@layout/main';
 import { BaseLayout } from '@layout/base';
 import { NavigateLayout } from '@layout/navigate';
 import { BrandModifyFrame } from '@frame/brand-modify';
@@ -32,7 +32,8 @@ export class AdminApplication extends Application {
       notFound: <NotFound />,
     });
 
-    app.layouts([AppLayout]);
+    app.layouts([MainLayout]);
+
     app.features([
       UserRequestFeature.configure({
         presentation: UserRequestPresentation.define((registry) => {
@@ -40,6 +41,7 @@ export class AdminApplication extends Application {
         }),
       }),
     ]);
+
     app.initializers([RegisterUnauthorizedRecoveryInitializer, ResolveAuthStateInitializer]);
 
     app.router(
