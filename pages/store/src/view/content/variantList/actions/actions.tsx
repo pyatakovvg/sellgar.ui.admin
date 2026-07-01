@@ -1,5 +1,5 @@
-import { StoreModifyFrame } from '@frame/store-modify';
-import { StoreProductEntity } from '@library/domain';
+import { StoreInventoryFrame } from '@frame/store-inventory';
+import { StoreOfferEntity, StoreProductEntity } from '@library/domain';
 import { Button, Icon, useCellData } from '@sellgar/kit';
 import { useFrame } from '@tiyn/app';
 
@@ -7,23 +7,25 @@ import React from 'react';
 
 import s from './default.module.scss';
 
-export const Actions: React.FC = () => {
-  const storeModifyFrame = useFrame(StoreModifyFrame);
-  const { data } = useCellData<StoreProductEntity>();
+interface ActionsProps {
+  storeProduct: StoreProductEntity;
+}
 
-  const handleClick = () => {
-    void storeModifyFrame.open({ uuid: data.uuid });
+export const Actions: React.FC<ActionsProps> = (props) => {
+  const storeInventoryFrame = useFrame(StoreInventoryFrame);
+  const { data } = useCellData<StoreOfferEntity>();
+
+  const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    event.stopPropagation();
+    void storeInventoryFrame.open({
+      storeProductUuid: props.storeProduct.uuid,
+      offerUuid: data.uuid,
+    });
   };
 
   return (
     <div className={s.wrapper}>
-      <Button
-        form={'icon'}
-        style={'ghost'}
-        size={'sm'}
-        leadIcon={<Icon icon={'more-2-fill'} />}
-        onClick={() => handleClick()}
-      />
+      <Button.Icon style={'ghost'} size={'sm'} leadIcon={<Icon icon={'stock-line'} />} onClick={handleClick} />
     </div>
   );
 };

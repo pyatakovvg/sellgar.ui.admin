@@ -1,0 +1,21 @@
+.wrapper {
+  width: min(560px, calc(100vw - 32px));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background: var(--color-background-surface);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.header {
+  border-bottom: 1px solid var(--color-border-neutral);
+}
+
+.content {
+  min-height: 0;
+  padding: 24px;
+}
+
+.controls {
+  border-top: 1px solid var(--color-border-neutral);
+}

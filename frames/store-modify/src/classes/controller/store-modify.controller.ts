@@ -1,11 +1,12 @@
-import {
-  CreateStoreProductDto,
-  StoreProductEntity,
-  StoreServiceInterface,
-  VariantServiceInterface,
-} from '@library/domain';
+import { CreateStoreProductDto, StoreProductEntity, StoreServiceInterface } from '@library/domain';
 
-import { Controller, FrameServiceInterface, Inject, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@tiyn/app';
+import {
+  Controller,
+  FrameServiceInterface,
+  Inject,
+  type FrameControllerActionArgs,
+  type FrameControllerLoaderArgs,
+} from '@tiyn/app';
 
 import { StoreModifyActionPayload, StoreModifyControllerInterface } from './store-modify-controller.interface.ts';
 import { StoreModifyFrameParams } from '../params';
@@ -14,7 +15,6 @@ import { StoreModifyFrameParams } from '../params';
 export class StoreModifyController implements StoreModifyControllerInterface {
   constructor(
     @Inject(StoreServiceInterface) private readonly storeService: StoreServiceInterface,
-    @Inject(VariantServiceInterface) private readonly variantService: VariantServiceInterface,
     @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
   ) {}
 
@@ -26,7 +26,9 @@ export class StoreModifyController implements StoreModifyControllerInterface {
     return await this.storeService.findByUuid(args.props.uuid);
   }
 
-  async action(args: FrameControllerActionArgs<StoreModifyFrameParams, StoreModifyActionPayload>): Promise<StoreProductEntity> {
+  async action(
+    args: FrameControllerActionArgs<StoreModifyFrameParams, StoreModifyActionPayload>,
+  ): Promise<StoreProductEntity> {
     if (args.props.uuid) {
       if (args.payload.expectedVersion === undefined) {
         throw new Error('Не передана версия товара на складе.');
@@ -35,7 +37,7 @@ export class StoreModifyController implements StoreModifyControllerInterface {
       const result = await this.storeService.update({
         uuid: args.props.uuid,
         expectedVersion: args.payload.expectedVersion,
-        ...(await this.toStoreProductDto(args.payload, args.payload.offerUuid)),
+        ...this.toStoreProductDto(args.payload),
       });
 
       await this.frameService.close();
@@ -43,7 +45,7 @@ export class StoreModifyController implements StoreModifyControllerInterface {
       return result;
     }
 
-    const result = await this.storeService.create(await this.toStoreProductDto(args.payload));
+    const result = await this.storeService.create(this.toStoreProductDto(args.payload));
 
     await this.frameService.close();
 
@@ -54,29 +56,20 @@ export class StoreModifyController implements StoreModifyControllerInterface {
     await this.frameService.close();
   }
 
-  private async toStoreProductDto(payload: StoreModifyActionPayload, offerUuid?: string): Promise<CreateStoreProductDto> {
-    const variant = await this.variantService.findByUuid(payload.variantUuid);
-    const productUuid = variant?.product?.uuid;
-
-    if (!productUuid) {
-      throw new Error('Не удалось определить товар по выбранному варианту.');
-    }
-
+  private toStoreProductDto(payload: StoreModifyActionPayload): CreateStoreProductDto {
     return {
       commandId: crypto.randomUUID(),
       shopUuid: payload.shopUuid,
-      productUuid,
-      article: payload.article,
+      productUuid: payload.productUuid,
+      article: payload.offers[0]?.article ?? '',
       showing: payload.showing,
-      offers: [
-        {
-          uuid: offerUuid,
-          variantUuid: payload.variantUuid,
-          article: payload.article,
-          currentPrice: payload.currentPrice,
-          showing: payload.showing,
-        },
-      ],
+      offers: payload.offers.map((offer) => ({
+        uuid: offer.uuid,
+        variantUuid: offer.variantUuid,
+        article: offer.article,
+        currentPrice: offer.currentPrice,
+        showing: offer.showing,
+      })),
     };
   }
 }

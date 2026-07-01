@@ -18,7 +18,6 @@ export const Controls: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Button
-        data-qa={'employee-edit.back.button'}
         leadIcon={<ArrowLeftSLineIcon />}
         style={'secondary'}
         disabled={submit.inProcess}
@@ -27,7 +26,6 @@ export const Controls: React.FC = () => {
         Назад
       </Button>
       <Button
-        data-qa={'employee-edit.submit.button'}
         type={'submit'}
         form={CATEGORY_MODIFY_FORM_ID}
         inProcess={submit.inProcess}

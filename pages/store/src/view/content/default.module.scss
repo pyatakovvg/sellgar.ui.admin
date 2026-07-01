@@ -5,3 +5,11 @@
   flex-direction: column;
   flex: 1 0;
 }
+
+.variants {
+
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  border-bottom: var(--numbers-1) solid var(--border-base-divider);
+}

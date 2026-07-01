@@ -1,0 +1,9 @@
+.wrapper {
+  width: min(560px, calc(100vw - 32px));
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background-surface);
+  border-radius: 8px;
+}

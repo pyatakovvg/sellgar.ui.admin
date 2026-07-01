@@ -6,7 +6,9 @@ import React from 'react';
 
 import { Name } from './name';
 import { Shop } from './shop';
-import { Category } from './category';
+import { Variants } from './variants';
+import { Showcase } from './showcase';
+import { Visible } from './visible';
 import { VariantList } from './variantList';
 
 import { StoreControllerInterface } from '../../classes/controller/store-controller.interface.ts';
@@ -31,12 +33,11 @@ export const Content: React.FC = () => {
       >
         {({ Column, Expand }) => (
           <>
-            <Column>
-              {({ Head, Cell }) => (
+            <Column width={24}>
+              {({ Cell }) => (
                 <>
-                  <Head label={'Описание'} />
                   <Cell>
-                    <Name />
+                    <Visible />
                   </Cell>
                 </>
               )}
@@ -44,9 +45,9 @@ export const Content: React.FC = () => {
             <Column>
               {({ Head, Cell }) => (
                 <>
-                  <Head label={'Статус'} />
+                  <Head label={'Описание'} />
                   <Cell>
-                    <Category />
+                    <Name />
                   </Cell>
                 </>
               )}
@@ -61,8 +62,34 @@ export const Content: React.FC = () => {
                 </>
               )}
             </Column>
+            <Column width={140}>
+              {({ Head, Cell }) => (
+                <>
+                  <Head label={'Варианты'} />
+                  <Cell>
+                    <Variants />
+                  </Cell>
+                </>
+              )}
+            </Column>
+            <Column width={160}>
+              {({ Head, Cell }) => (
+                <>
+                  <Head label={'Витрина'} />
+                  <Cell>
+                    <Showcase />
+                  </Cell>
+                </>
+              )}
+            </Column>
 
-            <Expand render={({ row }) => <VariantList data={row.offers} />} />
+            <Expand
+              render={({ row }) => (
+                <div className={s.variants}>
+                  <VariantList storeProduct={row} data={row.offers} />
+                </div>
+              )}
+            />
           </>
         )}
       </Table>

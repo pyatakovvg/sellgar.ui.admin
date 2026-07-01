@@ -1,4 +1,5 @@
 import { inject, injectable } from 'inversify';
+import { plainToInstance, type ClassConstructor } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../helpers/config';
@@ -34,38 +35,42 @@ export class StoreGateway implements StoreGatewayInterface {
   }
 
   async create(dto: CreateStoreProductDto): Promise<StoreProductEntity> {
-    await validateOrReject(dto);
+    await this.validateDto(CreateStoreProductDto, dto);
 
     return this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/store/products', dto);
   }
 
   async update(dto: UpdateStoreProductDto): Promise<StoreProductEntity> {
-    await validateOrReject(dto);
+    await this.validateDto(UpdateStoreProductDto, dto);
 
     return this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/store/products/' + dto.uuid, dto);
   }
 
   async archive(dto: ArchiveStoreProductDto): Promise<StoreProductEntity> {
-    await validateOrReject(dto);
+    await this.validateDto(ArchiveStoreProductDto, dto);
 
     return this.httpClient.patch(this.config.get('GATEWAY_API') + `/v2/store/products/${dto.uuid}/archive`, dto);
   }
 
   async receiptInventory(dto: ReceiptOfferInventoryDto): Promise<StoreOfferInventoryEntity> {
-    await validateOrReject(dto);
+    await this.validateDto(ReceiptOfferInventoryDto, dto);
 
     return this.httpClient.post(this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/receipt`, dto);
   }
 
   async writeOffInventory(dto: WriteOffOfferInventoryDto): Promise<StoreOfferInventoryEntity> {
-    await validateOrReject(dto);
+    await this.validateDto(WriteOffOfferInventoryDto, dto);
 
     return this.httpClient.post(this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/write-off`, dto);
   }
 
   async adjustInventory(dto: AdjustOfferInventoryDto): Promise<StoreOfferInventoryEntity> {
-    await validateOrReject(dto);
+    await this.validateDto(AdjustOfferInventoryDto, dto);
 
     return this.httpClient.post(this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/adjust`, dto);
+  }
+
+  private async validateDto<T extends object>(dtoClass: ClassConstructor<T>, dto: T): Promise<void> {
+    await validateOrReject(plainToInstance(dtoClass, dto));
   }
 }

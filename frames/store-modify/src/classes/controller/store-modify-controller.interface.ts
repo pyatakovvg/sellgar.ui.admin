@@ -4,22 +4,28 @@ import { FrameControllerInterface, type FrameControllerActionArgs, type FrameCon
 import { StoreModifyFrameParams } from '../params';
 
 export interface StoreModifyActionPayload {
-  article: string;
   shopUuid: string;
-  variantUuid: string;
-  currentPrice: {
-    value: string;
-    currencyCode: string;
-  };
+  productUuid: string;
   showing: boolean;
-  offerUuid?: string;
+  offers: {
+    uuid?: string;
+    variantUuid: string;
+    article: string;
+    currentPrice: {
+      value: string;
+      currencyCode: string;
+    };
+    showing: boolean;
+  }[];
   expectedVersion?: number;
 }
 
 export abstract class StoreModifyControllerInterface extends FrameControllerInterface<StoreModifyFrameParams> {
   abstract loader(args: FrameControllerLoaderArgs<StoreModifyFrameParams>): Promise<StoreProductEntity | undefined>;
 
-  abstract action(args: FrameControllerActionArgs<StoreModifyFrameParams, StoreModifyActionPayload>): Promise<StoreProductEntity>;
+  abstract action(
+    args: FrameControllerActionArgs<StoreModifyFrameParams, StoreModifyActionPayload>,
+  ): Promise<StoreProductEntity>;
 
   abstract toList(): Promise<void>;
 }

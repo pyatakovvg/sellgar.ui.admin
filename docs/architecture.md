@@ -36,7 +36,6 @@ Host не должен становиться местом для feature UI и�
 - `/products/create` -> `@page/product-modify`;
 - `/products/:uuid` -> `@page/product-modify`;
 - `/store` -> `@page/store`, frame `@frame/store-modify`;
-- `/store/create` и `/store/:uuid` -> legacy page `@page/store-modify`;
 - `/brands` -> `@page/brands`, frame `@frame/brand-modify`;
 - `/categories` -> `@page/categories`, frame `@frame/category-modify`;
 - `/units` -> `@page/units`, frame `@frame/unit-modify`;

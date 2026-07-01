@@ -9,6 +9,7 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
+    "@frame/store-inventory": "0.0.1",
     "@frame/store-modify": "0.0.1",
     "@library/design": "0.0.1",
     "@library/domain": "0.0.1",

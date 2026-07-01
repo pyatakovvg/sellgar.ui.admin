@@ -8,7 +8,7 @@ export const Header: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Typography size={'body-m'} weight={'medium'}>
-        <p className={s.label} data-qa={'employee-edit.header'}>
+        <p className={s.label}>
           Брэнд
         </p>
       </Typography>

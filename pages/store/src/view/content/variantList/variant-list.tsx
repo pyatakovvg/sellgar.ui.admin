@@ -1,16 +1,19 @@
-import { Table } from '@sellgar/kit';
-import { StoreOfferEntity } from '@library/domain';
+import { Dot, Table } from '@sellgar/kit';
+import { StoreOfferEntity, StoreProductEntity } from '@library/domain';
 
 import React from 'react';
 
 import { Article } from './article';
 import { Name } from './name';
-import { Count } from './count';
+import { Inventory } from './inventory';
 import { Price } from './price';
+import { Actions } from './actions';
+import { Visible } from './visible';
 
 import s from './default.module.scss';
 
 interface IProps {
+  storeProduct: StoreProductEntity;
   data: StoreOfferEntity[];
 }
 
@@ -20,6 +23,15 @@ export const VariantList: React.FC<IProps> = (props) => {
       <Table surface={'embedded'} size={'sm'} style={'secondary'} data={{ nodes: props.data }}>
         {({ Column }) => (
           <>
+            <Column width={24}>
+              {({ Cell }) => (
+                <>
+                  <Cell>
+                    <Visible />
+                  </Cell>
+                </>
+              )}
+            </Column>
             <Column width={200}>
               {({ Head, Cell }) => (
                 <>
@@ -40,12 +52,32 @@ export const VariantList: React.FC<IProps> = (props) => {
                 </>
               )}
             </Column>
-            <Column align={'center'}>
+            <Column width={96} align={'right'}>
               {({ Head, Cell }) => (
                 <>
-                  <Head label={'Кол-во'} />
+                  <Head label={'Остаток'} />
                   <Cell>
-                    <Count />
+                    <Inventory value={'quantity'} />
+                  </Cell>
+                </>
+              )}
+            </Column>
+            <Column width={96} align={'right'}>
+              {({ Head, Cell }) => (
+                <>
+                  <Head label={'Резерв'} />
+                  <Cell>
+                    <Inventory value={'reserved'} />
+                  </Cell>
+                </>
+              )}
+            </Column>
+            <Column width={96} align={'right'}>
+              {({ Head, Cell }) => (
+                <>
+                  <Head label={'Доступно'} />
+                  <Cell>
+                    <Inventory value={'available'} />
                   </Cell>
                 </>
               )}
@@ -56,6 +88,16 @@ export const VariantList: React.FC<IProps> = (props) => {
                   <Head label={'Цена'} />
                   <Cell>
                     <Price />
+                  </Cell>
+                </>
+              )}
+            </Column>
+            <Column width={52} align={'right'}>
+              {({ Head, Cell }) => (
+                <>
+                  <Head label={''} />
+                  <Cell>
+                    <Actions storeProduct={props.storeProduct} />
                   </Cell>
                 </>
               )}
