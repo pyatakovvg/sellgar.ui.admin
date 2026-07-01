@@ -1,5 +1,5 @@
 import { CurrencyEntity } from '@library/domain';
-import { Badge, Caption, Checkbox, Field, Input, Label, Select, TabMenu, Typography } from '@sellgar/kit';
+import { Badge, Caption, Checkbox, Field, Input, InputAmount2, Label, Select, TabMenu, Typography } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, type FieldArrayWithId, useFormContext } from 'react-hook-form';
@@ -104,10 +104,10 @@ export const OffersTabs: React.FC<OffersProps> = ({ currencies, product, fields 
                           <Label label={'Цена'} />
                         </Field.Label>
                         <Field.Content>
-                          <Input
+                          <InputAmount2
                             {...field}
                             target={error?.message ? 'destructive' : undefined}
-                            value={field.value ?? ''}
+                            value={field.value ? Number(field.value) : undefined}
                           />
                         </Field.Content>
                         {!!error?.message && (

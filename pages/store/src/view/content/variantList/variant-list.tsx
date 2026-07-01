@@ -23,7 +23,7 @@ export const VariantList: React.FC<IProps> = (props) => {
       <Table surface={'embedded'} size={'sm'} style={'secondary'} data={{ nodes: props.data }}>
         {({ Column }) => (
           <>
-            <Column width={24}>
+            <Column width={36}>
               {({ Cell }) => (
                 <>
                   <Cell>

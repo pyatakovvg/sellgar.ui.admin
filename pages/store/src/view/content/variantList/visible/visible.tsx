@@ -1,4 +1,5 @@
-import { Dot, useCellData } from '@sellgar/kit';
+import { useCellData } from '@sellgar/kit';
+import { CheckboxBlankCircleLineIcon, CheckboxBlankCircleFillIcon } from '@sellgar/kit/icons';
 import { StoreProductEntity } from '@library/domain';
 
 import React from 'react';
@@ -9,8 +10,6 @@ export const Visible: React.FC = () => {
   const { data } = useCellData<StoreProductEntity>();
 
   return (
-    <div className={s.wrapper}>
-      <Dot size={'md'} color={data.showing ? 'green' : 'gray'} />
-    </div>
+    <div className={s.wrapper}>{data.showing ? <CheckboxBlankCircleFillIcon /> : <CheckboxBlankCircleLineIcon />}</div>
   );
 };
