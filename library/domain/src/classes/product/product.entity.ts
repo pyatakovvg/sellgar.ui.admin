@@ -7,6 +7,30 @@ import { CatalogStatus } from '../catalog-status.enum.ts';
 import { BrandEntity } from '../brand';
 import { VariantEntity } from '../variant';
 import { CategoryEntity } from '../category';
+import { PropertyEntity } from '../property';
+
+export class ProductPropertyEntity {
+  @Expose()
+  @IsUUID()
+  uuid: string;
+
+  @Expose()
+  @ValidateNested()
+  @Type(() => PropertyEntity)
+  property: PropertyEntity;
+
+  @Expose()
+  @IsUUID()
+  propertyUuid: string;
+
+  @Expose()
+  @IsString()
+  value: string;
+
+  @Expose()
+  @IsNumber()
+  order: number;
+}
 
 export class ProductEntity {
   @Expose()
@@ -51,8 +75,13 @@ export class ProductEntity {
 
   @Expose()
   @ValidateNested()
+  @Type(() => ProductPropertyEntity)
+  properties: ProductPropertyEntity[] = [];
+
+  @Expose()
+  @ValidateNested()
   @Type(() => VariantEntity)
-  variants: VariantEntity[];
+  variants: VariantEntity[] = [];
 
   @Expose()
   @IsDateString()

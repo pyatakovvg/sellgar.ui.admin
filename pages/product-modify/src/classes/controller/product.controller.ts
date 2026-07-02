@@ -50,6 +50,7 @@ export class ProductController implements ProductControllerInterface {
       description: dto.description,
       brandUuid: dto.brandUuid,
       categoryUuid: dto.categoryUuid,
+      properties: dto.properties,
       variants: dto.variants,
     });
   }
@@ -62,6 +63,7 @@ export class ProductController implements ProductControllerInterface {
       description: dto.description,
       brandUuid: dto.brandUuid,
       categoryUuid: dto.categoryUuid,
+      properties: dto.properties,
       variants: dto.variants,
     });
   }
@@ -84,6 +86,7 @@ export class ProductController implements ProductControllerInterface {
   private toFormProduct(product: ProductEntity): ProductEntity {
     return {
       ...product,
+      properties: product.properties ?? [],
       variants:
         product.variants?.map((variant) => ({
           ...variant,

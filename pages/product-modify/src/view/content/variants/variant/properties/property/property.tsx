@@ -11,7 +11,7 @@ import s from './property.module.scss';
 interface IProps {
   item: object;
   index: number;
-  parentIndex: number;
+  name: string;
   onDelete(): void;
 }
 
@@ -26,7 +26,7 @@ export const Property: React.FC<IProps> = (props) => {
   const y = Motion.useMotionValue(0);
   const dragControls = Motion.useDragControls();
 
-  const propertyWatch = watch(`variants.${props.parentIndex}.properties.${props.index}.propertyUuid`);
+  const propertyWatch = watch(`${props.name}.${props.index}.propertyUuid`);
   const properties = useProperties();
   const property = useSelectedProperty(propertyWatch);
 
@@ -46,7 +46,7 @@ export const Property: React.FC<IProps> = (props) => {
       <div className={s.field}>
         <ReactHookForm.Controller
           control={control}
-          name={`variants.${props.parentIndex}.properties.${props.index}.propertyUuid`}
+          name={`${props.name}.${props.index}.propertyUuid`}
           render={({ field, fieldState: { error } }) => (
             <Field>
               <Field.Content>
@@ -72,7 +72,7 @@ export const Property: React.FC<IProps> = (props) => {
       <div className={s.field}>
         <ReactHookForm.Controller
           control={control}
-          name={`variants.${props.parentIndex}.properties.${props.index}.value`}
+          name={`${props.name}.${props.index}.value`}
           render={({ field, fieldState: { error } }) => (
             <Field>
               <Field.Content>

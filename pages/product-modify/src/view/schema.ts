@@ -5,6 +5,12 @@ interface IForm {
   brandUuid: string;
   categoryUuid: string;
   description: string;
+  properties: {
+    uuid?: string;
+    propertyUuid: string;
+    value: string;
+    order: number;
+  }[];
   variants: {
     images: {
       uuid?: string;
@@ -31,6 +37,14 @@ export const schema = yup.object({
   brandUuid: yup.string().required('Необходимо выбрать'),
   categoryUuid: yup.string().required('Необходимо выбрать'),
   description: yup.string().required('Необходимо заполнить'),
+  properties: yup.array().of(
+    yup.object({
+      uuid: yup.string().optional(),
+      propertyUuid: yup.string().uuid().required('Необходимо выбрать'),
+      value: yup.string().required('Необходимо заполнить'),
+      order: yup.number(),
+    }),
+  ),
   variants: yup.array().of(
     yup.object({
       images: yup.array().of(

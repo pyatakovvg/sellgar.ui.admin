@@ -6,6 +6,7 @@ import * as ReactHookForm from 'react-hook-form';
 
 import { useBrands } from '../../../hooks/brands.hook.ts';
 import { useCategories } from '../../../hooks/categories.hook.ts';
+import { Properties } from '../variants/variant/properties';
 
 import s from './product.module.scss';
 
@@ -156,6 +157,11 @@ export const Product = () => {
                 </Field>
               )}
             />
+          </div>
+        </div>
+        <div className={s.line}>
+          <div className={s.field}>
+            <Properties name={'properties'} label={'Общие свойства товара'} />
           </div>
         </div>
       </div>

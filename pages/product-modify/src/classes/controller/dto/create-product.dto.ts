@@ -74,7 +74,11 @@ export class CreateProductDto {
   @IsUUID()
   brandUuid: string;
 
-  @ValidateNested()
+  @ValidateNested({ each: true })
+  @Type(() => Property)
+  properties: Property[];
+
+  @ValidateNested({ each: true })
   @Type(() => Variant)
   variants: Variant[];
 }

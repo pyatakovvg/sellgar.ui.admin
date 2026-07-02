@@ -1,6 +1,18 @@
 import { IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
+class ProductPropertyDto {
+  @IsUUID()
+  @IsOptional()
+  uuid?: string;
+
+  @IsUUID()
+  propertyUuid: string;
+
+  @IsString()
+  value: string;
+}
+
 class ProductVariantImageDto {
   @IsUUID()
   @IsOptional()
@@ -54,6 +66,11 @@ export class CreateProductDto {
 
   @IsUUID()
   brandUuid: string;
+
+  @ValidateNested({ each: true })
+  @Type(() => ProductPropertyDto)
+  @IsOptional()
+  properties?: ProductPropertyDto[];
 
   @ValidateNested({ each: true })
   @Type(() => ProductVariantDto)

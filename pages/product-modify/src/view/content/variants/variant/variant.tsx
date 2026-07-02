@@ -108,7 +108,7 @@ export const Variant: React.FC<IProps> = (props) => {
         </div>
         <div className={s.line}>
           <div className={s.field}>
-            <Properties index={props.index} />
+            <Properties name={`variants.${props.index}.properties`} label={'Свойства варианта'} />
           </div>
         </div>
       </div>

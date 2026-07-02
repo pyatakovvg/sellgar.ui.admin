@@ -11,14 +11,15 @@ import { Property } from './property';
 import s from './properties.module.scss';
 
 interface IProps {
-  index: number;
+  name: string;
+  label: string;
 }
 
 export const Properties: React.FC<IProps> = (props) => {
   const { control } = ReactHookForm.useFormContext();
   const { fields, prepend, remove, move } = ReactHookForm.useFieldArray({
     control,
-    name: `variants.${props.index}.properties`,
+    name: props.name,
   });
 
   const handleAddProperty = () => {
@@ -30,7 +31,7 @@ export const Properties: React.FC<IProps> = (props) => {
       <Field>
         <Field.Label>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Label label={'Свойства товара'} />
+            <Label label={props.label} />
             <ButtonLink
               type={'button'}
               size={'xs'}
@@ -67,7 +68,7 @@ export const Properties: React.FC<IProps> = (props) => {
                     <Property
                       key={item.id}
                       item={item}
-                      parentIndex={props.index}
+                      name={props.name}
                       index={index}
                       onDelete={() => remove(index)}
                     />
