@@ -1,6 +1,5 @@
 import { Page } from '@library/design';
 import { useLoaderData, useNavigate } from '@tiyn/app';
-import { ProductEntity } from '@library/domain';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
@@ -14,32 +13,43 @@ import { useCreate } from '../requests/create.hook.ts';
 import { useUpdate } from '../requests/update.hook.ts';
 
 import { IFormData, schema } from './schema.ts';
+import { normalizeProductFormData, toProductFormData } from './form-values.ts';
 
 export const ModuleView = () => {
   const navigate = useNavigate();
-  const data = useLoaderData(ProductControllerInterface) as ProductEntity | undefined;
+  const data = useLoaderData(ProductControllerInterface);
+  const [product, setProduct] = React.useState(data);
+  const isEdit = Boolean(product?.uuid);
 
   const methods = ReactHookForm.useForm<IFormData>({
     mode: 'onBlur',
-    defaultValues: data ?? new ProductEntity(),
+    defaultValues: toProductFormData(data),
     resolver: ReactHookFormResolver.yupResolver(schema),
   });
+
+  React.useEffect(() => {
+    setProduct(data);
+    methods.reset(toProductFormData(data));
+  }, [data?.uuid]);
 
   const update = useUpdate();
   const create = useCreate();
 
   const handleSubmit = methods.handleSubmit(
     async (values: IFormData) => {
-      if (data?.uuid) {
-        const result = await update(data.uuid, {
-          uuid: data.uuid,
-          version: data.version,
-          ...values,
+      const normalizedValues = normalizeProductFormData(values);
+
+      if (product?.uuid) {
+        const result = await update(product.uuid, {
+          uuid: product.uuid,
+          version: product.version,
+          ...normalizedValues,
         });
 
-        methods.reset(result);
+        setProduct(result);
+        methods.reset(toProductFormData(result));
       } else {
-        const result = await create(values);
+        const result = await create(normalizedValues);
 
         await navigate.to('/products/' + result?.uuid);
       }
@@ -51,9 +61,9 @@ export const ModuleView = () => {
       <form onSubmit={handleSubmit}>
         <Page>
           <Page.Header>
-            <Page.Header.Title>Новый товар</Page.Header.Title>
+            <Page.Header.Title>{isEdit ? 'Редактирование товара' : 'Новый товар'}</Page.Header.Title>
             <Page.Header.Controls>
-              <Controls />
+              <Controls inProcess={methods.formState.isSubmitting} />
             </Page.Header.Controls>
           </Page.Header>
           <Page.Content>

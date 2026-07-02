@@ -1,14 +1,12 @@
 import { ProductEntity } from '@library/domain';
+import type { ControllerLoaderArgs } from '@tiyn/app';
 
 import { CreateProductDto } from './dto/create-product.dto.ts';
 import { UpdateProductDto } from './dto/update-product.dto.ts';
 
-import { FormStoreInterface } from '../store/form/form-store.interface.ts';
-
 export abstract class ProductControllerInterface {
-  abstract formStore: FormStoreInterface;
-
-  abstract findByUuid(uuid?: string): Promise<ProductEntity | void>;
+  abstract loader(args: ControllerLoaderArgs): Promise<ProductEntity | undefined>;
+  abstract findByUuid(uuid?: string): Promise<ProductEntity | undefined>;
   abstract create(dto: CreateProductDto): Promise<ProductEntity>;
   abstract update(uuid: string, dto: UpdateProductDto): Promise<ProductEntity>;
   abstract getFileImageUrl(fileUuid: string): string;

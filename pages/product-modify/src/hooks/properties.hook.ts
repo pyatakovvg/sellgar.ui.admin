@@ -1,9 +1,9 @@
-import { useController } from '@tiyn/app';
+import { useLoaderData } from '@tiyn/app';
 
-import { ProductControllerInterface } from '../classes/controller/product-controller.interface.ts';
+import { ProductFormOptionsControllerInterface } from '../classes/controller/product-form-options-controller.interface.ts';
 
 export const useProperties = () => {
-  const controller = useController(ProductControllerInterface);
+  const options = useLoaderData(ProductFormOptionsControllerInterface);
 
-  return controller.formStore.properties;
+  return options.properties;
 };

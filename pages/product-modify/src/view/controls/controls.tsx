@@ -1,14 +1,19 @@
 import { Button } from '@sellgar/kit';
 
 import React from 'react';
-// import * as ReactHookForm from 'react-hook-form';
 
 import s from './controls.module.scss';
 
-export const Controls: React.FC = () => {
+interface IProps {
+  inProcess: boolean;
+}
+
+export const Controls: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
-      <Button type={'submit'}>Сохранить</Button>
+      <Button type={'submit'} disabled={props.inProcess} inProcess={props.inProcess}>
+        Сохранить
+      </Button>
     </div>
   );
 };

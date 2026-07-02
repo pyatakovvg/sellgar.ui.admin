@@ -10,6 +10,7 @@ import s from './variant.module.scss';
 
 interface IProps {
   index: number;
+  canDelete: boolean;
   onCopy(): void;
   onDelete(): void;
 }
@@ -22,6 +23,7 @@ export const Variant: React.FC<IProps> = (props) => {
       <div className={s.controls}>
         <div className={s.button}>
           <Button
+            type={'button'}
             form={'icon'}
             size={'sm'}
             style={'ghost'}
@@ -31,10 +33,12 @@ export const Variant: React.FC<IProps> = (props) => {
         </div>
         <div className={s.button}>
           <Button
+            type={'button'}
             form={'icon'}
             size={'sm'}
             style={'ghost'}
             target={'destructive'}
+            disabled={!props.canDelete}
             leadIcon={<Icon icon={Icon.deleteBin5Line} />}
             onClick={() => props.onDelete()}
           />
@@ -108,7 +112,12 @@ export const Variant: React.FC<IProps> = (props) => {
         </div>
         <div className={s.line}>
           <div className={s.field}>
-            <Properties name={`variants.${props.index}.properties`} label={'Свойства варианта'} />
+            <Properties
+              name={`variants.${props.index}.properties`}
+              label={'Свойства варианта'}
+              scope={'variant'}
+              variantIndex={props.index}
+            />
           </div>
         </div>
       </div>

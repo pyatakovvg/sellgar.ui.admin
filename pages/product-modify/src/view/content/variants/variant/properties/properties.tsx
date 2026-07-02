@@ -1,5 +1,4 @@
 import { ButtonLink, Field, Label, Icon } from '@sellgar/kit';
-import { PropertyEntity } from '@library/domain';
 
 import React from 'react';
 import * as Motion from 'framer-motion';
@@ -8,22 +7,43 @@ import * as ReactHookForm from 'react-hook-form';
 import { Empty } from './empty';
 import { Property } from './property';
 
+import { createEmptyProperty } from '../../../../form-values.ts';
+import type { IFormData } from '../../../../schema.ts';
 import s from './properties.module.scss';
 
+export type PropertiesFieldName = 'properties' | `variants.${number}.properties`;
+
 interface IProps {
-  name: string;
+  name: PropertiesFieldName;
   label: string;
+  scope: 'product' | 'variant';
+  variantIndex?: number;
 }
 
 export const Properties: React.FC<IProps> = (props) => {
-  const { control } = ReactHookForm.useFormContext();
-  const { fields, prepend, remove, move } = ReactHookForm.useFieldArray({
+  const { control } = ReactHookForm.useFormContext<IFormData>();
+  const { fields, append, remove, move } = ReactHookForm.useFieldArray({
     control,
     name: props.name,
   });
 
   const handleAddProperty = () => {
-    prepend(new PropertyEntity());
+    append(createEmptyProperty());
+  };
+
+  const handleReorder = (value: string[]) => {
+    const movedId = value.find((id, newIndex) => fields[newIndex]?.id !== id);
+
+    if (!movedId) {
+      return;
+    }
+
+    const newIndex = value.findIndex((id) => id === movedId);
+    const oldIndex = fields.findIndex((item) => item.id === movedId);
+
+    if (oldIndex >= 0 && newIndex >= 0) {
+      move(oldIndex, newIndex);
+    }
   };
 
   return (
@@ -51,25 +71,18 @@ export const Properties: React.FC<IProps> = (props) => {
                 className={s.content}
                 as={'div'}
                 axis="y"
-                onReorder={(value) => {
-                  const movedItem = value.find((item, newIndex) => fields[newIndex]?.id !== item.id);
-
-                  if (movedItem) {
-                    const newIndex = value.findIndex((item) => item.id === movedItem.id);
-                    const oldIndex = fields.findIndex((item) => item.id === movedItem.id);
-
-                    move(oldIndex, newIndex);
-                  }
-                }}
-                values={fields}
+                onReorder={handleReorder}
+                values={fields.map((field) => field.id)}
               >
                 {fields.map((item, index) => {
                   return (
                     <Property
                       key={item.id}
-                      item={item}
+                      fieldId={item.id}
                       name={props.name}
                       index={index}
+                      scope={props.scope}
+                      variantIndex={props.variantIndex}
                       onDelete={() => remove(index)}
                     />
                   );

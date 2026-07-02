@@ -32,7 +32,7 @@ class Variant {
   @IsString()
   description: string;
 
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => Property)
   properties: Property[];
 }

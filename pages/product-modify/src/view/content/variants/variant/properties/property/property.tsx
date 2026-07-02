@@ -6,36 +6,110 @@ import * as Motion from 'framer-motion';
 
 import { useProperties } from '../../../../../../hooks/properties.hook.ts';
 
+import type { IFormData } from '../../../../../schema.ts';
 import s from './property.module.scss';
 
-interface IProps {
-  item: object;
+type PropertiesFieldName = 'properties' | `variants.${number}.properties`;
+type PropertyUuidFieldName = `properties.${number}.propertyUuid` | `variants.${number}.properties.${number}.propertyUuid`;
+type PropertyValueFieldName = `properties.${number}.value` | `variants.${number}.properties.${number}.value`;
+type PropertyRows = IFormData['properties'];
+type VariantRows = IFormData['variants'];
+type PropertyScope = 'product' | 'variant';
+
+interface PropertyLocation {
   index: number;
-  name: string;
+  scope: PropertyScope;
+  variantIndex?: number;
+}
+
+interface IProps {
+  fieldId: string;
+  index: number;
+  name: PropertiesFieldName;
+  scope: PropertyScope;
+  variantIndex?: number;
   onDelete(): void;
 }
 
-const useSelectedProperty = (propertyUuid: string) => {
+const useSelectedProperty = (propertyUuid?: string) => {
   const properties = useProperties();
   return React.useMemo(() => properties.find((item) => item.uuid === propertyUuid), [properties, propertyUuid]);
 };
 
+const getVariantProperties = (variants: VariantRows, variantIndex?: number): PropertyRows => {
+  if (variantIndex === undefined) {
+    return [];
+  }
+
+  return variants[variantIndex]?.properties ?? [];
+};
+
+const getCurrentPropertyUuid = (location: PropertyLocation, productProperties: PropertyRows, variants: VariantRows) => {
+  if (location.scope === 'product') {
+    return productProperties[location.index]?.propertyUuid;
+  }
+
+  return getVariantProperties(variants, location.variantIndex)[location.index]?.propertyUuid;
+};
+
+const getBlockedPropertyUuids = (
+  location: PropertyLocation,
+  productProperties: PropertyRows,
+  variants: VariantRows,
+  currentPropertyUuid?: string,
+) => {
+  const blocked = new Set<string>();
+  const block = (propertyUuid?: string) => {
+    if (propertyUuid && propertyUuid !== currentPropertyUuid) {
+      blocked.add(propertyUuid);
+    }
+  };
+
+  if (location.scope === 'product') {
+    productProperties.forEach((item, index) => {
+      if (index !== location.index) {
+        block(item.propertyUuid);
+      }
+    });
+
+    variants.forEach((variant) => {
+      variant.properties.forEach((item) => block(item.propertyUuid));
+    });
+  } else {
+    productProperties.forEach((item) => block(item.propertyUuid));
+    getVariantProperties(variants, location.variantIndex).forEach((item, index) => {
+      if (index !== location.index) {
+        block(item.propertyUuid);
+      }
+    });
+  }
+
+  return blocked;
+};
+
 export const Property: React.FC<IProps> = (props) => {
-  const { control, watch } = ReactHookForm.useFormContext();
+  const { control } = ReactHookForm.useFormContext<IFormData>();
 
   const y = Motion.useMotionValue(0);
   const dragControls = Motion.useDragControls();
 
-  const propertyWatch = watch(`${props.name}.${props.index}.propertyUuid`);
+  const propertyPath = `${props.name}.${props.index}.propertyUuid` as PropertyUuidFieldName;
+  const valuePath = `${props.name}.${props.index}.value` as PropertyValueFieldName;
+  const productProperties = ReactHookForm.useWatch({ control, name: 'properties' }) ?? [];
+  const variants = ReactHookForm.useWatch({ control, name: 'variants' }) ?? [];
+  const location = { index: props.index, scope: props.scope, variantIndex: props.variantIndex };
+  const currentPropertyUuid = getCurrentPropertyUuid(location, productProperties, variants);
   const properties = useProperties();
-  const property = useSelectedProperty(propertyWatch);
+  const property = useSelectedProperty(currentPropertyUuid);
+  const blockedPropertyUuids = getBlockedPropertyUuids(location, productProperties, variants, currentPropertyUuid);
+  const options = properties.filter((item) => item.uuid === currentPropertyUuid || !blockedPropertyUuids.has(item.uuid));
 
   return (
     <Motion.Reorder.Item
       className={s.wrapper}
       as={'div'}
-      id={'id'}
-      value={props.item}
+      id={props.fieldId}
+      value={props.fieldId}
       style={{ y }}
       dragListener={false}
       dragControls={dragControls}
@@ -46,14 +120,14 @@ export const Property: React.FC<IProps> = (props) => {
       <div className={s.field}>
         <ReactHookForm.Controller
           control={control}
-          name={`${props.name}.${props.index}.propertyUuid`}
+          name={propertyPath}
           render={({ field, fieldState: { error } }) => (
             <Field>
               <Field.Content>
                 <Select
                   optionKey={'uuid'}
                   optionValue={'name'}
-                  options={properties}
+                  options={options}
                   target={error?.message ? 'destructive' : undefined}
                   value={field.value}
                   onChange={(value) => field.onChange(value)}
@@ -72,13 +146,14 @@ export const Property: React.FC<IProps> = (props) => {
       <div className={s.field}>
         <ReactHookForm.Controller
           control={control}
-          name={`${props.name}.${props.index}.value`}
+          name={valuePath}
           render={({ field, fieldState: { error } }) => (
             <Field>
               <Field.Content>
                 <Input
                   badge={property?.unit ? <Badge label={property?.unit.name} /> : undefined}
                   {...field}
+                  value={field.value ?? ''}
                   target={error?.message ? 'destructive' : undefined}
                 />
               </Field.Content>
@@ -93,6 +168,7 @@ export const Property: React.FC<IProps> = (props) => {
       </div>
       <div className={s.field}>
         <Button
+          type={'button'}
           form={'icon'}
           size={'sm'}
           style={'ghost'}

@@ -79,6 +79,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = (props) => {
           <div key={item.id} className={[s.image, item.primary ? s.primary : undefined].filter(Boolean).join(' ')}>
             <div className={s.remove}>
               <Button.Icon
+                type={'button'}
                 shape={'rounded'}
                 size={'xs'}
                 target={'destructive'}

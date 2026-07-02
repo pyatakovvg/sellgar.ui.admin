@@ -161,7 +161,7 @@ export const Product = () => {
         </div>
         <div className={s.line}>
           <div className={s.field}>
-            <Properties name={'properties'} label={'Общие свойства товара'} />
+            <Properties name={'properties'} label={'Общие свойства товара'} scope={'product'} />
           </div>
         </div>
       </div>
