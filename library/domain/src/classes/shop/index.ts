@@ -1,3 +1,6 @@
+export { CreateDto as CreateShopDto } from './service/dto/create.dto.ts';
+export { UpdateDto as UpdateShopDto } from './service/dto/update.dto.ts';
+
 export { ShopEntity, ShopResultEntity } from './shop.entity.ts';
 
 export { ShopGateway } from './gateway/shop.gateway.ts';

@@ -1342,6 +1342,7 @@ __metadata:
     "@frame/category-modify": "npm:0.0.1"
     "@frame/property-group-modify": "npm:0.0.1"
     "@frame/property-modify": "npm:0.0.1"
+    "@frame/shop-modify": "npm:0.0.1"
     "@frame/store-inventory": "npm:0.0.1"
     "@frame/store-modify": "npm:0.0.1"
     "@frame/unit-modify": "npm:0.0.1"
@@ -1355,7 +1356,7 @@ __metadata:
     "@page/product-modify": "npm:0.0.1"
     "@page/products": "npm:0.0.1"
     "@page/properties": "npm:0.0.1"
-    "@page/shop": "npm:0.0.1"
+    "@page/shops": "npm:0.0.1"
     "@page/sign-in": "npm:0.0.1"
     "@page/store": "npm:0.0.1"
     "@page/units": "npm:0.0.1"
@@ -1976,6 +1977,28 @@ __metadata:
     "@types/react-dom": "npm:19.2.3"
     class-transformer: "npm:0.5.1"
     class-validator: "npm:0.15.1"
+    react: "npm:19.2.7"
+    react-dom: "npm:19.2.7"
+    react-hook-form: "npm:7.80.0"
+    react-router-dom: "npm:7.18.1"
+    yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
+"@frame/shop-modify@npm:0.0.1, @frame/shop-modify@workspace:frames/shop-modify":
+  version: 0.0.0-use.local
+  resolution: "@frame/shop-modify@workspace:frames/shop-modify"
+  dependencies:
+    "@hookform/resolvers": "npm:5.4.0"
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.188"
+    "@tiyn/app": "npm:0.0.1"
+    "@types/react": "npm:19.2.17"
+    "@types/react-dom": "npm:19.2.3"
+    class-transformer: "npm:0.5.1"
+    class-validator: "npm:0.15.1"
+    classnames: "npm:2.5.1"
     react: "npm:19.2.7"
     react-dom: "npm:19.2.7"
     react-hook-form: "npm:7.80.0"
@@ -2976,12 +2999,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@page/shop@npm:0.0.1, @page/shop@workspace:pages/shop":
+"@page/shops@npm:0.0.1, @page/shops@workspace:pages/shops":
   version: 0.0.0-use.local
-  resolution: "@page/shop@workspace:pages/shop"
+  resolution: "@page/shops@workspace:pages/shops"
   dependencies:
+    "@frame/shop-modify": "npm:0.0.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.188"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"

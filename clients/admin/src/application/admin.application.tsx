@@ -8,6 +8,7 @@ import { BrandModifyFrame } from '@frame/brand-modify';
 import { CategoryModifyFrame } from '@frame/category-modify';
 import { PropertyGroupModifyFrame } from '@frame/property-group-modify';
 import { PropertyModifyFrame } from '@frame/property-modify';
+import { ShopModifyFrame } from '@frame/shop-modify';
 import { StoreInventoryFrame } from '@frame/store-inventory';
 import { StoreModifyFrame } from '@frame/store-modify';
 import { UnitModifyFrame } from '@frame/unit-modify';
@@ -82,7 +83,8 @@ export class AdminApplication extends Application {
               }),
               new Route({
                 path: '/shops',
-                load: () => import('@page/shop'),
+                frames: [ShopModifyFrame],
+                load: () => import('@page/shops'),
               }),
               new Route({
                 path: '/products',
