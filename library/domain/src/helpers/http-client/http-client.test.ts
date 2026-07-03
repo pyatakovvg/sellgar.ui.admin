@@ -1,8 +1,19 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { BadGatewayException } from './exeptions/bad-gateway.exception.ts';
 import { BadRequestException } from './exeptions/bad-request.exception.ts';
+import { ConflictException } from './exeptions/conflict.exception.ts';
+import { ForbiddenException } from './exeptions/forbidden.exception.ts';
+import { GatewayTimeoutException } from './exeptions/gateway-timeout.exception.ts';
+import { InternalServerErrorException } from './exeptions/internal-server-error.exception.ts';
+import { LockoutException } from './exeptions/lockout.exception.ts';
+import { MethodNotAllowedException } from './exeptions/method-not-allowed.exception.ts';
 import { NotFoundException } from './exeptions/not-found.exception.ts';
+import { RequestTimeoutException } from './exeptions/request-timeout.exception.ts';
 import { ServiceUnavailableException } from './exeptions/service-unavailable.exception.ts';
+import { TooManyRequestsException } from './exeptions/too-many-requests.exception.ts';
+import { UnauthorizedException } from './exeptions/unauthorized.exception.ts';
+import { UnprocessableEntityException } from './exeptions/unprocessable-entity.exception.ts';
 import { HttpClient } from './http-client.ts';
 
 import type { DeviceServiceInterface } from '../device';
@@ -34,10 +45,25 @@ describe('HttpClient', () => {
     vi.unstubAllGlobals();
   });
 
-  it('maps HTTP response statuses to matching exceptions', async () => {
-    mockFetch(async () => jsonResponse({ message: 'Not found' }, { status: 404 }));
+  it.each([
+    [400, BadRequestException],
+    [401, UnauthorizedException],
+    [403, ForbiddenException],
+    [404, NotFoundException],
+    [405, MethodNotAllowedException],
+    [408, RequestTimeoutException],
+    [409, ConflictException],
+    [422, UnprocessableEntityException],
+    [423, LockoutException],
+    [429, TooManyRequestsException],
+    [500, InternalServerErrorException],
+    [502, BadGatewayException],
+    [503, ServiceUnavailableException],
+    [504, GatewayTimeoutException],
+  ])('maps HTTP %s response to matching exception', async (status, ExceptionConstructor) => {
+    mockFetch(async () => jsonResponse({ message: `Status ${status}` }, { status }));
 
-    await expect(createClient().get('/missing')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(createClient().get('/status')).rejects.toBeInstanceOf(ExceptionConstructor);
   });
 
   it('uses BadRequestException for unknown client errors', async () => {

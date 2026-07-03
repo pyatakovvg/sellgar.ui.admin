@@ -2,15 +2,19 @@ import { Inject, Injectable } from '@tiyn/app';
 
 import { BadGatewayException } from './exeptions/bad-gateway.exception.ts';
 import { BadRequestException } from './exeptions/bad-request.exception.ts';
+import { ConflictException } from './exeptions/conflict.exception.ts';
 import { ForbiddenException } from './exeptions/forbidden.exception.ts';
 import { GatewayTimeoutException } from './exeptions/gateway-timeout.exception.ts';
 import { HttpException } from './exeptions/http.exception.ts';
 import { InternalServerErrorException } from './exeptions/internal-server-error.exception.ts';
+import { LockoutException } from './exeptions/lockout.exception.ts';
 import { MethodNotAllowedException } from './exeptions/method-not-allowed.exception.ts';
 import { NotFoundException } from './exeptions/not-found.exception.ts';
 import { RequestTimeoutException } from './exeptions/request-timeout.exception.ts';
 import { ServiceUnavailableException } from './exeptions/service-unavailable.exception.ts';
+import { TooManyRequestsException } from './exeptions/too-many-requests.exception.ts';
 import { UnauthorizedException } from './exeptions/unauthorized.exception.ts';
+import { UnprocessableEntityException } from './exeptions/unprocessable-entity.exception.ts';
 
 import { DeviceServiceInterface } from '../device';
 
@@ -173,6 +177,14 @@ export class HttpClient implements HttpClientInterface {
         throw new MethodNotAllowedException(payload);
       case 408:
         throw new RequestTimeoutException(payload);
+      case 409:
+        throw new ConflictException(payload);
+      case 422:
+        throw new UnprocessableEntityException(payload);
+      case 423:
+        throw new LockoutException(payload);
+      case 429:
+        throw new TooManyRequestsException(payload);
       case 500:
         throw new InternalServerErrorException(payload);
       case 502:
