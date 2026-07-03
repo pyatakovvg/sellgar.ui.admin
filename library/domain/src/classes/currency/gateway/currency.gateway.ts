@@ -10,7 +10,7 @@ import { UpdateCurrencyDto } from './dto/update-currency.dto.ts';
 
 import { CurrencyGatewayInterface } from './currency-gateway.interface.ts';
 
-import { CurrencyEntity, CurrencyResultEntity } from '../currency.entity.ts';
+import { CurrencyEntity, CurrencyResultEntity } from '../domain/currency.entity.ts';
 
 @injectable()
 export class CurrencyGateway implements CurrencyGatewayInterface {

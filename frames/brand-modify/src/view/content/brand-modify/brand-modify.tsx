@@ -1,23 +1,24 @@
-import { BrandEntity } from '@library/domain';
-import { useLoaderData, useSubmit } from '@tiyn/app';
+import * as AppRuntime from '@tiyn/app';
 
 import React from 'react';
-import { FormProvider, type Resolver, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as RHF from 'react-hook-form';
+import * as YR from '@hookform/resolvers/yup';
 
 import { BrandModifyControllerInterface } from '../../../classes/controller/brand-modify-controller.interface.ts';
+
 import { BRAND_MODIFY_FORM_ID } from '../../../constants';
 
+import * as FS from './form.schema.ts';
+
 import { Fields } from './fields';
-import { schema, type IFormData } from './form.schema.ts';
 
 import s from './default.module.scss';
 
 export const BrandModify: React.FC = () => {
-  const data = useLoaderData(BrandModifyControllerInterface) as BrandEntity | undefined;
-  const submit = useSubmit(BrandModifyControllerInterface);
+  const data = AppRuntime.useLoaderData(BrandModifyControllerInterface);
+  const submit = AppRuntime.useSubmit(BrandModifyControllerInterface);
 
-  const methods = useForm<IFormData>({
+  const methods = RHF.useForm<FS.IFormData>({
     mode: 'onChange',
     defaultValues: {
       code: data?.code ?? '',
@@ -25,7 +26,7 @@ export const BrandModify: React.FC = () => {
       description: data?.description ?? '',
       image: data?.image ?? null,
     },
-    resolver: yupResolver(schema) as Resolver<IFormData>,
+    resolver: YR.yupResolver(FS.schema),
   });
 
   const handleSubmit = methods.handleSubmit(async (values) => {
@@ -50,10 +51,10 @@ export const BrandModify: React.FC = () => {
   });
 
   return (
-    <FormProvider {...methods}>
+    <RHF.FormProvider {...methods}>
       <form id={BRAND_MODIFY_FORM_ID} className={s.wrapper} onSubmit={handleSubmit}>
         <Fields inProcess={submit.inProcess} />
       </form>
-    </FormProvider>
+    </RHF.FormProvider>
   );
 };

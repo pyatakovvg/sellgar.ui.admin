@@ -8,7 +8,7 @@ import { CreateProductDto } from './dto/create-product.dto.ts';
 import { UpdateProductDto } from './dto/update-product.dto.ts';
 import { AddVariantImageDto } from './dto/add-variant-image.dto.ts';
 
-import { VariantEntity, ProductVariantResultEntity } from '../variant.entity.ts';
+import { VariantEntity, ProductVariantResultEntity } from '../domain/variant.entity.ts';
 
 @injectable()
 export class VariantGateway implements VariantGatewayInterface {

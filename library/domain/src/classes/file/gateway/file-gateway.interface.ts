@@ -1,6 +1,6 @@
 import { GetAllFileFilterDto } from './dto/get-all-file-filter.dto.ts';
 
-import { FileEntity, FileResultEntity } from '../file.entity.ts';
+import { FileEntity, FileResultEntity } from '../domain/file.entity.ts';
 
 export abstract class FileGatewayInterface {
   abstract findAll(filter: GetAllFileFilterDto): Promise<FileResultEntity>;

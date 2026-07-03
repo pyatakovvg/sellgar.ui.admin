@@ -5,7 +5,7 @@ import { plainToInstance } from 'class-transformer';
 import { ConfigInterface } from '../../../helpers/config';
 import { HttpClientInterface } from '../../../helpers/http-client';
 
-import { ProfileEntity } from '../profile.entity.ts';
+import { ProfileEntity } from '../domain/profile.entity.ts';
 
 import { ProfileGatewayInterface } from './profile-gateway.interface.ts';
 

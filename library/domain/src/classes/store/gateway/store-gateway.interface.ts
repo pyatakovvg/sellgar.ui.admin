@@ -6,7 +6,7 @@ import { StoreProductQueryDto } from './dto/store-product-query.dto.ts';
 import { UpdateStoreProductDto } from './dto/update-store-product.dto.ts';
 import { WriteOffOfferInventoryDto } from './dto/write-off-offer-inventory.dto.ts';
 
-import { StoreOfferInventoryEntity, StoreProductEntity, StoreProductResultEntity } from '../store.entity.ts';
+import { StoreOfferInventoryEntity, StoreProductEntity, StoreProductResultEntity } from '../domain/store.entity.ts';
 
 export abstract class StoreGatewayInterface {
   abstract findAll(query?: StoreProductQueryDto): Promise<StoreProductResultEntity>;

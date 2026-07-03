@@ -9,7 +9,7 @@ import { GetAllFileFilterDto } from './dto/get-all-file-filter.dto.ts';
 
 import { FileGatewayInterface } from './file-gateway.interface.ts';
 
-import { FileEntity, FileResultEntity } from '../file.entity.ts';
+import { FileEntity, FileResultEntity } from '../domain/file.entity.ts';
 
 @injectable()
 export class FileGateway implements FileGatewayInterface {

@@ -10,7 +10,7 @@ import { UpdateDto } from './dto/update.dto.ts';
 
 import { ShopGatewayInterface } from './shop-gateway.interface.ts';
 
-import { ShopEntity, ShopResultEntity } from '../shop.entity.ts';
+import { ShopEntity, ShopResultEntity } from '../domain/shop.entity.ts';
 
 import { logger } from '../../../decorators';
 

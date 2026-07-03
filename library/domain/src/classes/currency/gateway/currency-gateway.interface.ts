@@ -1,7 +1,7 @@
 import { CreateCurrencyDto } from './dto/create-currency.dto.ts';
 import { UpdateCurrencyDto } from './dto/update-currency.dto.ts';
 
-import { CurrencyEntity, CurrencyResultEntity } from '../currency.entity.ts';
+import { CurrencyEntity, CurrencyResultEntity } from '../domain/currency.entity.ts';
 
 export abstract class CurrencyGatewayInterface {
   abstract findAll(): Promise<CurrencyResultEntity>;

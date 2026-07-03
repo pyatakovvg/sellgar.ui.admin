@@ -5,7 +5,7 @@ import { HttpClientInterface } from '../../../helpers/http-client';
 
 import { PriceGatewayInterface } from './price-gateway.interface.ts';
 
-import { PriceEntity, PriceResultEntity } from '../price.entity.ts';
+import { PriceEntity, PriceResultEntity } from '../domain/price.entity.ts';
 
 import { CreatePriceDto } from './dto/create-price.dto.ts';
 

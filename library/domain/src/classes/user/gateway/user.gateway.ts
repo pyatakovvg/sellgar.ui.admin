@@ -5,7 +5,7 @@ import { plainToInstance } from 'class-transformer';
 import { ConfigInterface } from '../../../helpers/config';
 import { HttpClientInterface } from '../../../helpers/http-client';
 
-import { UserEntity, UserResultEntity } from '../user.entity.ts';
+import { UserEntity, UserResultEntity } from '../domain/user.entity.ts';
 
 import { FilterUserDto } from './dto/filter-user.dto.ts';
 import { CreateUserDto } from './dto/create-user.dto.ts';

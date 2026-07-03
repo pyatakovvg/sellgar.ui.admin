@@ -1,10 +1,8 @@
-export { UnitEntity, UnitResultEntity } from './unit.entity.ts';
+export { UnitEntity, UnitResultEntity } from './domain/unit.entity.ts';
 
-export { CreateUnitDto } from './service/dto/create-unit.dto.ts';
-export { UpdateUnitDto } from './service/dto/update-unit.dto.ts';
+export { CreateUnitDto } from './application/dto/create-unit.dto.ts';
+export { UpdateUnitDto } from './application/dto/update-unit.dto.ts';
 
-export { UnitGateway } from './gateway/unit.gateway.ts';
 export { UnitGatewayInterface } from './gateway/unit-gateway.interface.ts';
 
-export { UnitService } from './service/unit.service.ts';
-export { UnitServiceInterface } from './service/unit-service.interface.ts';
+export { UnitServiceInterface } from './application/unit-service.interface.ts';

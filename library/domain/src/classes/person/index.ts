@@ -1,1 +1,1 @@
-export { PersonEntity } from './person.entity.ts';
+export { PersonEntity } from './domain/person.entity.ts';

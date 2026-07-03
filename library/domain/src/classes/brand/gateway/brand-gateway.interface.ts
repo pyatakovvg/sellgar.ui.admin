@@ -1,7 +1,7 @@
 import { CreateBrandDto } from './dto/create-brand.dto.ts';
 import { UpdateBrandDto } from './dto/update-brand.dto.ts';
 
-import { BrandEntity, BrandResultEntity } from '../brand.entity.ts';
+import { BrandEntity, BrandResultEntity } from '../domain/brand.entity.ts';
 
 export abstract class BrandGatewayInterface {
   abstract findAll(): Promise<BrandResultEntity>;

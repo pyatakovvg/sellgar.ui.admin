@@ -1,7 +1,5 @@
-export { VariantEntity, ProductVariantResultEntity } from './variant.entity.ts';
+export { VariantEntity, ProductVariantResultEntity } from './domain/variant.entity.ts';
 
-export { VariantGateway } from './gateway/variant.gateway.ts';
 export { VariantGatewayInterface } from './gateway/variant-gateway.interface.ts';
 
-export { VariantService } from './service/variant.service.ts';
-export { VariantServiceInterface } from './service/variant-service.interface.ts';
+export { VariantServiceInterface } from './application/variant-service.interface.ts';

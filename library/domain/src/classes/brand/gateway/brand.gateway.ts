@@ -10,7 +10,7 @@ import { UpdateBrandDto } from './dto/update-brand.dto.ts';
 
 import { type BrandGatewayInterface } from './brand-gateway.interface.ts';
 
-import { BrandEntity, BrandResultEntity } from '../brand.entity.ts';
+import { BrandEntity, BrandResultEntity } from '../domain/brand.entity.ts';
 
 @injectable()
 export class BrandGateway implements BrandGatewayInterface {

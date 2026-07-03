@@ -1,7 +1,7 @@
 import { CreateDto } from './dto/create.dto.ts';
 import { UpdateDto } from './dto/update.dto.ts';
 
-import { ShopEntity, ShopResultEntity } from '../shop.entity.ts';
+import { ShopEntity, ShopResultEntity } from '../domain/shop.entity.ts';
 
 export abstract class ShopGatewayInterface {
   abstract findAll(): Promise<ShopResultEntity>;

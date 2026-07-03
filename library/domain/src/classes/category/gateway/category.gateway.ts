@@ -10,7 +10,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto.ts';
 
 import { CategoryGatewayInterface } from './category-gateway.interface.ts';
 
-import { CategoryEntity, CategoryResultEntity } from '../category.entity.ts';
+import { CategoryEntity, CategoryResultEntity } from '../domain/category.entity.ts';
 
 @injectable()
 export class CategoryGateway implements CategoryGatewayInterface {

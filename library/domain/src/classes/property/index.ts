@@ -1,10 +1,8 @@
-export { PropertyEntity, PropertyResultEntity } from './property.entity.ts';
+export { PropertyEntity, PropertyResultEntity } from './domain/property.entity.ts';
 
-export { CreatePropertyDto } from './service/dto/create-property.dto.ts';
-export { UpdatePropertyDto } from './service/dto/update-property.dto.ts';
+export { CreatePropertyDto } from './application/dto/create-property.dto.ts';
+export { UpdatePropertyDto } from './application/dto/update-property.dto.ts';
 
-export { PropertyGateway } from './gateway/property.gateway.ts';
 export { PropertyGatewayInterface } from './gateway/property-gateway.interface.ts';
 
-export { PropertyService } from './service/property.service.ts';
-export { PropertyServiceInterface } from './service/property-service.interface.ts';
+export { PropertyServiceInterface } from './application/property-service.interface.ts';

@@ -10,7 +10,7 @@ import { UpdateProductDto } from './dto/update-product.dto.ts';
 
 import { ProductGatewayInterface } from './product-gateway.interface.ts';
 
-import { ProductEntity, ProductResultEntity } from '../product.entity.ts';
+import { ProductEntity, ProductResultEntity } from '../domain/product.entity.ts';
 
 import { logger } from '../../../decorators';
 
