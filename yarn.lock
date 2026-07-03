@@ -1361,7 +1361,7 @@ __metadata:
     "@page/store": "npm:0.0.1"
     "@page/units": "npm:0.0.1"
     "@tiyn/app": "npm:0.0.1"
-    "@types/node": "npm:26.0.1"
+    "@types/node": "npm:26.1.0"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
     "@typescript-eslint/eslint-plugin": "npm:8.62.1"
@@ -1379,7 +1379,7 @@ __metadata:
     rollup-plugin-visualizer: "npm:7.0.1"
     sass: "npm:1.101.0"
     typescript: "npm:6.0.3"
-    vite: "npm:8.1.2"
+    vite: "npm:8.1.3"
     vite-plugin-pwa: "npm:1.3.0"
     vite-tsconfig-paths: "npm:6.1.1"
     workbox-core: "npm:7.4.1"
@@ -1907,7 +1907,7 @@ __metadata:
     "@hookform/resolvers": "npm:5.4.0"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -1929,7 +1929,7 @@ __metadata:
     "@hookform/resolvers": "npm:5.4.0"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -1950,7 +1950,7 @@ __metadata:
     "@hookform/resolvers": "npm:5.4.0"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -1971,7 +1971,7 @@ __metadata:
     "@hookform/resolvers": "npm:5.4.0"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -1992,7 +1992,7 @@ __metadata:
     "@hookform/resolvers": "npm:5.4.0"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -2014,7 +2014,7 @@ __metadata:
     "@hookform/resolvers": "npm:5.4.0"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -2035,7 +2035,7 @@ __metadata:
     "@hookform/resolvers": "npm:5.4.0"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -2056,7 +2056,7 @@ __metadata:
     "@hookform/resolvers": "npm:5.4.0"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -2681,7 +2681,7 @@ __metadata:
   resolution: "@layout/base@workspace:layouts/base"
   dependencies:
     "@library/design": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
     "@types/reflect-metadata": "npm:0.1.0"
@@ -2697,7 +2697,7 @@ __metadata:
   resolution: "@layout/main@workspace:layouts/main"
   dependencies:
     "@library/design": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -2714,7 +2714,7 @@ __metadata:
   resolution: "@layout/navigate@workspace:layouts/navigate"
   dependencies:
     "@library/design": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
     "@types/reflect-metadata": "npm:0.1.0"
@@ -2889,7 +2889,7 @@ __metadata:
     "@frame/brand-modify": "npm:0.0.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -2907,7 +2907,7 @@ __metadata:
     "@frame/category-modify": "npm:0.0.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -2950,8 +2950,8 @@ __metadata:
     "@types/react-dom": "npm:19.2.3"
     classnames: "npm:2.5.1"
     date-fns: "npm:4.4.0"
-    framer-motion: "npm:12.42.1"
-    motion: "npm:12.42.1"
+    framer-motion: "npm:12.42.2"
+    motion: "npm:12.42.2"
     react: "npm:19.2.7"
     react-dom: "npm:19.2.7"
     react-hook-form: "npm:7.80.0"
@@ -2984,7 +2984,7 @@ __metadata:
     "@frame/property-modify": "npm:0.0.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -3002,7 +3002,7 @@ __metadata:
     "@frame/shop-modify": "npm:0.0.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -3019,7 +3019,7 @@ __metadata:
   dependencies:
     "@hookform/resolvers": "npm:5.4.0"
     "@library/push": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -3040,7 +3040,7 @@ __metadata:
     "@frame/store-modify": "npm:0.0.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -3058,7 +3058,7 @@ __metadata:
     "@frame/unit-modify": "npm:0.0.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -3776,9 +3776,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sellgar/kit@npm:0.0.188":
-  version: 0.0.188
-  resolution: "@sellgar/kit@npm:0.0.188"
+"@sellgar/kit@npm:0.0.190":
+  version: 0.0.190
+  resolution: "@sellgar/kit@npm:0.0.190"
   dependencies:
     "@floating-ui/dom": "npm:1.7.6"
     "@floating-ui/react": "npm:0.27.19"
@@ -3797,7 +3797,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/8b37709cd21add95c873a8c9dc29ae5a3cf89cf33f977dc46f8d4c9c78580e98f37790730993c21f3cfc94198ad6e9f90a39c1faee5b45aff46644bb7a05bbf4
+  checksum: 10/c1f79251824b4e3f91346e9d2dff775508fee4d23ddbd31d8a9bb30879be443695e4687e24d81afaf2c014fa3bf23841397ebcab3304eac391867956ae10505f
   languageName: node
   linkType: hard
 
@@ -4500,12 +4500,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:26.0.1":
-  version: 26.0.1
-  resolution: "@types/node@npm:26.0.1"
+"@types/node@npm:26.1.0":
+  version: 26.1.0
+  resolution: "@types/node@npm:26.1.0"
   dependencies:
     undici-types: "npm:~8.3.0"
-  checksum: 10/c312909c89c4f52291084d5b8b67c119f3c3adce9bdd5e57da74cb4d05059021b2b2b6b5eb52ccb086d66397b5793864e4d48b17d608ab42c27cfc193d337823
+  checksum: 10/fee720e8ddf8aa66a22bc5cf3209347f8dcc07cbf7475f966761684f04fb34b819739a311edbf87271d6c7f9f50b1f015d3ff9e36d67d04264aafe18ac9a3796
   languageName: node
   linkType: hard
 
@@ -4907,7 +4907,7 @@ __metadata:
   dependencies:
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
@@ -4923,7 +4923,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@widget/theme@workspace:widgets/theme"
   dependencies:
-    "@sellgar/kit": "npm:0.0.188"
+    "@sellgar/kit": "npm:0.0.190"
     "@types/numeral": "npm:2.0.5"
     moment: "npm:2.30.1"
     moment-timezone: "npm:0.6.2"
@@ -6471,11 +6471,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:12.42.1, framer-motion@npm:^12.42.1":
-  version: 12.42.1
-  resolution: "framer-motion@npm:12.42.1"
+"framer-motion@npm:12.42.2, framer-motion@npm:^12.42.2":
+  version: 12.42.2
+  resolution: "framer-motion@npm:12.42.2"
   dependencies:
-    motion-dom: "npm:^12.42.1"
+    motion-dom: "npm:^12.42.2"
     motion-utils: "npm:^12.39.0"
     tslib: "npm:^2.4.0"
   peerDependencies:
@@ -6489,7 +6489,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/c817da332213ce6cc4fa12bc6fd00dfa5687514ea0e0a3e523459089ab9d1dd702e0c471db24320e6e7e9fc7eca61980eb4f3556f30e7ee6421e29eca61ca334
+  checksum: 10/88be683cd62586ce7d5fc34f9054b4e89c313a5cd2729fac6d34eda7c7740ff5588afa103ecb8bfda580c09012fb1be65b655632304977fbe3e17009e3462205
   languageName: node
   linkType: hard
 
@@ -8087,12 +8087,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"motion-dom@npm:^12.42.1":
-  version: 12.42.1
-  resolution: "motion-dom@npm:12.42.1"
+"motion-dom@npm:^12.42.2":
+  version: 12.42.2
+  resolution: "motion-dom@npm:12.42.2"
   dependencies:
     motion-utils: "npm:^12.39.0"
-  checksum: 10/b606e11b3148a9b4ec626e0dbaa4f7aa642a602fab8ca081d8eccfc19edc58e83efef53b9c86c16c779dbb613e82be11cb74148aa9f1b4348c0650c495fa6da1
+  checksum: 10/f3ad9476f51aa35bae00b289e93ce9ddedd8cee0c988d12efd5cffd0c8227df20cc666116794034217827a8f717810b3567d034946fed2abac7c18f53522fe59
   languageName: node
   linkType: hard
 
@@ -8103,11 +8103,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"motion@npm:12.42.1":
-  version: 12.42.1
-  resolution: "motion@npm:12.42.1"
+"motion@npm:12.42.2":
+  version: 12.42.2
+  resolution: "motion@npm:12.42.2"
   dependencies:
-    framer-motion: "npm:^12.42.1"
+    framer-motion: "npm:^12.42.2"
     tslib: "npm:^2.4.0"
   peerDependencies:
     "@emotion/is-prop-valid": "*"
@@ -8120,7 +8120,7 @@ __metadata:
       optional: true
     react-dom:
       optional: true
-  checksum: 10/64cd65c1e90730e33a2d3be1983a94d64dbf3459ae4b6dc1026227b729ae1df5f8f93eb7f21b6e64024e62855212c8a4992a81baf60bd4c905d888a34b8f10f5
+  checksum: 10/2651bdb6700e982c29095df7a573180aba29cf6882fdbfc2a7cc2ab42c6ca01ce9eaa9d0612a486d546728aef654e9d67316f49a42cc2e331fce4692079be12e
   languageName: node
   linkType: hard
 
@@ -9292,7 +9292,7 @@ __metadata:
     "@testing-library/jest-dom": "npm:6.9.1"
     "@testing-library/react": "npm:16.3.2"
     "@testing-library/user-event": "npm:14.6.1"
-    "@types/node": "npm:26.0.1"
+    "@types/node": "npm:26.1.0"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
     "@types/reflect-metadata": "npm:0.1.0"
@@ -10656,9 +10656,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:8.1.2":
-  version: 8.1.2
-  resolution: "vite@npm:8.1.2"
+"vite@npm:8.1.3":
+  version: 8.1.3
+  resolution: "vite@npm:8.1.3"
   dependencies:
     fsevents: "npm:~2.3.3"
     lightningcss: "npm:^1.32.0"
@@ -10709,7 +10709,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10/0f19c652919459ee010f8795f757c2b86025658ca3c7f0b317d65198289bcb7a679187ac0340da533371960385a65f468bfe3ff52811835f015a87dad05562a6
+  checksum: 10/6dd12c59d2afb6204109d9cbbfe0706f1fb4c9dad5f88ecb43e328f94f8d071f7611f70c1d93f6e51222b451f8cdbbd9af141fae8a7c2562ceafef3800fcf45d
   languageName: node
   linkType: hard
 
