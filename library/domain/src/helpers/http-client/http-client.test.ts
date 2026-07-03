@@ -5,6 +5,7 @@ import { BadRequestException } from './exeptions/bad-request.exception.ts';
 import { ConflictException } from './exeptions/conflict.exception.ts';
 import { ForbiddenException } from './exeptions/forbidden.exception.ts';
 import { GatewayTimeoutException } from './exeptions/gateway-timeout.exception.ts';
+import { HttpException } from './exeptions/http.exception.ts';
 import { InternalServerErrorException } from './exeptions/internal-server-error.exception.ts';
 import { LockoutException } from './exeptions/lockout.exception.ts';
 import { MethodNotAllowedException } from './exeptions/method-not-allowed.exception.ts';
@@ -66,10 +67,17 @@ describe('HttpClient', () => {
     await expect(createClient().get('/status')).rejects.toBeInstanceOf(ExceptionConstructor);
   });
 
-  it('uses BadRequestException for unknown client errors', async () => {
+  it('preserves unknown response statuses with base HttpException', async () => {
     mockFetch(async () => jsonResponse({ message: 'Invalid' }, { status: 418 }));
 
-    await expect(createClient().get('/invalid')).rejects.toBeInstanceOf(BadRequestException);
+    await expect(createClient().get('/invalid')).rejects.toMatchObject({
+      message: 'Invalid',
+      getStatus: expect.any(Function),
+    });
+
+    await expect(createClient().get('/invalid')).rejects.toSatisfy((error: unknown) => {
+      return error instanceof HttpException && error.getStatus() === 418;
+    });
   });
 
   it('does not mask aborted requests as backend unavailable', async () => {

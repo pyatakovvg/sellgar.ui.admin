@@ -194,7 +194,7 @@ export class HttpClient implements HttpClientInterface {
       case 504:
         throw new GatewayTimeoutException(payload);
       default:
-        throw response.status >= 500 ? new InternalServerErrorException(payload) : new BadRequestException(payload);
+        throw new HttpException(payload ?? response.statusText, response.status);
     }
   }
 
