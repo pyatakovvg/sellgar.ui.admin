@@ -15,6 +15,7 @@ import { ServiceUnavailableException } from './exeptions/service-unavailable.exc
 import { TooManyRequestsException } from './exeptions/too-many-requests.exception.ts';
 import { UnauthorizedException } from './exeptions/unauthorized.exception.ts';
 import { UnprocessableEntityException } from './exeptions/unprocessable-entity.exception.ts';
+import { WafBlockedException } from './exeptions/waf-blocked.exception.ts';
 import { HttpClient } from './http-client.ts';
 
 import type { DeviceServiceInterface } from '../device';
@@ -54,6 +55,7 @@ describe('HttpClient', () => {
     [405, MethodNotAllowedException],
     [408, RequestTimeoutException],
     [409, ConflictException],
+    [418, WafBlockedException],
     [422, UnprocessableEntityException],
     [423, LockoutException],
     [429, TooManyRequestsException],
@@ -68,15 +70,15 @@ describe('HttpClient', () => {
   });
 
   it('preserves unknown response statuses with base HttpException', async () => {
-    mockFetch(async () => jsonResponse({ message: 'Invalid' }, { status: 418 }));
+    mockFetch(async () => jsonResponse({ message: 'Unavailable For Legal Reasons' }, { status: 451 }));
 
     await expect(createClient().get('/invalid')).rejects.toMatchObject({
-      message: 'Invalid',
+      message: 'Unavailable For Legal Reasons',
       getStatus: expect.any(Function),
     });
 
     await expect(createClient().get('/invalid')).rejects.toSatisfy((error: unknown) => {
-      return error instanceof HttpException && error.getStatus() === 418;
+      return error instanceof HttpException && error.getStatus() === 451;
     });
   });
 

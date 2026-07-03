@@ -15,6 +15,7 @@ import { ServiceUnavailableException } from './exeptions/service-unavailable.exc
 import { TooManyRequestsException } from './exeptions/too-many-requests.exception.ts';
 import { UnauthorizedException } from './exeptions/unauthorized.exception.ts';
 import { UnprocessableEntityException } from './exeptions/unprocessable-entity.exception.ts';
+import { WafBlockedException } from './exeptions/waf-blocked.exception.ts';
 
 import { DeviceServiceInterface } from '../device';
 
@@ -179,6 +180,8 @@ export class HttpClient implements HttpClientInterface {
         throw new RequestTimeoutException(payload);
       case 409:
         throw new ConflictException(payload);
+      case 418:
+        throw new WafBlockedException(payload);
       case 422:
         throw new UnprocessableEntityException(payload);
       case 423:

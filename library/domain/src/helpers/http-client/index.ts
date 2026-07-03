@@ -15,3 +15,4 @@ export { ServiceUnavailableException } from './exeptions/service-unavailable.exc
 export { MethodNotAllowedException } from './exeptions/method-not-allowed.exception.ts';
 export { TooManyRequestsException } from './exeptions/too-many-requests.exception.ts';
 export { UnprocessableEntityException } from './exeptions/unprocessable-entity.exception.ts';
+export { WafBlockedException } from './exeptions/waf-blocked.exception.ts';
