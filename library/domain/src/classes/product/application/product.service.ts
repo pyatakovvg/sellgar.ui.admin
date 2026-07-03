@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
@@ -8,9 +8,9 @@ import { UpdateProductDto } from './dto/update-product.dto.ts';
 import { ProductServiceInterface } from './product-service.interface.ts';
 import { ProductGatewayInterface } from '../gateway/product-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class ProductService implements ProductServiceInterface {
-  constructor(@inject(ProductGatewayInterface) private readonly productGateway: ProductGatewayInterface) {}
+  constructor(@Inject(ProductGatewayInterface) private readonly productGateway: ProductGatewayInterface) {}
 
   async findAll() {
     return await this.productGateway.findAll();

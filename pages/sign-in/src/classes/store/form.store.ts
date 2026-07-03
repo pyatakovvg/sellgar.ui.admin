@@ -1,16 +1,16 @@
 import { AuthServiceInterface, HttpException } from '@library/domain';
 
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { makeObservable, observable, action } from 'mobx';
 
 import { FormStoreInterface } from './form-store.interface.ts';
 
-@injectable()
+@Injectable()
 export class FormStore implements FormStoreInterface {
   @observable inProcess: boolean = false;
   @observable error: HttpException | null = null;
 
-  constructor(@inject(AuthServiceInterface) private readonly authService: AuthServiceInterface) {
+  constructor(@Inject(AuthServiceInterface) private readonly authService: AuthServiceInterface) {
     makeObservable(this);
   }
 

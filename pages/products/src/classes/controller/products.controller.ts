@@ -1,4 +1,4 @@
-import { ProductServiceInterface, logger } from '@library/domain';
+import { ProductServiceInterface } from '@library/domain';
 
 import { Controller, Inject } from '@tiyn/app';
 
@@ -8,7 +8,6 @@ import { ProductsControllerInterface } from './products-controller.interface.ts'
 export class ProductsController implements ProductsControllerInterface {
   constructor(@Inject(ProductServiceInterface) private readonly productService: ProductServiceInterface) {}
 
-  @logger()
   async loader() {
     return await this.productService.findAll();
   }

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 
 import { CreateUnitDto } from './dto/create-unit.dto.ts';
 import { UpdateUnitDto } from './dto/update-unit.dto.ts';
@@ -8,11 +8,11 @@ import { HttpClientInterface } from '../../../helpers/http-client';
 
 import { UnitGatewayInterface } from './unit-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class UnitGateway implements UnitGatewayInterface {
   constructor(
-    @inject(ConfigInterface) private readonly config: ConfigInterface,
-    @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ConfigInterface) private readonly config: ConfigInterface,
+    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
   update(uuid: string, updateUnitDto: UpdateUnitDto) {

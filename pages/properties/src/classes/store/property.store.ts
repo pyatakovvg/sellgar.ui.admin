@@ -1,11 +1,11 @@
 import { PropertyGroupEntity, MetaEntity } from '@library/domain';
 
-import { injectable } from 'inversify';
+import { Injectable } from '@tiyn/app';
 import { makeObservable, observable, action } from 'mobx';
 
 import { PropertyStoreInterface } from './property-store.interface.ts';
 
-@injectable()
+@Injectable()
 export class PropertyStore implements PropertyStoreInterface {
   @observable data: PropertyGroupEntity[] = [];
   @observable meta: MetaEntity;

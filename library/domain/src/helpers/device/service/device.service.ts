@@ -1,6 +1,6 @@
 import { uuid } from '@utils/generate';
 
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 
 import { StorageServiceInterface } from '../../storage';
 
@@ -10,9 +10,9 @@ interface IDeviceInfo {
   deviceId: string;
 }
 
-@injectable()
+@Injectable()
 export class DeviceService implements DeviceServiceInterface {
-  constructor(@inject(StorageServiceInterface) private storageService: StorageServiceInterface<IDeviceInfo>) {}
+  constructor(@Inject(StorageServiceInterface) private storageService: StorageServiceInterface<IDeviceInfo>) {}
 
   getUniqueId() {
     const deviceId = this.storageService.get('deviceId');

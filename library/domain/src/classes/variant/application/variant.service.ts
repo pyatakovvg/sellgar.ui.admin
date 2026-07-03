@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 
 import { VariantServiceInterface } from './variant-service.interface.ts';
 import { VariantGatewayInterface } from '../gateway/variant-gateway.interface.ts';
@@ -9,9 +9,9 @@ import { AddVariantImageDto } from '../gateway/dto/add-variant-image.dto.ts';
 
 import { VariantEntity, ProductVariantResultEntity } from '../domain/variant.entity.ts';
 
-@injectable()
+@Injectable()
 export class VariantService implements VariantServiceInterface {
-  constructor(@inject(VariantGatewayInterface) private readonly productGateway: VariantGatewayInterface) {}
+  constructor(@Inject(VariantGatewayInterface) private readonly productGateway: VariantGatewayInterface) {}
 
   async findAll(): Promise<ProductVariantResultEntity> {
     return await this.productGateway.findAll();

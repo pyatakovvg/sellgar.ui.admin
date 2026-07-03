@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -10,9 +10,9 @@ import { UpdateBrandDto } from './dto/update-brand.dto.ts';
 import { BrandServiceInterface } from './brand-service.interface.ts';
 import { BrandGatewayInterface } from '../gateway/brand-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class BrandService implements BrandServiceInterface {
-  constructor(@inject(BrandGatewayInterface) private readonly brandGateway: BrandGatewayInterface) {}
+  constructor(@Inject(BrandGatewayInterface) private readonly brandGateway: BrandGatewayInterface) {}
 
   async findAll(): Promise<BrandResultEntity> {
     return await this.brandGateway.findAll();

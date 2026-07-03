@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 
 import { ConfigInterface } from '../../../helpers/config';
 import { HttpClientInterface } from '../../../helpers/http-client';
@@ -8,11 +8,11 @@ import { UpdatePropertyGroupDto } from './dto/update-property-group.dto.ts';
 
 import { PropertyGroupGatewayInterface } from './property-group-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class PropertyGroupGateway implements PropertyGroupGatewayInterface {
   constructor(
-    @inject(ConfigInterface) private readonly config: ConfigInterface,
-    @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ConfigInterface) private readonly config: ConfigInterface,
+    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
   update(uuid: string, updatePropertyGroupDto: UpdatePropertyGroupDto) {

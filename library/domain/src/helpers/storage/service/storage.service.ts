@@ -1,8 +1,8 @@
-import { injectable } from 'inversify';
+import { Injectable } from '@tiyn/app';
 
 import { StorageServiceInterface, type TStorageMap } from './storage-service.interface.ts';
 
-@injectable()
+@Injectable()
 export class StorageService<T extends TStorageMap = {}> implements StorageServiceInterface<T> {
   get<K extends keyof T>(key: K): T[K] {
     return localStorage.getItem(key as string) as T[K];

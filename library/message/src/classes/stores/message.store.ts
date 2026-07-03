@@ -1,13 +1,13 @@
 import { uuid } from '@utils/generate';
 
-import { injectable } from 'inversify';
+import { Injectable } from '@tiyn/app';
 import { observable, action, makeAutoObservable } from 'mobx';
 
 import { MessageEntity } from './entity/message.entity.ts';
 
 export const MessageStoreSymbol = Symbol.for('MessageStore');
 
-@injectable()
+@Injectable()
 export class MessageStore {
   @observable messages: MessageEntity[] = [];
 

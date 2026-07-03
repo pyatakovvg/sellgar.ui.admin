@@ -1,9 +1,9 @@
-import { Container } from 'inversify';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
 
 import { PushService, PushServiceSymbol } from './services/push.service.ts';
 
-const container = new Container();
-
-container.bind<PushService>(PushServiceSymbol).to(PushService);
-
-export { container };
+export class PushBindings implements BindingModuleInterface {
+  register(registry: BindingRegistryInterface): void {
+    registry.bind<PushService>(PushServiceSymbol).to(PushService).inSingletonScope();
+  }
+}

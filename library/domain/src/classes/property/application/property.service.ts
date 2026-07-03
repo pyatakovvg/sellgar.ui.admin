@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -10,9 +10,9 @@ import { UpdatePropertyDto } from './dto/update-property.dto.ts';
 import { PropertyServiceInterface } from './property-service.interface.ts';
 import { PropertyGatewayInterface } from '../gateway/property-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class PropertyService implements PropertyServiceInterface {
-  constructor(@inject(PropertyGatewayInterface) private readonly propertyGateway: PropertyGatewayInterface) {}
+  constructor(@Inject(PropertyGatewayInterface) private readonly propertyGateway: PropertyGatewayInterface) {}
 
   async findAll(): Promise<PropertyResultEntity> {
     const result = await this.propertyGateway.findAll();

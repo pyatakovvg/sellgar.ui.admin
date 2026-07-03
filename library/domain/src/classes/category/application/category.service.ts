@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -10,9 +10,9 @@ import { CategoryGatewayInterface } from '../gateway/category-gateway.interface.
 
 import { CategoryEntity, CategoryResultEntity } from '../domain/category.entity.ts';
 
-@injectable()
+@Injectable()
 export class CategoryService implements CategoryServiceInterface {
-  constructor(@inject(CategoryGatewayInterface) private readonly categoryGateway: CategoryGatewayInterface) {}
+  constructor(@Inject(CategoryGatewayInterface) private readonly categoryGateway: CategoryGatewayInterface) {}
 
   async findAll(): Promise<CategoryResultEntity> {
     return await this.categoryGateway.findAll();

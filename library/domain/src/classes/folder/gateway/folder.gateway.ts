@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 
 import { ConfigInterface } from '../../../helpers/config';
 import { HttpClientInterface } from '../../../helpers/http-client';
@@ -7,11 +7,11 @@ import { GetAllFolderFilterDto } from './dto/get-all-folder-filter.dto.ts';
 
 import { FolderGatewayInterface } from './folder-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class FolderGateway implements FolderGatewayInterface {
   constructor(
-    @inject(ConfigInterface) private readonly config: ConfigInterface,
-    @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ConfigInterface) private readonly config: ConfigInterface,
+    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
   findByUuid(uuid: string) {

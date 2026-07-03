@@ -9,9 +9,9 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
+    "@tiyn/app": "0.0.1",
     "@utils/generate": "0.0.1",
     "classnames": "2.5.1",
-    "inversify": "8.1.1",
     "mobx": "6.16.1",
     "mobx-react": "9.2.2",
     "react": "19.2.7",

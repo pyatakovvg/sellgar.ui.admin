@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 
 import { CreatePropertyDto } from './dto/create-property.dto.ts';
 import { UpdatePropertyDto } from './dto/update-property.dto.ts';
@@ -8,11 +8,11 @@ import { HttpClientInterface } from '../../../helpers/http-client';
 
 import { type PropertyGatewayInterface } from './property-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class PropertyGateway implements PropertyGatewayInterface {
   constructor(
-    @inject(ConfigInterface) private readonly config: ConfigInterface,
-    @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ConfigInterface) private readonly config: ConfigInterface,
+    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
   update(uuid: string, updatePropertyDto: UpdatePropertyDto) {

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
@@ -11,11 +11,11 @@ import { FileGatewayInterface } from './file-gateway.interface.ts';
 
 import { FileEntity, FileResultEntity } from '../domain/file.entity.ts';
 
-@injectable()
+@Injectable()
 export class FileGateway implements FileGatewayInterface {
   constructor(
-    @inject(ConfigInterface) private readonly config: ConfigInterface,
-    @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ConfigInterface) private readonly config: ConfigInterface,
+    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
   async findAll(filter: GetAllFileFilterDto) {

@@ -1,12 +1,12 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 
 import { AuthGatewayInterface } from '../gateway/auth-gateway.interface.ts';
 
 import { type AuthServiceInterface } from './auth-service.interface.ts';
 
-@injectable()
+@Injectable()
 export class AuthService implements AuthServiceInterface {
-  constructor(@inject(AuthGatewayInterface) private readonly authGateway: AuthGatewayInterface) {}
+  constructor(@Inject(AuthGatewayInterface) private readonly authGateway: AuthGatewayInterface) {}
 
   async signOut() {
     return await this.authGateway.signOut();

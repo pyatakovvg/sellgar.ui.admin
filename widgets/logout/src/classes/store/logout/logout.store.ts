@@ -1,9 +1,9 @@
-import { injectable } from 'inversify';
+import { Injectable } from '@tiyn/app';
 import { makeAutoObservable, observable, computed, action } from 'mobx';
 
 import { LogoutStoreInterface } from './logout-store.interface.ts';
 
-@injectable()
+@Injectable()
 export class LogoutStore implements LogoutStoreInterface {
   @observable private _inProcess: boolean = false;
 

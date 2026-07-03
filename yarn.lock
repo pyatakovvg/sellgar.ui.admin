@@ -2751,8 +2751,6 @@ __metadata:
     "@types/reflect-metadata": "npm:0.1.0"
     class-transformer: "npm:0.5.1"
     class-validator: "npm:0.15.1"
-    inversify: "npm:8.1.1"
-    inversify-inject-decorators: "npm:3.1.0"
     lodash: "npm:4.18.1"
     reflect-metadata: "npm:0.2.2"
   languageName: unknown
@@ -2762,12 +2760,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@library/message@workspace:library/message"
   dependencies:
+    "@tiyn/app": "npm:0.0.1"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
     "@types/reflect-metadata": "npm:0.1.0"
     "@utils/generate": "npm:0.0.1"
     classnames: "npm:2.5.1"
-    inversify: "npm:8.1.1"
     mobx: "npm:6.16.1"
     mobx-react: "npm:9.2.2"
     react: "npm:19.2.7"
@@ -2780,9 +2778,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@library/push@workspace:library/push"
   dependencies:
+    "@tiyn/app": "npm:0.0.1"
     "@types/reflect-metadata": "npm:0.1.0"
     esbuild: "npm:0.28.1"
-    inversify: "npm:8.1.1"
     reflect-metadata: "npm:0.2.2"
   languageName: unknown
   linkType: soft
@@ -2933,8 +2931,6 @@ __metadata:
     class-validator: "npm:0.15.1"
     classnames: "npm:2.5.1"
     formik: "npm:2.4.9"
-    inversify: "npm:8.1.1"
-    inversify-inject-decorators: "npm:3.1.0"
     react: "npm:19.2.7"
     react-dom: "npm:19.2.7"
     react-router-dom: "npm:7.18.1"
@@ -7001,13 +6997,6 @@ __metadata:
     hasown: "npm:^2.0.2"
     side-channel: "npm:^1.1.0"
   checksum: 10/1d5219273a3dab61b165eddf358815eefc463207db33c20fcfca54717da02e3f492003757721f972fd0bf21e4b426cab389c5427b99ceea4b8b670dc88ee6d4a
-  languageName: node
-  linkType: hard
-
-"inversify-inject-decorators@npm:3.1.0":
-  version: 3.1.0
-  resolution: "inversify-inject-decorators@npm:3.1.0"
-  checksum: 10/26a6512a0c6681db74f0f20d53536dfb685e60c18ede3ca440859e688c2874ad7977d3db5dbf8e414d46033a98b46986a5b7d62d7dd4abddc0afa080d13f12e9
   languageName: node
   linkType: hard
 

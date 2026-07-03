@@ -1,10 +1,10 @@
-import { injectable } from 'inversify';
+import { Injectable } from '@tiyn/app';
 
 import { PushMessageDto } from './dto/push-message.dto.ts';
 
 export const PushServiceSymbol = Symbol.for('PushService');
 
-@injectable()
+@Injectable()
 export class PushService {
   private _instance: ServiceWorkerRegistration;
 

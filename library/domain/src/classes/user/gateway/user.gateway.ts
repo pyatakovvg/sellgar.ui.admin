@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -13,11 +13,11 @@ import { UpdateUserDto } from './dto/update-user.dto.ts';
 
 import { UserGatewayInterface } from './user-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class UserGateway implements UserGatewayInterface {
   constructor(
-    @inject(ConfigInterface) private readonly config: ConfigInterface,
-    @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ConfigInterface) private readonly config: ConfigInterface,
+    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
   async getAll(filter: FilterUserDto) {

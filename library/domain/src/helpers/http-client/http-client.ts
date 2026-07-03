@@ -1,4 +1,4 @@
-import { injectable, inject } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 
 import { ForbiddenException } from './exeptions/forbidden.exception.ts';
 import { UnauthorizedException } from './exeptions/unauthorized.exception.ts';
@@ -9,13 +9,11 @@ import { DeviceServiceInterface } from '../device';
 
 import { HttpClientInterface, type HttpRequestConfig } from './http-client.interface.ts';
 
-import { httpLogger } from '../../decorators';
-
-@injectable()
+@Injectable()
 export class HttpClient implements HttpClientInterface {
   private readonly _controller = new AbortController();
 
-  constructor(@inject(DeviceServiceInterface) private readonly deviceService: DeviceServiceInterface) {}
+  constructor(@Inject(DeviceServiceInterface) private readonly deviceService: DeviceServiceInterface) {}
 
   private async request<R = unknown, D = unknown>(
     method: string,
@@ -173,32 +171,26 @@ export class HttpClient implements HttpClientInterface {
     return String(data);
   }
 
-  @httpLogger()
   abort(reason?: any): void {
     this._controller.abort(reason);
   }
 
-  @httpLogger()
   get<T = any, R = T, D = any>(url: string, config?: HttpRequestConfig<D>): Promise<R> {
     return this.request<R, D>('GET', url, undefined, config);
   }
 
-  @httpLogger()
   post<T = any, R = T, D = any>(url: string, data?: D, config?: HttpRequestConfig<D>): Promise<R> {
     return this.request<R, D>('POST', url, data, config);
   }
 
-  @httpLogger()
   put<T = any, R = T, D = any>(url: string, data?: D, config?: HttpRequestConfig<D>): Promise<R> {
     return this.request<R, D>('PUT', url, data, config);
   }
 
-  @httpLogger()
   patch<T = any, R = T, D = any>(url: string, data?: D, config?: HttpRequestConfig<D>): Promise<R> {
     return this.request<R, D>('PATCH', url, data, config);
   }
 
-  @httpLogger()
   delete<T = any, R = T, D = any>(url: string, config?: HttpRequestConfig<D>): Promise<R> {
     return this.request<R, D>('DELETE', url, undefined, config);
   }

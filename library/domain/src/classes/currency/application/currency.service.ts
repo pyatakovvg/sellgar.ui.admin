@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -10,9 +10,9 @@ import { CurrencyGatewayInterface } from '../gateway/currency-gateway.interface.
 
 import { CurrencyEntity, CurrencyResultEntity } from '../domain/currency.entity.ts';
 
-@injectable()
+@Injectable()
 export class CurrencyService implements CurrencyServiceInterface {
-  constructor(@inject(CurrencyGatewayInterface) private readonly brandGateway: CurrencyGatewayInterface) {}
+  constructor(@Inject(CurrencyGatewayInterface) private readonly brandGateway: CurrencyGatewayInterface) {}
 
   async findAll(): Promise<CurrencyResultEntity> {
     return await this.brandGateway.findAll();

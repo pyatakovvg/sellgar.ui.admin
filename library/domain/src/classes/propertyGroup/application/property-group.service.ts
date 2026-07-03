@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -11,10 +11,10 @@ import { PropertyGroupGatewayInterface } from '../gateway/property-group-gateway
 
 import { type PropertyGroupServiceInterface } from './property-group-service.interface.ts';
 
-@injectable()
+@Injectable()
 export class PropertyGroupService implements PropertyGroupServiceInterface {
   constructor(
-    @inject(PropertyGroupGatewayInterface) private readonly propertyGroupGateway: PropertyGroupGatewayInterface,
+    @Inject(PropertyGroupGatewayInterface) private readonly propertyGroupGateway: PropertyGroupGatewayInterface,
   ) {}
 
   async findAll(): Promise<PropertyGroupResultEntity> {

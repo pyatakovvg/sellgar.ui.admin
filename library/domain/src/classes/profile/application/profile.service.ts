@@ -1,11 +1,11 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 
 import { ProfileServiceInterface } from './profile-service.interface.ts';
 import { ProfileGatewayInterface } from '../gateway/profile-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class ProfileService implements ProfileServiceInterface {
-  constructor(@inject(ProfileGatewayInterface) private readonly profileGateway: ProfileGatewayInterface) {}
+  constructor(@Inject(ProfileGatewayInterface) private readonly profileGateway: ProfileGatewayInterface) {}
 
   async get() {
     return await this.profileGateway.get();

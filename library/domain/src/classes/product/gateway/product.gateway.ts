@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
@@ -12,16 +12,13 @@ import { ProductGatewayInterface } from './product-gateway.interface.ts';
 
 import { ProductEntity, ProductResultEntity } from '../domain/product.entity.ts';
 
-import { logger } from '../../../decorators';
-
-@injectable()
+@Injectable()
 export class ProductGateway implements ProductGatewayInterface {
   constructor(
-    @inject(ConfigInterface) private readonly config: ConfigInterface,
-    @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ConfigInterface) private readonly config: ConfigInterface,
+    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
-  @logger()
   async findAll() {
     const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/products');
     const resultInstance = plainToInstance(ProductResultEntity, result);
@@ -31,7 +28,6 @@ export class ProductGateway implements ProductGatewayInterface {
     return resultInstance;
   }
 
-  @logger()
   async findByUuid(uuid: string) {
     const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/products/' + uuid);
     const resultInstance = plainToInstance(ProductEntity, result, {
@@ -43,7 +39,6 @@ export class ProductGateway implements ProductGatewayInterface {
     return resultInstance;
   }
 
-  @logger()
   async create(dto: CreateProductDto) {
     const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/products', this.createProductFormData(dto));
     const resultInstance = plainToInstance(ProductEntity, result);
@@ -53,7 +48,6 @@ export class ProductGateway implements ProductGatewayInterface {
     return resultInstance;
   }
 
-  @logger()
   async update(uuid: string, dto: UpdateProductDto) {
     const result = await this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/products/' + uuid, this.createProductFormData(dto));
     const resultInstance = plainToInstance(ProductEntity, result);

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -10,9 +10,9 @@ import { UpdateUnitDto } from './dto/update-unit.dto.ts';
 import { UnitServiceInterface } from './unit-service.interface.ts';
 import { UnitGatewayInterface } from '../gateway/unit-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class UnitService implements UnitServiceInterface {
-  constructor(@inject(UnitGatewayInterface) private readonly unitGateway: UnitGatewayInterface) {}
+  constructor(@Inject(UnitGatewayInterface) private readonly unitGateway: UnitGatewayInterface) {}
 
   async findAll(): Promise<UnitResultEntity> {
     const result = await this.unitGateway.findAll();

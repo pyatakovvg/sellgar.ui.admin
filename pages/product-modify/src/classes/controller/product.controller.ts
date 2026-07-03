@@ -1,4 +1,4 @@
-import { FileServiceInterface, logger, ProductEntity, ProductServiceInterface } from '@library/domain';
+import { FileServiceInterface, ProductEntity, ProductServiceInterface } from '@library/domain';
 
 import { Controller, type ControllerLoaderArgs, Inject } from '@tiyn/app';
 
@@ -16,7 +16,6 @@ export class ProductController implements ProductControllerInterface {
     @Inject(FileServiceInterface) private readonly fileService: FileServiceInterface,
   ) {}
 
-  @logger()
   async findByUuid(uuid?: string): Promise<ProductEntity | undefined> {
     if (uuid) {
       return await this.productService.findByUuid(uuid);

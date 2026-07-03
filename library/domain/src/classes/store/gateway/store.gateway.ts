@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { plainToInstance, type ClassConstructor } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
@@ -17,11 +17,11 @@ import { StoreOfferInventoryEntity, StoreProductEntity, StoreProductResultEntity
 
 import { StoreGatewayInterface } from './store-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class StoreGateway implements StoreGatewayInterface {
   constructor(
-    @inject(ConfigInterface) private readonly config: ConfigInterface,
-    @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ConfigInterface) private readonly config: ConfigInterface,
+    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
   async findAll(query?: StoreProductQueryDto): Promise<StoreProductResultEntity> {

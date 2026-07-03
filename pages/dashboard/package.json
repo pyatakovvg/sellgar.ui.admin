@@ -16,8 +16,6 @@
     "class-validator": "0.15.1",
     "classnames": "2.5.1",
     "formik": "2.4.9",
-    "inversify": "8.1.1",
-    "inversify-inject-decorators": "3.1.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "react-router-dom": "7.18.1",

@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 
 import { ConfigInterface } from '../../../helpers/config';
 import { HttpClientInterface } from '../../../helpers/http-client';
@@ -9,11 +9,11 @@ import { PriceEntity, PriceResultEntity } from '../domain/price.entity.ts';
 
 import { CreatePriceDto } from './dto/create-price.dto.ts';
 
-@injectable()
+@Injectable()
 export class PriceGateway implements PriceGatewayInterface {
   constructor(
-    @inject(ConfigInterface) private readonly config: ConfigInterface,
-    @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ConfigInterface) private readonly config: ConfigInterface,
+    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
   findAll(uuid: string): Promise<PriceResultEntity> {

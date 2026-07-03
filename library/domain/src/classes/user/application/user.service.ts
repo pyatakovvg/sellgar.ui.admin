@@ -1,5 +1,5 @@
 import { omitBy, isUndefined } from 'lodash';
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -10,9 +10,9 @@ import { UpdateUserDto } from '../gateway/dto/update-user.dto.ts';
 import { UserServiceInterface } from './user-service.interface.ts';
 import { UserGatewayInterface } from '../gateway/user-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class UserService implements UserServiceInterface {
-  constructor(@inject(UserGatewayInterface) private readonly userGateway: UserGatewayInterface) {}
+  constructor(@Inject(UserGatewayInterface) private readonly userGateway: UserGatewayInterface) {}
 
   getAll(filter: FilterUserDto) {
     const filterInstance = plainToInstance(FilterUserDto, filter, {

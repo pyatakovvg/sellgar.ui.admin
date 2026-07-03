@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { validateOrReject } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 
@@ -9,9 +9,9 @@ import { CreatePriceDto } from './dto/create-brand.dto.ts';
 import { PriceServiceInterface } from './price-service.interface.ts';
 import { PriceGatewayInterface } from '../gateway/price-gateway.interface.ts';
 
-@injectable()
+@Injectable()
 export class PriceService implements PriceServiceInterface {
-  constructor(@inject(PriceGatewayInterface) private readonly priceGateway: PriceGatewayInterface) {}
+  constructor(@Inject(PriceGatewayInterface) private readonly priceGateway: PriceGatewayInterface) {}
 
   async findAll(storeUuid: string): Promise<PriceResultEntity> {
     const result = await this.priceGateway.findAll(storeUuid);

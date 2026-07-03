@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { Inject, Injectable } from '@tiyn/app';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
@@ -12,11 +12,11 @@ import { CategoryGatewayInterface } from './category-gateway.interface.ts';
 
 import { CategoryEntity, CategoryResultEntity } from '../domain/category.entity.ts';
 
-@injectable()
+@Injectable()
 export class CategoryGateway implements CategoryGatewayInterface {
   constructor(
-    @inject(ConfigInterface) private readonly config: ConfigInterface,
-    @inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ConfigInterface) private readonly config: ConfigInterface,
+    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
   ) {}
 
   async update(uuid: string, updateCategoryDto: UpdateCategoryDto): Promise<CategoryEntity> {

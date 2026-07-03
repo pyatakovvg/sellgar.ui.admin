@@ -1,12 +1,12 @@
 import React from 'react';
+import { useDependency } from '@tiyn/app';
 
-import { container } from './classes/classes.di.ts';
 import { MessagePresenter, MessagePresenterSymbol } from './classes/presenters/message.presenter.ts';
 
 import { Provider } from './message.context.ts';
 
 export const MessageProvider: React.FC<React.PropsWithChildren> = (props) => {
-  return (
-    <Provider value={{ presenter: container.get<MessagePresenter>(MessagePresenterSymbol) }}>{props.children}</Provider>
-  );
+  const presenter = useDependency<MessagePresenter>(MessagePresenterSymbol);
+
+  return <Provider value={{ presenter }}>{props.children}</Provider>;
 };
