@@ -1,9 +1,16 @@
 import { Inject, Injectable } from '@tiyn/app';
 
+import { BadGatewayException } from './exeptions/bad-gateway.exception.ts';
+import { BadRequestException } from './exeptions/bad-request.exception.ts';
 import { ForbiddenException } from './exeptions/forbidden.exception.ts';
-import { UnauthorizedException } from './exeptions/unauthorized.exception.ts';
-import { ServiceUnavailableException } from './exeptions/service-unavailable.exception.ts';
+import { GatewayTimeoutException } from './exeptions/gateway-timeout.exception.ts';
+import { HttpException } from './exeptions/http.exception.ts';
 import { InternalServerErrorException } from './exeptions/internal-server-error.exception.ts';
+import { MethodNotAllowedException } from './exeptions/method-not-allowed.exception.ts';
+import { NotFoundException } from './exeptions/not-found.exception.ts';
+import { RequestTimeoutException } from './exeptions/request-timeout.exception.ts';
+import { ServiceUnavailableException } from './exeptions/service-unavailable.exception.ts';
+import { UnauthorizedException } from './exeptions/unauthorized.exception.ts';
 
 import { DeviceServiceInterface } from '../device';
 
@@ -11,7 +18,7 @@ import { HttpClientInterface, type HttpRequestConfig } from './http-client.inter
 
 @Injectable()
 export class HttpClient implements HttpClientInterface {
-  private readonly _controller = new AbortController();
+  private _controller = new AbortController();
 
   constructor(@Inject(DeviceServiceInterface) private readonly deviceService: DeviceServiceInterface) {}
 
@@ -23,13 +30,14 @@ export class HttpClient implements HttpClientInterface {
   ): Promise<R> {
     const requestUrl = this.createUrl(url, config.params);
     const headers = this.createHeaders(config.headers, data);
+    const signal = config.signal ?? this._controller.signal;
 
     try {
       const response = await fetch(requestUrl, {
         method,
         credentials: config.withCredentials === false ? 'same-origin' : 'include',
         headers,
-        signal: config.signal ?? this._controller.signal,
+        signal,
         body: this.createBody(data),
       });
 
@@ -41,10 +49,11 @@ export class HttpClient implements HttpClientInterface {
 
       return result as R;
     } catch (error) {
-      if (error instanceof ForbiddenException || error instanceof UnauthorizedException) {
+      if (error instanceof HttpException) {
         throw error;
       }
-      if (error instanceof ServiceUnavailableException || error instanceof InternalServerErrorException) {
+
+      if (signal.aborted) {
         throw error;
       }
 
@@ -66,6 +75,10 @@ export class HttpClient implements HttpClientInterface {
 
       if (Array.isArray(value)) {
         for (const item of value) {
+          if (this.shouldSkipParamValue(item)) {
+            continue;
+          }
+
           target.searchParams.append(key, String(item));
         }
         continue;
@@ -80,6 +93,10 @@ export class HttpClient implements HttpClientInterface {
     }
 
     return target.toString();
+  }
+
+  private shouldSkipParamValue(value: unknown): boolean {
+    return value === undefined || value === null || value === '';
   }
 
   private createHeaders<D>(headers: HeadersInit | undefined, data?: D): Headers {
@@ -144,14 +161,28 @@ export class HttpClient implements HttpClientInterface {
     switch (response.status) {
       case 0:
         throw new ServiceUnavailableException(payload);
+      case 400:
+        throw new BadRequestException(payload);
       case 401:
         throw new UnauthorizedException(payload);
       case 403:
         throw new ForbiddenException(payload);
+      case 404:
+        throw new NotFoundException(payload);
+      case 405:
+        throw new MethodNotAllowedException(payload);
+      case 408:
+        throw new RequestTimeoutException(payload);
+      case 500:
+        throw new InternalServerErrorException(payload);
+      case 502:
+        throw new BadGatewayException(payload);
       case 503:
         throw new ServiceUnavailableException(payload);
+      case 504:
+        throw new GatewayTimeoutException(payload);
       default:
-        throw new InternalServerErrorException(payload);
+        throw response.status >= 500 ? new InternalServerErrorException(payload) : new BadRequestException(payload);
     }
   }
 
@@ -173,6 +204,7 @@ export class HttpClient implements HttpClientInterface {
 
   abort(reason?: any): void {
     this._controller.abort(reason);
+    this._controller = new AbortController();
   }
 
   get<T = any, R = T, D = any>(url: string, config?: HttpRequestConfig<D>): Promise<R> {
