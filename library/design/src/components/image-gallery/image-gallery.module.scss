@@ -33,21 +33,6 @@
   }
 }
 
-.primary {
-  border-color: var(--border-base-brand);
-}
-
-.primaryMarker {
-  position: absolute;
-  top: var(--numbers-4);
-  left: var(--numbers-4);
-  width: var(--numbers-8);
-  height: var(--numbers-8);
-  border-radius: 999px;
-  background: var(--icon-accent-purple-accent);
-  box-shadow: 0 0 0 var(--numbers-2) var(--background-input-normal);
-}
-
 .remove {
   position: absolute;
   right: var(--numbers-1);

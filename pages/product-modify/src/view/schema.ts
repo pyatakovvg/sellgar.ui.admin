@@ -31,6 +31,7 @@ export const schema = yup.object({
               uuid: yup.string().optional(),
               localId: yup.string().optional(),
               imageUuid: yup.string().optional(),
+              order: yup.number().required(),
               file: yup.mixed<File>().optional(),
               fileName: yup.string().optional(),
               alt: yup.string().nullable().optional(),

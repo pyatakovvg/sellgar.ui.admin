@@ -50,6 +50,9 @@ class VariantImage {
   @IsOptional()
   imageUuid?: string;
 
+  @IsNumber()
+  order: number;
+
   file?: File;
 
   @IsString()

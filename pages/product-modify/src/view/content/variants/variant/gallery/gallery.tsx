@@ -36,17 +36,39 @@ export const Gallery: React.FC<IProps> = (props) => {
     }
   };
 
+  const handleItemClick = (id: string) => {
+    const index = fields.findIndex((field) => field.id === id);
+
+    if (index <= 0) {
+      return;
+    }
+
+    const currentImages = fields.map(({ id, ...image }) => image);
+    const [selectedImage] = currentImages.splice(index, 1);
+
+    if (!selectedImage) {
+      return;
+    }
+
+    replace(
+      [selectedImage, ...currentImages].map((image, order) => ({
+        ...image,
+        order,
+      })),
+    );
+  };
+
   return (
     <ImageGallery
-      items={fields.map((image, index) => ({
+      items={fields.map((image) => ({
         id: image.id,
         src: image.imageUuid ? controller.getFileImageUrl(image.imageUuid) : undefined,
         file: image.file,
         fileName: image.fileName,
-        primary: index === 0,
       }))}
       onSelect={handleFiles}
       onRemove={handleRemove}
+      onItemClick={handleItemClick}
     />
   );
 };

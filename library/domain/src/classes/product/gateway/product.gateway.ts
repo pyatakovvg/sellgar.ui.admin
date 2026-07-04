@@ -72,6 +72,7 @@ export class ProductGateway implements ProductGatewayInterface {
             return {
               localId,
               fileName: image.fileName ?? image.file.name,
+              order: image.order,
               alt: image.alt ?? null,
             };
           }
@@ -80,6 +81,7 @@ export class ProductGateway implements ProductGatewayInterface {
             uuid: image.uuid,
             imageUuid: image.imageUuid,
             fileName: image.fileName,
+            order: image.order,
             alt: image.alt ?? null,
           };
         }),

@@ -11,6 +11,7 @@ export interface ProductVariantImageFormData {
   uuid?: string;
   localId?: string;
   imageUuid?: string;
+  order: number;
   file?: File;
   fileName?: string;
   alt?: string | null;
@@ -70,9 +71,10 @@ export const toProductFormData = (product?: ProductEntity): ProductFormData => {
       value: property.value ?? '',
       order: property.order ?? order,
     })),
-    images: (variant.images ?? []).map((image) => ({
+    images: (variant.images ?? []).map((image, order) => ({
       uuid: image.uuid,
       imageUuid: image.imageUuid,
+      order: image.order ?? order,
       fileName: image.image?.fileName,
       alt: image.alt ?? null,
     })),
@@ -101,6 +103,10 @@ export const normalizeProductFormData = (product: ProductFormData): ProductFormD
   })),
   variants: product.variants.map((variant) => ({
     ...variant,
+    images: variant.images.map((image, order) => ({
+      ...image,
+      order,
+    })),
     properties: variant.properties.map((property, order) => ({
       ...property,
       order,
@@ -116,8 +122,9 @@ export const copyVariantFormData = (variant: ProductVariantFormData): ProductVar
     value: property.value,
     order,
   })),
-  images: variant.images.map((image) => ({
+  images: variant.images.map((image, order) => ({
     imageUuid: image.imageUuid,
+    order,
     file: image.file,
     localId: image.file ? globalThis.crypto.randomUUID() : undefined,
     fileName: image.fileName,

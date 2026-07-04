@@ -53,9 +53,12 @@ export class ProductController implements ProductControllerInterface {
   }
 
   addGalleryImages(currentImages: VariantImageFormData[], files: File[]): VariantImageFormData[] {
+    const startOrder = currentImages.length;
+
     return currentImages.concat(
-      files.map((file) => ({
+      files.map((file, index) => ({
         localId: globalThis.crypto.randomUUID(),
+        order: startOrder + index,
         file,
         fileName: file.name,
         alt: null,

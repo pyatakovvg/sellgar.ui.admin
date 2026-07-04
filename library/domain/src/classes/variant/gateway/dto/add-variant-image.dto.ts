@@ -1,7 +1,6 @@
 export class AddVariantImageDto {
   imageUuid: string;
   fileName?: string;
-  sortOrder?: number;
-  isPrimary?: boolean;
+  order?: number;
   alt?: string | null;
 }

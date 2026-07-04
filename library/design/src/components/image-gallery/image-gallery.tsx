@@ -10,7 +10,6 @@ export interface ImageGalleryItem {
   src?: string;
   file?: File;
   fileName?: string | null;
-  primary?: boolean;
 }
 
 interface ImageGalleryProps {
@@ -19,6 +18,7 @@ interface ImageGalleryProps {
   multiple?: boolean;
   onSelect: (files: File[]) => void;
   onRemove: (id: string) => void;
+  onItemClick?: (id: string) => void;
 }
 
 const Preview: React.FC<{ item: ImageGalleryItem }> = (props) => {
@@ -72,11 +72,32 @@ export const ImageGallery: React.FC<ImageGalleryProps> = (props) => {
     props.onRemove(id);
   };
 
+  const handleItemClick = (id: string) => {
+    props.onItemClick?.(id);
+  };
+
+  const handleImageKeyDown = (event: React.KeyboardEvent, id: string) => {
+    if (event.key !== 'Enter' && event.key !== ' ') {
+      return;
+    }
+
+    event.preventDefault();
+    handleItemClick(id);
+  };
+
   return (
     <div className={[s.wrapper, props.disabled ? s.disabled : undefined].filter(Boolean).join(' ')}>
       <div className={s.content}>
         {props.items.map((item) => (
-          <div key={item.id} className={[s.image, item.primary ? s.primary : undefined].filter(Boolean).join(' ')}>
+          <div
+            key={item.id}
+            className={s.image}
+            role={props.onItemClick ? 'button' : undefined}
+            tabIndex={props.onItemClick ? 0 : undefined}
+            aria-label={props.onItemClick ? 'Выбрать изображение' : undefined}
+            onClick={() => handleItemClick(item.id)}
+            onKeyDown={(event) => handleImageKeyDown(event, item.id)}
+          >
             <div className={s.remove}>
               <Button.Icon
                 type={'button'}
@@ -88,7 +109,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = (props) => {
                 onClick={(event) => handleRemove(event, item.id)}
               />
             </div>
-            {item.primary && <span className={s.primaryMarker} />}
             <Preview item={item} />
           </div>
         ))}
