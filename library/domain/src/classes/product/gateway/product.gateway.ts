@@ -63,7 +63,7 @@ export class ProductGateway implements ProductGatewayInterface {
       ...dto,
       variants: dto.variants.map((variant) => ({
         ...variant,
-        images: variant.images?.map((image) => {
+        images: variant.images?.map((image, order) => {
           if (image.file) {
             const localId = image.localId ?? globalThis.crypto.randomUUID();
 
@@ -72,7 +72,7 @@ export class ProductGateway implements ProductGatewayInterface {
             return {
               localId,
               fileName: image.fileName ?? image.file.name,
-              order: image.order,
+              order,
               alt: image.alt ?? null,
             };
           }
@@ -81,7 +81,7 @@ export class ProductGateway implements ProductGatewayInterface {
             uuid: image.uuid,
             imageUuid: image.imageUuid,
             fileName: image.fileName,
-            order: image.order,
+            order,
             alt: image.alt ?? null,
           };
         }),

@@ -1487,6 +1487,86 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dnd-kit/abstract@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "@dnd-kit/abstract@npm:0.5.0"
+  dependencies:
+    "@dnd-kit/geometry": "npm:^0.5.0"
+    "@dnd-kit/state": "npm:^0.5.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10/09fc675140d2123a05cb41c3aa3d5d6cae7ec392e8939904851fc6ebfba73a533c1bf1970021a6a3ea1aa8e4b94468d0740048e794e511fc5b877ce49db4ef02
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/collision@npm:0.5.0, @dnd-kit/collision@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "@dnd-kit/collision@npm:0.5.0"
+  dependencies:
+    "@dnd-kit/abstract": "npm:^0.5.0"
+    "@dnd-kit/geometry": "npm:^0.5.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10/11a2c97bc4c0f64de820fc95269fa692d4afd8c8918a81a3112c700a904e379c52597b576ab7540b342a854525b7cd86e4227d6347fd5582396bf0b9d22a31bc
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/dom@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "@dnd-kit/dom@npm:0.5.0"
+  dependencies:
+    "@dnd-kit/abstract": "npm:^0.5.0"
+    "@dnd-kit/collision": "npm:^0.5.0"
+    "@dnd-kit/geometry": "npm:^0.5.0"
+    "@dnd-kit/state": "npm:^0.5.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10/ea6774805fb3ebe4e94b2801132321f2f57a54fee7e0b4cd2157f2b3b867aa03400b2cddb4a5f8688860a58151394cd1b9d526176ef4f1f50391300ddd49eb46
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/geometry@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "@dnd-kit/geometry@npm:0.5.0"
+  dependencies:
+    "@dnd-kit/state": "npm:^0.5.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10/bb9627318b4a7718eff3cf762add78ffdf07650c06c55f2103650d3ea70487cf88d8d3cf6eed2f3ba1866653a9d98b1663c4689b48df435f76e26d6180ab406c
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/helpers@npm:0.5.0":
+  version: 0.5.0
+  resolution: "@dnd-kit/helpers@npm:0.5.0"
+  dependencies:
+    "@dnd-kit/abstract": "npm:^0.5.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10/ed4812a6483d1bd3a47e444c38289485f9e695c2b08ca04d2c2f89cc16eef9d3112d3fd81e405ef5b96da79fa23e6119f43f7b36662256fb4774e836d7b045b3
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/react@npm:0.5.0":
+  version: 0.5.0
+  resolution: "@dnd-kit/react@npm:0.5.0"
+  dependencies:
+    "@dnd-kit/abstract": "npm:^0.5.0"
+    "@dnd-kit/dom": "npm:^0.5.0"
+    "@dnd-kit/state": "npm:^0.5.0"
+    tslib: "npm:^2.6.2"
+  peerDependencies:
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  checksum: 10/7a69f66234ffa002f43151fc62070f599c4186816f7470a5fa5137b08679e1beab752801338ae4da5d110c322f7063e48b4ea400ecae6506c2fbf1fd62c5539f
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/state@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "@dnd-kit/state@npm:0.5.0"
+  dependencies:
+    "@preact/signals-core": "npm:^1.10.0"
+    tslib: "npm:^2.6.2"
+  checksum: 10/d4623a679b4cd1f4864d041447de0a8f8665c4541abc5734401d4969fb9e53aec59569aadcf7f43232d6621d5a8002974af9f21de982804dfa97e13ea192e3ad
+  languageName: node
+  linkType: hard
+
 "@emnapi/core@npm:1.10.0":
   version: 1.10.0
   resolution: "@emnapi/core@npm:1.10.0"
@@ -2730,6 +2810,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@library/design@workspace:library/design"
   dependencies:
+    "@dnd-kit/collision": "npm:0.5.0"
+    "@dnd-kit/helpers": "npm:0.5.0"
+    "@dnd-kit/react": "npm:0.5.0"
     "@types/react": "npm:19.2.17"
     "@types/react-dom": "npm:19.2.3"
     "@types/reflect-metadata": "npm:0.1.0"
@@ -3224,6 +3307,13 @@ __metadata:
   version: 1.0.0-next.29
   resolution: "@polka/url@npm:1.0.0-next.29"
   checksum: 10/69ca11ab15a4ffec7f0b07fcc4e1f01489b3d9683a7e1867758818386575c60c213401259ba3705b8a812228d17e2bfd18e6f021194d943fff4bca389c9d4f28
+  languageName: node
+  linkType: hard
+
+"@preact/signals-core@npm:^1.10.0":
+  version: 1.14.3
+  resolution: "@preact/signals-core@npm:1.14.3"
+  checksum: 10/20db2f1cc5678ef71c01e8f0844818d7ebfbc1061752d62297bcb99cde3c9b12b23eadaffd0274b24b663118e2f35167d06cc9a527a83323cc77f2296b5d9582
   languageName: node
   linkType: hard
 
@@ -10345,7 +10435,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.4.0":
+"tslib@npm:^2.0.0, tslib@npm:^2.4.0, tslib@npm:^2.6.2":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10/3e2e043d5c2316461cb54e5c7fe02c30ef6dccb3384717ca22ae5c6b5bc95232a6241df19c622d9c73b809bea33b187f6dbc73030963e29950c2141bc32a79f7

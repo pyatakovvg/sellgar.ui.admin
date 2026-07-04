@@ -14,9 +14,10 @@ interface IProps {
 export const Gallery: React.FC<IProps> = (props) => {
   const controller = useController(ProductControllerInterface);
   const { control } = ReactHookForm.useFormContext<IFormData>();
-  const { fields, remove, replace } = ReactHookForm.useFieldArray({
+  const fieldName = `variants.${props.index}.images` as const;
+  const { fields, remove, replace, move } = ReactHookForm.useFieldArray({
     control,
-    name: `variants.${props.index}.images`,
+    name: fieldName,
   });
 
   const handleFiles = (files: File[]) => {
@@ -36,26 +37,15 @@ export const Gallery: React.FC<IProps> = (props) => {
     }
   };
 
-  const handleItemClick = (id: string) => {
-    const index = fields.findIndex((field) => field.id === id);
+  const handleReorder = (event: { ids: string[]; sourceId: string }) => {
+    const oldIndex = fields.findIndex((item) => item.id === event.sourceId);
+    const newIndex = event.ids.findIndex((id) => id === event.sourceId);
 
-    if (index <= 0) {
+    if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) {
       return;
     }
 
-    const currentImages = fields.map(({ id, ...image }) => image);
-    const [selectedImage] = currentImages.splice(index, 1);
-
-    if (!selectedImage) {
-      return;
-    }
-
-    replace(
-      [selectedImage, ...currentImages].map((image, order) => ({
-        ...image,
-        order,
-      })),
-    );
+    move(oldIndex, newIndex);
   };
 
   return (
@@ -68,7 +58,7 @@ export const Gallery: React.FC<IProps> = (props) => {
       }))}
       onSelect={handleFiles}
       onRemove={handleRemove}
-      onItemClick={handleItemClick}
+      onReorder={handleReorder}
     />
   );
 };

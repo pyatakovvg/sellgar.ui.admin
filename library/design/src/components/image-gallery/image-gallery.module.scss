@@ -26,10 +26,40 @@
   overflow: hidden;
   border: var(--numbers-1) solid var(--border-base-divider);
   border-radius: var(--measurements-radius-md);
-  cursor: pointer;
+  transition: var(--measurements-transition);
 
   &:hover {
     border-color: var(--border-base-brand);
+  }
+}
+
+.dragging {
+  opacity: 0.64;
+}
+
+.dropTarget {
+  border-color: var(--border-base-brand);
+}
+
+.dragHandle {
+  position: absolute;
+  top: var(--numbers-1);
+  left: var(--numbers-1);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--numbers-24);
+  height: var(--numbers-24);
+  color: var(--icon-base-secondary);
+  font-size: var(--numbers-16);
+  background: var(--background-input-normal);
+  border: 0;
+  border-radius: var(--measurements-radius-md);
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
   }
 }
 
@@ -37,6 +67,7 @@
   position: absolute;
   right: var(--numbers-1);
   bottom: var(--numbers-1);
+  z-index: 1;
 }
 
 .img {
