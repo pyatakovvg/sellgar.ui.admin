@@ -1,11 +1,11 @@
 import { Field, Caption, Select, Input, Badge, Button, Icon } from '@sellgar/kit';
+import { useLoaderData } from '@tiyn/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
 import * as Motion from 'framer-motion';
 
-import { useProperties } from '../../../../../../hooks/properties.hook.ts';
-
+import { ProductFormOptionsControllerInterface } from '../../../../../../classes/controller/product-form-options-controller.interface.ts';
 import type { IFormData } from '../../../../../schema.ts';
 import s from './property.module.scss';
 
@@ -30,11 +30,6 @@ interface IProps {
   variantIndex?: number;
   onDelete(): void;
 }
-
-const useSelectedProperty = (propertyUuid?: string) => {
-  const properties = useProperties();
-  return React.useMemo(() => properties.find((item) => item.uuid === propertyUuid), [properties, propertyUuid]);
-};
 
 const getVariantProperties = (variants: VariantRows, variantIndex?: number): PropertyRows => {
   if (variantIndex === undefined) {
@@ -99,8 +94,8 @@ export const Property: React.FC<IProps> = (props) => {
   const variants = ReactHookForm.useWatch({ control, name: 'variants' }) ?? [];
   const location = { index: props.index, scope: props.scope, variantIndex: props.variantIndex };
   const currentPropertyUuid = getCurrentPropertyUuid(location, productProperties, variants);
-  const properties = useProperties();
-  const property = useSelectedProperty(currentPropertyUuid);
+  const { properties } = useLoaderData(ProductFormOptionsControllerInterface);
+  const property = React.useMemo(() => properties.find((item) => item.uuid === currentPropertyUuid), [properties, currentPropertyUuid]);
   const blockedPropertyUuids = getBlockedPropertyUuids(location, productProperties, variants, currentPropertyUuid);
   const options = properties.filter((item) => item.uuid === currentPropertyUuid || !blockedPropertyUuids.has(item.uuid));
 

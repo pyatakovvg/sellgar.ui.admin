@@ -21,8 +21,8 @@
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
-  width: var(--numbers-80);
-  height: var(--numbers-80);
+  width: var(--numbers-100);
+  height: var(--numbers-100);
   overflow: hidden;
   border: var(--numbers-1) solid var(--border-base-divider);
   border-radius: var(--measurements-radius-md);
@@ -72,8 +72,8 @@
 
 .img {
   flex: 0 0 auto;
-  width: var(--numbers-78);
-  height: var(--numbers-78);
+  width: var(--numbers-98);
+  height: var(--numbers-98);
 }
 
 .pending {
@@ -104,8 +104,8 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  width: var(--numbers-80);
-  height: var(--numbers-80);
+  width: var(--numbers-100);
+  height: var(--numbers-100);
   color: var(--icon-base-quaternary);
   font-size: var(--numbers-20);
   background: transparent;

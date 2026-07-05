@@ -1,22 +1,20 @@
-import { FileServiceInterface, ProductEntity, ProductServiceInterface } from '@library/domain';
+import { ProductEntity, ProductServiceInterface } from '@library/domain';
 
-import { Controller, type ControllerLoaderArgs, Inject } from '@tiyn/app';
+import { Controller, type ControllerActionArgs, type ControllerLoaderArgs, Inject, NavigateServiceInterface } from '@tiyn/app';
 
-import { ProductControllerInterface } from './product-controller.interface.ts';
+import { ProductActionPayload, ProductControllerInterface } from './product-controller.interface.ts';
 
 import { CreateProductDto } from './dto/create-product.dto.ts';
 import { UpdateProductDto } from './dto/update-product.dto.ts';
-
-type VariantImageFormData = NonNullable<CreateProductDto['variants'][number]['images']>[number];
 
 @Controller()
 export class ProductController implements ProductControllerInterface {
   constructor(
     @Inject(ProductServiceInterface) private readonly productService: ProductServiceInterface,
-    @Inject(FileServiceInterface) private readonly fileService: FileServiceInterface,
+    @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
   ) {}
 
-  async findByUuid(uuid?: string): Promise<ProductEntity | undefined> {
+  private async findByUuid(uuid?: string): Promise<ProductEntity | undefined> {
     if (uuid) {
       return await this.productService.findByUuid(uuid);
     }
@@ -24,7 +22,7 @@ export class ProductController implements ProductControllerInterface {
     return undefined;
   }
 
-  async create(dto: CreateProductDto) {
+  private async create(dto: CreateProductDto) {
     return await this.productService.create({
       name: dto.name,
       description: dto.description,
@@ -35,7 +33,7 @@ export class ProductController implements ProductControllerInterface {
     });
   }
 
-  async update(uuid: string, dto: UpdateProductDto) {
+  private async update(uuid: string, dto: UpdateProductDto) {
     return await this.productService.update(uuid, {
       uuid,
       version: dto.version,
@@ -48,22 +46,16 @@ export class ProductController implements ProductControllerInterface {
     });
   }
 
-  getFileImageUrl(fileUuid: string) {
-    return this.fileService.getPublicImageUrl(fileUuid);
-  }
+  async action(args: ControllerActionArgs<ProductActionPayload>) {
+    if ('uuid' in args.payload && args.payload.uuid) {
+      return await this.update(args.payload.uuid, args.payload);
+    }
 
-  addGalleryImages(currentImages: VariantImageFormData[], files: File[]): VariantImageFormData[] {
-    const startOrder = currentImages.length;
+    const result = await this.create(args.payload);
 
-    return currentImages.concat(
-      files.map((file, index) => ({
-        localId: globalThis.crypto.randomUUID(),
-        order: startOrder + index,
-        file,
-        fileName: file.name,
-        alt: null,
-      })),
-    );
+    await this.navigateService.to('/products/' + result.uuid);
+
+    return result;
   }
 
   async loader(args: ControllerLoaderArgs) {

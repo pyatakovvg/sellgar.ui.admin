@@ -1,18 +1,18 @@
 import { ImageGallery } from '@library/design';
-import { useController } from '@tiyn/app';
+import { useDependency } from '@tiyn/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
 
 import type { IFormData } from '../../../../schema.ts';
-import { ProductControllerInterface } from '../../../../../classes/controller/product-controller.interface.ts';
+import { ProductImageServiceInterface } from '../../../../../classes/product-image/product-image-service.interface.ts';
 
 interface IProps {
   index: number;
 }
 
 export const Gallery: React.FC<IProps> = (props) => {
-  const controller = useController(ProductControllerInterface);
+  const productImageService = useDependency(ProductImageServiceInterface);
   const { control } = ReactHookForm.useFormContext<IFormData>();
   const fieldName = `variants.${props.index}.images` as const;
   const { fields, remove, replace, move } = ReactHookForm.useFieldArray({
@@ -26,7 +26,7 @@ export const Gallery: React.FC<IProps> = (props) => {
     }
 
     const currentImages = fields.map(({ id, ...image }) => image);
-    replace(controller.addGalleryImages(currentImages, files));
+    replace(productImageService.addGalleryImages(currentImages, files));
   };
 
   const handleRemove = (id: string) => {
@@ -52,7 +52,7 @@ export const Gallery: React.FC<IProps> = (props) => {
     <ImageGallery
       items={fields.map((image) => ({
         id: image.id,
-        src: image.imageUuid ? controller.getFileImageUrl(image.imageUuid) : undefined,
+        src: image.imageUuid ? productImageService.getFileImageUrl(image.imageUuid) : undefined,
         file: image.file,
         fileName: image.fileName,
       }))}

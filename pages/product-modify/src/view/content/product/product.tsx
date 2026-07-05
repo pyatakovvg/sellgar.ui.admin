@@ -1,11 +1,11 @@
 import { CategoryEntity } from '@library/domain';
 import { Field, Label, Caption, Input, Select, Textarea, Typography } from '@sellgar/kit';
+import { useLoaderData } from '@tiyn/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
 
-import { useBrands } from '../../../hooks/brands.hook.ts';
-import { useCategories } from '../../../hooks/categories.hook.ts';
+import { ProductFormOptionsControllerInterface } from '../../../classes/controller/product-form-options-controller.interface.ts';
 import { Properties } from '../variants/variant/properties';
 
 import s from './product.module.scss';
@@ -27,9 +27,8 @@ const flattenCategories = (items: CategoryEntity[], level = 0): CategoryOption[]
 export const Product = () => {
   const { control } = ReactHookForm.useFormContext();
 
-  const brands = useBrands();
-  const categories = useCategories();
-  const categoryOptions = React.useMemo(() => flattenCategories(categories), [categories]);
+  const options = useLoaderData(ProductFormOptionsControllerInterface);
+  const categoryOptions = React.useMemo(() => flattenCategories(options.categories), [options.categories]);
 
   return (
     <div className={s.wrapper}>
@@ -112,7 +111,7 @@ export const Product = () => {
                     <Select
                       optionKey={'uuid'}
                       optionValue={'name'}
-                      options={brands}
+                      options={options.brands}
                       target={error?.message ? 'destructive' : undefined}
                       value={field.value}
                       onChange={(value) => field.onChange(value)}
