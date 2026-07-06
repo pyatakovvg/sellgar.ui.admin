@@ -24,6 +24,11 @@ export class ProductPropertyEntity {
   propertyUuid: string;
 
   @Expose()
+  @IsUUID()
+  @IsOptional()
+  optionUuid: string | null;
+
+  @Expose()
   @IsString()
   value: string;
 

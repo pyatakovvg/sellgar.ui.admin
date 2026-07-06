@@ -12,8 +12,10 @@ export const Header: React.FC = () => {
 
   return (
     <div className={s.wrapper}>
-      <Typography size={'body-l'}>
-        <p className={s.label}>{property ? 'Редактировать свойство' : 'Новое свойство'}</p>
+      <Typography size={'body-m'} weight={'medium'}>
+        <p className={s.label}>
+          {property ? 'Редактировать свойство' : 'Новое свойство'}
+        </p>
       </Typography>
       <Drawer.Close />
     </div>

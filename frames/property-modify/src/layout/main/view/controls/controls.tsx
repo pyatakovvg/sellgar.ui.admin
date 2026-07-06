@@ -1,23 +1,35 @@
-import { Button } from '@sellgar/kit';
 import { useController, useSubmit } from '@tiyn/app';
+import { Button } from '@sellgar/kit';
+import { ArrowLeftSLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 
-import { PropertyModifyControllerInterface } from '../../../../classes/controller/property-modify-controller.interface.ts';
 import { PROPERTY_MODIFY_FORM_ID } from '../../../../constants';
+
+import { PropertyModifyControllerInterface } from '../../../../classes/controller/property-modify-controller.interface.ts';
 
 import s from './default.module.scss';
 
 export const Controls: React.FC = () => {
-  const submit = useSubmit(PropertyModifyControllerInterface);
   const controller = useController(PropertyModifyControllerInterface);
+
+  const submit = useSubmit(PropertyModifyControllerInterface);
 
   return (
     <div className={s.wrapper}>
-      <Button type={'button'} disabled={submit.inProcess} size={'sm'} style={'secondary'} onClick={() => controller.toList()}>
-        Отмена
+      <Button
+        leadIcon={<ArrowLeftSLineIcon />}
+        style={'secondary'}
+        disabled={submit.inProcess}
+        onClick={() => controller.toList()}
+      >
+        Назад
       </Button>
-      <Button type={'submit'} form={PROPERTY_MODIFY_FORM_ID} disabled={submit.inProcess} size={'sm'} target={'info'}>
+      <Button
+        type={'submit'}
+        form={PROPERTY_MODIFY_FORM_ID}
+        inProcess={submit.inProcess}
+      >
         Сохранить
       </Button>
     </div>

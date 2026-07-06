@@ -6,7 +6,6 @@ import { BaseLayout } from '@layout/base';
 import { NavigateLayout } from '@layout/navigate';
 import { BrandModifyFrame } from '@frame/brand-modify';
 import { CategoryModifyFrame } from '@frame/category-modify';
-import { PropertyGroupModifyFrame } from '@frame/property-group-modify';
 import { PropertyModifyFrame } from '@frame/property-modify';
 import { ShopModifyFrame } from '@frame/shop-modify';
 import { StoreInventoryFrame } from '@frame/store-inventory';
@@ -128,7 +127,7 @@ export class AdminApplication extends Application {
               }),
               new Route({
                 path: '/properties',
-                frames: [PropertyModifyFrame, PropertyGroupModifyFrame],
+                frames: [PropertyModifyFrame],
                 load: () => import('@page/properties'),
               }),
             ],

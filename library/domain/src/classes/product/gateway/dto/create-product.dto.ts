@@ -9,6 +9,10 @@ class ProductPropertyDto {
   @IsUUID()
   propertyUuid: string;
 
+  @IsUUID()
+  @IsOptional()
+  optionUuid?: string | null;
+
   @IsString()
   value: string;
 }
@@ -56,6 +60,10 @@ class ProductVariantDto {
 
   @IsString()
   description: string;
+
+  @ValidateNested({ each: true })
+  @Type(() => ProductPropertyDto)
+  properties: ProductPropertyDto[];
 }
 
 export class CreateProductDto {

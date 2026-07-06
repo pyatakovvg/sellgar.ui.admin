@@ -9,7 +9,6 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
-    "@frame/property-group-modify": "0.0.1",
     "@frame/property-modify": "0.0.1",
     "@library/design": "0.0.1",
     "@library/domain": "0.0.1",

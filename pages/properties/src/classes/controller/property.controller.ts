@@ -1,4 +1,4 @@
-import { PropertyGroupServiceInterface } from '@library/domain';
+import { PropertyServiceInterface } from '@library/domain';
 
 import { Controller, Inject } from '@tiyn/app';
 
@@ -9,7 +9,7 @@ import { PropertyControllerInterface } from './property-controller.interface.ts'
 export class PropertyController implements PropertyControllerInterface {
   constructor(
     @Inject(PropertyStoreInterface) private readonly propertyStore: PropertyStoreInterface,
-    @Inject(PropertyGroupServiceInterface) private readonly propertyGroupService: PropertyGroupServiceInterface,
+    @Inject(PropertyServiceInterface) private readonly propertyService: PropertyServiceInterface,
   ) {}
 
   getData() {
@@ -22,7 +22,7 @@ export class PropertyController implements PropertyControllerInterface {
 
   async loader() {
     try {
-      const result = await this.propertyGroupService.findAll();
+      const result = await this.propertyService.findAll();
 
       this.propertyStore.setData(result.data);
       this.propertyStore.setMeta(result.meta);
@@ -30,7 +30,6 @@ export class PropertyController implements PropertyControllerInterface {
       return result.data;
     } catch (error) {
       console.log(111, error);
-    } finally {
     }
   }
 }

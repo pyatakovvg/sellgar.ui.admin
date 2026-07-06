@@ -39,7 +39,7 @@ Host не должен становиться местом для feature UI и�
 - `/brands` -> `@page/brands`, frame `@frame/brand-modify`;
 - `/categories` -> `@page/categories`, frame `@frame/category-modify`;
 - `/units` -> `@page/units`, frame `@frame/unit-modify`;
-- `/properties` -> `@page/properties`, frames `@frame/property-modify` и `@frame/property-group-modify`.
+- `/properties` -> `@page/properties`, frame `@frame/property-modify`.
 
 ## Границы пакетов
 

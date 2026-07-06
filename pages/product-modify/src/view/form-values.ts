@@ -3,6 +3,7 @@ import type { ProductEntity } from '@library/domain';
 export interface ProductPropertyFormData {
   uuid?: string;
   propertyUuid: string;
+  optionUuid?: string | null;
   value: string;
   order: number;
 }
@@ -36,6 +37,7 @@ export interface ProductFormData {
 
 export const createEmptyProperty = (): ProductPropertyFormData => ({
   propertyUuid: '',
+  optionUuid: null,
   value: '',
   order: 0,
 });
@@ -56,6 +58,27 @@ export const createEmptyProduct = (): ProductFormData => ({
   variants: [createEmptyVariant()],
 });
 
+const resolveOptionUuid = (property: NonNullable<ProductEntity['properties']>[number]): string | null => {
+  if (property.optionUuid) {
+    return property.optionUuid;
+  }
+
+  if (property.property?.type !== 'OPTION') {
+    return null;
+  }
+
+  const value = property.value?.trim().toLowerCase();
+
+  if (!value) {
+    return null;
+  }
+
+  return (
+    property.property.options?.find((option) => option.code.trim().toLowerCase() === value || option.name.trim().toLowerCase() === value)
+      ?.uuid ?? null
+  );
+};
+
 export const toProductFormData = (product?: ProductEntity): ProductFormData => {
   if (!product) {
     return createEmptyProduct();
@@ -68,6 +91,7 @@ export const toProductFormData = (product?: ProductEntity): ProductFormData => {
     properties: (variant.properties ?? []).map((property, order) => ({
       uuid: property.uuid,
       propertyUuid: property.propertyUuid,
+      optionUuid: resolveOptionUuid(property),
       value: property.value ?? '',
       order: property.order ?? order,
     })),
@@ -88,6 +112,7 @@ export const toProductFormData = (product?: ProductEntity): ProductFormData => {
     properties: (product.properties ?? []).map((property, order) => ({
       uuid: property.uuid,
       propertyUuid: property.propertyUuid,
+      optionUuid: resolveOptionUuid(property),
       value: property.value ?? '',
       order: property.order ?? order,
     })),
@@ -119,6 +144,7 @@ export const copyVariantFormData = (variant: ProductVariantFormData): ProductVar
   description: variant.description,
   properties: variant.properties.map((property, order) => ({
     propertyUuid: property.propertyUuid,
+    optionUuid: property.optionUuid ?? null,
     value: property.value,
     order,
   })),

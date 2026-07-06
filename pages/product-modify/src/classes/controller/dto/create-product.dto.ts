@@ -9,6 +9,10 @@ class Property {
   @IsUUID()
   propertyUuid: string;
 
+  @IsUUID()
+  @IsOptional()
+  optionUuid?: string | null;
+
   @IsString()
   value: string;
 

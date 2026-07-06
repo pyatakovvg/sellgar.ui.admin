@@ -1,9 +1,9 @@
-import { PropertyGroupEntity, MetaEntity } from '@library/domain';
+import { PropertyEntity, MetaEntity } from '@library/domain';
 
 export abstract class PropertyStoreInterface {
-  abstract data: PropertyGroupEntity[];
+  abstract data: PropertyEntity[];
   abstract meta: MetaEntity;
 
-  abstract setData(data: PropertyGroupEntity[]): void;
+  abstract setData(data: PropertyEntity[]): void;
   abstract setMeta(meta: MetaEntity): void;
 }

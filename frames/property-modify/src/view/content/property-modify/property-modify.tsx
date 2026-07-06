@@ -9,6 +9,7 @@ import { PropertyModifyControllerInterface } from '../../../classes/controller/p
 import { PROPERTY_MODIFY_FORM_ID } from '../../../constants';
 
 import { Fields } from './fields';
+import { createDefaultValues, createPropertyPayload } from './form-values.ts';
 import { schema, type IFormData } from './form.schema.ts';
 
 import s from './default.module.scss';
@@ -19,42 +20,16 @@ export const PropertyModify: React.FC = () => {
 
   const methods = useForm<IFormData>({
     mode: 'onChange',
-    defaultValues: {
-      groupUuid: property?.groupUuid ?? '',
-      unitUuid: property?.unitUuid ?? undefined,
-      code: property?.code ?? '',
-      name: property?.name ?? '',
-      type: property?.type ?? 'TEXT',
-      description: property?.description ?? '',
-    },
+    defaultValues: createDefaultValues(property),
     resolver: yupResolver(schema) as Resolver<IFormData>,
   });
 
+  React.useEffect(() => {
+    methods.reset(createDefaultValues(property));
+  }, [methods, property]);
+
   const handleSubmit = methods.handleSubmit(async (values) => {
-    const unitUuid = values.unitUuid || undefined;
-
-    if (property) {
-      await submit({
-        uuid: property.uuid,
-        version: property.version,
-        groupUuid: values.groupUuid,
-        unitUuid,
-        code: values.code,
-        name: values.name,
-        type: values.type,
-        description: values.description,
-      });
-      return;
-    }
-
-    await submit({
-      groupUuid: values.groupUuid,
-      unitUuid,
-      code: values.code,
-      name: values.name,
-      type: values.type,
-      description: values.description,
-    });
+    await submit(createPropertyPayload(values, property));
   });
 
   return (

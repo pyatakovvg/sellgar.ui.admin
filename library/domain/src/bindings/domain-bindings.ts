@@ -20,8 +20,6 @@ import {
   ProfileGatewayInterface,
   ProfileServiceInterface,
   PropertyGatewayInterface,
-  PropertyGroupGatewayInterface,
-  PropertyGroupServiceInterface,
   PropertyServiceInterface,
   ShopGatewayInterface,
   ShopServiceInterface,
@@ -52,8 +50,6 @@ import { ProductGateway } from '../classes/product/gateway/product.gateway.ts';
 import { ProductService } from '../classes/product/application/product.service.ts';
 import { ProfileGateway } from '../classes/profile/gateway/profile.gateway.ts';
 import { ProfileService } from '../classes/profile/application/profile.service.ts';
-import { PropertyGroupGateway } from '../classes/propertyGroup/gateway/property-group.gateway.ts';
-import { PropertyGroupService } from '../classes/propertyGroup/application/property-group.service.ts';
 import { PropertyGateway } from '../classes/property/gateway/property.gateway.ts';
 import { PropertyService } from '../classes/property/application/property.service.ts';
 import { ShopGateway } from '../classes/shop/gateway/shop.gateway.ts';
@@ -90,8 +86,6 @@ export class DomainBindings extends BindingModuleInterface {
     registry.bind(UnitServiceInterface).to(UnitService);
     registry.bind(PropertyGatewayInterface).to(PropertyGateway);
     registry.bind(PropertyServiceInterface).to(PropertyService);
-    registry.bind(PropertyGroupGatewayInterface).to(PropertyGroupGateway);
-    registry.bind(PropertyGroupServiceInterface).to(PropertyGroupService);
     registry.bind(FileGatewayInterface).to(FileGateway);
     registry.bind(FileServiceInterface).to(FileService);
     registry.bind(FolderGatewayInterface).to(FolderGateway);

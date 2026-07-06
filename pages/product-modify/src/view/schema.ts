@@ -15,6 +15,7 @@ export const schema = yup.object({
       yup.object({
         uuid: yup.string().optional(),
         propertyUuid: requiredUuidSelect(),
+        optionUuid: yup.string().uuid('Необходимо выбрать').nullable().optional(),
         value: yup.string().required('Необходимо заполнить'),
         order: yup.number().required(),
       }),
@@ -47,6 +48,7 @@ export const schema = yup.object({
             yup.object({
               uuid: yup.string().optional(),
               propertyUuid: requiredUuidSelect(),
+              optionUuid: yup.string().uuid('Необходимо выбрать').nullable().optional(),
               value: yup.string().required('Необходимо заполнить'),
               order: yup.number().required(),
             }),

@@ -31,6 +31,11 @@ export class VariantPropertyEntity {
   propertyUuid: string;
 
   @Expose()
+  @IsUUID()
+  @IsOptional()
+  optionUuid: string | null;
+
+  @Expose()
   @IsString()
   value: string;
 

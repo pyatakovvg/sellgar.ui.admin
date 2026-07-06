@@ -1,0 +1,133 @@
+.optionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--numbers-12);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-10);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-10);
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-12);
+  padding: var(--numbers-10);
+  border: var(--numbers-1) solid var(--color-border-primary);
+  border-radius: var(--numbers-8);
+}
+
+.optionMain {
+  display: grid;
+  grid-template-columns: var(--numbers-24) minmax(96px, 1fr) minmax(128px, 1.3fr) var(--numbers-32);
+  gap: var(--numbers-8);
+  align-items: start;
+}
+
+.optionDrag,
+.metadataDrag,
+.optionControl,
+.metadataControl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--numbers-40);
+}
+
+.optionDrag,
+.metadataDrag {
+  cursor: grab;
+}
+
+.optionDragIcon {
+  color: var(--color-text-secondary);
+}
+
+.optionControl,
+.metadataControl {
+  justify-content: flex-end;
+}
+
+.metadata {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-8);
+  padding-left: var(--numbers-32);
+}
+
+.metadataHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--numbers-8);
+}
+
+.metadataTitle {
+  color: var(--color-text-secondary);
+  font-size: var(--numbers-12);
+  line-height: var(--numbers-16);
+}
+
+.metadataList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-8);
+}
+
+.metadataRow {
+  display: grid;
+  grid-template-columns: var(--numbers-24) minmax(112px, 0.8fr) minmax(160px, 1.4fr) var(--numbers-32);
+  gap: var(--numbers-8);
+  align-items: start;
+}
+
+.metadataValue {
+  min-width: 0;
+}
+
+.colorValue {
+  display: grid;
+  grid-template-columns: var(--numbers-32) minmax(0, 1fr);
+  gap: var(--numbers-6);
+  align-items: center;
+}
+
+.colorInput {
+  width: var(--numbers-32);
+  height: var(--numbers-32);
+  padding: 0;
+  border: var(--numbers-1) solid var(--color-border-primary);
+  border-radius: var(--numbers-6);
+  background: transparent;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .optionMain,
+  .metadataRow {
+    grid-template-columns: var(--numbers-24) minmax(0, 1fr) var(--numbers-32);
+  }
+
+  .optionMain > :nth-child(3),
+  .metadataRow > :nth-child(3) {
+    grid-column: 2;
+  }
+
+  .metadataControl {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .metadata {
+    padding-left: 0;
+  }
+}

@@ -38,7 +38,7 @@
 - `/brands` - бренды, frame `brand`.
 - `/categories` - категории, frame `category`.
 - `/units` - единицы измерения, frame `unit`.
-- `/properties` - характеристики и группы характеристик, frames `property` и `property-group`.
+- `/properties` - характеристики, frame `property`.
 
 ## Скрипты
 

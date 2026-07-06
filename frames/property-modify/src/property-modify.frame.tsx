@@ -7,7 +7,7 @@ import { PropertyModifyFrameParams } from './classes/params';
 import { PROPERTY_MODIFY_FRAME_HASH_KEY } from './constants';
 import { MainLayout } from './layout/main';
 import { Exception, Fallback, FrameView } from './view';
-import { PropertyModifyFrameShell } from './shell.tsx';
+import { PropertyModifyFrameShell } from './shell';
 
 @UseBindings(PropertyModifyBindings)
 @Frame<PropertyModifyFrameParams>({

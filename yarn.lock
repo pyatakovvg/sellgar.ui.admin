@@ -1340,7 +1340,6 @@ __metadata:
   dependencies:
     "@frame/brand-modify": "npm:0.0.1"
     "@frame/category-modify": "npm:0.0.1"
-    "@frame/property-group-modify": "npm:0.0.1"
     "@frame/property-modify": "npm:0.0.1"
     "@frame/shop-modify": "npm:0.0.1"
     "@frame/store-inventory": "npm:0.0.1"
@@ -2005,27 +2004,6 @@ __metadata:
 "@frame/category-modify@npm:0.0.1, @frame/category-modify@workspace:frames/category-modify":
   version: 0.0.0-use.local
   resolution: "@frame/category-modify@workspace:frames/category-modify"
-  dependencies:
-    "@hookform/resolvers": "npm:5.4.0"
-    "@library/design": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@tiyn/app": "npm:0.0.1"
-    "@types/react": "npm:19.2.17"
-    "@types/react-dom": "npm:19.2.3"
-    class-transformer: "npm:0.5.1"
-    class-validator: "npm:0.15.1"
-    react: "npm:19.2.7"
-    react-dom: "npm:19.2.7"
-    react-hook-form: "npm:7.80.0"
-    react-router-dom: "npm:7.18.1"
-    yup: "npm:1.7.1"
-  languageName: unknown
-  linkType: soft
-
-"@frame/property-group-modify@npm:0.0.1, @frame/property-group-modify@workspace:frames/property-group-modify":
-  version: 0.0.0-use.local
-  resolution: "@frame/property-group-modify@workspace:frames/property-group-modify"
   dependencies:
     "@hookform/resolvers": "npm:5.4.0"
     "@library/design": "npm:0.0.1"
@@ -3063,7 +3041,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@page/properties@workspace:pages/properties"
   dependencies:
-    "@frame/property-group-modify": "npm:0.0.1"
     "@frame/property-modify": "npm:0.0.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"

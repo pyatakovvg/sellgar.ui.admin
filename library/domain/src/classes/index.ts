@@ -10,7 +10,6 @@ export * from './price';
 export * from './product';
 export * from './profile';
 export * from './property';
-export * from './propertyGroup';
 export * from './shop';
 export * from './store';
 export * from './unit';

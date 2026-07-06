@@ -13,7 +13,6 @@
   "dependencies": {
     "@frame/brand-modify": "0.0.1",
     "@frame/category-modify": "0.0.1",
-    "@frame/property-group-modify": "0.0.1",
     "@frame/property-modify": "0.0.1",
     "@frame/shop-modify": "0.0.1",
     "@frame/store-inventory": "0.0.1",

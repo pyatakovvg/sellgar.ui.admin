@@ -1,8 +1,8 @@
-import { MetaEntity, PropertyGroupEntity } from '@library/domain';
+import { MetaEntity, PropertyEntity } from '@library/domain';
 
 export abstract class PropertyControllerInterface {
-  abstract getData(): PropertyGroupEntity[];
+  abstract getData(): PropertyEntity[];
   abstract getMeta(): MetaEntity;
 
-  abstract loader(): Promise<PropertyGroupEntity[] | undefined>;
+  abstract loader(): Promise<PropertyEntity[] | undefined>;
 }

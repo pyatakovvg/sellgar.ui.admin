@@ -1,12 +1,61 @@
-import { IsOptional, IsString, IsUUID } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
-export class CreatePropertyDto {
+export class PropertyOptionMetadataDto {
   @IsUUID()
-  groupUuid: string;
+  @IsOptional()
+  uuid?: string;
+
+  @IsString()
+  valueType: 'TEXT' | 'COLOR' | 'IMAGE' | 'ICON';
+
+  @IsNumber()
+  @IsOptional()
+  sortOrder?: number;
+
+  @IsString()
+  @IsOptional()
+  textValue?: string | null;
+
+  @IsString()
+  @IsOptional()
+  colorValue?: string | null;
 
   @IsUUID()
   @IsOptional()
-  unitUuid?: string;
+  fileUuid?: string | null;
+
+  @IsString()
+  @IsOptional()
+  iconCode?: string | null;
+}
+
+export class PropertyOptionDto {
+  @IsUUID()
+  @IsOptional()
+  uuid?: string;
+
+  @IsString()
+  code: string;
+
+  @IsString()
+  name: string;
+
+  @IsNumber()
+  @IsOptional()
+  sortOrder?: number;
+
+  @ValidateNested({ each: true })
+  @Type(() => PropertyOptionMetadataDto)
+  @IsArray()
+  @IsOptional()
+  metadata?: PropertyOptionMetadataDto[];
+}
+
+export class CreatePropertyDto {
+  @IsUUID()
+  @IsOptional()
+  unitUuid?: string | null;
 
   @IsString()
   code: string;
@@ -15,8 +64,15 @@ export class CreatePropertyDto {
   name: string;
 
   @IsString()
-  type: string;
+  type: 'TEXT' | 'NUMBER' | 'BOOLEAN' | 'OPTION' | 'DATE';
 
   @IsString()
   description: string;
+
+  @ValidateNested({ each: true })
+  @Type(() => PropertyOptionDto)
+  @IsArray()
+  @IsOptional()
+  options?: PropertyOptionDto[];
+
 }
