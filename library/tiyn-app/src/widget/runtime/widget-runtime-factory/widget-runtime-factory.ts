@@ -1,8 +1,9 @@
 import { SessionRuntimeStateInterface } from '../../../application/session/session-runtime-state';
 import { Inject, Injectable, Optional } from '../../../di/injection/decorators';
-import { RuntimeProviderInstance } from '../../../runtime/provider/runtime-provider-instance';
-import type { RuntimeProviderContextInterface } from '../../../runtime/provider/runtime-provider';
-import type { RuntimeProviderResult } from '../../../runtime/provider/runtime-provider-instance';
+import type {
+  RuntimeProviderContextInterface,
+  RuntimeProviderResult,
+} from '../../../runtime/provider/runtime-provider';
 import type { RuntimeScope } from '../../../runtime/scope/base';
 
 import type { WidgetConstructor } from '../../declaration/widget';
@@ -28,6 +29,27 @@ export class WidgetRuntimeFactory extends WidgetRuntimeFactoryInterface {
     options: WidgetRuntimeFactoryOptions<TProps>,
   ): WidgetRuntime<TProps> {
     return new WidgetRuntime(options.ownerScope, widget, createWidgetRuntimeProps(options.props), this.session);
+  }
+
+  consumePrepared<TProps extends object>(
+    widget: WidgetConstructor,
+    options: WidgetRuntimeFactoryOptions<TProps>,
+  ): WidgetRuntime<TProps> | null {
+    const runtime = this.releasePrepared<TProps>(widget, options);
+
+    if (!runtime) {
+      return null;
+    }
+
+    if (runtime.getSnapshot().phase === 'disposed') {
+      return null;
+    }
+
+    if (options.props) {
+      runtime.setProps(options.props);
+    }
+
+    return runtime;
   }
 
   getPrepared<TProps extends object>(
@@ -109,11 +131,11 @@ export class WidgetRuntimeFactory extends WidgetRuntimeFactoryInterface {
       signal: context.signal,
     });
 
-    return new RuntimeProviderInstance(() => {
+    return () => {
       const preparedRuntime = this.releasePrepared<TProps>(widget, runtimeOptions);
 
       return preparedRuntime?.dispose();
-    });
+    };
   }
 
   releasePrepared<TProps extends object>(

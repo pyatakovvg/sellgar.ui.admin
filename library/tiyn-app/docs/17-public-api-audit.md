@@ -1,6 +1,6 @@
 # Аудит Публичного API `@tiyn/app`
 
-Дата сверки: 2026-06-26.
+Дата сверки: 2026-07-28.
 
 Документ фиксирует результат размещения документации в `library/tiyn-app/docs`
 и сверки с текущим пакетом `library/tiyn-app`.
@@ -32,12 +32,15 @@
 - Frames: `@Frame`, `FrameDefinition`, `FrameShellInterface`,
   `HashFrameSource`, `FrameServiceInterface`, unified controller hooks и
   runtime-local revalidate;
-- Runtime providers/scopes: `@Provider`, `RuntimeProviderInterface`,
-  `RuntimeScope`, application/module/widget/frame scopes;
+- Runtime providers: `@Provider`, `RuntimeProviderInterface`,
+  `@SingletonProvider`, `SingletonProviderInterface`,
+  `RuntimeProviderResult`, `RuntimeProviderCleanup`;
 - Runtime errors: `RuntimeErrorsInterface`, `useRuntimeErrors`,
   `useRuntimeError`, `useRuntimeOperation`;
 - Policies/guards: `Policy`, `PolicyInterface`, `PolicyDescriptorBuilder`,
   `Guard`, `GuardInterface`, `UseGuards`, `useGuard`, `Guarded`;
+- Reactive entities: `Entity`, `EntityConstructor`, `EntityIdentity`,
+  `EntityMetadata`, `EntityOptions`, `updateEntity`, `reactive`;
 - Встроенные features: notification и user-request.
 
 ## Граница Публичного API
@@ -55,11 +58,15 @@ import { Application, Module, Route, Router } from '@tiyn/app';
 - route object builder;
 - module export resolver;
 - runners и pipeline classes, которые не экспортируются из `src/index.ts`;
+- concrete runtime/state-machine classes, scope classes, bindings
+  implementations и metadata readers;
+- direct scope access, включая `useRuntimeScope`; React-код получает dependency
+  через `useDependency(...)`;
+- framework-owned adapter components, lifecycle helpers и default
+  implementations: `RevalidateBridge`, `renderView`,
+  `ApplicationInitializerGroup`, router continuation service и concrete
+  runtime reporters;
 - файлы под `types/`.
-
-Если внутренний класс экспортируется из `src/index.ts`, но используется только
-runtime-слоем, код фич всё равно должен предпочитать высокоуровневые
-declarations/hooks/services из документации.
 
 ## Карта Локальных AGENTS.md
 
@@ -83,6 +90,8 @@ declarations/hooks/services из документации.
 - `src/revalidate/AGENTS.md` - unified revalidate service, runtime-local
   implementation и bridge.
 - `src/react/AGENTS.md` - React Router adapter, exception/pending/view helpers.
+- `src/reactive/AGENTS.md` - reactive entity declarations, identity metadata и
+  observable runtime.
 - `src/features/AGENTS.md` - встроенные features.
 - `src/features/notification/AGENTS.md` - notification фича.
 - `src/features/user-request/AGENTS.md` - user request фича.

@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBrowserRouter, Outlet, RouterProvider, useLocation, useMatches, useNavigation } from 'react-router-dom';
 
+import { ApplicationComponentsProvider } from '../../../application/react/application-components-context';
 import { FrameLayer } from '../../../frame/react/frame-layer';
 import { renderLayouts } from '../../../layout/rendering/layout-renderer';
 import type { LayoutConstructor } from '../../../layout/declaration/layout';
@@ -91,18 +92,20 @@ export const createReactRouterView = (
     }, []);
 
     return (
-      <RuntimeScopeProvider scope={applicationScope}>
-        <SessionRevalidationBoundary
-          revalidate={() => browserRouter.revalidate()}
-          routerRuntime={routerRuntime}
-          session={session}
-        >
-          <RouterProvider router={browserRouter} />
-        </SessionRevalidationBoundary>
-        {features.map((feature, index) => {
-          return <React.Fragment key={index}>{feature.createLayer()}</React.Fragment>;
-        })}
-      </RuntimeScopeProvider>
+      <ApplicationComponentsProvider components={components}>
+        <RuntimeScopeProvider scope={applicationScope}>
+          <SessionRevalidationBoundary
+            revalidate={() => browserRouter.revalidate()}
+            routerRuntime={routerRuntime}
+            session={session}
+          >
+            <RouterProvider router={browserRouter} />
+          </SessionRevalidationBoundary>
+          {features.map((feature, index) => {
+            return <React.Fragment key={index}>{feature.createLayer()}</React.Fragment>;
+          })}
+        </RuntimeScopeProvider>
+      </ApplicationComponentsProvider>
     );
   };
 };

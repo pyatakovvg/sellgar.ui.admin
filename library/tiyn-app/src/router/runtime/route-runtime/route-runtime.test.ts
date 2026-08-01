@@ -32,8 +32,8 @@ import {
   Provider,
   RuntimeProviderInterface,
   type RuntimeProviderContextInterface,
+  type RuntimeProviderResult,
 } from '../../../runtime/provider/runtime-provider';
-import { RuntimeProviderInstance } from '../../../runtime/provider/runtime-provider-instance';
 import { Layout } from '../../../layout/declaration/layout';
 import type { LayoutConstructor } from '../../../layout/declaration/layout';
 import type { RouteDefaultTo } from '../../declaration/route';
@@ -50,6 +50,25 @@ import type { RoutePolicyDeclarations } from '../route-runtime-context';
 import { RouteRuntime } from './';
 
 describe('RouteRuntime', () => {
+  it('reports route provider setup errors with provider phase code', async () => {
+    const setupError = new Error('setup route-провайдера завершился с ошибкой.');
+    const fixture = createRouteRuntimeFixture({
+      routeProviderSetup: () => {
+        throw setupError;
+      },
+      routeProviders: [TestRouteProvider],
+    });
+
+    await expect(fixture.runtime.loader(createLoaderArgs())).rejects.toThrow(
+      'setup route-провайдера завершился с ошибкой.',
+    );
+
+    expect(fixture.reportError).toHaveBeenCalledWith({
+      code: 'route.provider_setup_failed',
+      error: setupError,
+    });
+  });
+
   it('reports module provider beforeRender errors with provider phase code', async () => {
     const beforeRenderError = new Error('beforeRender провайдера завершился с ошибкой.');
     const fixture = createRouteRuntimeFixture({
@@ -65,6 +84,24 @@ describe('RouteRuntime', () => {
     expect(fixture.reportError).toHaveBeenCalledWith({
       code: 'route.module.provider_before_render_failed',
       error: beforeRenderError,
+    });
+  });
+
+  it('reports module provider setup errors with provider phase code', async () => {
+    const setupError = new Error('setup module-провайдера завершился с ошибкой.');
+    const fixture = createRouteRuntimeFixture({
+      setup: () => {
+        throw setupError;
+      },
+    });
+
+    await expect(fixture.runtime.loader(createLoaderArgs())).rejects.toThrow(
+      'setup module-провайдера завершился с ошибкой.',
+    );
+
+    expect(fixture.reportError).toHaveBeenCalledWith({
+      code: 'route.module.provider_setup_failed',
+      error: setupError,
     });
   });
 
@@ -149,16 +186,16 @@ describe('RouteRuntime', () => {
   it('redirects default route before running route providers', async () => {
     const routeCanMatch = vi.fn<() => PolicyResult>(() => ({ type: 'fail' }));
     const routeProviderBeforeRender = vi.fn((context: RuntimeProviderContextInterface) => {
-      return new RuntimeProviderInstance(() => {
+      return () => {
         void context;
-      });
+      };
     });
     const fixture = createRouteRuntimeFixture({
       routeCanMatch,
       routeDefaultTo: '/terminals',
       routePathname: '/',
       routeProviderBeforeRender,
-      routeProviders: [TestRouteProviderInterface],
+      routeProviders: [TestRouteProvider],
     });
 
     await expect(fixture.runtime.loader(createLoaderArgs(''))).rejects.toMatchObject({
@@ -426,11 +463,11 @@ describe('RouteRuntime', () => {
       expect(context.phase).toBe('beforeRender');
       expect(context.scope).toBeInstanceOf(RouteScope);
 
-      return new RuntimeProviderInstance(routeProviderDispose);
+      return () => routeProviderDispose();
     });
     const fixture = createRouteRuntimeFixture({
       routeProviderBeforeRender,
-      routeProviders: [TestRouteProviderInterface],
+      routeProviders: [TestRouteProvider],
     });
 
     await fixture.runtime.loader(createLoaderArgs());
@@ -440,13 +477,53 @@ describe('RouteRuntime', () => {
     expect(routeProviderDispose).toHaveBeenCalledTimes(1);
   });
 
+  it('runs route provider setup once and disposes its cleanup at the route boundary', async () => {
+    const routeProviderDispose = vi.fn();
+    const routeProviderSetup = vi.fn((context: RuntimeProviderContextInterface) => {
+      expect(context.phase).toBe('setup');
+      expect(context.scope).toBeInstanceOf(RouteScope);
+
+      return () => routeProviderDispose();
+    });
+    const fixture = createRouteRuntimeFixture({
+      routeProviderSetup,
+      routeProviders: [TestRouteProvider],
+    });
+
+    await fixture.runtime.loader(createLoaderArgs());
+    await fixture.runtime.loader(createLoaderArgs());
+    await fixture.runtime.dispose();
+
+    expect(routeProviderSetup).toHaveBeenCalledTimes(1);
+    expect(routeProviderDispose).toHaveBeenCalledTimes(1);
+  });
+
+  it('creates a new route provider pipeline when the persistent route runtime is activated again', async () => {
+    const routeProviderDispose = vi.fn();
+    const routeProviderSetup = vi.fn(() => {
+      return () => routeProviderDispose();
+    });
+    const fixture = createRouteRuntimeFixture({
+      routeProviderSetup,
+      routeProviders: [TestRouteProvider],
+    });
+
+    await fixture.runtime.loader(createLoaderArgs());
+    await fixture.runtime.dispose();
+    await fixture.runtime.loader(createLoaderArgs());
+    await fixture.runtime.dispose();
+
+    expect(routeProviderSetup).toHaveBeenCalledTimes(2);
+    expect(routeProviderDispose).toHaveBeenCalledTimes(2);
+  });
+
   it('runs layout providers in route scope', async () => {
     const layoutProviderDispose = vi.fn();
     const layoutProviderBeforeRender = vi.fn((context: RuntimeProviderContextInterface) => {
       expect(context.phase).toBe('beforeRender');
       expect(context.scope).toBeInstanceOf(RouteScope);
 
-      return new RuntimeProviderInstance(layoutProviderDispose);
+      return () => layoutProviderDispose();
     });
 
     TestLayoutProvider.beforeRenderHandler = layoutProviderBeforeRender;
@@ -481,9 +558,13 @@ interface RouteRuntimeFixtureOptions {
   readonly routePathname?: string;
   readonly routeProviderBeforeRender?: (
     context: RuntimeProviderContextInterface,
-  ) => RuntimeProviderInstance | Promise<RuntimeProviderInstance>;
+  ) => RuntimeProviderResult | Promise<RuntimeProviderResult>;
+  readonly routeProviderSetup?: (
+    context: RuntimeProviderContextInterface,
+  ) => RuntimeProviderResult | Promise<RuntimeProviderResult>;
   readonly routeProviders?: readonly DependencyToken<RuntimeProviderInterface>[];
   readonly session?: TestSessionRuntimeState;
+  readonly setup?: (context: RuntimeProviderContextInterface) => void | Promise<void>;
 }
 
 interface RouteRuntimeFixture {
@@ -496,13 +577,13 @@ interface RouteRuntimeFixture {
 const createRouteRuntimeFixture = (options: RouteRuntimeFixtureOptions = {}): RouteRuntimeFixture => {
   const beforeRender = vi.fn(options.beforeRender ?? (() => {}));
   const dispose = vi.fn(options.dispose ?? (() => {}));
+  const setup = vi.fn(options.setup ?? (() => {}));
   const frameProviderBeforeRender = vi.fn(options.frameProviderBeforeRender ?? (() => {}));
   const routeCanMatch = vi.fn(options.routeCanMatch ?? (() => ({ type: 'pass' as const })));
 
   TestFrameProvider.beforeRenderHandler = frameProviderBeforeRender;
-  TestRouteProvider.beforeRenderHandler = vi.fn(
-    options.routeProviderBeforeRender ?? (() => new RuntimeProviderInstance(() => {})),
-  );
+  TestRouteProvider.beforeRenderHandler = vi.fn(options.routeProviderBeforeRender ?? (() => () => {}));
+  TestRouteProvider.setupHandler = vi.fn(options.routeProviderSetup ?? (() => {}));
 
   abstract class TestControllerInterface implements ControllerInterface {
     abstract loader(args: ControllerLoaderArgs): unknown | Promise<unknown>;
@@ -523,14 +604,15 @@ const createRouteRuntimeFixture = (options: RouteRuntimeFixtureOptions = {}): Ro
   }
 
   @Provider()
-  abstract class TestProviderInterface extends RuntimeProviderInterface {}
+  class TestProvider extends RuntimeProviderInterface {
+    setup(context: RuntimeProviderContextInterface): void | Promise<void> {
+      return setup(context);
+    }
 
-  @Injectable()
-  class TestProvider extends TestProviderInterface {
-    beforeRender(context: RuntimeProviderContextInterface): RuntimeProviderInstance | Promise<RuntimeProviderInstance> {
+    beforeRender(context: RuntimeProviderContextInterface): RuntimeProviderResult | Promise<RuntimeProviderResult> {
       beforeRender(context);
 
-      return new RuntimeProviderInstance(dispose);
+      return () => dispose();
     }
   }
 
@@ -539,7 +621,6 @@ const createRouteRuntimeFixture = (options: RouteRuntimeFixtureOptions = {}): Ro
   class TestBindings extends BindingModuleInterface {
     register(registry: BindingRegistryInterface): void {
       registry.bind(TestControllerInterface).to(TestController).inSingletonScope();
-      registry.bind(TestProviderInterface).to(TestProvider).inSingletonScope();
     }
   }
 
@@ -547,7 +628,7 @@ const createRouteRuntimeFixture = (options: RouteRuntimeFixtureOptions = {}): Ro
 
   @UseBindings(TestBindings)
   @Module({
-    providers: [TestProviderInterface],
+    providers: [TestProvider],
     view: View,
   })
   class TestModule {}
@@ -646,23 +727,20 @@ const catchRedirect = async (promise: Promise<unknown>): Promise<Response> => {
 const TestFrameView = (): null => null;
 
 @Provider()
-abstract class TestFrameProviderInterface extends RuntimeProviderInterface {}
-
-@Frame({
-  providers: [TestFrameProviderInterface],
-  source: HashFrameSource.create('test-frame'),
-  view: TestFrameView,
-})
-class TestFrame extends FrameDefinition {}
-
-@Injectable()
-class TestFrameProvider extends TestFrameProviderInterface {
+class TestFrameProvider extends RuntimeProviderInterface {
   static beforeRenderHandler: (context: RuntimeProviderContextInterface) => void | Promise<void> = () => {};
 
   beforeRender(context: RuntimeProviderContextInterface): void | Promise<void> {
     return TestFrameProvider.beforeRenderHandler(context);
   }
 }
+
+@Frame({
+  providers: [TestFrameProvider],
+  source: HashFrameSource.create('test-frame'),
+  view: TestFrameView,
+})
+class TestFrame extends FrameDefinition {}
 
 class TestApplicationBindings extends BindingModuleInterface {
   register(registry: BindingRegistryInterface): void {
@@ -672,8 +750,6 @@ class TestApplicationBindings extends BindingModuleInterface {
     registry.bind(FirstAvailableAllowedPolicy).toSelf().inSingletonScope();
     registry.bind(SecondFirstAvailableAllowedPolicy).toSelf().inSingletonScope();
     registry.bind(FirstAvailableDeniedPolicy).toSelf().inSingletonScope();
-    registry.bind(TestFrameProviderInterface).to(TestFrameProvider).inSingletonScope();
-    registry.bind(TestRouteProviderInterface).to(TestRouteProvider).inSingletonScope();
   }
 }
 
@@ -681,36 +757,23 @@ class TestApplicationBindings extends BindingModuleInterface {
 class TestApplicationOwner {}
 
 @Provider()
-abstract class TestLayoutProviderInterface extends RuntimeProviderInterface {}
-
-@Injectable()
-class TestLayoutProvider extends TestLayoutProviderInterface {
+class TestLayoutProvider extends RuntimeProviderInterface {
   static beforeRenderHandler: (
     context: RuntimeProviderContextInterface,
-  ) => RuntimeProviderInstance | Promise<RuntimeProviderInstance> = () => new RuntimeProviderInstance(() => {});
+  ) => RuntimeProviderResult | Promise<RuntimeProviderResult> = () => () => {};
 
-  beforeRender(context: RuntimeProviderContextInterface): RuntimeProviderInstance | Promise<RuntimeProviderInstance> {
+  beforeRender(context: RuntimeProviderContextInterface): RuntimeProviderResult | Promise<RuntimeProviderResult> {
     return TestLayoutProvider.beforeRenderHandler(context);
-  }
-}
-
-class TestLayoutBindings extends BindingModuleInterface {
-  register(registry: BindingRegistryInterface): void {
-    registry.bind(TestLayoutProviderInterface).to(TestLayoutProvider).inSingletonScope();
   }
 }
 
 const TestLayoutView = (): null => null;
 
-@UseBindings(TestLayoutBindings)
 @Layout({
-  providers: [TestLayoutProviderInterface],
+  providers: [TestLayoutProvider],
   view: TestLayoutView,
 })
 class TestLayout {}
-
-@Provider()
-abstract class TestRouteProviderInterface extends RuntimeProviderInterface {}
 
 @Injectable()
 class TestRoutePolicy extends RoutePolicyInterface {
@@ -748,13 +811,20 @@ class SecondFirstAvailableAllowedPolicy extends RoutePolicyInterface {
   }
 }
 
-@Injectable()
-class TestRouteProvider extends TestRouteProviderInterface {
+@Provider()
+class TestRouteProvider extends RuntimeProviderInterface {
+  static setupHandler: (
+    context: RuntimeProviderContextInterface,
+  ) => RuntimeProviderResult | Promise<RuntimeProviderResult> = () => {};
   static beforeRenderHandler: (
     context: RuntimeProviderContextInterface,
-  ) => RuntimeProviderInstance | Promise<RuntimeProviderInstance> = () => new RuntimeProviderInstance(() => {});
+  ) => RuntimeProviderResult | Promise<RuntimeProviderResult> = () => () => {};
 
-  beforeRender(context: RuntimeProviderContextInterface): RuntimeProviderInstance | Promise<RuntimeProviderInstance> {
+  setup(context: RuntimeProviderContextInterface): RuntimeProviderResult | Promise<RuntimeProviderResult> {
+    return TestRouteProvider.setupHandler(context);
+  }
+
+  beforeRender(context: RuntimeProviderContextInterface): RuntimeProviderResult | Promise<RuntimeProviderResult> {
     return TestRouteProvider.beforeRenderHandler(context);
   }
 }

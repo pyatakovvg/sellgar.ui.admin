@@ -64,7 +64,7 @@ describe('FrameRuntime', () => {
       },
       value: 'loaded',
     });
-    expect(TestFrameProvider.events).toEqual(['beforeLoad:beforeLoad', 'beforeRender:beforeRender']);
+    expect(TestFrameProvider.events).toEqual(['beforeLoad:beforeLoad', 'setup:setup', 'beforeRender:beforeRender']);
   });
 
   it('runs frame layout providers after frame providers', async () => {
@@ -80,6 +80,8 @@ describe('FrameRuntime', () => {
     expect(TestFrameProvider.events).toEqual([
       'beforeLoad:beforeLoad',
       'layoutBeforeLoad:beforeLoad',
+      'setup:setup',
+      'layoutSetup:setup',
       'beforeRender:beforeRender',
       'layoutBeforeRender:beforeRender',
     ]);
@@ -195,6 +197,7 @@ describe('FrameRuntime', () => {
       },
       value: 'ready:updated',
     });
+    expect(TestFrameProvider.events.filter((event) => event === 'setup:setup')).toHaveLength(1);
   });
 
   it('keeps failed frame runtime available until frame dispose', async () => {
@@ -442,6 +445,10 @@ class TestFrameProvider {
   static beforeRenderError: Error | null = null;
   static events: string[] = [];
 
+  setup(context: { readonly phase: string }): void {
+    TestFrameProvider.events.push(`setup:${context.phase}`);
+  }
+
   beforeLoad(context: { readonly phase: string }): void {
     TestFrameProvider.events.push(`beforeLoad:${context.phase}`);
   }
@@ -458,6 +465,10 @@ class TestFrameProvider {
 
 @Provider()
 class TestFrameLayoutProvider {
+  setup(context: { readonly phase: string }): void {
+    TestFrameProvider.events.push(`layoutSetup:${context.phase}`);
+  }
+
   beforeLoad(context: { readonly phase: string }): void {
     TestFrameProvider.events.push(`layoutBeforeLoad:${context.phase}`);
   }

@@ -257,7 +257,7 @@ export class OrdersSummaryWidgetPreloadProvider extends RuntimeProviderInterface
     super();
   }
 
-  beforeRender(context: RuntimeProviderContextInterface): Promise<RuntimeProviderInstance> {
+  beforeRender(context: RuntimeProviderContextInterface): Promise<RuntimeProviderResult> {
     return this.widgetRuntimeFactory.preload(context, OrdersSummaryWidget, {
       props: {
         title: 'Заказы',
@@ -352,11 +352,15 @@ await this.frameService.open(OrderDetailsFrame, { id });
 Используй `beforeLoad`, если controller loader должен увидеть результат
 provider-а.
 
+Используй `setup`, если provider владеет subscription или другим ресурсом на
+протяжении всего lifetime runtime. `setup` выполняется один раз и возвращает
+cleanup; revalidate не запускает его повторно.
+
 Используй `beforeRender`, если нужно подготовить runtime contribution до первого
 готового render. Типичный пример - widget preload.
 
 Используй `afterRender`, если работа не должна блокировать первый render:
-subscriptions, telemetry, event listeners.
+telemetry или effect, которому принципиально нужен уже выполненный render.
 
 Не клади business mutation в provider phase. Provider должен подключать runtime
 участника или lifecycle side effect.

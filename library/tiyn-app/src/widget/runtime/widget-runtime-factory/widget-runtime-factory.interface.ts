@@ -1,5 +1,7 @@
-import type { RuntimeProviderContextInterface } from '../../../runtime/provider/runtime-provider';
-import type { RuntimeProviderResult } from '../../../runtime/provider/runtime-provider-instance';
+import type {
+  RuntimeProviderContextInterface,
+  RuntimeProviderResult,
+} from '../../../runtime/provider/runtime-provider';
 import type { RuntimeScope } from '../../../runtime/scope/base';
 
 import type { WidgetConstructor } from '../../declaration/widget';
@@ -22,6 +24,11 @@ export abstract class WidgetRuntimeFactoryInterface {
     widget: WidgetConstructor,
     options: WidgetRuntimeFactoryOptions<TProps>,
   ): WidgetRuntime<TProps>;
+
+  abstract consumePrepared<TProps extends object>(
+    widget: WidgetConstructor,
+    options: WidgetRuntimeFactoryOptions<TProps>,
+  ): WidgetRuntime<TProps> | null;
 
   abstract getPrepared<TProps extends object>(
     widget: WidgetConstructor,

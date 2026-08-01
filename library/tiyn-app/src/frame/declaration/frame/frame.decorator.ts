@@ -2,11 +2,10 @@ import type React from 'react';
 
 import { Injectable } from '../../../di/injection/decorators';
 import type { DependencyConstructor } from '../../../di/binding/binding-builder';
-import type { DependencyToken } from '../../../di/token/dependency-token';
 import type { LayoutConstructor } from '../../../layout/declaration/layout';
 import type { RoutePolicyDeclaration } from '../../../router/runtime/route-runtime-context';
 import type { RenderableView } from '../../../react/view/renderable-view';
-import type { RuntimeProviderInterface } from '../../../runtime/provider/runtime-provider';
+import type { ProviderToken } from '../../../runtime/provider/provider-token.ts';
 import type { FrameSourceInterface } from '../../source/frame-source';
 
 export const FRAME_METADATA_KEY = Symbol('tiyn-app:frame:metadata');
@@ -28,7 +27,7 @@ export interface FrameMetadata<TProps extends object = object> {
   readonly fallback?: React.ReactNode;
   readonly forbidden?: React.ReactNode;
   readonly layouts?: readonly LayoutConstructor[];
-  readonly providers?: readonly DependencyToken<RuntimeProviderInterface<TProps>>[];
+  readonly providers?: readonly ProviderToken<TProps>[];
   readonly shell?: DependencyConstructor<FrameShellInterface>;
   readonly source?: FrameSourceInterface<TProps>;
   readonly view: RenderableView<TProps>;

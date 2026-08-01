@@ -365,7 +365,6 @@ useController(OrderDetailsControllerInterface);
 useLoaderData(OrderDetailsControllerInterface);
 useSubmit(OrderDetailsControllerInterface);
 useRevalidate();
-useFrameRuntime();
 ```
 
 `useSubmit(...)` возвращает function со state:

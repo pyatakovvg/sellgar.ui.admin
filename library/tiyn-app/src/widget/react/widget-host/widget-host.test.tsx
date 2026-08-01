@@ -4,11 +4,13 @@ import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, it } from 'vitest';
 
+import { ApplicationComponentsProvider } from '../../../application/react/application-components-context';
 import { Controller } from '../../../controller/contract/controller';
 
 import { BindingModuleInterface } from '../../../di/binding/binding-module';
 import { UseBindings } from '../../../di/composition/use-bindings';
 import type { BindingRegistryInterface } from '../../../di/binding/binding-registry';
+import { useException } from '../../../react/router/exception';
 import { ApplicationScope } from '../../../runtime/scope/kind';
 import { RuntimeScopeProvider } from '../../../runtime/react';
 
@@ -43,6 +45,98 @@ describe('WidgetHost', () => {
     });
   });
 
+  it('renders application fallback when widget fallback is not configured', async () => {
+    const scope = new ApplicationScope();
+
+    scope.activate(TestApplicationOwner);
+
+    render(
+      <ApplicationComponentsProvider components={{ fallback: <div>Application loading</div> }}>
+        <RuntimeScopeProvider scope={scope}>
+          <WidgetHost token={TestWidgetWithoutFallback} props={{ value: 'app-fallback' }} />
+        </RuntimeScopeProvider>
+      </ApplicationComponentsProvider>,
+    );
+
+    expect(screen.getByText('Application loading')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Widget app-fallback: app-fallback')).toBeInTheDocument();
+    });
+  });
+
+  it('prefers widget fallback over application fallback', async () => {
+    const scope = new ApplicationScope();
+
+    scope.activate(TestApplicationOwner);
+
+    render(
+      <ApplicationComponentsProvider components={{ fallback: <div>Application loading</div> }}>
+        <RuntimeScopeProvider scope={scope}>
+          <WidgetHost token={TestWidget} props={{ value: 'widget-fallback' }} />
+        </RuntimeScopeProvider>
+      </ApplicationComponentsProvider>,
+    );
+
+    expect(screen.getByText('Loading widget')).toBeInTheDocument();
+    expect(screen.queryByText('Application loading')).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Widget widget-fallback: widget-fallback')).toBeInTheDocument();
+    });
+  });
+
+  it('renders application exception when widget exception is not configured', async () => {
+    const scope = new ApplicationScope();
+
+    scope.activate(TestApplicationOwner);
+
+    render(
+      <ApplicationComponentsProvider components={{ exception: <div>Application exception</div> }}>
+        <RuntimeScopeProvider scope={scope}>
+          <WidgetHost token={TestFailedWidgetWithoutException} props={{ value: 'failed' }} />
+        </RuntimeScopeProvider>
+      </ApplicationComponentsProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Application exception')).toBeInTheDocument();
+    });
+  });
+
+  it('prefers widget exception over application exception', async () => {
+    const scope = new ApplicationScope();
+
+    scope.activate(TestApplicationOwner);
+
+    render(
+      <ApplicationComponentsProvider components={{ exception: <div>Application exception</div> }}>
+        <RuntimeScopeProvider scope={scope}>
+          <WidgetHost token={TestFailedWidget} props={{ value: 'failed' }} />
+        </RuntimeScopeProvider>
+      </ApplicationComponentsProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Widget exception')).toBeInTheDocument();
+    });
+    expect(screen.queryByText('Application exception')).not.toBeInTheDocument();
+  });
+
+  it('provides widget loader error to exception view', async () => {
+    const scope = new ApplicationScope();
+
+    scope.activate(TestApplicationOwner);
+
+    render(
+      <RuntimeScopeProvider scope={scope}>
+        <WidgetHost token={TestFailedWidgetWithExceptionContext} props={{ value: 'failed' }} />
+      </RuntimeScopeProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Widget error: Widget loader failed.')).toBeInTheDocument();
+    });
+  });
+
   it('keeps the runtime alive during React StrictMode effect replay', async () => {
     const scope = new ApplicationScope();
 
@@ -61,7 +155,7 @@ describe('WidgetHost', () => {
     });
   });
 
-  it('uses prepared widget runtime without owning its disposal', async () => {
+  it('consumes prepared widget runtime and owns its disposal', async () => {
     const scope = new ApplicationScope();
 
     scope.activate(TestApplicationOwner);
@@ -83,22 +177,23 @@ describe('WidgetHost', () => {
     );
 
     expect(screen.getByText('Widget prepared: prepared')).toBeInTheDocument();
+    expect(
+      widgetRuntimeFactory.getPrepared(TestWidget, {
+        ownerScope: scope,
+      }),
+    ).toBeNull();
 
     unmount();
 
     await waitFor(() => {
-      expect(preparedRuntime.getSnapshot().phase).toBe('ready');
+      expect(preparedRuntime.getSnapshot().phase).toBe('disposed');
     });
 
     const releasedRuntime = widgetRuntimeFactory.releasePrepared(TestWidget, {
       ownerScope: scope,
     });
 
-    expect(releasedRuntime).toBe(preparedRuntime);
-
-    await preparedRuntime.dispose();
-
-    expect(preparedRuntime.getSnapshot().phase).toBe('disposed');
+    expect(releasedRuntime).toBeNull();
   });
 });
 
@@ -142,6 +237,57 @@ class TestWidgetBindings extends BindingModuleInterface {
   view: TestWidgetView,
 })
 class TestWidget extends WidgetDefinition<TestWidgetProps> {}
+
+@UseBindings(TestWidgetBindings)
+@Widget({
+  view: TestWidgetView,
+})
+class TestWidgetWithoutFallback extends WidgetDefinition<TestWidgetProps> {}
+
+@Controller()
+class TestFailedWidgetController extends WidgetControllerInterface<TestWidgetProps> {
+  async loader(): Promise<string> {
+    throw new Error('Widget loader failed.');
+  }
+}
+
+class TestFailedWidgetBindings extends BindingModuleInterface {
+  register(registry: BindingRegistryInterface): void {
+    registry.bind(TestFailedWidgetController).toSelf().inSingletonScope();
+  }
+}
+
+const TestFailedWidgetView: React.FC = () => {
+  const value = useLoaderData(TestFailedWidgetController);
+
+  return <div>{`Failed widget: ${value}`}</div>;
+};
+
+const TestWidgetException: React.FC = () => {
+  const error = useException();
+
+  return <div>{`Widget error: ${error instanceof Error ? error.message : 'unknown'}`}</div>;
+};
+
+@UseBindings(TestFailedWidgetBindings)
+@Widget({
+  exception: <div>Widget exception</div>,
+  view: TestFailedWidgetView,
+})
+class TestFailedWidget extends WidgetDefinition<TestWidgetProps> {}
+
+@UseBindings(TestFailedWidgetBindings)
+@Widget({
+  exception: <TestWidgetException />,
+  view: TestFailedWidgetView,
+})
+class TestFailedWidgetWithExceptionContext extends WidgetDefinition<TestWidgetProps> {}
+
+@UseBindings(TestFailedWidgetBindings)
+@Widget({
+  view: TestFailedWidgetView,
+})
+class TestFailedWidgetWithoutException extends WidgetDefinition<TestWidgetProps> {}
 
 class TestApplicationBindings extends BindingModuleInterface {
   register(registry: BindingRegistryInterface): void {

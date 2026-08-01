@@ -29,7 +29,6 @@ Runtime application API описан в [Приложение](./02-application.
 ```text
 clients/{host-name}/
   AGENTS.md
-  env.d.ts
   index.html
   package.json
   tsconfig.json
@@ -83,6 +82,9 @@ clients/{host-name}/
       policies/
         index.ts
         {name}.policy.ts
+      presentations/
+        index.ts
+        {name}.presentation.tsx
     sw/
       index.ts
       service-worker.tsx

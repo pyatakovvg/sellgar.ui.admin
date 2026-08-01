@@ -11,12 +11,14 @@ export type RuntimeErrorCode =
   | 'route.provider_before_load_failed'
   | 'route.provider_before_render_failed'
   | 'route.provider_dispose_failed'
+  | 'route.provider_setup_failed'
   | 'route.module.commit_cleanup_failed'
   | 'route.module.discard_cleanup_failed'
   | 'route.module.dispose_failed'
   | 'route.module.provider_before_load_failed'
   | 'route.module.provider_before_render_failed'
-  | 'route.module.provider_dispose_failed';
+  | 'route.module.provider_dispose_failed'
+  | 'route.module.provider_setup_failed';
 
 export interface RuntimeErrorReport {
   readonly code: RuntimeErrorCode;
@@ -43,12 +45,14 @@ export type RuntimeErrorPhase =
   | 'route.provider.before_load'
   | 'route.provider.before_render'
   | 'route.provider.dispose'
+  | 'route.provider.setup'
   | 'route.module.commit'
   | 'route.module.discard'
   | 'route.module.dispose'
   | 'route.module.provider.before_load'
   | 'route.module.provider.before_render'
-  | 'route.module.provider.dispose';
+  | 'route.module.provider.dispose'
+  | 'route.module.provider.setup';
 
 export type RuntimeErrorSource =
   | 'application.disposable'

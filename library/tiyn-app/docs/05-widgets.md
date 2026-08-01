@@ -209,7 +209,6 @@ useController(OrdersSummaryWidgetControllerInterface);
 useLoaderData(OrdersSummaryWidgetControllerInterface);
 useSubmit(OrdersSummaryWidgetControllerInterface);
 useRevalidate();
-useWidgetRuntime();
 ```
 
 `useSubmit(...)` возвращает function со state:
@@ -271,7 +270,7 @@ export class OrdersSummaryWidgetPreloadProvider extends RuntimeProviderInterface
     super();
   }
 
-  beforeRender(context: RuntimeProviderContextInterface): Promise<RuntimeProviderInstance> {
+  beforeRender(context: RuntimeProviderContextInterface): Promise<RuntimeProviderResult> {
     return this.widgetRuntimeFactory.preload(context, OrdersSummaryWidget, {
       props: {
         title: 'Orders',

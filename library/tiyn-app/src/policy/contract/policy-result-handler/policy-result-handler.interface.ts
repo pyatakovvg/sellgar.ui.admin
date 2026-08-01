@@ -23,5 +23,4 @@ export type PolicyResultHandlerToken<TContext extends RuntimeContextInterface = 
   DependencyToken<PolicyResultHandlerInterface<TContext>>;
 
 export type PolicyResultHandlerDeclaration<TContext extends RuntimeContextInterface = RuntimeContextInterface> =
-  | PolicyBoundaryDecision
-  | PolicyResultHandlerToken<TContext>;
+  PolicyBoundaryDecision | PolicyResultHandlerToken<TContext>;

@@ -15,8 +15,10 @@ import { GuardRejectedException } from '../../../guard/contract/guard-rejected-e
 import { UseGuards } from '../../../guard/declaration/use-guards';
 import { ApplicationScope } from '../../../runtime/scope/kind';
 import { Provider, RuntimeProviderInterface } from '../../../runtime/provider/runtime-provider';
-import { RuntimeProviderInstance } from '../../../runtime/provider/runtime-provider-instance';
-import type { RuntimeProviderContextInterface } from '../../../runtime/provider/runtime-provider';
+import type {
+  RuntimeProviderContextInterface,
+  RuntimeProviderResult,
+} from '../../../runtime/provider/runtime-provider';
 
 import { Widget, WidgetDefinition } from '../../declaration/widget';
 
@@ -46,7 +48,7 @@ describe('WidgetRuntime', () => {
       phase: 'ready',
     });
     expect(runtime.getLoaderData(TestWidgetController)).toBe('ready');
-    expect(TestWidgetProvider.events).toEqual(['beforeLoad:ready', 'beforeRender:ready']);
+    expect(TestWidgetProvider.events).toEqual(['beforeLoad:ready', 'setup:ready', 'beforeRender:ready']);
     expect(listener).toHaveBeenCalledTimes(2);
 
     await runtime.dispose();
@@ -112,6 +114,7 @@ describe('WidgetRuntime', () => {
     expect(runtime.getLoaderData(TestWidgetController)).toBe('updated');
     expect(TestWidgetProvider.events).toEqual([
       'beforeLoad:ready',
+      'setup:ready',
       'beforeRender:ready',
       'beforeLoad:updated',
       'beforeRender:updated',
@@ -378,16 +381,20 @@ class TestWidgetWithoutActionController extends WidgetControllerInterface<TestWi
 class TestWidgetProvider extends RuntimeProviderInterface<TestWidgetProps> {
   static events: string[] = [];
 
+  setup({ props }: RuntimeProviderContextInterface<TestWidgetProps>): RuntimeProviderResult {
+    TestWidgetProvider.events.push(`setup:${props.value}`);
+
+    return () => {
+      TestWidgetProvider.events.push('dispose');
+    };
+  }
+
   beforeLoad({ props }: RuntimeProviderContextInterface<TestWidgetProps>): void {
     TestWidgetProvider.events.push(`beforeLoad:${props.value}`);
   }
 
-  beforeRender({ props }: RuntimeProviderContextInterface<TestWidgetProps>): RuntimeProviderInstance {
+  beforeRender({ props }: RuntimeProviderContextInterface<TestWidgetProps>): void {
     TestWidgetProvider.events.push(`beforeRender:${props.value}`);
-
-    return new RuntimeProviderInstance(() => {
-      TestWidgetProvider.events.push('dispose');
-    });
   }
 }
 

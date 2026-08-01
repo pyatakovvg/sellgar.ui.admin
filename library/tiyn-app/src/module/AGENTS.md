@@ -18,5 +18,5 @@ runtime для route-level screens.
 
 - Module runtime/resolution: локальные tests в `module/runtime` и
   `module/resolution`.
-- Изменение metadata: сверить docs `04-modules-controllers-providers.md` и
+- Изменение metadata: сверить docs `../../docs/04-modules-controllers-providers.md` и
   package structure docs.

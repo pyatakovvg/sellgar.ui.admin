@@ -92,9 +92,7 @@ export class RuntimeErrors extends RuntimeErrorsInterface {
   }
 }
 
-const assertRuntimeErrorConstructor = <TError extends Error>(
-  errorType: RuntimeErrorConstructor<TError>,
-): void => {
+const assertRuntimeErrorConstructor = <TError extends Error>(errorType: RuntimeErrorConstructor<TError>): void => {
   if (isRuntimeErrorConstructor(errorType)) {
     return;
   }

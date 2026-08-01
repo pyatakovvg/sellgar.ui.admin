@@ -1,7 +1,9 @@
 import type { RuntimeScope } from '../../scope/base';
-import type { RuntimeProviderResult } from '../runtime-provider-instance';
 
-export type RuntimeProviderPhase = 'afterRender' | 'beforeLoad' | 'beforeRender' | 'onDemand';
+export type RuntimeProviderCleanup = () => void | Promise<void>;
+export type RuntimeProviderResult = void | RuntimeProviderCleanup;
+
+export type RuntimeProviderPhase = 'afterRender' | 'beforeLoad' | 'beforeRender' | 'onDemand' | 'setup';
 
 export interface RuntimeExecutionContextInterface<TProps extends object = object> {
   readonly phase: RuntimeProviderPhase;
@@ -18,6 +20,8 @@ export interface RuntimeProviderContextInterface<
 }
 
 export abstract class RuntimeProviderInterface<TProps extends object = object> {
+  setup?(context: RuntimeProviderContextInterface<TProps>): RuntimeProviderResult | Promise<RuntimeProviderResult>;
+
   afterRender?(
     context: RuntimeProviderContextInterface<TProps>,
   ): RuntimeProviderResult | Promise<RuntimeProviderResult>;

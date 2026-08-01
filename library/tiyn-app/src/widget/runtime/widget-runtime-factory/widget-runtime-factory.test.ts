@@ -8,9 +8,11 @@ import { Controller } from '../../../controller/contract/controller';
 import { BindingModuleInterface } from '../../../di/binding/binding-module';
 import { UseBindings } from '../../../di/composition/use-bindings';
 import { ApplicationScope } from '../../../runtime/scope/kind';
-import { RuntimeProviderInstanceInterface } from '../../../runtime/provider/runtime-provider-instance';
 import type { BindingRegistryInterface } from '../../../di/binding/binding-registry';
-import type { RuntimeProviderContextInterface } from '../../../runtime/provider/runtime-provider';
+import type {
+  RuntimeProviderCleanup,
+  RuntimeProviderContextInterface,
+} from '../../../runtime/provider/runtime-provider';
 
 import { Widget, WidgetDefinition } from '../../declaration/widget';
 
@@ -18,13 +20,13 @@ import { WidgetControllerInterface, type WidgetControllerLoaderArgs } from '../w
 import { WidgetRuntimeFactory } from './';
 
 describe('WidgetRuntimeFactory', () => {
-  it('preloads widget runtime and returns cleanup instance', async () => {
+  it('preloads widget runtime and returns cleanup', async () => {
     resetTestWidgetController();
 
     const scope = new ApplicationScope();
     const factory = new WidgetRuntimeFactory();
     const context = createProviderContext(scope);
-    const providerInstance = await factory.preload<TestWidgetProps>(context, TestWidget, {
+    const providerCleanup = await factory.preload<TestWidgetProps>(context, TestWidget, {
       props: {
         value: 'preloaded',
       },
@@ -37,8 +39,8 @@ describe('WidgetRuntimeFactory', () => {
     expect(runtime?.getSnapshot().phase).toBe('ready');
     expect(runtime?.getLoaderData(TestWidgetController)).toBe('preloaded');
 
-    assertRuntimeProviderInstance(providerInstance);
-    await providerInstance.dispose();
+    assertRuntimeProviderCleanup(providerCleanup);
+    await providerCleanup();
 
     expect(factory.getPrepared(TestWidget, { ownerScope: scope })).toBeNull();
     expect(runtime?.getSnapshot().phase).toBe('disposed');
@@ -52,7 +54,7 @@ describe('WidgetRuntimeFactory', () => {
     const factory = new WidgetRuntimeFactory();
     const firstContext = createProviderContext(scope);
     const secondContext = createProviderContext(scope);
-    const providerInstance = await factory.preload<TestWidgetProps>(firstContext, TestWidget, {
+    const providerCleanup = await factory.preload<TestWidgetProps>(firstContext, TestWidget, {
       props: {
         value: 'preloaded',
       },
@@ -73,8 +75,40 @@ describe('WidgetRuntimeFactory', () => {
     expect(runtime?.getLoaderData(TestWidgetController)).toBe('revalidated');
     expect(TestWidgetController.loaderValues).toEqual(['preloaded', 'revalidated']);
 
-    assertRuntimeProviderInstance(providerInstance);
-    await providerInstance.dispose();
+    assertRuntimeProviderCleanup(providerCleanup);
+    await providerCleanup();
+  });
+
+  it('consumes prepared widget runtime once', async () => {
+    resetTestWidgetController();
+
+    const scope = new ApplicationScope();
+    const factory = new WidgetRuntimeFactory();
+    const context = createProviderContext(scope);
+    const providerCleanup = await factory.preload<TestWidgetProps>(context, TestWidget, {
+      props: {
+        value: 'preloaded',
+      },
+    });
+
+    const runtime = factory.consumePrepared<TestWidgetProps>(TestWidget, {
+      ownerScope: scope,
+      props: {
+        value: 'consumed',
+      },
+    });
+
+    expect(runtime?.getSnapshot().phase).toBe('ready');
+    expect(runtime?.getProps()).toEqual({ value: 'consumed' });
+    expect(factory.getPrepared(TestWidget, { ownerScope: scope })).toBeNull();
+    expect(factory.consumePrepared(TestWidget, { ownerScope: scope })).toBeNull();
+
+    assertRuntimeProviderCleanup(providerCleanup);
+    await providerCleanup();
+
+    expect(runtime?.getSnapshot().phase).toBe('ready');
+
+    await runtime?.dispose();
   });
 });
 
@@ -115,11 +149,9 @@ const resetTestWidgetController = (): void => {
   TestWidgetController.loaderValues = [];
 };
 
-const assertRuntimeProviderInstance: (value: unknown) => asserts value is RuntimeProviderInstanceInterface = (
-  value,
-) => {
-  if (!(value instanceof RuntimeProviderInstanceInterface)) {
-    throw new Error('Provider instance не был создан.');
+const assertRuntimeProviderCleanup: (value: unknown) => asserts value is RuntimeProviderCleanup = (value) => {
+  if (typeof value !== 'function') {
+    throw new Error('Provider cleanup не был создан.');
   }
 };
 

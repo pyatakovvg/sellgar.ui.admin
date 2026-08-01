@@ -20,6 +20,10 @@ export interface RuntimeScopeActivateOptions {
   readonly collectControllerBindings?: boolean;
 }
 
+export interface RuntimeScopeBindingsLease {
+  dispose(): void;
+}
+
 export abstract class RuntimeScope extends RuntimeScopeInterface {
   private readonly controllerTokens = new Set<DependencyToken<unknown>>();
   private readonly retainedModules = new Map<BindingModuleConstructor, RetainedBindingModule>();
@@ -37,11 +41,7 @@ export abstract class RuntimeScope extends RuntimeScopeInterface {
   }
 
   activate(owner: unknown, options: RuntimeScopeActivateOptions = {}): void {
-    this.assertActive();
-
-    for (const bindingModule of getUseBindingsMetadata(owner)) {
-      this.retain(bindingModule, options);
-    }
+    this.retainedOrder.push(...this.retainBindingModules(owner, options));
   }
 
   dispose(): void {
@@ -96,6 +96,50 @@ export abstract class RuntimeScope extends RuntimeScopeInterface {
     this.container.load(containerModule);
   }
 
+  protected retainBindings(owner: unknown, options: RuntimeScopeActivateOptions = {}): RuntimeScopeBindingsLease {
+    const bindingModules = this.retainBindingModules(owner, options);
+    let active = true;
+
+    return {
+      dispose: () => {
+        if (!active) {
+          return;
+        }
+
+        active = false;
+
+        for (const bindingModule of [...bindingModules].reverse()) {
+          this.release(bindingModule);
+        }
+      },
+    };
+  }
+
+  private retainBindingModules(
+    owner: unknown,
+    options: RuntimeScopeActivateOptions,
+  ): readonly BindingModuleConstructor[] {
+    this.assertActive();
+
+    const bindingModules = getUseBindingsMetadata(owner);
+    const retainedModules: BindingModuleConstructor[] = [];
+
+    try {
+      for (const bindingModule of bindingModules) {
+        this.retain(bindingModule, options);
+        retainedModules.push(bindingModule);
+      }
+    } catch (error) {
+      for (const bindingModule of retainedModules.reverse()) {
+        this.release(bindingModule);
+      }
+
+      throw error;
+    }
+
+    return bindingModules;
+  }
+
   private retain(bindingModule: BindingModuleConstructor, options: RuntimeScopeActivateOptions): void {
     const retainedModule = this.retainedModules.get(bindingModule);
 
@@ -104,7 +148,6 @@ export abstract class RuntimeScope extends RuntimeScopeInterface {
         containerModule: retainedModule.containerModule,
         count: retainedModule.count + 1,
       });
-      this.retainedOrder.push(bindingModule);
       return;
     }
 
@@ -124,7 +167,6 @@ export abstract class RuntimeScope extends RuntimeScopeInterface {
       containerModule,
       count: 1,
     });
-    this.retainedOrder.push(bindingModule);
   }
 
   private release(bindingModule: BindingModuleConstructor): void {

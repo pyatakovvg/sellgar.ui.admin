@@ -56,20 +56,41 @@ ApplicationScope
   app-level services
   application initializers disposables
 
+ProviderScope
+  provider-local bindings
+  shared provider dependencies
+  isolated provider instances
+
 ModuleScope
   module bindings
   module controllers
-  module providers
+  module provider pipeline
 
 WidgetScope
   widget bindings
   widget controllers
-  widget providers
+  widget provider pipeline
 
 FrameScope
   frame bindings
-  frame providers
+  frame provider pipeline
 ```
+
+`ProviderScope` и scopes route/module/frame/widget являются соседними ветками
+`ApplicationScope`:
+
+```text
+ApplicationScope
+├── ProviderScope
+└── RouteScope
+    ├── ModuleScope
+    ├── FrameScope
+    └── WidgetScope
+```
+
+Поэтому provider может использовать application dependencies и собственные
+bindings, но не получает module/frame/widget bindings через constructor. Данные
+конкретного runtime передаются ему через `RuntimeProviderContextInterface`.
 
 React mount/unmount может запустить adapter behavior, но не должен становиться
 владельцем framework graph. Например, `WidgetHost` может создать widget runtime

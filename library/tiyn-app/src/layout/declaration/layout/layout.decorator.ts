@@ -1,8 +1,7 @@
 import type React from 'react';
 
-import type { DependencyToken } from '../../../di/token/dependency-token';
 import type { RenderableView } from '../../../react/view/renderable-view';
-import type { RuntimeProviderInterface } from '../../../runtime/provider/runtime-provider';
+import type { ProviderToken } from '../../../runtime/provider/provider-token.ts';
 
 export const LAYOUT_METADATA_KEY = Symbol('tiyn-app:layout:metadata');
 
@@ -11,7 +10,7 @@ export interface LayoutViewProps {
 }
 
 export interface LayoutMetadata {
-  readonly providers?: readonly DependencyToken<RuntimeProviderInterface>[];
+  readonly providers?: readonly ProviderToken[];
   readonly view: RenderableView<LayoutViewProps>;
 }
 

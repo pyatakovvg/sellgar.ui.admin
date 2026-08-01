@@ -1,20 +1,11 @@
 export { Application } from './application/lifecycle/application';
-export {
-  ApplicationControllerInterface,
-  type ApplicationLifecyclePhase,
-  type ApplicationLifecycleSnapshot,
-} from './application/lifecycle/application-lifecycle';
-export { ApplicationConfig } from './application/config/application-config';
+export { ApplicationControllerInterface } from './application/lifecycle/application-lifecycle';
 export {
   ApplicationConfiguratorInterface,
   type ApplicationComponents,
   type ApplicationInitializerDeclaration,
 } from './application/config/application-configurator';
-export {
-  ApplicationEventBus,
-  ApplicationEventBusBindings,
-  ApplicationEventBusInterface,
-} from './application/event/application-event-bus';
+export { ApplicationEventBusInterface } from './application/event/application-event-bus';
 export {
   ApplicationEventHandlerInterface,
   type ApplicationEventHandler,
@@ -23,7 +14,6 @@ export {
   type ApplicationEventSubscription,
   type ApplicationEventToken,
 } from './application/event/application-event';
-export { ApplicationInitializerGroup } from './application/initializer/application-initializer-group';
 export { ApplicationFeatureInterface } from './application/feature/application-feature';
 export {
   Initializer,
@@ -32,19 +22,8 @@ export {
   type ApplicationInitializerToken,
 } from './application/initializer/application-initializer';
 export { Initializers } from './application/initializer/initializer';
-export {
-  ApplicationStore,
-  ApplicationStoreBindings,
-  ApplicationStoreInterface,
-  type ApplicationStoreClassKey,
-} from './application/store/application-store';
-export { ConsoleRuntimeErrorReporter } from './application/reporting/console-runtime-error-reporter';
-export {
-  RuntimeErrorReporter,
-  RuntimeErrorReporterBindings,
-  RuntimeErrorReporterInterface,
-  normalizeRuntimeErrorReport,
-} from './application/reporting/runtime-error-reporter';
+export { ApplicationStoreInterface, type ApplicationStoreClassKey } from './application/store/application-store';
+export { RuntimeErrorReporterInterface } from './application/reporting/runtime-error-reporter';
 export { RuntimeErrorReporterSinkInterface } from './application/reporting/runtime-error-reporter-sink';
 export type {
   NormalizedRuntimeErrorReport,
@@ -55,14 +34,12 @@ export type {
   RuntimeErrorSource,
 } from './application/reporting/runtime-error-report';
 export {
-  SessionRuntimeState,
   SessionRuntimeStateInterface,
   type SessionRuntimePhase,
   type SessionRuntimeStateChange,
   type SessionRuntimeStateListener,
 } from './application/session/session-runtime-state';
 export {
-  DisposableRegistry,
   DisposableRegistryInterface,
   type Disposable,
   type DisposableLike,
@@ -76,23 +53,7 @@ export {
   type ControllerInterface,
   type ControllerLoaderArgs,
 } from './controller/contract/controller';
-export {
-  createControllerActionArgs,
-  createControllerActionResultEnvelope,
-  parseControllerActionRequest,
-  type ControllerActionRequest,
-} from './controller/action/controller-action-request';
-export {
-  createControllerLoaderData,
-  getControllerLoaderData,
-  type ControllerLoaderData,
-} from './controller/data/controller-loader-data';
-export {
-  ControllerRuntimeProvider,
-  useController,
-  type ControllerRuntimeProviderProps,
-  type ControllerRuntimeRegistry,
-} from './controller/react/controller-runtime-context';
+export { useController } from './controller/react/controller-runtime-context';
 export { useLoaderData } from './controller/react/use-controller-loader-data';
 export { useSubmit, type ControllerSubmit } from './controller/react/use-controller-submit';
 
@@ -112,8 +73,6 @@ export {
   FrameDefinition,
   FrameShell,
   FrameShellInterface,
-  getFrameMetadata,
-  isFrameConstructor,
   type FrameConstructor,
   type FrameMetadata,
   type FrameProps,
@@ -127,14 +86,6 @@ export {
 } from './frame/source/frame-source';
 export { HashFrameSource, type HashFrameSourceOptions } from './frame/source/hash-frame-source';
 export {
-  FrameRuntime,
-  type FrameRuntimeActionOptions,
-  type FrameRuntimeLoadOptions,
-  type FrameRuntimePhase,
-  type FrameRuntimeRevalidateOptions,
-  type FrameRuntimeSnapshot,
-} from './frame/runtime/frame-runtime';
-export {
   FrameControllerInterface,
   type FrameControllerActionArgs,
   type FrameControllerActionPayload,
@@ -142,9 +93,8 @@ export {
   type FrameControllerLoaderArgs,
   type FrameControllerLoaderResult,
 } from './frame/runtime/frame-controller';
-export { FrameBindings, FrameService, FrameServiceInterface, type FrameOpenArgs } from './frame/service/frame-service';
+export { FrameServiceInterface, type FrameOpenArgs } from './frame/service/frame-service';
 export { useFrame, type CurrentFrameHandle, type FrameHandle } from './frame/react/use-frame';
-export { useFrameRuntime, type FrameRuntimeProviderProps } from './frame/react/frame-runtime-context';
 
 export { GuardFailure, type GuardFailureStrategy } from './guard/contract/guard-failure-strategy';
 export { Guard, GuardInterface, type GuardToken } from './guard/contract/guard';
@@ -190,9 +140,24 @@ export type {
   RevalidateKey,
   RevalidateOptions,
 } from './revalidate/contract/revalidate-service';
-export { RevalidateBridge, type RevalidateBridgeProps } from './revalidate/react/revalidate-bridge';
 
-export { PolicyDescriptorBuilder, createPolicyDescriptor } from './policy/declaration/policy-descriptor-builder';
+export {
+  Entity,
+  EntityCollection,
+  insertEntity,
+  removeEntity,
+  updateEntity,
+  type EntityConstructor,
+  type EntityCollectionDecorator,
+  type EntityCollectionOptions,
+  type EntityIdentity,
+  type InsertEntityOptions,
+  type EntityMetadata,
+  type EntityOptions,
+} from './reactive/entity';
+export { Reactive, reactive, type ReactiveProps } from './reactive/react';
+
+export { PolicyDescriptorBuilder } from './policy/declaration/policy-descriptor-builder';
 export { Policy, PolicyInterface, type PolicyToken } from './policy/contract/policy';
 export {
   PolicyResultHandlerInterface,
@@ -210,7 +175,7 @@ export { useException } from './react/router/exception';
 export { useLocation, type LocationHandler } from './react/router/use-location';
 export { useNavigate } from './react/router/use-navigate';
 export { useRoutePending, type RoutePendingOptions } from './react/router/use-route-pending';
-export { renderView, type RenderableView } from './react/view/renderable-view';
+export type { RenderableView } from './react/view/renderable-view';
 
 export {
   Route,
@@ -224,9 +189,7 @@ export {
   type RouterRedirectOptions,
   type RouterRedirectToSavedOptions,
 } from './router/declaration/router';
-export { ClassTransformerRouterParamsConverter } from './router/params/class-transformer-router-params-converter';
 export {
-  RouterParamsConverterBindings,
   RouterParamsConverterInterface,
   type RouterParamsConstructor,
   type RouterParamsObjectOptions,
@@ -243,21 +206,7 @@ export {
   type RouterNavigateOptions,
   type RouterSearchNavigateOptions,
 } from './router/service/navigate-service';
-export {
-  NavigationContinuationService,
-  NavigationContinuationServiceInterface,
-  type NavigationContinuationOptions,
-} from './router/service/navigation-continuation-service';
-export { RouterServiceControllerInterface, type RouterNavigator } from './router/service/router-service-controller';
 export { RoutePolicyInterface } from './router/runtime/route-policy';
-export {
-  RouterRuntime,
-  type ActiveFrameRuntime,
-  type RouteRuntimeHandle,
-  type RouteRuntimeId,
-  type RouteRuntimeRegistrationOptions,
-  type RouterRuntimeListener,
-} from './router/runtime/router-runtime';
 export type {
   RoutePolicyBoundary,
   RoutePolicyDeclarations,
@@ -277,53 +226,29 @@ export {
   type RouterSearchUpdateOptions,
 } from './router/utils/search-utils';
 export type { RuntimeContextInterface } from './runtime/context';
-export {
-  RuntimeProviderInstance,
-  RuntimeProviderInstanceInterface,
-} from './runtime/provider/runtime-provider-instance';
-export type {
-  RuntimeProviderDisposeHandler,
-  RuntimeProviderResult,
-} from './runtime/provider/runtime-provider-instance';
 export { Provider, RuntimeProviderInterface } from './runtime/provider/runtime-provider';
 export type {
-  RuntimeExecutionContextInterface,
+  RuntimeProviderCleanup,
   RuntimeProviderContextInterface,
-  RuntimeProviderPhase,
+  RuntimeProviderResult,
 } from './runtime/provider/runtime-provider';
+export { SingletonProvider, SingletonProviderInterface } from './runtime/provider/singleton-provider';
 export {
-  RuntimeScopeProvider,
   useDependency,
   useRuntimeError,
   useRuntimeErrors,
   useRuntimeOperation,
-  useRuntimeScope,
   type RuntimeOperation,
-  type RuntimeScopeProviderProps,
 } from './runtime/react';
 export { RuntimeErrorsInterface, type RuntimeErrorConstructor, type RuntimeErrorHandler } from './runtime/errors';
-export { RuntimeScope } from './runtime/scope/base';
-export { RuntimeScopeInterface } from './runtime/scope/contract';
-export { ApplicationScope, FrameScope, ModuleScope, WidgetScope } from './runtime/scope/kind';
 
 export {
   Widget,
   WidgetDefinition,
-  getWidgetMetadata,
-  isWidgetConstructor,
   type WidgetConstructor,
   type WidgetMetadata,
   type WidgetProps,
 } from './widget/declaration/widget';
-export {
-  WidgetRuntime,
-  type ActiveWidgetRuntime,
-  type WidgetRuntimeActionOptions,
-  type WidgetRuntimeLoadOptions,
-  type WidgetRuntimeRevalidateOptions,
-  type WidgetRuntimeRevalidateState,
-  type WidgetRuntimeSnapshot,
-} from './widget/runtime/widget-runtime';
 export {
   WidgetControllerInterface,
   type WidgetControllerActionArgs,
@@ -333,17 +258,9 @@ export {
   type WidgetControllerLoaderResult,
 } from './widget/runtime/widget-controller';
 export {
-  WidgetStateMachine,
-  type WidgetRuntimePhase,
-  type WidgetStateMachineSnapshot,
-} from './widget/runtime/widget-state-machine';
-export {
-  WidgetRuntimeFactory,
-  WidgetRuntimeFactoryBindings,
   WidgetRuntimeFactoryInterface,
   type WidgetPreloadOptions,
   type WidgetRuntimeFactoryOptions,
 } from './widget/runtime/widget-runtime-factory';
 export { useWidgetProps } from './widget/react/use-widget-props';
-export { useWidgetRuntime, type WidgetRuntimeProviderProps } from './widget/react/widget-runtime-context';
 export { WidgetHost, type WidgetHostProps } from './widget/react/widget-host';

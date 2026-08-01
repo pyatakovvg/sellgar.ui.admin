@@ -8,7 +8,7 @@
 не описывается как рабочий механизм.
 
 Документы размещены внутри пакета `library/tiyn-app` и сверены с текущим
-`src/index.ts` 2026-06-19. Результат сверки:
+`src/index.ts` 2026-07-28. Результат сверки:
 [Аудит Public API](./17-public-api-audit.md).
 
 ## Для Кого Этот Документ
@@ -29,6 +29,11 @@
 Если ты впервые работаешь с `@tiyn/app`, начни с первых двух разделов. Они
 объясняют владение runtime и порядок запуска. Остальные разделы можно читать по
 задаче.
+
+Для очного обучения и презентации используй отдельный
+[курс для преподавателя](./training/README.md). Он вводит понятия поступательно,
+начиная с `Hello World`, и использует эту папку как технический источник, а не
+как порядок показа материала аудитории.
 
 ### Быстрый Вход
 
@@ -59,6 +64,7 @@
 - [Выбрать provider phase](./09-recipes.md#выбрать-provider-phase)
 - [Выбрать между module, widget и frame](./09-recipes.md#выбрать-между-module-widget-и-frame)
 - [Добавить access guard](./11-guards.md)
+- [Объявить реактивную сущность](./18-reactive-entities.md)
 
 ### Базовая Модель
 
@@ -168,7 +174,7 @@
 - [Runtime operation flow](./08-policies-revalidate-errors.md#runtime-operation-flow)
 - [Runtime errors](./08-policies-revalidate-errors.md#runtime-errors)
 - [Unauthorized recovery](./08-policies-revalidate-errors.md#unauthorized-recovery)
-- [Revalidate route/module](./08-policies-revalidate-errors.md#revalidate-routemodule)
+- [Revalidate runtime entity](./08-policies-revalidate-errors.md#revalidate-runtime-entity)
 - [Revalidate widget](./08-policies-revalidate-errors.md#revalidate-widget)
 - [Revalidate frame](./08-policies-revalidate-errors.md#revalidate-frame)
 - [Runtime reporting](./08-policies-revalidate-errors.md#runtime-reporting)
@@ -206,7 +212,10 @@ internal source files из feature/application packages. Публичная гр
 - route layouts;
 - module runtime;
 - controller `loader` / `action`;
-- runtime providers: `beforeLoad`, `beforeRender`, `afterRender`, `onDemand`;
+- runtime providers: однократный `setup`, а также `beforeLoad`,
+  `beforeRender`, `afterRender`, `onDemand`;
+- singleton providers: `@SingletonProvider()`, один shared `setup` и
+  reference-counted cleanup без runtime context;
 - `LocationServiceInterface`, `NavigateServiceInterface`, `useLocation`, `useNavigate`,
   `NavItem`, `useRoutePending`, route matching через `location.matches(...)`;
 - runtime-local revalidate через `useRevalidate` и
@@ -219,7 +228,9 @@ internal source files из feature/application packages. Публичная гр
   `FrameServiceInterface`;
 - access guards: `GuardInterface`, `Guard`, `@UseGuards`, `useGuard`,
   `Guarded`;
-- typed runtime reporter pipeline.
+- typed runtime reporter pipeline;
+- реактивные сущности через `@Entity`, автоматическую weak-registration,
+  `updateEntity` и React bridge `reactive`.
 
 ## Что Не Считать Готовым API
 

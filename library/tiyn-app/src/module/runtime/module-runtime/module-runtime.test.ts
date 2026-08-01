@@ -17,11 +17,8 @@ import {
   Provider,
   RuntimeProviderInterface,
   type RuntimeProviderContextInterface,
-} from '../../../runtime/provider/runtime-provider';
-import {
-  RuntimeProviderInstance,
   type RuntimeProviderResult,
-} from '../../../runtime/provider/runtime-provider-instance';
+} from '../../../runtime/provider/runtime-provider';
 import { Module } from '../../declaration/module';
 
 import { ModuleRuntime } from './';
@@ -296,12 +293,31 @@ describe('ModuleRuntime', () => {
         order.push('loader');
         return 'loader-data';
       },
+      setup: (context) => {
+        expect(context.phase).toBe('setup');
+        expect(context.scope).toBeInstanceOf(ModuleScope);
+        expect(context.signal).toBe(context.request.signal);
+        order.push('setup');
+      },
     });
 
     fixture.moduleDeferred.resolve(fixture.moduleExports);
     await fixture.runtime.load(createLoaderArgs());
 
-    expect(order).toEqual(['beforeLoad', 'loader', 'beforeRender']);
+    expect(order).toEqual(['beforeLoad', 'loader', 'setup', 'beforeRender']);
+  });
+
+  it('runs provider setup once across module revalidation', async () => {
+    const fixture = createModuleRuntimeFixture();
+
+    fixture.moduleDeferred.resolve(fixture.moduleExports);
+    await fixture.runtime.load(createLoaderArgs());
+    fixture.runtime.commit();
+    await fixture.runtime.revalidate();
+
+    expect(fixture.setup).toHaveBeenCalledTimes(1);
+    expect(fixture.beforeLoad).toHaveBeenCalledTimes(2);
+    expect(fixture.beforeRender).toHaveBeenCalledTimes(2);
   });
 
   it('disposes controllers, providers and then module scope', async () => {
@@ -370,6 +386,27 @@ describe('ModuleRuntime', () => {
     expect(reporter.cleanup).not.toHaveBeenCalled();
   });
 
+  it('reports provider setup errors', async () => {
+    const error = new Error('Setup провайдера завершился с ошибкой.');
+    const reporter = {
+      cleanup: vi.fn(),
+      providerSetup: vi.fn(),
+    };
+    const fixture = createModuleRuntimeFixture({
+      setup: () => {
+        throw error;
+      },
+    });
+
+    fixture.moduleDeferred.resolve(fixture.moduleExports);
+
+    await expect(fixture.runtime.load(createLoaderArgs(), reporter)).rejects.toThrow(
+      'Setup провайдера завершился с ошибкой.',
+    );
+    expect(reporter.providerSetup).toHaveBeenCalledWith(error);
+    expect(reporter.cleanup).not.toHaveBeenCalled();
+  });
+
   it('disposes pending module when navigation aborts during provider phase', async () => {
     const beforeLoadDeferred = createDeferred<void>();
     const providerDispose = vi.fn();
@@ -377,7 +414,7 @@ describe('ModuleRuntime', () => {
       beforeLoad: async () => {
         await beforeLoadDeferred.promise;
 
-        return new RuntimeProviderInstance(() => providerDispose());
+        return () => providerDispose();
       },
     });
     const abortController = new AbortController();
@@ -431,6 +468,7 @@ interface ModuleRuntimeFixtureOptions {
   readonly guard?: boolean;
   readonly loader?: (args: ControllerLoaderArgs) => unknown | Promise<unknown>;
   readonly providerDispose?: () => void | Promise<void>;
+  readonly setup?: (context: RuntimeProviderContextInterface) => RuntimeProviderResult | Promise<RuntimeProviderResult>;
 }
 
 interface ModuleRuntimeFixture {
@@ -444,6 +482,7 @@ interface ModuleRuntimeFixture {
   readonly moduleExports: Record<string, unknown>;
   readonly providerDispose: ReturnType<typeof vi.fn>;
   readonly runtime: ModuleRuntime;
+  readonly setup: ReturnType<typeof vi.fn>;
 }
 
 const createModuleRuntimeFixture = (options: ModuleRuntimeFixtureOptions = {}): ModuleRuntimeFixture => {
@@ -453,6 +492,7 @@ const createModuleRuntimeFixture = (options: ModuleRuntimeFixtureOptions = {}): 
   const guard = vi.fn(() => options.guard ?? true);
   const loader = vi.fn(options.loader ?? (() => 'loader-data'));
   const providerDispose = vi.fn(options.providerDispose ?? (() => {}));
+  const setup = vi.fn(options.setup ?? (() => {}));
 
   abstract class TestControllerInterface implements ControllerInterface {
     abstract dispose(): void | Promise<void>;
@@ -482,18 +522,19 @@ const createModuleRuntimeFixture = (options: ModuleRuntimeFixtureOptions = {}): 
   }
 
   @Provider()
-  abstract class TestProviderInterface extends RuntimeProviderInterface {}
+  class TestProvider extends RuntimeProviderInterface {
+    setup(context: RuntimeProviderContextInterface): RuntimeProviderResult | Promise<RuntimeProviderResult> {
+      setup(context);
 
-  @Injectable()
-  class TestProvider extends TestProviderInterface {
+      return () => providerDispose();
+    }
+
     beforeLoad(context: RuntimeProviderContextInterface): RuntimeProviderResult | Promise<RuntimeProviderResult> {
       return beforeLoad(context);
     }
 
-    beforeRender(context: RuntimeProviderContextInterface): RuntimeProviderInstance | Promise<RuntimeProviderInstance> {
-      beforeRender(context);
-
-      return new RuntimeProviderInstance(providerDispose);
+    beforeRender(context: RuntimeProviderContextInterface): RuntimeProviderResult | Promise<RuntimeProviderResult> {
+      return beforeRender(context);
     }
   }
 
@@ -501,7 +542,6 @@ const createModuleRuntimeFixture = (options: ModuleRuntimeFixtureOptions = {}): 
     register(registry: BindingRegistryInterface): void {
       registry.bind(TestControllerInterface).to(TestController).inSingletonScope();
       registry.bind(TestGuardInterface).to(TestGuard).inSingletonScope();
-      registry.bind(TestProviderInterface).to(TestProvider).inSingletonScope();
     }
   }
 
@@ -509,7 +549,7 @@ const createModuleRuntimeFixture = (options: ModuleRuntimeFixtureOptions = {}): 
 
   @UseBindings(TestBindings)
   @Module({
-    providers: [TestProviderInterface],
+    providers: [TestProvider],
     view: View,
   })
   class TestModule {}
@@ -532,5 +572,6 @@ const createModuleRuntimeFixture = (options: ModuleRuntimeFixtureOptions = {}): 
     moduleExports,
     providerDispose,
     runtime,
+    setup,
   };
 };

@@ -19,4 +19,4 @@
 
 - Runner/executor/react изменения: локальные tests в `guard/runtime` и
   `guard/react`.
-- Проверить docs `11-guards.md`, если меняется contract.
+- Проверить docs `../../docs/11-guards.md`, если меняется contract.

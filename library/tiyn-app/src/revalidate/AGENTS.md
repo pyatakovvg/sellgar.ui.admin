@@ -16,4 +16,4 @@
 
 - Service/bridge/hook изменения: локальные tests в `revalidate/*`.
 - Проверить потребителей в module/frame/widget controllers и docs
-  `08-policies-revalidate-errors.md`.
+  `../../docs/08-policies-revalidate-errors.md`.

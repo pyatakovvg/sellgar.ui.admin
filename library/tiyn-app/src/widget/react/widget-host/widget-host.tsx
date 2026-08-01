@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { useApplicationComponents } from '../../../application/react/application-components-context';
 import { ControllerRuntimeProvider } from '../../../controller/react/controller-runtime-context';
 import { renderView } from '../../../react/view/renderable-view';
+import { ExceptionProvider } from '../../../react/router/exception';
 import { useDependency, useRuntimeScope } from '../../../runtime/react';
 import type { RuntimeScope } from '../../../runtime/scope/base';
 
@@ -22,6 +24,7 @@ export const WidgetHost = <TWidget extends WidgetConstructor>(
   const { runtimeKey, token } = hostProps;
   const widgetProps = createWidgetHostProps('props' in hostProps ? hostProps.props : undefined);
   const metadata = getWidgetMetadata<WidgetProps<TWidget>>(token);
+  const components = useApplicationComponents();
   const ownerScope = useRuntimeScope();
   const widgetFactory = useDependency(WidgetRuntimeFactoryInterface);
   const disposeTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -33,15 +36,14 @@ export const WidgetHost = <TWidget extends WidgetConstructor>(
       props: widgetProps,
       runtimeKey,
     };
-    const preparedRuntime = widgetFactory.getPrepared(token, runtimeOptions);
+    const preparedRuntime = widgetFactory.consumePrepared(token, runtimeOptions);
 
     runtimeRef.current = {
-      isPrepared: preparedRuntime !== null,
       runtime: preparedRuntime ?? widgetFactory.create(token, runtimeOptions),
     };
   }
 
-  const { isPrepared, runtime } = runtimeRef.current;
+  const { runtime } = runtimeRef.current;
 
   runtime.setProps(widgetProps);
 
@@ -61,20 +63,19 @@ export const WidgetHost = <TWidget extends WidgetConstructor>(
 
     return () => {
       disposeTimerRef.current = setTimeout(() => {
-        if (!isPrepared) {
-          void runtime.dispose();
-        }
+        void runtime.dispose();
 
         if (runtimeRef.current?.runtime === runtime) {
           runtimeRef.current = null;
         }
       }, 0);
     };
-  }, [isPrepared, runtime]);
+  }, [runtime]);
 
   const content = resolveWidgetContent(snapshot.phase, {
-    exception: metadata.exception,
-    fallback: metadata.fallback,
+    error: snapshot.error,
+    exception: metadata.exception ?? components.exception,
+    fallback: metadata.fallback ?? components.fallback,
     view: renderView(metadata.view, widgetProps),
   });
 
@@ -105,11 +106,11 @@ type WidgetHostWidgetProps<TProps extends object> = keyof TProps extends never
     };
 
 interface WidgetRuntimeEntry<TProps extends object> {
-  readonly isPrepared: boolean;
   readonly runtime: WidgetRuntime<TProps>;
 }
 
 interface WidgetContentOptions {
+  readonly error: unknown | null;
   readonly exception: React.ReactNode;
   readonly fallback: React.ReactNode;
   readonly view: React.ReactNode;
@@ -121,7 +122,7 @@ const createWidgetHostProps = <TProps extends object>(props: TProps | undefined)
 
 const resolveWidgetContent = (phase: WidgetRuntimePhase, options: WidgetContentOptions): React.ReactNode => {
   if (phase === 'failed') {
-    return options.exception;
+    return renderWidgetException(options.exception, options.error);
   }
 
   if (phase !== 'ready') {
@@ -129,4 +130,8 @@ const resolveWidgetContent = (phase: WidgetRuntimePhase, options: WidgetContentO
   }
 
   return options.view;
+};
+
+const renderWidgetException = (exception: React.ReactNode, error: unknown): React.ReactNode => {
+  return <ExceptionProvider error={error}>{exception ?? null}</ExceptionProvider>;
 };

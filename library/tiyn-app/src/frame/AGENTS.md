@@ -20,5 +20,5 @@ hooks.
 ## Проверка
 
 - Frame source/runtime/service/navigation: локальные tests в `frame/*`.
-- Изменение history/hash поведение: проверить docs `06-frames.md` и audit.
+- Изменение history/hash поведение: проверить docs `../../docs/06-frames.md` и audit.
 - Публичный contract: сверить `src/index.ts`.

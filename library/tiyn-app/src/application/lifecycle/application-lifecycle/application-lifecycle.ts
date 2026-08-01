@@ -1,14 +1,7 @@
 import type { RuntimeErrorReport } from '../../reporting/runtime-error-report';
 
 export type ApplicationLifecyclePhase =
-  | 'created'
-  | 'composing'
-  | 'composed'
-  | 'initializing'
-  | 'ready'
-  | 'failed'
-  | 'disposing'
-  | 'disposed';
+  'created' | 'composing' | 'composed' | 'initializing' | 'ready' | 'failed' | 'disposing' | 'disposed';
 
 export interface ApplicationLifecycleSnapshot {
   readonly error: unknown;

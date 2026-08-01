@@ -267,11 +267,41 @@ async action(args: ControllerActionArgs<UpdateOrderFilterPayload>): Promise<void
 
 Provider - lifecycle participant route, layout, module, frame или widget runtime.
 Каждый provider, который попадает в `providers: [...]`, должен быть помечен
-`@Provider()`. Framework автоматически регистрирует такой class token в DI, если
-он еще не зарегистрирован вручную.
+`@Provider()`. Framework создает такой concrete class token в отдельном instance
+scope для каждого runtime pipeline.
+
+Provider является самодостаточной DI-сущностью. Его собственные зависимости
+подключаются на provider class через `@UseBindings(...)`:
 
 ```ts
+@UseBindings(OrdersEventsBindings)
+@Provider()
+export class OrdersEventsProvider extends RuntimeProviderInterface {
+  constructor(
+    @Inject(OrdersEventsSourceInterface)
+    private readonly source: OrdersEventsSourceInterface,
+  ) {
+    super();
+  }
+}
+```
+
+Application, module, frame и widget не должны дублировать
+`OrdersEventsBindings`. Если несколько активных providers используют один и тот
+же binding module, `ProviderScope` регистрирует его один раз и освобождает после
+последнего provider pipeline.
+
+Не привязывай сам provider class в binding module. `@UseBindings(...)` provider-а
+предназначен только для его dependencies; lifecycle экземпляра принадлежит
+framework.
+
+```ts
+type RuntimeProviderCleanup = () => void | Promise<void>;
+type RuntimeProviderResult = void | RuntimeProviderCleanup;
+
 export abstract class RuntimeProviderInterface {
+  setup?(context: RuntimeProviderContextInterface): RuntimeProviderResult | Promise<RuntimeProviderResult>;
+
   beforeLoad?(context: RuntimeProviderContextInterface): RuntimeProviderResult | Promise<RuntimeProviderResult>;
 
   beforeRender?(context: RuntimeProviderContextInterface): RuntimeProviderResult | Promise<RuntimeProviderResult>;
@@ -282,19 +312,24 @@ export abstract class RuntimeProviderInterface {
 }
 ```
 
+Runtime сохраняет cleanup, возвращённый каждым hook, и вызывает его при
+освобождении provider pipeline до освобождения provider dependencies.
+
 Context provider-а:
 
 ```ts
 interface RuntimeProviderContextInterface {
   readonly params: Record<string, string | undefined>;
-  readonly phase: 'afterRender' | 'beforeLoad' | 'beforeRender' | 'onDemand';
+  readonly phase: 'afterRender' | 'beforeLoad' | 'beforeRender' | 'onDemand' | 'setup';
   readonly request: Request;
   readonly scope: RuntimeScope;
   readonly signal: AbortSignal;
 }
 ```
 
-Provider может вернуть `RuntimeProviderInstance` для очистки ресурсов:
+Provider может вернуть cleanup-функцию через `RuntimeProviderResult` для
+очистки ресурсов, созданных конкретным lifecycle hook. Ресурс на весь lifetime
+runtime boundary создаётся в однократном `setup`:
 
 ```ts
 @Provider()
@@ -304,12 +339,12 @@ export class OrdersEventsProvider implements RuntimeProviderInterface {
     private readonly eventBus: ApplicationEventBusInterface,
   ) {}
 
-  afterRender(): RuntimeProviderInstance {
+  setup(): RuntimeProviderResult {
     const eventScope = this.eventBus.createScope().subscribe(OrderUpdatedEvent, this.handleOrderUpdated.bind(this));
 
-    return new RuntimeProviderInstance(() => {
+    return () => {
       eventScope.dispose();
-    });
+    };
   }
 
   private handleOrderUpdated(event: OrderUpdatedEvent): void {
@@ -322,6 +357,52 @@ export class OrdersEventsProvider implements RuntimeProviderInterface {
 subscriptions внутри provider/controller. `subscribe(...)` можно оставить для
 одиночной подписки, если owner напрямую возвращает ее disposable в runtime
 cleanup.
+
+Provider instances не являются общими между runtime pipelines. Одновременное
+использование одного provider в module, frame и widget создает три экземпляра и
+три lifecycle-вызова. При этом их provider dependencies могут быть singleton в
+общем `ProviderScope`.
+
+Module/frame/widget bindings не видны provider-у. Локальные `scope`, `props`,
+`params`, `request` и `signal` доступны только через provider context. Это не
+разрывает preload-цепочку: provider получает application-level runtime factory и
+передает ей context конкретного frame или widget.
+
+## Singleton Provider
+
+Context-free integration, которая изменяет глобальный runtime state и не должна
+обрабатывать событие отдельно для каждого module/frame/widget, объявляется
+отдельным provider contract:
+
+```ts
+import { SingletonProvider, SingletonProviderInterface, type RuntimeProviderResult } from '@tiyn/app';
+
+@SingletonProvider()
+export class OrdersUpdatesProvider implements SingletonProviderInterface {
+  setup(): RuntimeProviderResult {
+    return this.source.subscribe((update) => {
+      updateEntity(OrderEntity, update);
+    });
+  }
+}
+```
+
+`SingletonProviderInterface` требует только `setup()` без
+`RuntimeProviderContextInterface`. Результат остаётся общим
+`RuntimeProviderResult`.
+
+Один singleton provider instance создаётся внутри application scope. Каждый
+runtime pipeline из `providers` metadata получает lease:
+
+- первый активный lease запускает `setup`;
+- дополнительные leases ожидают тот же setup и не повторяют его;
+- освобождение последнего lease запускает cleanup;
+- новая активация после cleanup снова запускает `setup` на том же instance.
+
+`@SingletonProvider()` нельзя заменять настройкой обычного `@Provider()`: у
+контрактов разный набор hooks и разная доступность runtime context. Обычные
+provider phases принадлежат конкретному runtime, singleton provider предназначен
+только для shared resource lifecycle.
 
 ## Когда Использовать Provider
 
@@ -344,6 +425,7 @@ activate module scope
 -> resolve providers
 -> beforeLoad providers
 -> controller loaders
+-> setup providers (один раз для этого runtime)
 -> beforeRender providers
 -> render ready screen
 -> dispose providers при очистке module runtime
@@ -351,9 +433,21 @@ activate module scope
 
 `beforeLoad` используй, когда controller loaders зависят от работы provider.
 
+`setup` используй для ресурса, lifetime которого совпадает с runtime boundary:
+socket/event subscription, observer или другой side effect с обязательным
+cleanup. Повторный loader/revalidate не запускает `setup` снова.
+
+Объект `RouteRuntime` может переживать несколько активаций одного route
+declaration. Уход с маршрута окончательно освобождает текущий provider pipeline.
+Если пользователь позже возвращается на маршрут, runtime создаёт новый pipeline
+и новые runtime-local provider instances; их `setup` выполняется снова. Это
+новый lifecycle boundary, а не revalidate ранее активного runtime.
+
 `beforeRender` используй для подготовки перед render, например widget preload.
 
-`afterRender` используй для subscriptions, analytics и неблокирующих effects.
+`afterRender` используй для analytics и неблокирующих effects, которым
+действительно нужен состоявшийся render. Долгоживущие subscriptions размещай в
+`setup`.
 
 `onDemand` зарезервирован для явного runtime-запроса.
 
@@ -371,7 +465,7 @@ export class OrdersSummaryWidgetPreloadProvider extends RuntimeProviderInterface
     super();
   }
 
-  beforeRender(context: RuntimeProviderContextInterface): Promise<RuntimeProviderInstance> {
+  beforeRender(context: RuntimeProviderContextInterface): Promise<RuntimeProviderResult> {
     return this.widgetRuntimeFactory.preload(context, OrdersSummaryWidget, {
       props: {
         title: 'Orders',

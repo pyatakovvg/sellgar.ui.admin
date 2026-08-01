@@ -1,1 +1,1 @@
-export { RuntimeScope } from './runtime-scope.ts';
+export { RuntimeScope, type RuntimeScopeActivateOptions, type RuntimeScopeBindingsLease } from './runtime-scope.ts';

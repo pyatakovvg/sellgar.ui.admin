@@ -1,13 +1,16 @@
-import type { DependencyConstructor } from '../../../di/binding/binding-builder';
 import type { DependencyToken } from '../../../di/token/dependency-token';
 import type { RuntimeScope } from '../../scope/base';
-import { RuntimeProviderInstanceInterface, type RuntimeProviderResult } from '../runtime-provider-instance';
+import { ProviderScope, type ProviderScopeInstance, type SingletonProviderScopeInstance } from '../../scope/kind';
+import type { ProviderToken } from '../provider-token.ts';
 import type {
+  RuntimeProviderCleanup,
   RuntimeProviderContextInterface,
   RuntimeProviderInterface,
   RuntimeProviderPhase,
+  RuntimeProviderResult,
 } from '../runtime-provider';
 import { isRuntimeProviderToken } from '../runtime-provider';
+import { isSingletonProviderToken, type SingletonProviderInterface } from '../singleton-provider';
 
 export type RuntimeProviderPipelineContext<TProps extends object = object> = Omit<
   RuntimeProviderContextInterface<TProps>,
@@ -15,29 +18,63 @@ export type RuntimeProviderPipelineContext<TProps extends object = object> = Omi
 >;
 
 export class RuntimeProviderPipeline<TProps extends object = object> {
-  private readonly providerInstances: RuntimeProviderInstanceInterface[] = [];
+  private readonly providerCleanups: RuntimeProviderCleanup[] = [];
+  private readonly providerScopeInstances: ProviderScopeInstance<RuntimeProviderInterface<TProps>>[];
   private readonly providers: Map<DependencyToken<RuntimeProviderInterface<TProps>>, RuntimeProviderInterface<TProps>>;
+  private readonly singletonProviderScopeInstances: SingletonProviderScopeInstance<SingletonProviderInterface>[];
+  private setupPromise: Promise<void> | undefined;
+  private disposed = false;
 
-  constructor(scope: RuntimeScope, providerTokens: readonly DependencyToken<RuntimeProviderInterface<TProps>>[]) {
-    this.providers = resolveProviders(scope, providerTokens);
+  constructor(scope: RuntimeScope, providerTokens: readonly ProviderToken<TProps>[]) {
+    const resolvedProviders = resolveProviders(scope.get(ProviderScope), providerTokens);
+
+    this.providers = resolvedProviders.providers;
+    this.providerScopeInstances = resolvedProviders.instances;
+    this.singletonProviderScopeInstances = resolvedProviders.singletonInstances;
   }
 
   get size(): number {
-    return this.providers.size;
+    return this.providers.size + this.singletonProviderScopeInstances.length;
+  }
+
+  setup(context: RuntimeProviderPipelineContext<TProps>): Promise<void> {
+    if (this.disposed) {
+      throw new Error('Pipeline runtime providers уже освобождён.');
+    }
+
+    this.setupPromise ??= this.runSetup(context);
+
+    return this.setupPromise;
   }
 
   async dispose(): Promise<readonly PromiseSettledResult<void>[]> {
-    if (this.providerInstances.length === 0) {
+    if (this.disposed) {
       return [];
     }
 
-    const providerInstances = this.providerInstances.splice(0);
+    this.disposed = true;
+    await this.setupPromise?.catch(() => undefined);
 
-    return Promise.allSettled(
-      providerInstances.map((providerInstance) => {
-        return Promise.resolve().then(() => providerInstance.dispose());
+    const providerCleanups = this.providerCleanups.splice(0);
+    const providerScopeInstances = this.providerScopeInstances.splice(0);
+    const singletonProviderScopeInstances = this.singletonProviderScopeInstances.splice(0);
+    const providerResults = await Promise.allSettled(
+      providerCleanups.map((cleanup) => {
+        return Promise.resolve().then(() => cleanup());
       }),
     );
+    const providerScopeResults = await Promise.allSettled(
+      providerScopeInstances.map((providerScopeInstance) => {
+        return Promise.resolve().then(() => providerScopeInstance.dispose());
+      }),
+    );
+    const singletonProviderScopeResults = await Promise.allSettled(
+      singletonProviderScopeInstances.map((providerScopeInstance) => {
+        return providerScopeInstance.dispose();
+      }),
+    );
+
+    return [...providerResults, ...singletonProviderScopeResults, ...providerScopeResults];
   }
 
   async runBeforeLoad(context: RuntimeProviderPipelineContext<TProps>): Promise<void> {
@@ -49,8 +86,16 @@ export class RuntimeProviderPipeline<TProps extends object = object> {
   }
 
   private retainProviderResult(result: RuntimeProviderResult): void {
-    if (result instanceof RuntimeProviderInstanceInterface) {
-      this.providerInstances.push(result);
+    if (typeof result === 'function') {
+      this.providerCleanups.push(result);
+    }
+  }
+
+  private async runSetup(context: RuntimeProviderPipelineContext<TProps>): Promise<void> {
+    await this.run('setup', context);
+
+    for (const providerScopeInstance of this.singletonProviderScopeInstances) {
+      await providerScopeInstance.setup();
     }
   }
 
@@ -68,47 +113,62 @@ export class RuntimeProviderPipeline<TProps extends object = object> {
   }
 }
 
+interface ResolvedProviders<TProps extends object> {
+  readonly instances: ProviderScopeInstance<RuntimeProviderInterface<TProps>>[];
+  readonly providers: Map<DependencyToken<RuntimeProviderInterface<TProps>>, RuntimeProviderInterface<TProps>>;
+  readonly singletonInstances: SingletonProviderScopeInstance<SingletonProviderInterface>[];
+}
+
 const resolveProviders = <TProps extends object>(
-  scope: RuntimeScope,
-  providerTokens: readonly DependencyToken<RuntimeProviderInterface<TProps>>[],
-): Map<DependencyToken<RuntimeProviderInterface<TProps>>, RuntimeProviderInterface<TProps>> => {
+  scope: ProviderScope,
+  providerTokens: readonly ProviderToken<TProps>[],
+): ResolvedProviders<TProps> => {
+  const instances: ProviderScopeInstance<RuntimeProviderInterface<TProps>>[] = [];
   const providers = new Map<DependencyToken<RuntimeProviderInterface<TProps>>, RuntimeProviderInterface<TProps>>();
+  const resolvedTokens = new Set<ProviderToken<TProps>>();
+  const singletonInstances: SingletonProviderScopeInstance<SingletonProviderInterface>[] = [];
 
-  for (const providerToken of providerTokens) {
-    assertRuntimeProviderToken(providerToken);
-    bindRuntimeProvider(scope, providerToken);
-    providers.set(providerToken, scope.get(providerToken));
+  try {
+    for (const providerToken of providerTokens) {
+      if (resolvedTokens.has(providerToken)) {
+        continue;
+      }
+
+      resolvedTokens.add(providerToken);
+
+      if (isRuntimeProviderToken(providerToken)) {
+        const runtimeProviderToken = providerToken as DependencyToken<RuntimeProviderInterface<TProps>>;
+        const instance = scope.acquire(runtimeProviderToken);
+
+        instances.push(instance);
+        providers.set(runtimeProviderToken, instance.value);
+        continue;
+      }
+
+      if (isSingletonProviderToken(providerToken)) {
+        singletonInstances.push(scope.acquireSingleton(providerToken as DependencyToken<SingletonProviderInterface>));
+        continue;
+      }
+
+      throw new Error(
+        `Provider "${getProviderTokenName(providerToken)}" указан в providers metadata, но не помечен декоратором @Provider() или @SingletonProvider().`,
+      );
+    }
+  } catch (error) {
+    for (const instance of instances.reverse()) {
+      instance.dispose();
+    }
+    for (const instance of singletonInstances.reverse()) {
+      void instance.dispose();
+    }
+
+    throw error;
   }
 
-  return providers;
+  return { instances, providers, singletonInstances };
 };
 
-const assertRuntimeProviderToken = <TProps extends object>(
-  providerToken: DependencyToken<RuntimeProviderInterface<TProps>>,
-): void => {
-  if (isRuntimeProviderToken(providerToken)) {
-    return;
-  }
-
-  throw new Error(
-    `Runtime provider "${getProviderTokenName(providerToken)}" указан в providers metadata, но не помечен декоратором @Provider().`,
-  );
-};
-
-const bindRuntimeProvider = <TProps extends object>(
-  scope: RuntimeScope,
-  providerToken: DependencyToken<RuntimeProviderInterface<TProps>>,
-): void => {
-  if (scope.has(providerToken)) {
-    return;
-  }
-
-  scope.bindSelf(providerToken as DependencyConstructor<RuntimeProviderInterface<TProps>>);
-};
-
-const getProviderTokenName = <TProps extends object>(
-  providerToken: DependencyToken<RuntimeProviderInterface<TProps>>,
-): string => {
+const getProviderTokenName = <TProps extends object>(providerToken: ProviderToken<TProps>): string => {
   if (typeof providerToken === 'function') {
     return providerToken.name || 'anonymous';
   }
@@ -121,6 +181,8 @@ const getProviderMethod = <TProps extends object>(
   phase: RuntimeProviderPhase,
 ) => {
   switch (phase) {
+    case 'setup':
+      return provider.setup;
     case 'afterRender':
       return provider.afterRender;
     case 'beforeLoad':

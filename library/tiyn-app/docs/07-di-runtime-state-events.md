@@ -70,8 +70,21 @@ Widget:
 export class OrdersSummaryWidget extends WidgetDefinition<OrdersSummaryWidgetProps> {}
 ```
 
+Provider:
+
+```ts
+@UseBindings(OrdersEventsBindings)
+@Provider()
+export class OrdersEventsProvider extends RuntimeProviderInterface {}
+```
+
 Decorator только записывает metadata. Runtime scopes сами активируют и
 освобождают bindings.
+
+Bindings provider-а активируются в общем `ProviderScope` по факту появления
+provider pipeline. Повторное использование одного binding module удерживает его
+по constructor identity и не выполняет повторную регистрацию. Последний
+завершившийся pipeline освобождает binding module.
 
 ## Injection
 
@@ -100,23 +113,28 @@ export abstract class OrdersServiceInterface {
 
 ## Runtime Scopes
 
-Публичные scope classes:
+Framework использует внутренние scope classes:
 
 ```ts
 ApplicationScope;
+ProviderScope;
 ModuleScope;
 WidgetScope;
 FrameScope;
 RuntimeScope;
 ```
 
-Обычный feature code не должен создавать scopes вручную. Scope activation
-принадлежит runtime-классам.
+Scope classes и их lifecycle API не экспортируются из root facade. Feature code
+не создаёт scopes вручную: activation принадлежит runtime-классам.
 
-React escape hatch:
+`ProviderScope` является дочерним только для `ApplicationScope` и соседним для
+route/module/frame/widget scopes. Поэтому provider-local bindings не попадают в
+runtime scopes, а локальные runtime bindings не становятся constructor
+dependencies provider-а.
+
+React DI facade:
 
 ```tsx
-const scope = useRuntimeScope();
 const service = useDependency(OrdersServiceInterface);
 ```
 
@@ -212,10 +230,10 @@ export class OrdersEventsProvider implements RuntimeProviderInterface {
     private readonly eventBus: ApplicationEventBusInterface,
   ) {}
 
-  afterRender(): RuntimeProviderInstance {
+  setup(): RuntimeProviderResult {
     const eventScope = this.eventBus.createScope().subscribe(OrderUpdatedEvent, this.handleOrderUpdated.bind(this));
 
-    return new RuntimeProviderInstance(() => eventScope.dispose());
+    return () => eventScope.dispose();
   }
 
   private handleOrderUpdated(event: OrderUpdatedEvent): void {

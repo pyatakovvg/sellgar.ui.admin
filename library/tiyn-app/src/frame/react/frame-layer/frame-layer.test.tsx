@@ -19,8 +19,8 @@ import {
   Provider,
   RuntimeProviderInterface,
   type RuntimeProviderContextInterface,
+  type RuntimeProviderResult,
 } from '../../../runtime/provider/runtime-provider';
-import { RuntimeProviderInstance } from '../../../runtime/provider/runtime-provider-instance';
 import { RuntimeScopeProvider } from '../../../runtime/react';
 import type { RuntimeScope } from '../../../runtime/scope/base';
 import { useException } from '../../../react/router/exception';
@@ -723,14 +723,14 @@ class TestFrameProvider extends RuntimeProviderInterface {
   static deferred: Deferred<void> = createDeferred();
   static events: string[] = [];
 
-  async beforeRender(context: RuntimeProviderContextInterface): Promise<RuntimeProviderInstance> {
+  async beforeRender(context: RuntimeProviderContextInterface): Promise<RuntimeProviderResult> {
     TestFrameProvider.events.push(`beforeRender:${context.phase}:${new URL(context.request.url).hash}`);
 
     await TestFrameProvider.deferred.promise;
 
-    return new RuntimeProviderInstance(() => {
+    return () => {
       TestFrameProvider.events.push('dispose');
-    });
+    };
   }
 }
 

@@ -1,15 +1,14 @@
 import type React from 'react';
 
-import type { DependencyToken } from '../../../di/token/dependency-token';
 import type { RenderableView } from '../../../react/view/renderable-view';
-import type { RuntimeProviderInterface } from '../../../runtime/provider/runtime-provider';
+import type { ProviderToken } from '../../../runtime/provider/provider-token.ts';
 
 export const WIDGET_METADATA_KEY = Symbol('tiyn-app:widget:metadata');
 
 export interface WidgetMetadata<TProps extends object = object> {
   readonly exception?: React.ReactNode;
   readonly fallback?: React.ReactNode;
-  readonly providers?: readonly DependencyToken<RuntimeProviderInterface<TProps>>[];
+  readonly providers?: readonly ProviderToken<TProps>[];
   readonly view: RenderableView<TProps>;
 }
 

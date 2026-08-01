@@ -372,7 +372,7 @@ import {
   RuntimeProviderInterface,
   WidgetRuntimeFactoryInterface,
   type RuntimeProviderContextInterface,
-  type RuntimeProviderInstance,
+  type RuntimeProviderResult,
 } from '@tiyn/app';
 
 import { OrdersSummaryWidget } from '../../orders-summary.widget.tsx';
@@ -386,7 +386,7 @@ export class OrdersSummaryWidgetPreloadProvider extends RuntimeProviderInterface
     super();
   }
 
-  beforeRender(context: RuntimeProviderContextInterface): Promise<RuntimeProviderInstance> {
+  beforeRender(context: RuntimeProviderContextInterface): Promise<RuntimeProviderResult> {
     return this.widgetRuntimeFactory.preload(context, OrdersSummaryWidget, {
       props: {
         title: 'Заказы',

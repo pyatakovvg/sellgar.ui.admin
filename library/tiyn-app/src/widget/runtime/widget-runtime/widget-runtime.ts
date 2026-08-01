@@ -577,6 +577,8 @@ export class WidgetRuntime<TProps extends object = Record<string, never>> {
     const loaderData = await this.loadControllers(widgetRuntime, signal);
 
     this.throwIfAborted(signal);
+    await widgetRuntime.providerPipeline.setup(this.createProviderContext(widgetRuntime.scope, signal));
+    this.throwIfAborted(signal);
     await this.runProviderBeforeRender(widgetRuntime, signal);
     this.throwIfAborted(signal);
 

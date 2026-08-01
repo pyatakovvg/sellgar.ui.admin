@@ -4,9 +4,7 @@ import type { GuardToken } from '../../contract/guard';
 import type { GuardDescriptor } from '../guard-descriptor';
 
 export type GuardDeclaration<TContext = unknown> =
-  | GuardToken<TContext>
-  | GuardDescriptor<TContext>
-  | GuardDescriptorBuilder<TContext>;
+  GuardToken<TContext> | GuardDescriptor<TContext> | GuardDescriptorBuilder<TContext>;
 
 export type GuardDeclarations<TContext = unknown> = GuardDeclaration<TContext> | readonly GuardDeclaration<TContext>[];
 

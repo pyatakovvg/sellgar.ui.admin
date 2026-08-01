@@ -12,7 +12,6 @@ import {
   parseControllerActionRequest,
   type ControllerActionRequest,
 } from '../../../controller/action/controller-action-request';
-import type { DependencyToken } from '../../../di/token/dependency-token';
 import { FrameRuntime } from '../../../frame/runtime/frame-runtime';
 import { getFrameMetadata, type FrameConstructor } from '../../../frame/declaration/frame';
 import type { FrameSourceCloseHandler, FrameSourceContextInterface } from '../../../frame/source/frame-source';
@@ -25,10 +24,7 @@ import {
   RuntimeProviderPipeline,
   type RuntimeProviderPipelineContext,
 } from '../../../runtime/provider/runtime-provider-pipeline';
-import type {
-  RuntimeProviderContextInterface,
-  RuntimeProviderInterface,
-} from '../../../runtime/provider/runtime-provider';
+import type { ProviderToken } from '../../../runtime/provider/provider-token.ts';
 import type { RuntimeScope } from '../../../runtime/scope/base';
 import {
   createRuntimeRevisionGuard,
@@ -56,8 +52,9 @@ import type {
 export class RouteRuntime {
   private readonly moduleRuntime: ModuleRuntime | null;
   private readonly preparedFrameRuntimes = new FrameRuntimeRegistry();
-  private readonly providerPipeline: RuntimeProviderPipeline;
+  private readonly providerTokens: readonly ProviderToken[];
   private readonly routeScope: RouteScope;
+  private providerPipeline: RuntimeProviderPipeline | undefined;
 
   constructor(
     private readonly route: Route,
@@ -72,7 +69,7 @@ export class RouteRuntime {
   ) {
     this.routeScope = new RouteScope(appScope);
     this.activateLayouts(route.layouts);
-    this.providerPipeline = new RuntimeProviderPipeline(this.routeScope, this.getProviderTokens());
+    this.providerTokens = this.getProviderTokens();
     this.moduleRuntime = route.load ? new ModuleRuntime(this.routeScope, route.load) : null;
   }
 
@@ -136,6 +133,7 @@ export class RouteRuntime {
             await this.executePolicies('canActivate', args, this.loaderPolicies);
 
             await this.runProviderBeforeLoad(args);
+            await this.runProviderSetup(args);
             await this.runProviderBeforeRender(args);
             await this.loadFrameRuntimes(args, this.appScope, location);
             await this.handleLoaderSessionTransition(args, operationGuard.revision);
@@ -157,6 +155,7 @@ export class RouteRuntime {
             this.createModuleReporter('route.module.discard_cleanup_failed'),
           );
 
+          await this.runProviderSetup(args);
           await this.runProviderBeforeRender(args);
           await this.loadFrameRuntimes(args, this.getRuntimeScope(), location);
           await this.handleLoaderSessionTransition(args, operationGuard.revision);
@@ -218,6 +217,10 @@ export class RouteRuntime {
 
   private async runProviderBeforeLoad(args: LoaderFunctionArgs): Promise<void> {
     await this.runProviders(args, 'beforeLoad', 'route.provider_before_load_failed');
+  }
+
+  private async runProviderSetup(args: LoaderFunctionArgs): Promise<void> {
+    await this.runProviders(args, 'setup', 'route.provider_setup_failed');
   }
 
   private redirectStaticDefaultRoute(args: LoaderFunctionArgs): void {
@@ -303,20 +306,23 @@ export class RouteRuntime {
 
   private async runProviders(
     args: LoaderFunctionArgs,
-    phase: RuntimeProviderContextInterface['phase'],
+    phase: 'beforeLoad' | 'beforeRender' | 'setup',
     code: RuntimeErrorCode,
   ): Promise<void> {
-    if (this.providerPipeline.size === 0) {
+    if (this.providerTokens.length === 0) {
       return;
     }
 
     const context = this.createProviderContext(args);
+    const providerPipeline = this.getOrCreateProviderPipeline();
 
     try {
       if (phase === 'beforeLoad') {
-        await this.providerPipeline.runBeforeLoad(context);
+        await providerPipeline.runBeforeLoad(context);
       } else if (phase === 'beforeRender') {
-        await this.providerPipeline.runBeforeRender(context);
+        await providerPipeline.runBeforeRender(context);
+      } else if (phase === 'setup') {
+        await providerPipeline.setup(context);
       }
     } catch (error) {
       this.app.reportError({
@@ -348,7 +354,7 @@ export class RouteRuntime {
     }
   }
 
-  private getProviderTokens(): readonly DependencyToken<RuntimeProviderInterface>[] {
+  private getProviderTokens(): readonly ProviderToken[] {
     return [
       ...this.route.providers,
       ...this.route.layouts.flatMap((layout) => {
@@ -357,12 +363,22 @@ export class RouteRuntime {
     ];
   }
 
+  private getOrCreateProviderPipeline(): RuntimeProviderPipeline {
+    this.providerPipeline ??= new RuntimeProviderPipeline(this.routeScope, this.providerTokens);
+
+    return this.providerPipeline;
+  }
+
   private async disposeProviders(code: RuntimeErrorCode): Promise<void> {
-    if (this.providerPipeline.size === 0) {
+    const providerPipeline = this.providerPipeline;
+
+    if (!providerPipeline) {
       return;
     }
 
-    const results = await this.providerPipeline.dispose();
+    this.providerPipeline = undefined;
+
+    const results = await providerPipeline.dispose();
 
     results.forEach((result) => {
       if (result.status === 'rejected') {
@@ -559,6 +575,9 @@ export class RouteRuntime {
       },
       providerDispose: (error) => {
         report('route.module.provider_dispose_failed', error);
+      },
+      providerSetup: (error) => {
+        report('route.module.provider_setup_failed', error);
       },
     };
   }

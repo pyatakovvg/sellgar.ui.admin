@@ -2,8 +2,7 @@ import type React from 'react';
 
 import type { FrameConstructor } from '../../../frame/declaration/frame';
 import type { LayoutConstructor } from '../../../layout/declaration/layout';
-import type { RuntimeProviderInterface } from '../../../runtime/provider/runtime-provider';
-import type { DependencyToken } from '../../../di/token/dependency-token';
+import type { ProviderToken } from '../../../runtime/provider/provider-token.ts';
 import type { RoutePolicyDeclaration } from '../../runtime/route-runtime-context';
 
 export interface RouteOptions {
@@ -19,7 +18,7 @@ export interface RouteOptions {
   readonly load?: () => Promise<Record<string, unknown>>;
   readonly notFound?: React.ReactNode;
   readonly path?: string;
-  readonly providers?: readonly DependencyToken<RuntimeProviderInterface>[];
+  readonly providers?: readonly ProviderToken[];
   readonly routes?: Route[];
 }
 
@@ -37,7 +36,7 @@ export class Route {
   readonly load: (() => Promise<Record<string, unknown>>) | undefined;
   readonly notFound: React.ReactNode | undefined;
   readonly path: string | undefined;
-  readonly providers: readonly DependencyToken<RuntimeProviderInterface>[];
+  readonly providers: readonly ProviderToken[];
   readonly routes: Route[];
 
   constructor(options: RouteOptions) {

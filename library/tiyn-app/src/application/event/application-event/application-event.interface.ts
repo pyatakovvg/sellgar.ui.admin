@@ -3,8 +3,7 @@ export type ApplicationEventToken<TEvent extends object> = abstract new (...args
 export type ApplicationEventHandler<TEvent extends object> = (event: TEvent) => void | Promise<void>;
 
 export type ApplicationEventHandlerDeclaration<TEvent extends object> =
-  | ApplicationEventHandler<TEvent>
-  | ApplicationEventHandlerInterface<TEvent>;
+  ApplicationEventHandler<TEvent> | ApplicationEventHandlerInterface<TEvent>;
 
 export interface ApplicationEventSubscription {
   dispose(): void;

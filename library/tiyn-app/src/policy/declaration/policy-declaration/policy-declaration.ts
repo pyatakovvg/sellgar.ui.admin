@@ -5,9 +5,7 @@ import type { PolicyDescriptor } from '../policy-descriptor';
 import { PolicyDescriptorBuilder } from '../policy-descriptor-builder';
 
 export type PolicyDeclaration<TContext extends RuntimeContextInterface = RuntimeContextInterface, TOptions = unknown> =
-  | PolicyToken<TContext, TOptions>
-  | PolicyDescriptor<TContext, TOptions>
-  | PolicyDescriptorBuilder<TContext, TOptions>;
+  PolicyToken<TContext, TOptions> | PolicyDescriptor<TContext, TOptions> | PolicyDescriptorBuilder<TContext, TOptions>;
 
 export const isPolicyDescriptor = <TContext extends RuntimeContextInterface>(
   declaration: PolicyDeclaration<TContext>,

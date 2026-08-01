@@ -16,4 +16,4 @@
 ## Проверка
 
 - Declaration/rendering изменения: проверить затронутый router/frame rendering.
-- Сверить docs `03-router-and-navigation.md` и `14-layout-package-structure.md`.
+- Сверить docs `../../docs/03-router-and-navigation.md` и `../../docs/14-layout-package-structure.md`.

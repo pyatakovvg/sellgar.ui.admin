@@ -46,6 +46,7 @@ export interface ModuleRuntimeReporter {
   readonly providerBeforeLoad?: (error: unknown) => void;
   readonly providerBeforeRender?: (error: unknown) => void;
   readonly providerDispose?: (error: unknown) => void;
+  readonly providerSetup?: (error: unknown) => void;
 }
 
 export interface ModuleRuntimeRevalidateOptions {
@@ -308,6 +309,8 @@ export class ModuleRuntime {
 
     const loaderData = await this.loadControllers(moduleRuntime, args, controllerToken);
 
+    this.throwIfAborted(args.request.signal);
+    await this.runProviderSetup(moduleRuntime, args, reporter);
     this.throwIfAborted(args.request.signal);
     await this.runProviderBeforeRender(moduleRuntime, args, reporter);
     this.throwIfAborted(args.request.signal);
@@ -589,6 +592,21 @@ export class ModuleRuntime {
     }
   }
 
+  private async runProviderSetup(
+    moduleRuntime: ActiveModuleRuntime,
+    args: ControllerLoaderArgs,
+    reporter?: ModuleRuntimeReporterInput,
+  ): Promise<void> {
+    const context = createProviderContext(moduleRuntime.scope, args);
+
+    try {
+      await moduleRuntime.providerPipeline.setup(context);
+    } catch (error) {
+      reportProviderSetupError(reporter, error);
+      throw error;
+    }
+  }
+
   private throwIfAborted(signal: AbortSignal): void {
     if (signal.aborted) {
       throw new Error('Активация модуля была прервана.');
@@ -658,4 +676,13 @@ const reportProviderDisposeError = (reporter: ModuleRuntimeReporterInput | undef
   }
 
   reporter?.providerDispose?.(error);
+};
+
+const reportProviderSetupError = (reporter: ModuleRuntimeReporterInput | undefined, error: unknown): void => {
+  if (typeof reporter === 'function') {
+    reporter(error);
+    return;
+  }
+
+  reporter?.providerSetup?.(error);
 };

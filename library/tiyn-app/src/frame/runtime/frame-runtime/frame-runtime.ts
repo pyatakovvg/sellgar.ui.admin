@@ -26,7 +26,7 @@ import {
   RuntimeProviderPipeline,
   type RuntimeProviderPipelineContext,
 } from '../../../runtime/provider/runtime-provider-pipeline';
-import type { RuntimeProviderInterface } from '../../../runtime/provider/runtime-provider';
+import type { ProviderToken } from '../../../runtime/provider/provider-token.ts';
 import type { RuntimeScope } from '../../../runtime/scope/base';
 import { RevalidateServiceInterface } from '../../../revalidate/contract/revalidate-service';
 import { RuntimeRevalidateService } from '../../../revalidate/runtime/revalidate-service';
@@ -520,7 +520,7 @@ export class FrameRuntime<TProps extends object = Record<string, never>> {
     });
   }
 
-  private getProviderTokens(): readonly DependencyToken<RuntimeProviderInterface<TProps>>[] {
+  private getProviderTokens(): readonly ProviderToken<TProps>[] {
     return [
       ...(this.metadata.providers ?? []),
       ...(this.metadata.layouts ?? []).flatMap((layout) => {
@@ -555,6 +555,8 @@ export class FrameRuntime<TProps extends object = Record<string, never>> {
 
     const loaderData = await this.loadControllers(frameRuntime, options.signal);
 
+    this.throwIfAborted(options.signal);
+    await this.getProviderPipeline(frameRuntime).setup(createProviderContext(frameRuntime.scope, this.props, options));
     this.throwIfAborted(options.signal);
     await this.runProviderBeforeRender(frameRuntime, options);
     this.throwIfAborted(options.signal);

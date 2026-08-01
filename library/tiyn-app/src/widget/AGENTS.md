@@ -20,4 +20,4 @@ runtime wiring.
 
 - Widget runtime/factory/state machine: локальные tests в `widget/runtime`.
 - React hooks/host: tests в `widget/react`.
-- Публичный contract: сверить `src/index.ts` и docs `05-widgets.md`.
+- Публичный contract: сверить `src/index.ts` и docs `../../docs/05-widgets.md`.

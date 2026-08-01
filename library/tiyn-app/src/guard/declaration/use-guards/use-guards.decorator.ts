@@ -12,8 +12,7 @@ export const UseGuards = <TContext = unknown>(
       return [...normalizeGuardDeclarations(declaration)];
     });
     const existing = Reflect.getOwnMetadata(USE_GUARDS_METADATA_KEY, target, propertyKey) as
-      | readonly GuardDeclaration<TContext>[]
-      | undefined;
+      readonly GuardDeclaration<TContext>[] | undefined;
 
     Reflect.defineMetadata(USE_GUARDS_METADATA_KEY, [...(existing ?? []), ...guards], target, propertyKey);
   };
@@ -25,7 +24,6 @@ export const getUseGuardsMetadata = <TContext = unknown>(
 ): readonly GuardDeclaration<TContext>[] => {
   return (
     (Reflect.getOwnMetadata(USE_GUARDS_METADATA_KEY, target, propertyKey) as
-      | readonly GuardDeclaration<TContext>[]
-      | undefined) ?? []
+      readonly GuardDeclaration<TContext>[] | undefined) ?? []
   );
 };

@@ -62,6 +62,11 @@ const RUNTIME_ERROR_DESCRIPTORS: Record<RuntimeErrorCode, RuntimeErrorDescriptor
     severity: 'warning',
     source: 'route.provider',
   },
+  'route.provider_setup_failed': {
+    phase: 'route.provider.setup',
+    severity: 'error',
+    source: 'route.provider',
+  },
   'route.module.commit_cleanup_failed': {
     phase: 'route.module.commit',
     severity: 'warning',
@@ -90,6 +95,11 @@ const RUNTIME_ERROR_DESCRIPTORS: Record<RuntimeErrorCode, RuntimeErrorDescriptor
   'route.module.provider_dispose_failed': {
     phase: 'route.module.provider.dispose',
     severity: 'warning',
+    source: 'route.module.provider',
+  },
+  'route.module.provider_setup_failed': {
+    phase: 'route.module.provider.setup',
+    severity: 'error',
     source: 'route.module.provider',
   },
 };

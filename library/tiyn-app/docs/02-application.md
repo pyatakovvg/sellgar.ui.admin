@@ -17,6 +17,10 @@
 Она не должна знать feature-specific детали: какие controllers есть у module,
 как widget грузит данные, какие domain services нужны конкретному экрану.
 
+Framework создает рядом с runtime-веткой отдельный `ProviderScope`. Application
+не перечисляет bindings конкретных providers: provider подключает их сам через
+`@UseBindings(...)`, только когда появляется в `providers: [...]`.
+
 ## Контракт
 
 ```ts
