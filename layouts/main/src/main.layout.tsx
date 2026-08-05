@@ -1,4 +1,4 @@
-import { Layout } from '@tiyn/app';
+import { Layout } from '@sellgar/app';
 
 import { LayoutView } from './view';
 

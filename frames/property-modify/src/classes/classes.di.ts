@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { PropertyModifyController } from './controller/property-modify.controller.ts';
 import { PropertyModifyControllerInterface } from './controller/property-modify-controller.interface.ts';

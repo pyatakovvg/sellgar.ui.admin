@@ -1,4 +1,4 @@
-import { Injectable } from '@tiyn/app';
+import { Injectable } from '@sellgar/app';
 import { makeAutoObservable, observable, computed, action } from 'mobx';
 
 import { LogoutStoreInterface } from './logout-store.interface.ts';

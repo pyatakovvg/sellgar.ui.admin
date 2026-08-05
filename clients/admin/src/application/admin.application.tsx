@@ -1,5 +1,5 @@
-import { Application, Route, Router, UseBindings, UserRequestFeature, UserRequestPresentation } from '@tiyn/app';
-import type { ApplicationConfiguratorInterface } from '@tiyn/app';
+import { Application, Route, Router, UseBindings, UserRequestFeature, UserRequestPresentation } from '@sellgar/app';
+import type { ApplicationConfiguratorInterface } from '@sellgar/app';
 
 import { MainLayout } from '@layout/main';
 import { BaseLayout } from '@layout/base';

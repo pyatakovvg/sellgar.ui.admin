@@ -19,7 +19,7 @@
 
 - Не добавлять сюда feature UI и business logic.
 - Здесь только регистрируются pages и frames; реализация живет в `pages/*` или `frames/*`.
-- Для routing, policies и application composition использовать primitives из `@tiyn/app`.
+- Для routing, policies и application composition использовать primitives из `@sellgar/app`.
 - Host bindings ограничивать application-wide/domain infrastructure.
 - Runtime recovery подключать в initializer через `RuntimeErrorsInterface`, а не
   через domain/request abstractions. Конкретная реакция на 401, логирование или

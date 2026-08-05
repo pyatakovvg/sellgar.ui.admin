@@ -1,6 +1,6 @@
 import { Form, ImageGallery, type ImageGalleryItem } from '@library/design';
 import { Caption, Field, Label } from '@sellgar/kit';
-import * as AppRuntime from '@tiyn/app';
+import * as AppRuntime from '@sellgar/app';
 
 import React from 'react';
 import * as RHF from 'react-hook-form';

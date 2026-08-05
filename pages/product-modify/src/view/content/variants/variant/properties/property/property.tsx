@@ -1,5 +1,5 @@
 import { Field, Caption, Select, Input, Badge, Button, Icon, Checkbox, Datepicker } from '@sellgar/kit';
-import { useLoaderData } from '@tiyn/app';
+import { useLoaderData } from '@sellgar/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';

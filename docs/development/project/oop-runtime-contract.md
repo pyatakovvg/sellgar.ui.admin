@@ -1,6 +1,6 @@
 # OOP-Контракт Runtime
 
-Runtime приложения - `@tiyn/app`.
+Runtime приложения - `@sellgar/app`.
 
 ## Application
 

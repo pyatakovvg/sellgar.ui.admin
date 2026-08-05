@@ -1,5 +1,5 @@
 import { Typography } from '@sellgar/kit';
-import { useLoaderData } from '@tiyn/app';
+import { useLoaderData } from '@sellgar/app';
 
 import React from 'react';
 

@@ -1,6 +1,6 @@
 import { ProductEntity } from '@library/domain';
 import { Button, Icon, useCellData } from '@sellgar/kit';
-import { useNavigate } from '@tiyn/app';
+import { useNavigate } from '@sellgar/app';
 
 import React from 'react';
 

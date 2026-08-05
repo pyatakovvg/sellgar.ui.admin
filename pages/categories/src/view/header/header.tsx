@@ -1,6 +1,6 @@
 import { Typography, Icon, Button } from '@sellgar/kit';
 import { CategoryModifyFrame } from '@frame/category-modify';
-import { useFrame } from '@tiyn/app';
+import { useFrame } from '@sellgar/app';
 
 import React from 'react';
 

@@ -1,4 +1,4 @@
-import { useLocation } from '@tiyn/app';
+import { useLocation } from '@sellgar/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';

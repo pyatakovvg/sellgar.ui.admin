@@ -1,5 +1,5 @@
 import { Field, Input, Icon, Button } from '@sellgar/kit';
-import { useNavigate } from '@tiyn/app';
+import { useNavigate } from '@sellgar/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';

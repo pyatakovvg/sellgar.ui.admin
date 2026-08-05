@@ -1,6 +1,6 @@
 import { BrandModifyFrame } from '@frame/brand-modify';
 import { Button, Icon, useCellData } from '@sellgar/kit';
-import { useFrame } from '@tiyn/app';
+import { useFrame } from '@sellgar/app';
 import { BrandEntity } from '@library/domain';
 
 import React from 'react';

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button, Modal, Typography } from '@sellgar/kit';
-import type { UserRequestAlertViewProps } from '@tiyn/app';
+import type { UserRequestAlertViewProps } from '@sellgar/app';
 
 import s from './default.module.scss';
 

@@ -1,5 +1,5 @@
 import { ProfileEntity } from '@library/domain';
-import { ApplicationStoreInterface, Controller, Inject } from '@tiyn/app';
+import { ApplicationStoreInterface, Controller, Inject } from '@sellgar/app';
 
 import { DashboardConstructorInterface } from './dashboard-constructor.interface.ts';
 

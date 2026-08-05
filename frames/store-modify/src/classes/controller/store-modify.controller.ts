@@ -6,7 +6,7 @@ import {
   Inject,
   type FrameControllerActionArgs,
   type FrameControllerLoaderArgs,
-} from '@tiyn/app';
+} from '@sellgar/app';
 
 import { StoreModifyActionPayload, StoreModifyControllerInterface } from './store-modify-controller.interface.ts';
 import { StoreModifyFrameParams } from '../params';

@@ -6,7 +6,7 @@ import {
   RevalidateServiceInterface,
   type FrameControllerActionArgs,
   type FrameControllerLoaderArgs,
-} from '@tiyn/app';
+} from '@sellgar/app';
 
 import { UnitModifyActionPayload, UnitModifyControllerInterface } from './unit-modify-controller.interface.ts';
 import { UnitModifyFrameParams } from '../params';

@@ -1,6 +1,6 @@
 import { PropertyEntity, MetaEntity } from '@library/domain';
 
-import { Injectable } from '@tiyn/app';
+import { Injectable } from '@sellgar/app';
 import { makeObservable, observable, action } from 'mobx';
 
 import { PropertyStoreInterface } from './property-store.interface.ts';

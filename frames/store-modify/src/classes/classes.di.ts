@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { CurrencyListController } from './controller/currency-list.controller.ts';
 import { CurrencyListControllerInterface } from './controller/currency-list-controller.interface.ts';

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@tiyn/app';
+import { Inject, Injectable } from '@sellgar/app';
 
 import { BadGatewayException } from './exeptions/bad-gateway.exception.ts';
 import { BadRequestException } from './exeptions/bad-request.exception.ts';

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@tiyn/app';
+import { Inject, Injectable } from '@sellgar/app';
 
 import { ProfileServiceInterface } from './profile-service.interface.ts';
 import { ProfileGatewayInterface } from '../gateway/profile-gateway.interface.ts';

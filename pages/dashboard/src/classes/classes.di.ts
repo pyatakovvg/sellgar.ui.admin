@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { DashboardConstructor } from './constructor/dashboard.constructor.ts';
 import { DashboardConstructorInterface } from './constructor/dashboard-constructor.interface.ts';

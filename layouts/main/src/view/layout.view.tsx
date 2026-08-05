@@ -1,6 +1,6 @@
 import { WidgetProvider as ThemeWidgetProvider } from '@widget/theme';
 
-import type { LayoutViewProps } from '@tiyn/app';
+import type { LayoutViewProps } from '@sellgar/app';
 
 import React from 'react';
 

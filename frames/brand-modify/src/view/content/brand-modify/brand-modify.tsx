@@ -1,4 +1,4 @@
-import * as AppRuntime from '@tiyn/app';
+import * as AppRuntime from '@sellgar/app';
 
 import React from 'react';
 import * as RHF from 'react-hook-form';

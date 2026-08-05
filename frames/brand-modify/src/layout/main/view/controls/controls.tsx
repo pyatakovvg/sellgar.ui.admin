@@ -1,6 +1,6 @@
 import { Button } from '@sellgar/kit';
 import { ArrowLeftSLineIcon } from '@sellgar/kit/icons';
-import * as AppRuntime from '@tiyn/app';
+import * as AppRuntime from '@sellgar/app';
 
 import React from 'react';
 

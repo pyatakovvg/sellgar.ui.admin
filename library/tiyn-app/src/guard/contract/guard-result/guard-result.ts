@@ -1,1 +1,0 @@
-export type GuardResult = boolean;

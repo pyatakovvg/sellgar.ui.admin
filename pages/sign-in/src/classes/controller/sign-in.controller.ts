@@ -1,5 +1,5 @@
 import { AuthServiceInterface, ProfileServiceInterface, ProfileEntity } from '@library/domain';
-import { ApplicationStoreInterface, Controller, Inject, SessionRuntimeStateInterface } from '@tiyn/app';
+import { ApplicationStoreInterface, Controller, Inject, SessionRuntimeStateInterface } from '@sellgar/app';
 
 import { SignInControllerInterface } from './sign-in-controller.interface.ts';
 

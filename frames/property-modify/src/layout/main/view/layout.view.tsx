@@ -1,5 +1,5 @@
 import { FrameLayout } from '@library/design';
-import type { LayoutViewProps } from '@tiyn/app';
+import type { LayoutViewProps } from '@sellgar/app';
 
 import React from 'react';
 

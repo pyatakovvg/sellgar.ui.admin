@@ -1,5 +1,5 @@
 import { ProductResultEntity } from '@library/domain';
-import { useLoaderData } from '@tiyn/app';
+import { useLoaderData } from '@sellgar/app';
 
 import React from 'react';
 

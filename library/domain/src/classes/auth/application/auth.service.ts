@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@tiyn/app';
+import { Inject, Injectable } from '@sellgar/app';
 
 import { AuthGatewayInterface } from '../gateway/auth-gateway.interface.ts';
 

@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { MessageStore, MessageStoreSymbol } from './stores/message.store.ts';
 import { MessagePresenter, MessagePresenterSymbol } from './presenters/message.presenter.ts';

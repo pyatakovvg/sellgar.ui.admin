@@ -1,5 +1,5 @@
 import { BrandModifyFrame } from '@frame/brand-modify';
-import { useFrame, useLocation } from '@tiyn/app';
+import { useFrame, useLocation } from '@sellgar/app';
 import { Button, Icon } from '@sellgar/kit';
 
 import React from 'react';

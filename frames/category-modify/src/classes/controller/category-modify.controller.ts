@@ -7,7 +7,7 @@ import {
   RevalidateServiceInterface,
   type FrameControllerActionArgs,
   type FrameControllerLoaderArgs,
-} from '@tiyn/app';
+} from '@sellgar/app';
 
 import { CategoryModifyActionPayload, CategoryModifyControllerInterface } from './category-modify-controller.interface.ts';
 import { CategoryModifyFrameParams } from '../params';

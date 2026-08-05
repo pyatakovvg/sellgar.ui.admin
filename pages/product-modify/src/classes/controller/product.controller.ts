@@ -1,6 +1,6 @@
 import { ProductEntity, ProductServiceInterface } from '@library/domain';
 
-import { Controller, type ControllerActionArgs, type ControllerLoaderArgs, Inject, NavigateServiceInterface } from '@tiyn/app';
+import { Controller, type ControllerActionArgs, type ControllerLoaderArgs, Inject, NavigateServiceInterface } from '@sellgar/app';
 
 import { ProductActionPayload, ProductControllerInterface } from './product-controller.interface.ts';
 

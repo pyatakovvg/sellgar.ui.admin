@@ -1,5 +1,5 @@
 import { Page } from '@library/design';
-import { useLoaderData, useSubmit } from '@tiyn/app';
+import { useLoaderData, useSubmit } from '@sellgar/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';

@@ -1,5 +1,5 @@
-import { Layout } from '@tiyn/app';
-import type { LayoutViewProps } from '@tiyn/app';
+import { Layout } from '@sellgar/app';
+import type { LayoutViewProps } from '@sellgar/app';
 
 import React from 'react';
 

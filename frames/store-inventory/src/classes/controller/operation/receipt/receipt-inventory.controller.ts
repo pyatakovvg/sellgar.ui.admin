@@ -1,5 +1,5 @@
 import { StoreServiceInterface } from '@library/domain';
-import { Controller, FrameServiceInterface, Inject, type FrameControllerActionArgs } from '@tiyn/app';
+import { Controller, FrameServiceInterface, Inject, type FrameControllerActionArgs } from '@sellgar/app';
 
 import {
   ReceiptInventoryActionPayload,

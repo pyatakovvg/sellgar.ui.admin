@@ -1,5 +1,5 @@
 import { CategoryEntity } from '@library/domain';
-import { FrameControllerInterface, type FrameControllerLoaderArgs } from '@tiyn/app';
+import { FrameControllerInterface, type FrameControllerLoaderArgs } from '@sellgar/app';
 
 import { CategoryModifyFrameParams } from '../params';
 

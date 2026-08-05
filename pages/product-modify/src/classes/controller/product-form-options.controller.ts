@@ -1,5 +1,5 @@
 import { BrandServiceInterface, CategoryServiceInterface, PropertyServiceInterface } from '@library/domain';
-import { Controller, type ControllerLoaderArgs, Inject } from '@tiyn/app';
+import { Controller, type ControllerLoaderArgs, Inject } from '@sellgar/app';
 
 import {
   ProductFormOptionsControllerInterface,

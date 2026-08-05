@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { PropertyStore } from './store/property.store.ts';
 import { PropertyStoreInterface } from './store/property-store.interface.ts';

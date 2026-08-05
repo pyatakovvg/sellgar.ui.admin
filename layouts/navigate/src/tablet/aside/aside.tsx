@@ -11,7 +11,7 @@ import {
   StoreLineIcon,
   UnsplashLineIcon,
 } from '@sellgar/kit/icons';
-import { ApplicationStoreInterface, useDependency } from '@tiyn/app';
+import { ApplicationStoreInterface, useDependency } from '@sellgar/app';
 import { ProfileEntity } from '@library/domain';
 
 import React from 'react';

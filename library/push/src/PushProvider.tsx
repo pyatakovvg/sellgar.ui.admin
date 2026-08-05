@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDependency } from '@tiyn/app';
+import { useDependency } from '@sellgar/app';
 
 import { Provider } from './push.context.ts';
 

@@ -1,7 +1,7 @@
 import { PropertyEntity } from '@library/domain';
 import { Table as TableComponent } from '@sellgar/kit';
 import { PropertyModifyFrame } from '@frame/property-modify';
-import { useFrame } from '@tiyn/app';
+import { useFrame } from '@sellgar/app';
 
 import React from 'react';
 

@@ -1,4 +1,4 @@
-import { Module, UseBindings } from '@tiyn/app';
+import { Module, UseBindings } from '@sellgar/app';
 
 import { CategoryView } from './view';
 

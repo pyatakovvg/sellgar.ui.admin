@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@tiyn/app';
+import { Inject, Injectable } from '@sellgar/app';
 import { plainToInstance, type ClassConstructor } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 

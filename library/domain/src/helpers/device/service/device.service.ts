@@ -1,6 +1,6 @@
 import { uuid } from '@utils/generate';
 
-import { Inject, Injectable } from '@tiyn/app';
+import { Inject, Injectable } from '@sellgar/app';
 
 import { StorageServiceInterface } from '../../storage';
 

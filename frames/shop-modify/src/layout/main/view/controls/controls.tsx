@@ -1,4 +1,4 @@
-import { useController, useSubmit } from '@tiyn/app';
+import { useController, useSubmit } from '@sellgar/app';
 import { Button } from '@sellgar/kit';
 import { ArrowLeftSLineIcon } from '@sellgar/kit/icons';
 

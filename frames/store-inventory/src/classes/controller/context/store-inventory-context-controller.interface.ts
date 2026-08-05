@@ -1,5 +1,5 @@
 import { StoreOfferEntity, StoreProductEntity } from '@library/domain';
-import { FrameControllerInterface, type FrameControllerLoaderArgs } from '@tiyn/app';
+import { FrameControllerInterface, type FrameControllerLoaderArgs } from '@sellgar/app';
 
 import { StoreInventoryFrameParams } from '../../params';
 

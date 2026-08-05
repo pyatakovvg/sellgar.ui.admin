@@ -7,7 +7,7 @@ import {
   RevalidateServiceInterface,
   type FrameControllerActionArgs,
   type FrameControllerLoaderArgs,
-} from '@tiyn/app';
+} from '@sellgar/app';
 
 import { ShopModifyActionPayload, ShopModifyControllerInterface } from './shop-modify-controller.interface.ts';
 import { ShopModifyFrameParams } from '../params';

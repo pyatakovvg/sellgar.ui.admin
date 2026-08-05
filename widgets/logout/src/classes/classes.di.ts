@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { LogoutController } from './controller/logout.controller.ts';
 import { LogoutControllerInterface } from './controller/logout-controller.interface.ts';

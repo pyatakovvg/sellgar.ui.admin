@@ -1,5 +1,5 @@
 import { CategoryEntity, CreateCategoryDto, UpdateCategoryDto } from '@library/domain';
-import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@tiyn/app';
+import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@sellgar/app';
 
 import { CategoryModifyFrameParams } from '../params';
 

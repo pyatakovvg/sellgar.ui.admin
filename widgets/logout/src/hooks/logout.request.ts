@@ -1,4 +1,4 @@
-import { useNavigate, useController } from '@tiyn/app';
+import { useNavigate, useController } from '@sellgar/app';
 
 import { LogoutControllerInterface } from '../classes/controller/logout-controller.interface.ts';
 

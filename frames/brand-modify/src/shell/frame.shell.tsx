@@ -1,6 +1,6 @@
 import { Drawer } from '@sellgar/kit';
-import { FrameShell, FrameShellInterface } from '@tiyn/app';
-import type { FrameShellContextInterface } from '@tiyn/app';
+import { FrameShell, FrameShellInterface } from '@sellgar/app';
+import type { FrameShellContextInterface } from '@sellgar/app';
 
 import React from 'react';
 

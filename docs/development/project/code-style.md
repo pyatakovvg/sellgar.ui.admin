@@ -10,7 +10,7 @@
 ## React
 
 - View components должны быть небольшими и package-local.
-- Для navigation, frame access, controllers и loader data использовать runtime hooks из `@tiyn/app`.
+- Для navigation, frame access, controllers и loader data использовать runtime hooks из `@sellgar/app`.
 - Для kit form inputs, которым нужна controlled integration, использовать `react-hook-form` controllers.
 - По возможности инициализировать form values напрямую из loader data.
 

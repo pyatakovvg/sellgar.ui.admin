@@ -1,5 +1,5 @@
 import { Field, Label, Caption, Select } from '@sellgar/kit';
-import { useLoaderData } from '@tiyn/app';
+import { useLoaderData } from '@sellgar/app';
 import { ShopEntity } from '@library/domain';
 
 import React from 'react';

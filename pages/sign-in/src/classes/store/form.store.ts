@@ -1,6 +1,6 @@
 import { AuthServiceInterface, HttpException } from '@library/domain';
 
-import { Inject, Injectable } from '@tiyn/app';
+import { Inject, Injectable } from '@sellgar/app';
 import { makeObservable, observable, action } from 'mobx';
 
 import { FormStoreInterface } from './form-store.interface.ts';

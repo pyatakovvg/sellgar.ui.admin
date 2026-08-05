@@ -27,7 +27,7 @@ export default defineConfig({
         codeSplitting: {
           groups: createCodeSplittingGroups({
             'react.vendor': ['react', 'react-dom', 'react-router-dom'],
-            'app.vendor': ['@tiyn/app'],
+            'app.vendor': ['@sellgar/app'],
             'domain.vendor': ['@library/domain'],
             'kit.vendor': ['@sellgar/kit'],
           }),

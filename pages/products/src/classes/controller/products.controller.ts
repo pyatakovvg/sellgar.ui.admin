@@ -1,6 +1,6 @@
 import { ProductServiceInterface } from '@library/domain';
 
-import { Controller, Inject } from '@tiyn/app';
+import { Controller, Inject } from '@sellgar/app';
 
 import { ProductsControllerInterface } from './products-controller.interface.ts';
 

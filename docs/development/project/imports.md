@@ -14,7 +14,7 @@
 
 Runtime и UI imports:
 
-- `@tiyn/app` - application, routing, modules, frames, DI hooks и policies.
+- `@sellgar/app` - application, routing, modules, frames, DI hooks и policies.
 - `@sellgar/kit` - UI components.
 - `@sellgar/kit/icons` - SVG icon components.
 
@@ -33,7 +33,7 @@ Runtime и UI imports:
 
 ```tsx
 import { Button } from '@sellgar/kit';
-import { useFrame } from '@tiyn/app';
+import { useFrame } from '@sellgar/app';
 import { AddLineIcon } from '@sellgar/kit/icons';
 
 import { BrandModifyFrame } from '@frame/brand-modify';

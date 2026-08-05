@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDependency } from '@tiyn/app';
+import { useDependency } from '@sellgar/app';
 
 import { MessagePresenter, MessagePresenterSymbol } from './classes/presenters/message.presenter.ts';
 

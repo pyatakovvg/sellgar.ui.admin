@@ -1,7 +1,7 @@
 import { BrandEntity } from '@library/domain';
 import { Table as TableComponent } from '@sellgar/kit';
 import { BrandModifyFrame } from '@frame/brand-modify';
-import { useFrame } from '@tiyn/app';
+import { useFrame } from '@sellgar/app';
 
 import React from 'react';
 

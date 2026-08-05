@@ -7,7 +7,7 @@
 ## Кратко
 
 - Монорепа Yarn workspaces, основной клиент: `clients/admin` (Vite + React 19).
-- Runtime приложения: `@tiyn/app`; DI bindings лежат рядом с application/pages/frames/widgets.
+- Runtime приложения: `@sellgar/app`; DI bindings лежат рядом с application/pages/frames/widgets.
 - UI kit: `@sellgar/kit`; иконки брать из `@sellgar/kit/icons`, не из font-class API.
 - Домен и HTTP: `@library/domain`.
 - Вся документация пишется на русском языке; paths, package names, команды и API identifiers оставлять как code literals.
@@ -37,6 +37,9 @@
 - `frames/*` - цельные drawer/modal workflows с собственными bindings/controller/view.
 - `widgets/*` - встраиваемые reusable widgets.
 - `library/*` - общие слои. `library/design` не должен зависеть от domain/pages/widgets.
+- `library/sellgar.kit.ui` - nested submodule UI kit; его commit и gitlink admin UI фиксируются раздельно.
+- `library/sellgar.orm.ui` - nested submodule ORM UI; его commit и gitlink admin UI фиксируются раздельно.
+- `library/sellgar.app.ui` - nested submodule App UI; его commit и gitlink admin UI фиксируются раздельно.
 - `utils/*` - чистые утилиты.
 
 ## Структура feature-пакета

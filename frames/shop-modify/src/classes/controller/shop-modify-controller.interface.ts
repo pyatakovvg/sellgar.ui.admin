@@ -1,5 +1,5 @@
 import { ShopEntity, CreateShopDto, UpdateShopDto } from '@library/domain';
-import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@tiyn/app';
+import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@sellgar/app';
 
 import { ShopModifyFrameParams } from '../params';
 

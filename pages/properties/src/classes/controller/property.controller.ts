@@ -1,6 +1,6 @@
 import { PropertyServiceInterface } from '@library/domain';
 
-import { Controller, Inject } from '@tiyn/app';
+import { Controller, Inject } from '@sellgar/app';
 
 import { PropertyStoreInterface } from '../store/property-store.interface.ts';
 import { PropertyControllerInterface } from './property-controller.interface.ts';

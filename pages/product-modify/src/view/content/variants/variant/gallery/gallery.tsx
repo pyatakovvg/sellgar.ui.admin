@@ -1,5 +1,5 @@
 import { ImageGallery } from '@library/design';
-import { useDependency } from '@tiyn/app';
+import { useDependency } from '@sellgar/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';

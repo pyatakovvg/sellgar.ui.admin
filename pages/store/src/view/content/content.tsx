@@ -1,6 +1,6 @@
 import { Table } from '@sellgar/kit';
 import { StoreModifyFrame } from '@frame/store-modify';
-import { useFrame, useLoaderData } from '@tiyn/app';
+import { useFrame, useLoaderData } from '@sellgar/app';
 
 import React from 'react';
 

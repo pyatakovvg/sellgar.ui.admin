@@ -13,7 +13,7 @@
 
 - Widgets использовать для UI, который встраивается в pages/layouts/frames.
 - Widget controllers и bindings держать локально, если widget владеет behavior.
-- Использовать `@sellgar/kit` и hooks из `@tiyn/app`, когда это подходит.
+- Использовать `@sellgar/kit` и hooks из `@sellgar/app`, когда это подходит.
 
 ## Нельзя
 

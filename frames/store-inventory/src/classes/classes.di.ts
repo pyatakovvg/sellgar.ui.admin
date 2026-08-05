@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { StoreInventoryContextController, StoreInventoryContextControllerInterface } from './controller/context';
 import { AdjustInventoryController, AdjustInventoryControllerInterface } from './controller/operation/adjust';

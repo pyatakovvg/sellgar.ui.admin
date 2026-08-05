@@ -7,7 +7,7 @@ import {
   UserRequestServiceInterface,
   type ApplicationInitializerContextInterface,
   type ApplicationInitializerInterface,
-} from '@tiyn/app';
+} from '@sellgar/app';
 
 @Initializer()
 export class RegisterUnauthorizedRecoveryInitializer implements ApplicationInitializerInterface {

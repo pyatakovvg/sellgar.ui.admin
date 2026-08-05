@@ -5,8 +5,8 @@
 ## Стек
 
 - React 19, Vite, TypeScript.
-- Runtime приложения: `@tiyn/app`.
-- DI: bindings из `@tiyn/app` и `inversify`.
+- Runtime приложения: `@sellgar/app`.
+- DI: bindings из `@sellgar/app` и `inversify`.
 - UI kit: `@sellgar/kit`, иконки из `@sellgar/kit/icons`.
 - Доменный слой и HTTP: `@library/domain`.
 

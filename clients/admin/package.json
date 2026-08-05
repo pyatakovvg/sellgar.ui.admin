@@ -31,7 +31,7 @@
     "@page/sign-in": "0.0.1",
     "@page/store": "0.0.1",
     "@page/units": "0.0.1",
-    "@tiyn/app": "0.0.1",
+    "@sellgar/app": "0.0.1",
     "mobx": "6.16.1",
     "mobx-react": "9.2.2",
     "react": "19.2.7",

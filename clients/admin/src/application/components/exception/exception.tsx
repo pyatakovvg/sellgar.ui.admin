@@ -1,5 +1,5 @@
 import { UnauthorizedException } from '@library/domain';
-import { useException } from '@tiyn/app';
+import { useException } from '@sellgar/app';
 
 import React from 'react';
 import { useRouteError, Navigate } from 'react-router-dom';

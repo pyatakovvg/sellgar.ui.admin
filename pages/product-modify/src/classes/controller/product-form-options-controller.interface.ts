@@ -1,5 +1,5 @@
 import type { BrandEntity, CategoryEntity, PropertyEntity } from '@library/domain';
-import type { ControllerLoaderArgs } from '@tiyn/app';
+import type { ControllerLoaderArgs } from '@sellgar/app';
 
 export interface ProductFormOptionsData {
   brands: BrandEntity[];

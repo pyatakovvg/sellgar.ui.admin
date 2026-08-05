@@ -1,5 +1,5 @@
 import { CategoryEntity, CategoryServiceInterface } from '@library/domain';
-import { Controller, Inject, type FrameControllerLoaderArgs } from '@tiyn/app';
+import { Controller, Inject, type FrameControllerLoaderArgs } from '@sellgar/app';
 
 import { CategoryListControllerInterface } from './category-list-controller.interface.ts';
 import { CategoryModifyFrameParams } from '../params';

@@ -1,6 +1,6 @@
 import { BrandServiceInterface } from '@library/domain';
 
-import { Controller, Inject } from '@tiyn/app';
+import { Controller, Inject } from '@sellgar/app';
 
 import { BrandsControllerInterface } from './brand-controller.interface.ts';
 

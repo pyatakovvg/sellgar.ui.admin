@@ -1,5 +1,5 @@
 import { Button, Icon, Animate } from '@sellgar/kit';
-import { useController } from '@tiyn/app';
+import { useController } from '@sellgar/app';
 
 import React from 'react';
 import { observer } from 'mobx-react';

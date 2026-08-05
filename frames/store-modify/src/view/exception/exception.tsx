@@ -1,5 +1,5 @@
 import { Typography } from '@sellgar/kit';
-import { useException } from '@tiyn/app';
+import { useException } from '@sellgar/app';
 
 import React from 'react';
 

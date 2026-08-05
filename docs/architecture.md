@@ -13,7 +13,7 @@ Host не должен становиться местом для feature UI и�
 
 ## Runtime
 
-Приложение использует `@tiyn/app`.
+Приложение использует `@sellgar/app`.
 
 - `Application` собирает runtime.
 - `Route` и `Router` задают route tree.

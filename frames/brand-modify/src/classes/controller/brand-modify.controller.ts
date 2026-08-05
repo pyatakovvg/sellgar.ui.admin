@@ -7,7 +7,7 @@ import {
   RevalidateServiceInterface,
   type FrameControllerActionArgs,
   type FrameControllerLoaderArgs,
-} from '@tiyn/app';
+} from '@sellgar/app';
 
 import { BrandModifyActionPayload, BrandModifyControllerInterface } from './brand-modify-controller.interface.ts';
 import { BrandModifyFrameParams } from '../params';

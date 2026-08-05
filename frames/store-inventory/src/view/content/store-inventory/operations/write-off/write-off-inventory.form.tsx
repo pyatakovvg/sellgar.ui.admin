@@ -1,6 +1,6 @@
 import { FormProvider, type Resolver, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useLoaderData, useSubmit } from '@tiyn/app';
+import { useLoaderData, useSubmit } from '@sellgar/app';
 
 import React from 'react';
 

@@ -1,4 +1,4 @@
-import { useLoaderData } from '@tiyn/app';
+import { useLoaderData } from '@sellgar/app';
 import { PropertyEntity } from '@library/domain';
 
 import React from 'react';

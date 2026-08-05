@@ -9,7 +9,7 @@
 UI переключения темы.
 
 Пакет экспортирует React provider/view напрямую и не является декларацией
-`@tiyn/app` widget.
+`@sellgar/app` widget.
 
 ## Границы
 

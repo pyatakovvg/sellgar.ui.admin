@@ -1,6 +1,6 @@
 import { StoreProductQueryDto, StoreServiceInterface } from '@library/domain';
 
-import { Controller, Inject, LocationServiceInterface } from '@tiyn/app';
+import { Controller, Inject, LocationServiceInterface } from '@sellgar/app';
 
 import { StoreControllerInterface } from './store-controller.interface.ts';
 

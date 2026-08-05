@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { UnitModifyController } from './controller/unit-modify.controller.ts';
 import { UnitModifyControllerInterface } from './controller/unit-modify-controller.interface.ts';

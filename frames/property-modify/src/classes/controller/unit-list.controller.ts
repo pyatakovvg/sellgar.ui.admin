@@ -1,5 +1,5 @@
 import { UnitEntity, UnitServiceInterface } from '@library/domain';
-import { Controller, Inject, type FrameControllerLoaderArgs } from '@tiyn/app';
+import { Controller, Inject, type FrameControllerLoaderArgs } from '@sellgar/app';
 
 import { UnitListControllerInterface } from './unit-list-controller.interface.ts';
 import { PropertyModifyFrameParams } from '../params';

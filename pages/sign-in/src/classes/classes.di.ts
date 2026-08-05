@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { FormStore } from './store/form.store.ts';
 import { FormStoreInterface } from './store/form-store.interface.ts';

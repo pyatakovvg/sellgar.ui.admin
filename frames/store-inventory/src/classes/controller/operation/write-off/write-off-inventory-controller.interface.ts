@@ -1,4 +1,4 @@
-import { FrameControllerInterface, type FrameControllerActionArgs } from '@tiyn/app';
+import { FrameControllerInterface, type FrameControllerActionArgs } from '@sellgar/app';
 
 import { StoreInventoryFrameParams } from '../../../params';
 

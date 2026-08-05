@@ -1,4 +1,4 @@
-import { useController } from '@tiyn/app';
+import { useController } from '@sellgar/app';
 
 import { SignInControllerInterface } from '../classes/controller/sign-in-controller.interface.ts';
 

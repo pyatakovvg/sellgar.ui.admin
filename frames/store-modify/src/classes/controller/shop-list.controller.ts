@@ -1,5 +1,5 @@
 import { ShopEntity, ShopServiceInterface } from '@library/domain';
-import { Controller, Inject, type FrameControllerLoaderArgs } from '@tiyn/app';
+import { Controller, Inject, type FrameControllerLoaderArgs } from '@sellgar/app';
 
 import { ShopListControllerInterface } from './shop-list-controller.interface.ts';
 import { StoreModifyFrameParams } from '../params';

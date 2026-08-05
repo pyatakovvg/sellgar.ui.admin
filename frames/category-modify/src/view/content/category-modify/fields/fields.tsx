@@ -1,7 +1,7 @@
 import { Form, ImageGallery } from '@library/design';
 import { CategoryEntity, CreateCategoryDto } from '@library/domain';
 import { Caption, Field, Input, Label, Select, Textarea } from '@sellgar/kit';
-import { useController, useLoaderData } from '@tiyn/app';
+import { useController, useLoaderData } from '@sellgar/app';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';

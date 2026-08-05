@@ -1,5 +1,5 @@
 import { ProductEntity } from '@library/domain';
-import type { ControllerActionArgs, ControllerLoaderArgs } from '@tiyn/app';
+import type { ControllerActionArgs, ControllerLoaderArgs } from '@sellgar/app';
 
 import { CreateProductDto } from './dto/create-product.dto.ts';
 import { UpdateProductDto } from './dto/update-product.dto.ts';

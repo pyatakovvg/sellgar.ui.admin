@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@tiyn/app';
+import { Inject, Injectable } from '@sellgar/app';
 
 import { CreateUnitDto } from './dto/create-unit.dto.ts';
 import { UpdateUnitDto } from './dto/update-unit.dto.ts';

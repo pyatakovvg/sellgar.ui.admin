@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@tiyn/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { ProductFormOptionsController } from './controller/product-form-options.controller.ts';
 import { ProductFormOptionsControllerInterface } from './controller/product-form-options-controller.interface.ts';

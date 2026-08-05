@@ -1,4 +1,4 @@
-import { Injectable } from '@tiyn/app';
+import { Injectable } from '@sellgar/app';
 
 import { ConfigInterface } from './config.interface.ts';
 

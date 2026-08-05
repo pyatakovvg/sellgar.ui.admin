@@ -1,4 +1,4 @@
-import { type WidgetControllerInterface } from '@tiyn/app';
+import { type WidgetControllerInterface } from '@sellgar/app';
 
 import { LogoutStoreInterface } from '../store/logout/logout-store.interface.ts';
 

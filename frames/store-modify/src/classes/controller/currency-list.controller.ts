@@ -1,5 +1,5 @@
 import { CurrencyEntity, CurrencyServiceInterface } from '@library/domain';
-import { Controller, Inject, type FrameControllerLoaderArgs } from '@tiyn/app';
+import { Controller, Inject, type FrameControllerLoaderArgs } from '@sellgar/app';
 
 import { CurrencyListControllerInterface } from './currency-list-controller.interface.ts';
 import { StoreModifyFrameParams } from '../params';

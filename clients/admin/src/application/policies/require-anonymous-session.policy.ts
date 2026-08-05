@@ -1,5 +1,5 @@
-import { Policy, RoutePolicyInterface } from '@tiyn/app';
-import type { PolicyResult, RuntimeContextInterface } from '@tiyn/app';
+import { Policy, RoutePolicyInterface } from '@sellgar/app';
+import type { PolicyResult, RuntimeContextInterface } from '@sellgar/app';
 
 @Policy()
 export class RequireAnonymousSessionPolicy extends RoutePolicyInterface {

@@ -1,5 +1,5 @@
 import { Button, Icon, useCellData } from '@sellgar/kit';
-import { useNavigate } from '@tiyn/app';
+import { useNavigate } from '@sellgar/app';
 import { CategoryEntity } from '@library/domain';
 
 import React from 'react';

@@ -1,6 +1,6 @@
 import { uuid } from '@utils/generate';
 
-import { Injectable } from '@tiyn/app';
+import { Injectable } from '@sellgar/app';
 import { observable, action, makeAutoObservable } from 'mobx';
 
 import { MessageEntity } from './entity/message.entity.ts';

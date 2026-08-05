@@ -1,4 +1,4 @@
-import { Frame, FrameDefinition, HashFrameSource, UseBindings } from '@tiyn/app';
+import { Frame, FrameDefinition, HashFrameSource, UseBindings } from '@sellgar/app';
 
 import React from 'react';
 

@@ -1,5 +1,5 @@
 import { PropertyEntity } from '@library/domain';
-import { useLoaderData, useSubmit } from '@tiyn/app';
+import { useLoaderData, useSubmit } from '@sellgar/app';
 
 import React from 'react';
 import { FormProvider, type Resolver, useForm } from 'react-hook-form';
