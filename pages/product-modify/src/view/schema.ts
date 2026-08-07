@@ -17,7 +17,6 @@ export const schema = yup.object({
         propertyUuid: requiredUuidSelect(),
         optionUuid: yup.string().uuid('Необходимо выбрать').nullable().optional(),
         value: yup.string().required('Необходимо заполнить'),
-        order: yup.number().required(),
       }),
     )
     .required(),
@@ -30,11 +29,8 @@ export const schema = yup.object({
           .of(
             yup.object({
               uuid: yup.string().optional(),
-              localId: yup.string().optional(),
               imageUuid: yup.string().optional(),
-              order: yup.number().required(),
               file: yup.mixed<File>().optional(),
-              fileName: yup.string().optional(),
               alt: yup.string().nullable().optional(),
             }),
           )
@@ -50,7 +46,6 @@ export const schema = yup.object({
               propertyUuid: requiredUuidSelect(),
               optionUuid: yup.string().uuid('Необходимо выбрать').nullable().optional(),
               value: yup.string().required('Необходимо заполнить'),
-              order: yup.number().required(),
             }),
           )
           .required(),

@@ -1,21 +1,21 @@
 import { ImageGallery } from '@library/design';
+import { FileServiceInterface } from '@library/domain';
 import { useDependency } from '@sellgar/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
 
 import type { IFormData } from '../../../../schema.ts';
-import { ProductImageServiceInterface } from '../../../../../classes/product-image/product-image-service.interface.ts';
 
 interface IProps {
   index: number;
 }
 
 export const Gallery: React.FC<IProps> = (props) => {
-  const productImageService = useDependency(ProductImageServiceInterface);
-  const { control } = ReactHookForm.useFormContext<IFormData>();
+  const fileService = useDependency(FileServiceInterface);
+  const { control, formState } = ReactHookForm.useFormContext<IFormData>();
   const fieldName = `variants.${props.index}.images` as const;
-  const { fields, remove, replace, move } = ReactHookForm.useFieldArray({
+  const { append, fields, remove, move } = ReactHookForm.useFieldArray({
     control,
     name: fieldName,
   });
@@ -25,8 +25,7 @@ export const Gallery: React.FC<IProps> = (props) => {
       return;
     }
 
-    const currentImages = fields.map(({ id, ...image }) => image);
-    replace(productImageService.addGalleryImages(currentImages, files));
+    append(files.map((file) => ({ file, alt: null })));
   };
 
   const handleRemove = (id: string) => {
@@ -52,10 +51,11 @@ export const Gallery: React.FC<IProps> = (props) => {
     <ImageGallery
       items={fields.map((image) => ({
         id: image.id,
-        src: image.imageUuid ? productImageService.getFileImageUrl(image.imageUuid) : undefined,
+        src: image.imageUuid ? fileService.getPublicImageUrl(image.imageUuid) : undefined,
         file: image.file,
-        fileName: image.fileName,
+        fileName: image.file?.name,
       }))}
+      disabled={formState.isSubmitting}
       onSelect={handleFiles}
       onRemove={handleRemove}
       onReorder={handleReorder}

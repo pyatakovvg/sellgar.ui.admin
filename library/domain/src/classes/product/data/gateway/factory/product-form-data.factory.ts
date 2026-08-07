@@ -14,12 +14,12 @@ export class ProductFormDataFactory implements ProductFormDataFactoryInterface {
         ...variant,
         images: variant.images?.map((image, order) => {
           if (image.file) {
-            const localId = image.localId ?? globalThis.crypto.randomUUID();
+            const localId = globalThis.crypto.randomUUID();
             formData.append(`gallery:${localId}`, image.file, image.file.name);
 
             return {
               localId,
-              fileName: image.fileName ?? image.file.name,
+              fileName: image.file.name,
               order,
               alt: image.alt ?? null,
             };
@@ -28,7 +28,6 @@ export class ProductFormDataFactory implements ProductFormDataFactoryInterface {
           return {
             uuid: image.uuid,
             imageUuid: image.imageUuid,
-            fileName: image.fileName,
             order,
             alt: image.alt ?? null,
           };

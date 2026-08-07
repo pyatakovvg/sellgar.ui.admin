@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { IsArray, IsInstance, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsArray, IsInstance, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 import type {
   CreateProductInput,
   ProductPropertyInput,
@@ -34,29 +34,14 @@ class ProductVariantImageDto implements ProductVariantImageInput {
   uuid?: string;
 
   @Expose()
-  @IsString()
-  @IsOptional()
-  localId?: string;
-
-  @Expose()
   @IsUUID()
   @IsOptional()
   imageUuid?: string;
 
   @Expose()
-  @IsNumber()
-  @IsOptional()
-  order?: number;
-
-  @Expose()
   @IsInstance(File)
   @IsOptional()
   file?: File;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  fileName?: string;
 
   @Expose()
   @IsString()

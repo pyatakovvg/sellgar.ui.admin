@@ -6,11 +6,10 @@ import { ConfigInterface } from '../../../../infrastructure/config/config.interf
 import { HttpClientInterface } from '../../../../infrastructure/http-client/http-client.interface.ts';
 import { ProductEntity } from '../../domain/product.entity.ts';
 import { ProductResultEntity } from '../../domain/product-result.entity.ts';
-import { CreateProductDto } from './dto/create-product.dto.ts';
-import { UpdateProductDto } from './dto/update-product.dto.ts';
 import { ProductFormDataFactoryInterface } from './factory/product-form-data-factory.interface.ts';
 import { CreateProductInput } from './input/create-product.input.ts';
 import { UpdateProductInput } from './input/update-product.input.ts';
+import { ProductDtoMapperInterface } from './mapper/product-dto-mapper.interface.ts';
 import { ProductGatewayInterface } from './product-gateway.interface.ts';
 
 @Injectable()
@@ -18,6 +17,7 @@ export class ProductGateway implements ProductGatewayInterface {
   constructor(
     @Inject(ConfigInterface) private readonly config: ConfigInterface,
     @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(ProductDtoMapperInterface) private readonly dtoMapper: ProductDtoMapperInterface,
     @Inject(ProductFormDataFactoryInterface) private readonly formDataFactory: ProductFormDataFactoryInterface,
   ) {}
 
@@ -34,7 +34,7 @@ export class ProductGateway implements ProductGatewayInterface {
   }
 
   async create(input: CreateProductInput): Promise<ProductEntity> {
-    const dto = plainToInstance(CreateProductDto, input);
+    const dto = this.dtoMapper.create(input);
     await validateOrReject(dto);
     const result = await this.httpClient.post(
       this.config.get('GATEWAY_API') + '/v2/products',
@@ -44,7 +44,7 @@ export class ProductGateway implements ProductGatewayInterface {
   }
 
   async update(uuid: string, input: UpdateProductInput): Promise<ProductEntity> {
-    const dto = plainToInstance(UpdateProductDto, input);
+    const dto = this.dtoMapper.update(input);
     await validateOrReject(dto);
     const result = await this.httpClient.patch(
       this.config.get('GATEWAY_API') + '/v2/products/' + uuid,

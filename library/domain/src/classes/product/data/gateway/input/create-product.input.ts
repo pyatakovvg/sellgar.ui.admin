@@ -7,11 +7,8 @@ export interface ProductPropertyInput {
 
 export interface ProductVariantImageInput {
   uuid?: string;
-  localId?: string;
   imageUuid?: string;
-  order?: number;
   file?: File;
-  fileName?: string;
   alt?: string | null;
 }
 
