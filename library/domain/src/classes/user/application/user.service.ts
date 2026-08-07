@@ -1,39 +1,30 @@
-import { omitBy, isUndefined } from 'lodash';
 import { Inject, Injectable } from '@sellgar/app';
-import { validateOrReject } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-
-import { FilterUserDto } from '../gateway/dto/filter-user.dto.ts';
-import { CreateUserDto } from '../gateway/dto/create-user.dto.ts';
-import { UpdateUserDto } from '../gateway/dto/update-user.dto.ts';
 
 import { UserServiceInterface } from './user-service.interface.ts';
-import { UserGatewayInterface } from '../gateway/user-gateway.interface.ts';
+import { UserGatewayInterface } from '../data/gateway/user-gateway.interface.ts';
+import { CreateUserInput } from '../data/gateway/input/create-user.input.ts';
+import { FilterUserInput } from '../data/gateway/input/filter-user.input.ts';
+import { UpdateUserInput } from '../data/gateway/input/update-user.input.ts';
+import { UserEntity } from '../domain/user.entity.ts';
+import { UserResultEntity } from '../domain/user-result.entity.ts';
 
 @Injectable()
 export class UserService implements UserServiceInterface {
   constructor(@Inject(UserGatewayInterface) private readonly userGateway: UserGatewayInterface) {}
 
-  getAll(filter: FilterUserDto) {
-    const filterInstance = plainToInstance(FilterUserDto, filter, {
-      exposeUnsetFields: false,
-    });
-
-    return this.userGateway.getAll(omitBy(filterInstance, isUndefined));
+  getAll(filter: FilterUserInput): Promise<UserResultEntity> {
+    return this.userGateway.getAll(filter);
   }
 
-  getByUuid(uuid: string) {
+  getByUuid(uuid: string): Promise<UserEntity> {
     return this.userGateway.getByUuid(uuid);
   }
 
-  async update(body: UpdateUserDto) {
-    const instance = plainToInstance(UpdateUserDto, body);
-    await validateOrReject(instance);
-    return await this.userGateway.update(instance.uuid, instance);
+  update(input: UpdateUserInput): Promise<UserEntity> {
+    return this.userGateway.update(input.uuid, input);
   }
 
-  async create(body: CreateUserDto) {
-    await validateOrReject(body);
-    return await this.userGateway.create(body);
+  create(input: CreateUserInput): Promise<UserEntity> {
+    return this.userGateway.create(input);
   }
 }

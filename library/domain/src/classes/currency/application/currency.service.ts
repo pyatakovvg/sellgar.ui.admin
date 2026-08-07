@@ -1,40 +1,29 @@
 import { Inject, Injectable } from '@sellgar/app';
-import { validateOrReject } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-
-import { CreateCurrencyDto } from './dto/create-currency.dto.ts';
-import { UpdateCurrencyDto } from './dto/update-currency.dto.ts';
 
 import { CurrencyServiceInterface } from './currency-service.interface.ts';
-import { CurrencyGatewayInterface } from '../gateway/currency-gateway.interface.ts';
-
-import { CurrencyEntity, CurrencyResultEntity } from '../domain/currency.entity.ts';
+import { CurrencyGatewayInterface } from '../data/gateway/currency-gateway.interface.ts';
+import { CreateCurrencyInput } from '../data/gateway/input/create-currency.input.ts';
+import { UpdateCurrencyInput } from '../data/gateway/input/update-currency.input.ts';
+import { CurrencyEntity } from '../domain/currency.entity.ts';
+import { CurrencyResultEntity } from '../domain/currency-result.entity.ts';
 
 @Injectable()
 export class CurrencyService implements CurrencyServiceInterface {
-  constructor(@Inject(CurrencyGatewayInterface) private readonly brandGateway: CurrencyGatewayInterface) {}
+  constructor(@Inject(CurrencyGatewayInterface) private readonly currencyGateway: CurrencyGatewayInterface) {}
 
-  async findAll(): Promise<CurrencyResultEntity> {
-    return await this.brandGateway.findAll();
+  findAll(): Promise<CurrencyResultEntity> {
+    return this.currencyGateway.findAll();
   }
 
-  async findByUuid(uuid: string): Promise<CurrencyEntity> {
-    return await this.brandGateway.findByUuid(uuid);
+  findByUuid(code: string): Promise<CurrencyEntity> {
+    return this.currencyGateway.findByUuid(code);
   }
 
-  async update(uuid: string, dto: UpdateCurrencyDto): Promise<CurrencyEntity> {
-    const dtoInstance = plainToInstance(UpdateCurrencyDto, dto);
-
-    await validateOrReject(dtoInstance);
-
-    return await this.brandGateway.update(uuid, dto);
+  update(code: string, input: UpdateCurrencyInput): Promise<CurrencyEntity> {
+    return this.currencyGateway.update(code, input);
   }
 
-  async create(dto: CreateCurrencyDto): Promise<CurrencyEntity> {
-    const dtoInstance = plainToInstance(CreateCurrencyDto, dto);
-
-    await validateOrReject(dtoInstance);
-
-    return await this.brandGateway.create(dto);
+  create(input: CreateCurrencyInput): Promise<CurrencyEntity> {
+    return this.currencyGateway.create(input);
   }
 }

@@ -1,4 +1,4 @@
-import { CreatePropertyDto, PropertyServiceInterface, UpdatePropertyDto } from '@library/domain';
+import { CreatePropertyInput, PropertyServiceInterface, UpdatePropertyInput } from '@library/domain';
 import {
   Controller,
   FrameServiceInterface,
@@ -8,7 +8,10 @@ import {
   type FrameControllerLoaderArgs,
 } from '@sellgar/app';
 
-import { PropertyModifyActionPayload, PropertyModifyControllerInterface } from './property-modify-controller.interface.ts';
+import {
+  PropertyModifyActionPayload,
+  PropertyModifyControllerInterface,
+} from './property-modify-controller.interface.ts';
 import { PropertyModifyFrameParams } from '../params';
 
 @Controller()
@@ -29,9 +32,9 @@ export class PropertyModifyController implements PropertyModifyControllerInterfa
 
   async action(args: FrameControllerActionArgs<PropertyModifyFrameParams, PropertyModifyActionPayload>) {
     if (args.props.uuid) {
-      await this.propertyService.update(args.props.uuid, args.payload as UpdatePropertyDto);
+      await this.propertyService.update(args.props.uuid, args.payload as UpdatePropertyInput);
     } else {
-      await this.propertyService.create(args.payload as CreatePropertyDto);
+      await this.propertyService.create(args.payload as CreatePropertyInput);
     }
 
     await this.revalidateService.revalidate();

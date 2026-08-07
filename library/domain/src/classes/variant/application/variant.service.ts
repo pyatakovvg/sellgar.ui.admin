@@ -1,39 +1,38 @@
 import { Inject, Injectable } from '@sellgar/app';
 
 import { VariantServiceInterface } from './variant-service.interface.ts';
-import { VariantGatewayInterface } from '../gateway/variant-gateway.interface.ts';
-
-import { CreateProductDto } from '../gateway/dto/create-product.dto.ts';
-import { UpdateProductDto } from '../gateway/dto/update-product.dto.ts';
-import { AddVariantImageDto } from '../gateway/dto/add-variant-image.dto.ts';
-
-import { VariantEntity, ProductVariantResultEntity } from '../domain/variant.entity.ts';
+import { VariantGatewayInterface } from '../data/gateway/variant-gateway.interface.ts';
+import { AddVariantImageInput } from '../data/gateway/input/add-variant-image.input.ts';
+import { CreateVariantInput } from '../data/gateway/input/create-variant.input.ts';
+import { UpdateVariantInput } from '../data/gateway/input/update-variant.input.ts';
+import { ProductVariantResultEntity } from '../domain/product-variant-result.entity.ts';
+import { VariantEntity } from '../domain/variant.entity.ts';
 
 @Injectable()
 export class VariantService implements VariantServiceInterface {
-  constructor(@Inject(VariantGatewayInterface) private readonly productGateway: VariantGatewayInterface) {}
+  constructor(@Inject(VariantGatewayInterface) private readonly variantGateway: VariantGatewayInterface) {}
 
-  async findAll(): Promise<ProductVariantResultEntity> {
-    return await this.productGateway.findAll();
+  findAll(): Promise<ProductVariantResultEntity> {
+    return this.variantGateway.findAll();
   }
 
-  async findByUuid(uuid: string): Promise<VariantEntity | null> {
-    return await this.productGateway.findByUuid(uuid);
+  findByUuid(uuid: string): Promise<VariantEntity | null> {
+    return this.variantGateway.findByUuid(uuid);
   }
 
-  async update(uuid: string, dto: UpdateProductDto): Promise<VariantEntity> {
-    return this.productGateway.update(uuid, dto);
+  update(uuid: string, input: UpdateVariantInput): Promise<VariantEntity> {
+    return this.variantGateway.update(uuid, input);
   }
 
-  async create(dto: CreateProductDto): Promise<VariantEntity> {
-    return await this.productGateway.create(dto);
+  create(input: CreateVariantInput): Promise<VariantEntity> {
+    return this.variantGateway.create(input);
   }
 
-  async addImage(variantUuid: string, dto: AddVariantImageDto): Promise<VariantEntity> {
-    return await this.productGateway.addImage(variantUuid, dto);
+  addImage(variantUuid: string, input: AddVariantImageInput): Promise<VariantEntity> {
+    return this.variantGateway.addImage(variantUuid, input);
   }
 
-  async removeImage(variantUuid: string, imageUuid: string): Promise<VariantEntity> {
-    return await this.productGateway.removeImage(variantUuid, imageUuid);
+  removeImage(variantUuid: string, imageUuid: string): Promise<VariantEntity> {
+    return this.variantGateway.removeImage(variantUuid, imageUuid);
   }
 }

@@ -1,4 +1,4 @@
-import { DomainBindings } from '@library/domain';
+import { DomainBinding } from '@library/domain';
 import { MessageBindings } from '@library/message';
 import { PushBindings } from '@library/push';
 import {
@@ -11,7 +11,7 @@ import { SessionExpirationNotifier } from '../session-expiration-notifier.ts';
 
 export class AdminBindings implements BindingModuleInterface {
   register(registry: BindingRegistryInterface): void {
-    new DomainBindings().register(registry);
+    new DomainBinding().register(registry);
     new MessageBindings().register(registry);
     new PushBindings().register(registry);
     registry.bind(SessionExpirationNotifierInterface).to(SessionExpirationNotifier).inSingletonScope();

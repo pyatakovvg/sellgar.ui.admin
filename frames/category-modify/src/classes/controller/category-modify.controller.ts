@@ -1,4 +1,9 @@
-import { CategoryServiceInterface, CreateCategoryDto, FileServiceInterface, UpdateCategoryDto } from '@library/domain';
+import {
+  CategoryServiceInterface,
+  CreateCategoryInput,
+  FileServiceInterface,
+  UpdateCategoryInput,
+} from '@library/domain';
 
 import {
   Controller,
@@ -9,7 +14,10 @@ import {
   type FrameControllerLoaderArgs,
 } from '@sellgar/app';
 
-import { CategoryModifyActionPayload, CategoryModifyControllerInterface } from './category-modify-controller.interface.ts';
+import {
+  CategoryModifyActionPayload,
+  CategoryModifyControllerInterface,
+} from './category-modify-controller.interface.ts';
 import { CategoryModifyFrameParams } from '../params';
 
 @Controller()
@@ -31,9 +39,9 @@ export class CategoryModifyController implements CategoryModifyControllerInterfa
 
   async action(args: FrameControllerActionArgs<CategoryModifyFrameParams, CategoryModifyActionPayload>) {
     if (args.props.uuid) {
-      await this.categoryService.update(args.props.uuid, args.payload as UpdateCategoryDto);
+      await this.categoryService.update(args.props.uuid, args.payload as UpdateCategoryInput);
     } else {
-      await this.categoryService.create(args.payload as CreateCategoryDto);
+      await this.categoryService.create(args.payload as CreateCategoryInput);
     }
 
     await this.revalidateService.revalidate();

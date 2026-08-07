@@ -1,69 +1,51 @@
 import { Inject, Injectable } from '@sellgar/app';
-import { plainToInstance, type ClassConstructor } from 'class-transformer';
-import { validateOrReject } from 'class-validator';
 
 import { StoreServiceInterface } from './store-service.interface.ts';
-import { StoreGatewayInterface } from '../gateway/store-gateway.interface.ts';
-
-import { AdjustOfferInventoryDto } from '../gateway/dto/adjust-offer-inventory.dto.ts';
-import { ArchiveStoreProductDto } from '../gateway/dto/archive-store-product.dto.ts';
-import { CreateStoreProductDto } from '../gateway/dto/create-store-product.dto.ts';
-import { ReceiptOfferInventoryDto } from '../gateway/dto/receipt-offer-inventory.dto.ts';
-import { StoreProductQueryDto } from '../gateway/dto/store-product-query.dto.ts';
-import { UpdateStoreProductDto } from '../gateway/dto/update-store-product.dto.ts';
-import { WriteOffOfferInventoryDto } from '../gateway/dto/write-off-offer-inventory.dto.ts';
-
-import { StoreOfferInventoryEntity, StoreProductEntity, StoreProductResultEntity } from '../domain/store.entity.ts';
+import { StoreGatewayInterface } from '../data/gateway/store-gateway.interface.ts';
+import { AdjustOfferInventoryInput } from '../data/gateway/input/adjust-offer-inventory.input.ts';
+import { ArchiveStoreProductInput } from '../data/gateway/input/archive-store-product.input.ts';
+import { CreateStoreProductInput } from '../data/gateway/input/create-store-product.input.ts';
+import { ReceiptOfferInventoryInput } from '../data/gateway/input/receipt-offer-inventory.input.ts';
+import { StoreProductQueryInput } from '../data/gateway/input/store-product-query.input.ts';
+import { UpdateStoreProductInput } from '../data/gateway/input/update-store-product.input.ts';
+import { WriteOffOfferInventoryInput } from '../data/gateway/input/write-off-offer-inventory.input.ts';
+import { StoreOfferInventoryEntity } from '../domain/store-offer-inventory.entity.ts';
+import { StoreProductEntity } from '../domain/store-product.entity.ts';
+import { StoreProductResultEntity } from '../domain/store-product-result.entity.ts';
 
 @Injectable()
 export class StoreService implements StoreServiceInterface {
   constructor(@Inject(StoreGatewayInterface) private readonly storeGateway: StoreGatewayInterface) {}
 
-  async findAll(query?: StoreProductQueryDto): Promise<StoreProductResultEntity> {
-    return await this.storeGateway.findAll(query);
+  findAll(query?: StoreProductQueryInput): Promise<StoreProductResultEntity> {
+    return this.storeGateway.findAll(query);
   }
 
-  async findByUuid(uuid: string): Promise<StoreProductEntity> {
-    return await this.storeGateway.findByUuid(uuid);
+  findByUuid(uuid: string): Promise<StoreProductEntity> {
+    return this.storeGateway.findByUuid(uuid);
   }
 
-  async update(dto: UpdateStoreProductDto): Promise<StoreProductEntity> {
-    await this.validateDto(UpdateStoreProductDto, dto);
-
-    return this.storeGateway.update(dto);
+  update(input: UpdateStoreProductInput): Promise<StoreProductEntity> {
+    return this.storeGateway.update(input);
   }
 
-  async create(dto: CreateStoreProductDto): Promise<StoreProductEntity> {
-    await this.validateDto(CreateStoreProductDto, dto);
-
-    return await this.storeGateway.create(dto);
+  create(input: CreateStoreProductInput): Promise<StoreProductEntity> {
+    return this.storeGateway.create(input);
   }
 
-  async archive(dto: ArchiveStoreProductDto): Promise<StoreProductEntity> {
-    await this.validateDto(ArchiveStoreProductDto, dto);
-
-    return this.storeGateway.archive(dto);
+  archive(input: ArchiveStoreProductInput): Promise<StoreProductEntity> {
+    return this.storeGateway.archive(input);
   }
 
-  async receiptInventory(dto: ReceiptOfferInventoryDto): Promise<StoreOfferInventoryEntity> {
-    await this.validateDto(ReceiptOfferInventoryDto, dto);
-
-    return this.storeGateway.receiptInventory(dto);
+  receiptInventory(input: ReceiptOfferInventoryInput): Promise<StoreOfferInventoryEntity> {
+    return this.storeGateway.receiptInventory(input);
   }
 
-  async writeOffInventory(dto: WriteOffOfferInventoryDto): Promise<StoreOfferInventoryEntity> {
-    await this.validateDto(WriteOffOfferInventoryDto, dto);
-
-    return this.storeGateway.writeOffInventory(dto);
+  writeOffInventory(input: WriteOffOfferInventoryInput): Promise<StoreOfferInventoryEntity> {
+    return this.storeGateway.writeOffInventory(input);
   }
 
-  async adjustInventory(dto: AdjustOfferInventoryDto): Promise<StoreOfferInventoryEntity> {
-    await this.validateDto(AdjustOfferInventoryDto, dto);
-
-    return this.storeGateway.adjustInventory(dto);
-  }
-
-  private async validateDto<T extends object>(dtoClass: ClassConstructor<T>, dto: T): Promise<void> {
-    await validateOrReject(plainToInstance(dtoClass, dto));
+  adjustInventory(input: AdjustOfferInventoryInput): Promise<StoreOfferInventoryEntity> {
+    return this.storeGateway.adjustInventory(input);
   }
 }

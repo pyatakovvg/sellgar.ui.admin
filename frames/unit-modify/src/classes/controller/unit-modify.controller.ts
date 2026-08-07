@@ -1,4 +1,4 @@
-import { CreateUnitDto, UnitServiceInterface, UpdateUnitDto } from '@library/domain';
+import { CreateUnitInput, UnitServiceInterface, UpdateUnitInput } from '@library/domain';
 import {
   Controller,
   FrameServiceInterface,
@@ -29,9 +29,9 @@ export class UnitModifyController implements UnitModifyControllerInterface {
 
   async action(args: FrameControllerActionArgs<UnitModifyFrameParams, UnitModifyActionPayload>) {
     if (args.props.uuid) {
-      await this.unitService.update(args.props.uuid, args.payload as UpdateUnitDto);
+      await this.unitService.update(args.props.uuid, args.payload as UpdateUnitInput);
     } else {
-      await this.unitService.create(args.payload as CreateUnitDto);
+      await this.unitService.create(args.payload as CreateUnitInput);
     }
 
     await this.revalidateService.revalidate();

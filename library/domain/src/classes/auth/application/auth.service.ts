@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@sellgar/app';
 
-import { AuthGatewayInterface } from '../gateway/auth-gateway.interface.ts';
+import { AuthGatewayInterface } from '../data/gateway/auth-gateway.interface.ts';
 
 import { type AuthServiceInterface } from './auth-service.interface.ts';
 

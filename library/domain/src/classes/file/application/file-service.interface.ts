@@ -1,10 +1,12 @@
-import { GetAllFileFilterDto } from '../gateway/dto/get-all-file-filter.dto.ts';
+import { GetAllFileFilterInput } from '../data/gateway/input/get-all-file-filter.input.ts';
 
-import { FileEntity, FileResultEntity } from '../domain/file.entity.ts';
+import { FileEntity } from '../domain/file.entity.ts';
+import { FileResultEntity } from '../domain/file-result.entity.ts';
+import { UploadFileEntity } from '../domain/upload-file.entity.ts';
 
 export abstract class FileServiceInterface {
-  abstract findAll(filter: GetAllFileFilterDto): Promise<FileResultEntity>;
-  abstract upload(files: File[], folderUuid?: string): Promise<FileEntity[]>;
+  abstract findAll(filter: GetAllFileFilterInput): Promise<FileResultEntity>;
+  abstract upload(files: UploadFileEntity[], folderUuid?: string): Promise<FileEntity[]>;
   abstract delete(uuid: string): Promise<FileEntity>;
   abstract download(uuid: string): Promise<Blob>;
   abstract getPublicImageUrl(uuid: string): string;

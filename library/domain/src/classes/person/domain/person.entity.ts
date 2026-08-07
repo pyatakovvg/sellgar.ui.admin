@@ -1,27 +1,36 @@
-import { IsString, IsUUID, IsDateString } from 'class-validator';
+import { Expose } from 'class-transformer';
+import { IsDateString, IsString, IsUUID } from 'class-validator';
 
 export class PersonEntity {
+  @Expose()
   @IsUUID()
   uuid: string;
 
+  @Expose()
   @IsString()
   name: string;
 
+  @Expose()
   @IsString()
   surname: string;
 
+  @Expose()
   @IsString()
   patronymic: string;
 
+  @Expose()
   @IsDateString()
-  birthday: Date;
+  birthday: string;
 
+  @Expose()
   @IsString()
   sex: 'MALE' | 'FEMALE';
 
+  @Expose()
   @IsDateString()
-  createdAt: Date;
+  createdAt: string;
 
+  @Expose()
   @IsDateString()
-  updatedAt: Date;
+  updatedAt: string;
 }

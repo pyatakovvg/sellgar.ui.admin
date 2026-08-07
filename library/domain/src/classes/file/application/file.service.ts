@@ -1,37 +1,33 @@
 import { Inject, Injectable } from '@sellgar/app';
-import { plainToInstance } from 'class-transformer';
-import { validateOrReject } from 'class-validator';
-
-import { GetAllFileFilterDto } from '../gateway/dto/get-all-file-filter.dto.ts';
 
 import { FileServiceInterface } from './file-service.interface.ts';
-import { FileGatewayInterface } from '../gateway/file-gateway.interface.ts';
+import { FileGatewayInterface } from '../data/gateway/file-gateway.interface.ts';
+import { GetAllFileFilterInput } from '../data/gateway/input/get-all-file-filter.input.ts';
+import { FileEntity } from '../domain/file.entity.ts';
+import { FileResultEntity } from '../domain/file-result.entity.ts';
+import { UploadFileEntity } from '../domain/upload-file.entity.ts';
 
 @Injectable()
 export class FileService implements FileServiceInterface {
   constructor(@Inject(FileGatewayInterface) private readonly fileGateway: FileGatewayInterface) {}
 
-  async findAll(filter: GetAllFileFilterDto) {
-    const filterInstance = plainToInstance(GetAllFileFilterDto, filter);
-
-    await validateOrReject(filterInstance);
-
-    return await this.fileGateway.findAll(filter);
+  findAll(filter: GetAllFileFilterInput): Promise<FileResultEntity> {
+    return this.fileGateway.findAll(filter);
   }
 
-  async upload(files: File[], folderUuid?: string) {
-    return await this.fileGateway.upload(files, folderUuid);
+  upload(files: UploadFileEntity[], folderUuid?: string): Promise<FileEntity[]> {
+    return this.fileGateway.upload(files, folderUuid);
   }
 
-  async delete(uuid: string) {
-    return await this.fileGateway.delete(uuid);
+  delete(uuid: string): Promise<FileEntity> {
+    return this.fileGateway.delete(uuid);
   }
 
-  async download(uuid: string) {
-    return await this.fileGateway.download(uuid);
+  download(uuid: string): Promise<Blob> {
+    return this.fileGateway.download(uuid);
   }
 
-  getPublicImageUrl(uuid: string) {
+  getPublicImageUrl(uuid: string): string {
     return this.fileGateway.getPublicImageUrl(uuid);
   }
 }

@@ -1,60 +1,29 @@
 import { Inject, Injectable } from '@sellgar/app';
-import { validateOrReject } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-
-import { UnitEntity, UnitResultEntity } from '../domain/unit.entity.ts';
-
-import { CreateUnitDto } from './dto/create-unit.dto.ts';
-import { UpdateUnitDto } from './dto/update-unit.dto.ts';
 
 import { UnitServiceInterface } from './unit-service.interface.ts';
-import { UnitGatewayInterface } from '../gateway/unit-gateway.interface.ts';
+import { UnitGatewayInterface } from '../data/gateway/unit-gateway.interface.ts';
+import { CreateUnitInput } from '../data/gateway/input/create-unit.input.ts';
+import { UpdateUnitInput } from '../data/gateway/input/update-unit.input.ts';
+import { UnitEntity } from '../domain/unit.entity.ts';
+import { UnitResultEntity } from '../domain/unit-result.entity.ts';
 
 @Injectable()
 export class UnitService implements UnitServiceInterface {
   constructor(@Inject(UnitGatewayInterface) private readonly unitGateway: UnitGatewayInterface) {}
 
-  async findAll(): Promise<UnitResultEntity> {
-    const result = await this.unitGateway.findAll();
-    const resultInstance = plainToInstance(UnitResultEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  findAll(): Promise<UnitResultEntity> {
+    return this.unitGateway.findAll();
   }
 
-  async findByUuid(code: string): Promise<UnitEntity> {
-    const result = await this.unitGateway.findByUuid(code);
-    const resultInstance = plainToInstance(UnitEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  findByUuid(uuid: string): Promise<UnitEntity> {
+    return this.unitGateway.findByUuid(uuid);
   }
 
-  async update(uuid: string, dto: UpdateUnitDto): Promise<UnitEntity> {
-    const dtoInstance = plainToInstance(UpdateUnitDto, dto);
-
-    await validateOrReject(dtoInstance);
-
-    const result = await this.unitGateway.update(uuid, dtoInstance);
-    const resultInstance = plainToInstance(UnitEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  update(uuid: string, input: UpdateUnitInput): Promise<UnitEntity> {
+    return this.unitGateway.update(uuid, input);
   }
 
-  async create(dto: CreateUnitDto): Promise<UnitEntity> {
-    const dtoInstance = plainToInstance(UpdateUnitDto, dto);
-
-    await validateOrReject(dtoInstance);
-
-    const result = await this.unitGateway.create(dtoInstance);
-    const resultInstance = plainToInstance(UnitEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  create(input: CreateUnitInput): Promise<UnitEntity> {
+    return this.unitGateway.create(input);
   }
 }

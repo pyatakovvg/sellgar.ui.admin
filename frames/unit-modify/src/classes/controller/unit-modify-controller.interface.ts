@@ -1,9 +1,9 @@
-import { CreateUnitDto, UnitEntity, UpdateUnitDto } from '@library/domain';
+import { CreateUnitInput, UnitEntity, UpdateUnitInput } from '@library/domain';
 import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@sellgar/app';
 
 import { UnitModifyFrameParams } from '../params';
 
-export type UnitModifyActionPayload = CreateUnitDto | UpdateUnitDto;
+export type UnitModifyActionPayload = CreateUnitInput | UpdateUnitInput;
 
 export abstract class UnitModifyControllerInterface extends FrameControllerInterface<UnitModifyFrameParams> {
   abstract loader(args: FrameControllerLoaderArgs<UnitModifyFrameParams>): Promise<UnitEntity | undefined>;

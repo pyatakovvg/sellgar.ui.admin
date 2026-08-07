@@ -1,7 +1,5 @@
-export { ShopEntity, ShopResultEntity } from './domain/shop.entity.ts';
-export { CreateDto as CreateShopDto } from './application/dto/create.dto.ts';
-export { UpdateDto as UpdateShopDto } from './application/dto/update.dto.ts';
-
-export { ShopGatewayInterface } from './gateway/shop-gateway.interface.ts';
-
+export { ShopEntity } from './domain/shop.entity.ts';
+export { ShopResultEntity } from './domain/shop-result.entity.ts';
 export { ShopServiceInterface } from './application/shop-service.interface.ts';
+export type { CreateShopInput } from './data/gateway/input/create-shop.input.ts';
+export type { UpdateShopInput } from './data/gateway/input/update-shop.input.ts';

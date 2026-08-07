@@ -1,14 +1,15 @@
-import { CreateProductDto } from '../gateway/dto/create-product.dto.ts';
-import { UpdateProductDto } from '../gateway/dto/update-product.dto.ts';
-import { AddVariantImageDto } from '../gateway/dto/add-variant-image.dto.ts';
+import { AddVariantImageInput } from '../data/gateway/input/add-variant-image.input.ts';
+import { CreateVariantInput } from '../data/gateway/input/create-variant.input.ts';
+import { UpdateVariantInput } from '../data/gateway/input/update-variant.input.ts';
 
-import { VariantEntity, ProductVariantResultEntity } from '../domain/variant.entity.ts';
+import { VariantEntity } from '../domain/variant.entity.ts';
+import { ProductVariantResultEntity } from '../domain/product-variant-result.entity.ts';
 
 export abstract class VariantServiceInterface {
   abstract findAll(): Promise<ProductVariantResultEntity>;
   abstract findByUuid(uuid: string): Promise<VariantEntity | null>;
-  abstract create(dto: CreateProductDto): Promise<VariantEntity>;
-  abstract update(uuid: string, dto: UpdateProductDto): Promise<VariantEntity>;
-  abstract addImage(variantUuid: string, dto: AddVariantImageDto): Promise<VariantEntity>;
+  abstract create(input: CreateVariantInput): Promise<VariantEntity>;
+  abstract update(uuid: string, input: UpdateVariantInput): Promise<VariantEntity>;
+  abstract addImage(variantUuid: string, input: AddVariantImageInput): Promise<VariantEntity>;
   abstract removeImage(variantUuid: string, imageUuid: string): Promise<VariantEntity>;
 }

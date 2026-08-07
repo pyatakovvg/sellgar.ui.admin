@@ -1,4 +1,4 @@
-import { CreatePropertyDto, PropertyEntity, UpdatePropertyDto } from '@library/domain';
+import { CreatePropertyInput, PropertyEntity, UpdatePropertyInput } from '@library/domain';
 
 import type { IFormData } from './form.schema.ts';
 
@@ -35,14 +35,14 @@ export const createEmptyOption = (): IFormData['options'][number] => ({
 
 export const createDefaultValues = (property?: PropertyEntity): IFormData => {
   return {
-    unitUuid: property?.type === 'NUMBER' ? property.unitUuid ?? undefined : undefined,
+    unitUuid: property?.type === 'NUMBER' ? (property.unitUuid ?? undefined) : undefined,
     code: property?.code ?? '',
     name: property?.name ?? '',
     type: property?.type ?? 'TEXT',
     description: property?.description ?? '',
     options:
       property?.type === 'OPTION'
-        ? property.options?.map((option) => ({
+        ? (property.options?.map((option) => ({
             uuid: option.uuid,
             code: option.code,
             name: option.name,
@@ -55,7 +55,7 @@ export const createDefaultValues = (property?: PropertyEntity): IFormData => {
                 fileUuid: metadata.fileUuid,
                 iconCode: metadata.iconCode,
               })) ?? [],
-          })) ?? []
+          })) ?? [])
         : [],
   };
 };
@@ -83,8 +83,11 @@ const createMetadataPayload = (metadata: OptionMetadata, sortOrder: number) => {
   }
 };
 
-export const createPropertyPayload = (values: IFormData, property?: PropertyEntity): CreatePropertyDto | UpdatePropertyDto => {
-  const payload: CreatePropertyDto = {
+export const createPropertyPayload = (
+  values: IFormData,
+  property?: PropertyEntity,
+): CreatePropertyInput | UpdatePropertyInput => {
+  const payload: CreatePropertyInput = {
     unitUuid: values.type === 'NUMBER' ? values.unitUuid || undefined : undefined,
     code: values.code,
     name: values.name,

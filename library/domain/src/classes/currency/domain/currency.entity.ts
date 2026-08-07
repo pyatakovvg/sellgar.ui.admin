@@ -1,7 +1,5 @@
-import { Type, Expose } from 'class-transformer';
-import { IsDateString, IsString, IsNumber, ValidateNested } from 'class-validator';
-
-import { MetaEntity } from '../../../meta.entity.ts';
+import { Expose } from 'class-transformer';
+import { IsDateString, IsNumber, IsString } from 'class-validator';
 
 export class CurrencyEntity {
   @Expose()
@@ -23,16 +21,4 @@ export class CurrencyEntity {
   @Expose()
   @IsDateString()
   updatedAt: string;
-}
-
-export class CurrencyResultEntity {
-  @Expose()
-  @ValidateNested()
-  @Type(() => CurrencyEntity)
-  data: CurrencyEntity[];
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => MetaEntity)
-  meta: MetaEntity;
 }

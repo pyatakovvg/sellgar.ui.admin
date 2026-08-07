@@ -1,11 +1,12 @@
-import { CreateDto } from '../gateway/dto/create.dto.ts';
-import { UpdateDto } from '../gateway/dto/update.dto.ts';
+import { CreateShopInput } from '../data/gateway/input/create-shop.input.ts';
+import { UpdateShopInput } from '../data/gateway/input/update-shop.input.ts';
 
-import { ShopEntity, ShopResultEntity } from '../domain/shop.entity.ts';
+import { ShopEntity } from '../domain/shop.entity.ts';
+import { ShopResultEntity } from '../domain/shop-result.entity.ts';
 
 export abstract class ShopServiceInterface {
   abstract findAll(): Promise<ShopResultEntity>;
   abstract findByUuid(uuid: string): Promise<ShopEntity>;
-  abstract create(dto: CreateDto): Promise<ShopEntity>;
-  abstract update(uuid: string, dto: UpdateDto): Promise<ShopEntity>;
+  abstract create(input: CreateShopInput): Promise<ShopEntity>;
+  abstract update(uuid: string, input: UpdateShopInput): Promise<ShopEntity>;
 }

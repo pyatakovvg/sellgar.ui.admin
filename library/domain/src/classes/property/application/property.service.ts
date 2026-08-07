@@ -1,52 +1,29 @@
 import { Inject, Injectable } from '@sellgar/app';
-import { validateOrReject } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-
-import { PropertyEntity, PropertyResultEntity } from '../domain/property.entity.ts';
-
-import { CreatePropertyDto } from './dto/create-property.dto.ts';
-import { UpdatePropertyDto } from './dto/update-property.dto.ts';
 
 import { PropertyServiceInterface } from './property-service.interface.ts';
-import { PropertyGatewayInterface } from '../gateway/property-gateway.interface.ts';
+import { PropertyGatewayInterface } from '../data/gateway/property-gateway.interface.ts';
+import { CreatePropertyInput } from '../data/gateway/input/create-property.input.ts';
+import { UpdatePropertyInput } from '../data/gateway/input/update-property.input.ts';
+import { PropertyEntity } from '../domain/property.entity.ts';
+import { PropertyResultEntity } from '../domain/property-result.entity.ts';
 
 @Injectable()
 export class PropertyService implements PropertyServiceInterface {
   constructor(@Inject(PropertyGatewayInterface) private readonly propertyGateway: PropertyGatewayInterface) {}
 
-  async findAll(): Promise<PropertyResultEntity> {
-    const result = await this.propertyGateway.findAll();
-    const resultInstance = plainToInstance(PropertyResultEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  findAll(): Promise<PropertyResultEntity> {
+    return this.propertyGateway.findAll();
   }
 
-  async findByUuid(uuid: string): Promise<PropertyEntity> {
-    const result = await this.propertyGateway.findByUuid(uuid);
-    const resultInstance = plainToInstance(PropertyEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  findByUuid(uuid: string): Promise<PropertyEntity> {
+    return this.propertyGateway.findByUuid(uuid);
   }
 
-  async update(uuid: string, updatePropertyDto: UpdatePropertyDto): Promise<PropertyEntity> {
-    const result = await this.propertyGateway.update(uuid, updatePropertyDto);
-    const resultInstance = plainToInstance(PropertyEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  update(uuid: string, input: UpdatePropertyInput): Promise<PropertyEntity> {
+    return this.propertyGateway.update(uuid, input);
   }
 
-  async create(createPropertyDto: CreatePropertyDto): Promise<PropertyEntity> {
-    const result = await this.propertyGateway.create(createPropertyDto);
-    const resultInstance = plainToInstance(PropertyEntity, result);
-
-    await validateOrReject(resultInstance);
-
-    return resultInstance;
+  create(input: CreatePropertyInput): Promise<PropertyEntity> {
+    return this.propertyGateway.create(input);
   }
 }

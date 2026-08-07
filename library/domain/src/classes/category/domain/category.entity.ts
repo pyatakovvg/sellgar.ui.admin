@@ -1,40 +1,7 @@
-import { Type, Expose } from 'class-transformer';
-import { IsOptional, IsString, IsUUID, ValidateNested, IsDateString, IsNumber, IsBoolean } from 'class-validator';
+import { Expose, Type } from 'class-transformer';
+import { IsArray, IsDateString, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
-import { MetaEntity } from '../../../meta.entity.ts';
-import { ImageEntity } from '../../variant/domain/variant.entity.ts';
-
-export class CategoryImageEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsUUID()
-  categoryUuid: string;
-
-  @Expose()
-  @IsUUID()
-  imageUuid: string;
-
-  @Expose()
-  @IsNumber()
-  sortOrder: number;
-
-  @Expose()
-  @IsBoolean()
-  isPrimary: boolean;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  alt?: string | null;
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => ImageEntity)
-  image: ImageEntity;
-}
+import { CategoryImageEntity } from './category-image.entity.ts';
 
 export class CategoryEntity {
   @Expose()
@@ -48,7 +15,7 @@ export class CategoryEntity {
   @Expose()
   @IsUUID()
   @IsOptional()
-  parentUuid?: string;
+  parentUuid?: string | null;
 
   @Expose()
   @IsString()
@@ -74,10 +41,12 @@ export class CategoryEntity {
   @Type(() => CategoryEntity)
   parent?: CategoryEntity;
 
+  @IsArray()
   @Expose()
-  @ValidateNested()
+  @IsOptional()
+  @ValidateNested({ each: true })
   @Type(() => CategoryEntity)
-  children: CategoryEntity[];
+  children?: CategoryEntity[];
 
   @Expose()
   @IsDateString()
@@ -86,16 +55,4 @@ export class CategoryEntity {
   @Expose()
   @IsDateString()
   updatedAt: string;
-}
-
-export class CategoryResultEntity {
-  @Expose()
-  @ValidateNested()
-  @Type(() => CategoryEntity)
-  data: CategoryEntity[];
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => MetaEntity)
-  meta: MetaEntity;
 }

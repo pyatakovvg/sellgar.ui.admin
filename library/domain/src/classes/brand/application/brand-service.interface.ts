@@ -1,11 +1,12 @@
-import { CreateBrandDto } from './dto/create-brand.dto.ts';
-import { UpdateBrandDto } from './dto/update-brand.dto.ts';
+import { CreateBrandInput } from '../data/gateway/input/create-brand.input.ts';
+import { UpdateBrandInput } from '../data/gateway/input/update-brand.input.ts';
 
-import { BrandEntity, BrandResultEntity } from '../domain/brand.entity.ts';
+import { BrandEntity } from '../domain/brand.entity.ts';
+import { BrandResultEntity } from '../domain/brand-result.entity.ts';
 
 export abstract class BrandServiceInterface {
   abstract findAll(): Promise<BrandResultEntity>;
   abstract findByUuid(code: string): Promise<BrandEntity>;
-  abstract create(createBrandDto: CreateBrandDto): Promise<BrandEntity>;
-  abstract update(code: string, updateBrandDto: UpdateBrandDto): Promise<BrandEntity>;
+  abstract create(input: CreateBrandInput): Promise<BrandEntity>;
+  abstract update(uuid: string, input: UpdateBrandInput): Promise<BrandEntity>;
 }

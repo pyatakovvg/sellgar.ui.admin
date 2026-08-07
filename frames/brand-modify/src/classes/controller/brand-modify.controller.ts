@@ -1,4 +1,4 @@
-import { BrandServiceInterface, CreateBrandDto, FileServiceInterface, UpdateBrandDto } from '@library/domain';
+import { BrandServiceInterface, CreateBrandInput, FileServiceInterface, UpdateBrandInput } from '@library/domain';
 
 import {
   Controller,
@@ -31,9 +31,9 @@ export class BrandModifyController implements BrandModifyControllerInterface {
 
   async action(args: FrameControllerActionArgs<BrandModifyFrameParams, BrandModifyActionPayload>) {
     if (args.props.uuid) {
-      await this.brandService.update(args.props.uuid, args.payload as UpdateBrandDto);
+      await this.brandService.update(args.props.uuid, args.payload as UpdateBrandInput);
     } else {
-      await this.brandService.create(args.payload as CreateBrandDto);
+      await this.brandService.create(args.payload as CreateBrandInput);
     }
 
     await this.revalidateService.revalidate();

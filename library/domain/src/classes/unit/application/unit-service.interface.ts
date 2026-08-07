@@ -1,11 +1,12 @@
-import { CreateUnitDto } from './dto/create-unit.dto.ts';
-import { UpdateUnitDto } from './dto/update-unit.dto.ts';
+import { CreateUnitInput } from '../data/gateway/input/create-unit.input.ts';
+import { UpdateUnitInput } from '../data/gateway/input/update-unit.input.ts';
 
-import { UnitEntity, UnitResultEntity } from '../domain/unit.entity.ts';
+import { UnitEntity } from '../domain/unit.entity.ts';
+import { UnitResultEntity } from '../domain/unit-result.entity.ts';
 
 export abstract class UnitServiceInterface {
   abstract findAll(): Promise<UnitResultEntity>;
   abstract findByUuid(code: string): Promise<UnitEntity>;
-  abstract create(createBrandDto: CreateUnitDto): Promise<UnitEntity>;
-  abstract update(code: string, updateBrandDto: UpdateUnitDto): Promise<UnitEntity>;
+  abstract create(input: CreateUnitInput): Promise<UnitEntity>;
+  abstract update(uuid: string, input: UpdateUnitInput): Promise<UnitEntity>;
 }

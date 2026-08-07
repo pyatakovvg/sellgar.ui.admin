@@ -1,7 +1,6 @@
-import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsString, ValidateNested, IsDateString, IsEnum, IsNumber } from 'class-validator';
+import { Expose } from 'class-transformer';
+import { IsDateString, IsEnum, IsNumber, IsString, IsUUID } from 'class-validator';
 
-import { MetaEntity } from '../../../meta.entity.ts';
 import { ShopStatus } from './shop-status.enum.ts';
 
 export class ShopEntity {
@@ -28,16 +27,4 @@ export class ShopEntity {
   @Expose()
   @IsDateString()
   updatedAt: string;
-}
-
-export class ShopResultEntity {
-  @Expose()
-  @ValidateNested()
-  @Type(() => ShopEntity)
-  data: ShopEntity[];
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => MetaEntity)
-  meta: MetaEntity;
 }

@@ -1,41 +1,13 @@
-import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsString, ValidateNested, IsDateString, IsOptional, IsNumber, IsEnum } from 'class-validator';
+import { Expose, Type } from 'class-transformer';
+import { IsArray, IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
-import { MetaEntity } from '../../../meta.entity.ts';
-import { CatalogStatus } from '../../catalog-status.enum.ts';
+import { ProductStatus } from './product-status.enum.ts';
 
 import { BrandEntity } from '../../brand';
 import { VariantEntity } from '../../variant';
 import { CategoryEntity } from '../../category';
-import { PropertyEntity } from '../../property';
 
-export class ProductPropertyEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => PropertyEntity)
-  property: PropertyEntity;
-
-  @Expose()
-  @IsUUID()
-  propertyUuid: string;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  optionUuid: string | null;
-
-  @Expose()
-  @IsString()
-  value: string;
-
-  @Expose()
-  @IsNumber()
-  order: number;
-}
+import { ProductPropertyEntity } from './product-property.entity.ts';
 
 export class ProductEntity {
   @Expose()
@@ -49,12 +21,12 @@ export class ProductEntity {
   @Expose()
   @IsUUID()
   @IsOptional()
-  brandUuid: string;
+  brandUuid?: string;
 
   @Expose()
   @IsUUID()
   @IsOptional()
-  categoryUuid: string;
+  categoryUuid?: string;
 
   @Expose()
   @IsString()
@@ -65,8 +37,8 @@ export class ProductEntity {
   description: string;
 
   @Expose()
-  @IsEnum(CatalogStatus)
-  status: CatalogStatus;
+  @IsEnum(ProductStatus)
+  status: ProductStatus;
 
   @Expose()
   @ValidateNested()
@@ -78,15 +50,17 @@ export class ProductEntity {
   @Type(() => BrandEntity)
   brand: BrandEntity;
 
+  @IsArray()
   @Expose()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => ProductPropertyEntity)
-  properties: ProductPropertyEntity[] = [];
+  properties: ProductPropertyEntity[];
 
+  @IsArray()
   @Expose()
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => VariantEntity)
-  variants: VariantEntity[] = [];
+  variants: VariantEntity[];
 
   @Expose()
   @IsDateString()
@@ -95,16 +69,4 @@ export class ProductEntity {
   @Expose()
   @IsDateString()
   updatedAt: string;
-}
-
-export class ProductResultEntity {
-  @Expose()
-  @ValidateNested()
-  @Type(() => ProductEntity)
-  data: ProductEntity[];
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => MetaEntity)
-  meta: MetaEntity;
 }

@@ -1,4 +1,4 @@
-import { CreateStoreProductDto, StoreProductEntity, StoreServiceInterface } from '@library/domain';
+import { CreateStoreProductInput, StoreProductEntity, StoreServiceInterface } from '@library/domain';
 
 import {
   Controller,
@@ -37,7 +37,7 @@ export class StoreModifyController implements StoreModifyControllerInterface {
       const result = await this.storeService.update({
         uuid: args.props.uuid,
         expectedVersion: args.payload.expectedVersion,
-        ...this.toStoreProductDto(args.payload),
+        ...this.toStoreProductInput(args.payload),
       });
 
       await this.frameService.close();
@@ -45,7 +45,7 @@ export class StoreModifyController implements StoreModifyControllerInterface {
       return result;
     }
 
-    const result = await this.storeService.create(this.toStoreProductDto(args.payload));
+    const result = await this.storeService.create(this.toStoreProductInput(args.payload));
 
     await this.frameService.close();
 
@@ -56,7 +56,7 @@ export class StoreModifyController implements StoreModifyControllerInterface {
     await this.frameService.close();
   }
 
-  private toStoreProductDto(payload: StoreModifyActionPayload): CreateStoreProductDto {
+  private toStoreProductInput(payload: StoreModifyActionPayload): CreateStoreProductInput {
     return {
       commandId: crypto.randomUUID(),
       shopUuid: payload.shopUuid,

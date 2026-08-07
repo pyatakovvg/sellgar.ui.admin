@@ -1,8 +1,7 @@
-import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsNumber, ValidateNested, IsDateString } from 'class-validator';
+import { Expose, Type } from 'class-transformer';
+import { IsDateString, IsNumber, IsUUID, ValidateNested } from 'class-validator';
 
-import { MetaEntity } from '../../../meta.entity.ts';
-import { CurrencyEntity } from '../../currency/domain/currency.entity.ts';
+import { CurrencyEntity } from '../../currency/index.ts';
 
 export class PriceEntity {
   @Expose()
@@ -21,14 +20,4 @@ export class PriceEntity {
   @Expose()
   @IsDateString()
   createdAt: string;
-}
-
-export class PriceResultEntity {
-  @ValidateNested()
-  @Type(() => PriceEntity)
-  data: PriceEntity[];
-
-  @ValidateNested()
-  @Type(() => MetaEntity)
-  meta: MetaEntity;
 }

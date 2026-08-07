@@ -1,38 +1,29 @@
 import { Inject, Injectable } from '@sellgar/app';
-import { plainToInstance } from 'class-transformer';
-import { validateOrReject } from 'class-validator';
-
-import { CreateDto } from './dto/create.dto.ts';
-import { UpdateDto } from './dto/update.dto.ts';
 
 import { ShopServiceInterface } from './shop-service.interface.ts';
-import { ShopGatewayInterface } from '../gateway/shop-gateway.interface.ts';
+import { ShopGatewayInterface } from '../data/gateway/shop-gateway.interface.ts';
+import { CreateShopInput } from '../data/gateway/input/create-shop.input.ts';
+import { UpdateShopInput } from '../data/gateway/input/update-shop.input.ts';
+import { ShopEntity } from '../domain/shop.entity.ts';
+import { ShopResultEntity } from '../domain/shop-result.entity.ts';
 
 @Injectable()
 export class ShopService implements ShopServiceInterface {
-  constructor(@Inject(ShopGatewayInterface) private readonly productGateway: ShopGatewayInterface) {}
+  constructor(@Inject(ShopGatewayInterface) private readonly shopGateway: ShopGatewayInterface) {}
 
-  async findAll() {
-    return await this.productGateway.findAll();
+  findAll(): Promise<ShopResultEntity> {
+    return this.shopGateway.findAll();
   }
 
-  async findByUuid(uuid: string) {
-    return await this.productGateway.findByUuid(uuid);
+  findByUuid(uuid: string): Promise<ShopEntity> {
+    return this.shopGateway.findByUuid(uuid);
   }
 
-  async update(uuid: string, dto: UpdateDto) {
-    const dtoInstance = plainToInstance(UpdateDto, dto);
-
-    await validateOrReject(dtoInstance);
-
-    return this.productGateway.update(uuid, dtoInstance);
+  update(uuid: string, input: UpdateShopInput): Promise<ShopEntity> {
+    return this.shopGateway.update(uuid, input);
   }
 
-  async create(dto: CreateDto) {
-    const dtoInstance = plainToInstance(CreateDto, dto);
-
-    await validateOrReject(dtoInstance);
-
-    return await this.productGateway.create(dtoInstance);
+  create(input: CreateShopInput): Promise<ShopEntity> {
+    return this.shopGateway.create(input);
   }
 }

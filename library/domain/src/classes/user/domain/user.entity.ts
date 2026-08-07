@@ -1,31 +1,24 @@
-import { Type } from 'class-transformer';
-import { IsString, IsUUID, IsBoolean, IsDateString, ValidateNested } from 'class-validator';
-
-import { MetaEntity } from '../../../meta.entity.ts';
+import { Expose } from 'class-transformer';
+import { IsBoolean, IsDateString, IsString, IsUUID } from 'class-validator';
 
 export class UserEntity {
+  @Expose()
   @IsUUID()
   uuid: string;
 
+  @Expose()
   @IsString()
   login: string;
 
+  @Expose()
   @IsBoolean()
-  isBlocked: string;
+  isBlocked: boolean;
 
+  @Expose()
   @IsDateString()
-  createdAt: Date;
+  createdAt: string;
 
+  @Expose()
   @IsDateString()
-  updatedAt: Date;
-}
-
-export class UserResultEntity {
-  @Type(() => UserEntity)
-  @ValidateNested({ each: true })
-  data: UserEntity[];
-
-  @ValidateNested()
-  @Type(() => MetaEntity)
-  meta: MetaEntity;
+  updatedAt: string;
 }

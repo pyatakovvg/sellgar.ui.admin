@@ -1,12 +1,12 @@
-import { MetaEntity } from '../../../meta.entity.ts';
+import { Expose } from 'class-transformer';
+import { IsString, IsUUID } from 'class-validator';
 
 export class FolderEntity {
+  @Expose()
+  @IsUUID()
   uuid: string;
+
+  @Expose()
+  @IsString()
   name: string;
-}
-
-export class FolderResultEntity {
-  data: FolderEntity[];
-
-  meta: MetaEntity;
 }

@@ -1,5 +1,5 @@
 import { Form, ImageGallery } from '@library/design';
-import { CategoryEntity, CreateCategoryDto } from '@library/domain';
+import { CategoryEntity, CreateCategoryInput } from '@library/domain';
 import { Caption, Field, Input, Label, Select, Textarea } from '@sellgar/kit';
 import { useController, useLoaderData } from '@sellgar/app';
 
@@ -44,7 +44,10 @@ export const Fields: React.FC<FieldsProps> = (props) => {
   const categories = useLoaderData(CategoryListControllerInterface) as CategoryEntity[];
   const { control } = useFormContext<IFormData>();
 
-  const categoryOptions = React.useMemo(() => flattenCategories(categories, category?.uuid), [categories, category?.uuid]);
+  const categoryOptions = React.useMemo(
+    () => flattenCategories(categories, category?.uuid),
+    [categories, category?.uuid],
+  );
 
   return (
     <div className={s.wrapper}>
@@ -53,7 +56,7 @@ export const Fields: React.FC<FieldsProps> = (props) => {
         control={control}
         disabled={props.inProcess}
         render={({ field, fieldState: { error } }) => {
-          const image = field.value as CreateCategoryDto['image'] | undefined;
+          const image = field.value as CreateCategoryInput['image'] | undefined;
           const items = image
             ? [
                 {
@@ -151,7 +154,13 @@ export const Fields: React.FC<FieldsProps> = (props) => {
                   <Label label={'Код'} />
                 </Field.Label>
                 <Field.Content>
-                  <Input {...field} autoFocus={true} target={error?.message ? 'destructive' : undefined} size={'md'} placeholder={'Код'} />
+                  <Input
+                    {...field}
+                    autoFocus={true}
+                    target={error?.message ? 'destructive' : undefined}
+                    size={'md'}
+                    placeholder={'Код'}
+                  />
                 </Field.Content>
                 {error?.message && (
                   <Field.Caption>
@@ -175,7 +184,12 @@ export const Fields: React.FC<FieldsProps> = (props) => {
                   <Label label={'Название'} />
                 </Field.Label>
                 <Field.Content>
-                  <Input {...field} target={error?.message ? 'destructive' : undefined} size={'md'} placeholder={'Название'} />
+                  <Input
+                    {...field}
+                    target={error?.message ? 'destructive' : undefined}
+                    size={'md'}
+                    placeholder={'Название'}
+                  />
                 </Field.Content>
                 {error?.message && (
                   <Field.Caption>
@@ -199,7 +213,12 @@ export const Fields: React.FC<FieldsProps> = (props) => {
                   <Label label={'Описание'} />
                 </Field.Label>
                 <Field.Content>
-                  <Textarea {...field} target={error?.message ? 'destructive' : undefined} size={'md'} placeholder={'Описание'} />
+                  <Textarea
+                    {...field}
+                    target={error?.message ? 'destructive' : undefined}
+                    size={'md'}
+                    placeholder={'Описание'}
+                  />
                 </Field.Content>
                 {error?.message && (
                   <Field.Caption>

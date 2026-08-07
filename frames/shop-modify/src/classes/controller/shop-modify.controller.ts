@@ -1,4 +1,4 @@
-import { CreateShopDto, ShopServiceInterface, UpdateShopDto } from '@library/domain';
+import { CreateShopInput, ShopServiceInterface, UpdateShopInput } from '@library/domain';
 
 import {
   Controller,
@@ -30,9 +30,9 @@ export class ShopModifyController implements ShopModifyControllerInterface {
 
   async action(args: FrameControllerActionArgs<ShopModifyFrameParams, ShopModifyActionPayload>) {
     if (args.props.uuid) {
-      await this.shopService.update(args.props.uuid, args.payload as UpdateShopDto);
+      await this.shopService.update(args.props.uuid, args.payload as UpdateShopInput);
     } else {
-      await this.shopService.create(args.payload as CreateShopDto);
+      await this.shopService.create(args.payload as CreateShopInput);
     }
 
     await this.revalidateService.revalidate();

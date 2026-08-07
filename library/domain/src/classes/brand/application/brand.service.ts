@@ -1,53 +1,29 @@
 import { Inject, Injectable } from '@sellgar/app';
-import { validateOrReject } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-
-import { BrandEntity, BrandResultEntity } from '../domain/brand.entity.ts';
-
-import { CreateBrandDto } from './dto/create-brand.dto.ts';
-import { UpdateBrandDto } from './dto/update-brand.dto.ts';
 
 import { BrandServiceInterface } from './brand-service.interface.ts';
-import { BrandGatewayInterface } from '../gateway/brand-gateway.interface.ts';
+import { BrandGatewayInterface } from '../data/gateway/brand-gateway.interface.ts';
+import { CreateBrandInput } from '../data/gateway/input/create-brand.input.ts';
+import { UpdateBrandInput } from '../data/gateway/input/update-brand.input.ts';
+import { BrandEntity } from '../domain/brand.entity.ts';
+import { BrandResultEntity } from '../domain/brand-result.entity.ts';
 
 @Injectable()
 export class BrandService implements BrandServiceInterface {
   constructor(@Inject(BrandGatewayInterface) private readonly brandGateway: BrandGatewayInterface) {}
 
-  async findAll(): Promise<BrandResultEntity> {
-    return await this.brandGateway.findAll();
+  findAll(): Promise<BrandResultEntity> {
+    return this.brandGateway.findAll();
   }
 
-  async findByUuid(uuid: string): Promise<BrandEntity> {
-    return await this.brandGateway.findByUuid(uuid);
+  findByUuid(uuid: string): Promise<BrandEntity> {
+    return this.brandGateway.findByUuid(uuid);
   }
 
-  async update(uuid: string, dto: UpdateBrandDto): Promise<BrandEntity> {
-    const dtoInstance = plainToInstance(UpdateBrandDto, this.createValidationDto(dto));
-
-    await validateOrReject(dtoInstance);
-
-    return await this.brandGateway.update(uuid, dto);
+  update(uuid: string, input: UpdateBrandInput): Promise<BrandEntity> {
+    return this.brandGateway.update(uuid, input);
   }
 
-  async create(dto: CreateBrandDto): Promise<BrandEntity> {
-    const dtoInstance = plainToInstance(CreateBrandDto, this.createValidationDto(dto));
-
-    await validateOrReject(dtoInstance);
-
-    return await this.brandGateway.create(dto);
-  }
-
-  private createValidationDto<T extends CreateBrandDto | UpdateBrandDto>(dto: T): T {
-    if (!dto.image) {
-      return dto;
-    }
-
-    const { file: _file, ...image } = dto.image;
-
-    return {
-      ...dto,
-      image,
-    };
+  create(input: CreateBrandInput): Promise<BrandEntity> {
+    return this.brandGateway.create(input);
   }
 }

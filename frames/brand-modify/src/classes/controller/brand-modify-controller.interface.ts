@@ -1,9 +1,9 @@
-import { BrandEntity, CreateBrandDto, UpdateBrandDto } from '@library/domain';
+import { BrandEntity, CreateBrandInput, UpdateBrandInput } from '@library/domain';
 import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@sellgar/app';
 
 import { BrandModifyFrameParams } from '../params';
 
-export type BrandModifyActionPayload = CreateBrandDto | UpdateBrandDto;
+export type BrandModifyActionPayload = CreateBrandInput | UpdateBrandInput;
 
 export abstract class BrandModifyControllerInterface extends FrameControllerInterface<BrandModifyFrameParams> {
   abstract loader(args: FrameControllerLoaderArgs<BrandModifyFrameParams>): Promise<BrandEntity | undefined>;

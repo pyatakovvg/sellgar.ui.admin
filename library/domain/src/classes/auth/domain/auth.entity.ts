@@ -1,25 +1,16 @@
-import { Type } from 'class-transformer';
-import { IsString, IsDateString, ValidateNested } from 'class-validator';
-
-import { MetaEntity } from '../../../meta.entity.ts';
+import { Expose } from 'class-transformer';
+import { IsDateString, IsString } from 'class-validator';
 
 export class AuthEntity {
+  @Expose()
   @IsString()
   accessToken: string;
 
+  @Expose()
   @IsString()
   refreshToken: string;
 
+  @Expose()
   @IsDateString()
   expiresAt: string;
-}
-
-export class AuthResultEntity {
-  @ValidateNested()
-  @Type(() => AuthEntity)
-  data: AuthEntity;
-
-  @ValidateNested()
-  @Type(() => MetaEntity)
-  meta: MetaEntity;
 }

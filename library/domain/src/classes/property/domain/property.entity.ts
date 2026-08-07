@@ -1,98 +1,9 @@
-import { Type, Expose } from 'class-transformer';
-import { IsUUID, IsOptional, IsString, ValidateNested, IsDateString, IsNumber } from 'class-validator';
+import { Expose, Type } from 'class-transformer';
+import { IsArray, IsDateString, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
 import { UnitEntity } from '../../unit';
-import { MetaEntity } from '../../../meta.entity.ts';
 
-export class PropertyOptionMetadataEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsNumber()
-  version: number;
-
-  @Expose()
-  @IsUUID()
-  optionUuid: string;
-
-  @Expose()
-  @IsString()
-  valueType: 'TEXT' | 'COLOR' | 'IMAGE' | 'ICON';
-
-  @Expose()
-  @IsNumber()
-  sortOrder: number;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  textValue: string | null;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  colorValue: string | null;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  fileUuid: string | null;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  iconCode: string | null;
-
-  @Expose()
-  @IsDateString()
-  createdAt: string;
-
-  @Expose()
-  @IsDateString()
-  updatedAt: string;
-}
-
-export class PropertyOptionEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsNumber()
-  version: number;
-
-  @Expose()
-  @IsUUID()
-  propertyUuid: string;
-
-  @Expose()
-  @IsString()
-  code: string;
-
-  @Expose()
-  @IsString()
-  name: string;
-
-  @Expose()
-  @IsNumber()
-  sortOrder: number;
-
-  @Expose()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => PropertyOptionMetadataEntity)
-  metadata: PropertyOptionMetadataEntity[];
-
-  @Expose()
-  @IsDateString()
-  createdAt: string;
-
-  @Expose()
-  @IsDateString()
-  updatedAt: string;
-}
+import { PropertyOptionEntity } from './property-option.entity.ts';
 
 export class PropertyEntity {
   @Expose()
@@ -106,7 +17,7 @@ export class PropertyEntity {
   @Expose()
   @IsUUID()
   @IsOptional()
-  unitUuid?: string;
+  unitUuid?: string | null;
 
   @Expose()
   @IsString()
@@ -130,11 +41,12 @@ export class PropertyEntity {
   @Type(() => UnitEntity)
   unit?: UnitEntity | null;
 
+  @IsArray()
   @Expose()
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => PropertyOptionEntity)
-  options: PropertyOptionEntity[];
+  options?: PropertyOptionEntity[];
 
   @Expose()
   @IsDateString()
@@ -143,16 +55,4 @@ export class PropertyEntity {
   @Expose()
   @IsDateString()
   updatedAt: string;
-}
-
-export class PropertyResultEntity {
-  @Expose()
-  @ValidateNested()
-  @Type(() => PropertyEntity)
-  data: PropertyEntity[];
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => MetaEntity)
-  meta: MetaEntity;
 }
