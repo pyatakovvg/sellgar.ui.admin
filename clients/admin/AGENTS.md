@@ -21,8 +21,9 @@
 - Здесь только регистрируются pages и frames; реализация живет в `pages/*` или `frames/*`.
 - Для routing, policies и application composition использовать primitives из `@sellgar/app`.
 - Host bindings ограничивать application-wide/domain infrastructure.
-- Runtime recovery подключать в initializer через `RuntimeErrorsInterface`, а не
-  через domain/request abstractions. Конкретная реакция на 401, логирование или
-  внешние репортеры принадлежат host application.
+- Recovery защищённой сессии при 401 принадлежит `RequestExecutor` из
+  `@sellgar/app`. Host application предоставляет только реализацию
+  `SessionExpirationNotifierInterface` через application-wide binding; не
+  подписываться на внутренние runtime errors отдельным initializer.
 - Диалоги host-level user request строить через `UserRequestFeature` и
   components из `@sellgar/kit`, не через самописные overlays.

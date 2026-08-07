@@ -9,29 +9,29 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
-    "@floating-ui/dom": "1.7.6",
-    "@floating-ui/react": "0.27.19",
+    "@floating-ui/dom": "1.8.0",
+    "@floating-ui/react": "0.27.20",
     "@react-input/mask": "2.0.4",
     "@react-input/number-format": "2.0.3",
-    "@tanstack/react-table": "8.21.3",
-    "@tanstack/react-virtual": "3.14.5",
-    "@tiptap/core": "3.27.1",
-    "@tiptap/pm": "3.27.1",
-    "@tiptap/react": "3.27.1",
-    "@tiptap/starter-kit": "3.27.1",
+    "@tanstack/react-table": "9.0.0",
+    "@tanstack/react-virtual": "3.14.9",
+    "@tiptap/core": "3.29.2",
+    "@tiptap/pm": "3.29.2",
+    "@tiptap/react": "3.29.2",
+    "@tiptap/starter-kit": "3.29.2",
     "classnames": "2.5.1",
     "formik": "2.4.9",
     "moment": "2.30.1",
-    "moment-timezone": "0.6.2",
-    "prosemirror-model": "1.25.9",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
+    "moment-timezone": "0.6.3",
+    "prosemirror-model": "1.25.11",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "react-number-format": "5.4.5",
-    "react-router-dom": "7.18.1"
+    "react-router-dom": "7.18.2"
   },
   "devDependencies": {
     "@types/moment": "2.13.0",
     "@types/moment-timezone": "0.5.30",
-    "@types/react": "19.2.17"
+    "@types/react": "19.2.18"
   }
 }

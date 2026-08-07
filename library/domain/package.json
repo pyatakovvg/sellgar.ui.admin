@@ -16,7 +16,7 @@
     "reflect-metadata": "0.2.2"
   },
   "devDependencies": {
-    "@types/lodash": "4.17.24",
+    "@types/lodash": "4.17.25",
     "@types/reflect-metadata": "0.1.0"
   }
 }

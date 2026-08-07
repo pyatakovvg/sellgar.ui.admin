@@ -18,7 +18,7 @@ import { NotFound } from './components/not-found';
 import { Splash } from './components/splash';
 
 import { AdminBindings } from './bindings';
-import { RegisterUnauthorizedRecoveryInitializer, ResolveAuthStateInitializer } from './initializers';
+import { ResolveAuthStateInitializer } from './initializers';
 import { AlertUserRequestView } from './presentations/user-request';
 import { RequireAnonymousSessionPolicy, RequireAuthenticatedSessionPolicy } from './policies';
 
@@ -43,7 +43,7 @@ export class AdminApplication extends Application {
       }),
     ]);
 
-    app.initializers([RegisterUnauthorizedRecoveryInitializer, ResolveAuthStateInitializer]);
+    app.initializers([ResolveAuthStateInitializer]);
 
     app.router(
       new Router({
