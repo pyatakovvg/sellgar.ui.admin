@@ -1,4 +1,4 @@
-export { AuthEntity, AuthServiceInterface } from './auth/index.ts';
+export { AuthEntity, AuthServiceInterface, SocketTicketEntity } from './auth/index.ts';
 export { BrandEntity, BrandResultEntity, BrandServiceInterface } from './brand/index.ts';
 export type { CreateBrandInput, UpdateBrandInput } from './brand/index.ts';
 export { CategoryEntity, CategoryResultEntity, CategoryServiceInterface } from './category/index.ts';

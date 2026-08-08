@@ -3152,6 +3152,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@library/provider@npm:0.0.1, @library/provider@workspace:library/provider":
+  version: 0.0.0-use.local
+  resolution: "@library/provider@workspace:library/provider"
+  dependencies:
+    "@library/domain": "npm:0.0.1"
+    "@library/socket-io": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    class-validator: "npm:0.15.1"
+  languageName: unknown
+  linkType: soft
+
 "@library/push@npm:0.0.1, @library/push@workspace:library/push":
   version: 0.0.0-use.local
   resolution: "@library/push@workspace:library/push"
@@ -3163,11 +3174,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@library/socket-io@workspace:library/socket-io":
+"@library/socket-io@npm:0.0.1, @library/socket-io@workspace:library/socket-io":
   version: 0.0.0-use.local
   resolution: "@library/socket-io@workspace:library/socket-io"
   dependencies:
     "@sellgar/app": "npm:0.0.1"
+    class-validator: "npm:0.15.1"
     socket.io-client: "npm:4.8.3"
   languageName: unknown
   linkType: soft
@@ -3320,6 +3332,7 @@ __metadata:
     "@hookform/resolvers": "npm:5.7.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
+    "@library/provider": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
     "@types/react": "npm:19.2.18"
     "@types/react-dom": "npm:19.2.4"
@@ -3341,6 +3354,7 @@ __metadata:
   dependencies:
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
+    "@library/provider": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
     "@types/react": "npm:19.2.18"
     "@types/react-dom": "npm:19.2.4"

@@ -1,16 +1,16 @@
 {
   "private": true,
   "type": "module",
-  "name": "@library/socket-io",
+  "name": "@library/provider",
   "version": "0.0.1",
-  "description": "Shared demand-driven Socket.IO connection",
+  "description": "Reusable Sellgar runtime providers",
   "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
-  "homepage": "",
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
+    "@library/domain": "0.0.1",
+    "@library/socket-io": "0.0.1",
     "@sellgar/app": "0.0.1",
-    "class-validator": "0.15.1",
-    "socket.io-client": "4.8.3"
+    "class-validator": "0.15.1"
   }
 }

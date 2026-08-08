@@ -1,11 +1,12 @@
 import { Typography, useCellData } from '@sellgar/kit';
 import { ProductEntity } from '@library/domain';
+import { reactive } from '@sellgar/app';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-export const Category: React.FC = () => {
+export const Category: React.FC = reactive(() => {
   const { data } = useCellData<ProductEntity>();
 
   if (!data.category) {
@@ -25,4 +26,4 @@ export const Category: React.FC = () => {
       </Typography>
     </div>
   );
-};
+});

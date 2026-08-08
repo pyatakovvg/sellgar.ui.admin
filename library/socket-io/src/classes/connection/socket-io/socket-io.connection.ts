@@ -1,15 +1,23 @@
 import { io, type Socket } from 'socket.io-client';
+import { parseRealtimeDelivery, type RealtimeDelivery } from '../../protocol/realtime-delivery.ts';
 
 import type {
   SocketIOConnectionError,
   SocketIOConnectionHandler,
   SocketIOConnectionInterface,
   SocketIOConnectionOptions,
+  SocketIOConnectionRequestOptions,
   SocketIOConnectionSubscription,
   SocketIOConnectionSubscriptionOptions,
+  SocketIORealtimeDeliveryHandler,
 } from '../../service/socket-io-connections/socket-io-connections.interface.ts';
 
 const RECONNECT_DELAYS = [0, 2_000, 10_000, 30_000, 60_000] as const;
+const CONNECTION_STABLE_AFTER_MS = 30_000;
+const DELIVERY_EVENT = 'realtime.event.v1';
+const DELIVERY_ACK_EVENT = 'realtime.ack.v1';
+const DELIVERY_READY_EVENT = 'realtime.ready.v1';
+const DELIVERY_ACK_TIMEOUT_MS = 5_000;
 
 interface SocketIOSubscriber {
   readonly handler: SocketIOConnectionHandler;
@@ -21,11 +29,22 @@ interface SocketIOEventSubscribers {
   readonly subscribers: Set<SocketIOSubscriber>;
 }
 
+interface SocketIODeliverySubscriber {
+  readonly eventType: string;
+  readonly handler: SocketIORealtimeDeliveryHandler;
+  readonly onError?: SocketIOConnectionSubscriptionOptions['onError'];
+}
+
 export class SocketIOConnection implements SocketIOConnectionInterface {
   private readonly socket: Socket;
   private readonly events = new Map<string, SocketIOEventSubscribers>();
+  private readonly deliverySubscribers = new Set<SocketIODeliverySubscriber>();
+  private deliveryExecution = Promise.resolve();
+  private deliveryGeneration = 0;
+  private deliverySubscription: SocketIOConnectionSubscription | undefined;
   private retryAttempt = 0;
   private retryTimer: ReturnType<typeof setTimeout> | undefined;
+  private stableConnectionTimer: ReturnType<typeof setTimeout> | undefined;
   private subscriberCount = 0;
   private connectedOnce = false;
   private disposed = false;
@@ -38,8 +57,54 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
     this.socket.on('connect', this.handleConnect);
     this.socket.on('connect_error', this.handleConnectError);
     this.socket.on('disconnect', this.handleDisconnect);
+    this.socket.on(DELIVERY_READY_EVENT, this.handleDeliveryReady);
     this.socket.io.on('reconnect_error', this.handleReconnectError);
     this.socket.io.on('reconnect_failed', this.handleReconnectFailed);
+  }
+
+  reconnect(): void {
+    this.assertActive();
+    this.clearRetry();
+    this.clearStableConnectionTimer();
+    this.disconnect();
+    this.scheduleRetry();
+  }
+
+  subscribeDelivery<TPayload = unknown>(
+    eventType: string,
+    handler: SocketIORealtimeDeliveryHandler<TPayload>,
+    options: SocketIOConnectionSubscriptionOptions = {},
+  ): SocketIOConnectionSubscription {
+    this.assertActive();
+
+    const subscriber: SocketIODeliverySubscriber = {
+      eventType,
+      handler: handler as SocketIORealtimeDeliveryHandler,
+      onError: options.onError,
+    };
+
+    this.deliverySubscribers.add(subscriber);
+    this.deliverySubscription ??= this.subscribe(DELIVERY_EVENT, (payload: unknown) => this.dispatchDelivery(payload));
+
+    let active = true;
+
+    return {
+      dispose: async () => {
+        if (!active) {
+          return;
+        }
+
+        active = false;
+        this.deliverySubscribers.delete(subscriber);
+
+        if (this.deliverySubscribers.size === 0) {
+          const subscription = this.deliverySubscription;
+
+          this.deliverySubscription = undefined;
+          await subscription?.dispose();
+        }
+      },
+    };
   }
 
   subscribe<TArguments extends unknown[]>(
@@ -74,6 +139,18 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
     };
   }
 
+  request<Payload, Response>(
+    event: string,
+    payload: Payload,
+    options: SocketIOConnectionRequestOptions = {},
+  ): Promise<Response> {
+    this.assertActive();
+
+    const socket = options.timeoutMs === undefined ? this.socket : this.socket.timeout(options.timeoutMs);
+
+    return socket.emitWithAck(event, payload) as Promise<Response>;
+  }
+
   async dispose(): Promise<void> {
     if (this.disposed) {
       return;
@@ -81,16 +158,20 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
 
     this.disposed = true;
     this.clearRetry();
+    this.clearStableConnectionTimer();
 
     for (const [event, eventSubscribers] of this.events) {
       this.socket.off(event, eventSubscribers.dispatcher);
     }
 
     this.events.clear();
+    this.deliverySubscribers.clear();
+    this.deliverySubscription = undefined;
     this.subscriberCount = 0;
     this.socket.off('connect', this.handleConnect);
     this.socket.off('connect_error', this.handleConnectError);
     this.socket.off('disconnect', this.handleDisconnect);
+    this.socket.off(DELIVERY_READY_EVENT, this.handleDeliveryReady);
     this.socket.io.off('reconnect_error', this.handleReconnectError);
     this.socket.io.off('reconnect_failed', this.handleReconnectFailed);
     this.disconnect();
@@ -98,8 +179,20 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
 
   private readonly handleConnect = () => {
     this.connectedOnce = true;
-    this.retryAttempt = 0;
     this.clearRetry();
+    this.clearStableConnectionTimer();
+    this.stableConnectionTimer = setTimeout(() => {
+      this.stableConnectionTimer = undefined;
+
+      if (this.socket.connected) {
+        this.retryAttempt = 0;
+      }
+    }, CONNECTION_STABLE_AFTER_MS);
+  };
+
+  private readonly handleDeliveryReady = () => {
+    this.clearStableConnectionTimer();
+    this.retryAttempt = 0;
   };
 
   private readonly handleConnectError = (error: unknown) => {
@@ -114,6 +207,8 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
   };
 
   private readonly handleDisconnect = (reason: string) => {
+    this.clearStableConnectionTimer();
+
     if (!this.hasSubscribers || this.socket.active || reason === 'io client disconnect') {
       return;
     }
@@ -190,9 +285,63 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
     this.socket.off(event, eventSubscribers.dispatcher);
   }
 
+  private dispatchDelivery(payload: unknown): Promise<void> {
+    const deliveryGeneration = this.deliveryGeneration;
+
+    this.deliveryExecution = this.deliveryExecution
+      .catch(() => undefined)
+      .then(async () => {
+        if (deliveryGeneration !== this.deliveryGeneration) {
+          return;
+        }
+
+        let delivery: RealtimeDelivery | undefined;
+
+        try {
+          const parsedDelivery = parseRealtimeDelivery(payload);
+
+          delivery = parsedDelivery;
+          const subscribers = [...this.deliverySubscribers].filter(
+            (subscriber) => subscriber.eventType === parsedDelivery.eventType,
+          );
+
+          await Promise.all(
+            subscribers.map((subscriber) => subscriber.handler(parsedDelivery.payload, parsedDelivery)),
+          );
+          await this.request(
+            DELIVERY_ACK_EVENT,
+            {
+              room: `${parsedDelivery.audience.type}:${parsedDelivery.audience.uuid}`,
+              sequence: parsedDelivery.sequence,
+            },
+            { timeoutMs: DELIVERY_ACK_TIMEOUT_MS },
+          );
+        } catch (error) {
+          this.deliveryGeneration += 1;
+          const subscribers = delivery
+            ? [...this.deliverySubscribers].filter((subscriber) => subscriber.eventType === delivery?.eventType)
+            : [...this.deliverySubscribers];
+
+          for (const subscriber of subscribers) {
+            this.reportSubscriberError(subscriber, {
+              context: 'handler',
+              error,
+              event: delivery?.eventType ?? DELIVERY_EVENT,
+            });
+          }
+
+          this.reconnect();
+          throw error;
+        }
+      });
+
+    return this.deliveryExecution;
+  }
+
   private applyDesiredState(): void {
     if (!this.hasSubscribers) {
       this.clearRetry();
+      this.clearStableConnectionTimer();
       this.retryAttempt = 0;
       this.disconnect();
       return;
@@ -250,6 +399,15 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
     this.retryTimer = undefined;
   }
 
+  private clearStableConnectionTimer(): void {
+    if (this.stableConnectionTimer === undefined) {
+      return;
+    }
+
+    clearTimeout(this.stableConnectionTimer);
+    this.stableConnectionTimer = undefined;
+  }
+
   private reportError(error: SocketIOConnectionError): void {
     for (const eventSubscribers of this.events.values()) {
       for (const subscriber of eventSubscribers.subscribers) {
@@ -258,7 +416,7 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
     }
   }
 
-  private reportSubscriberError(subscriber: SocketIOSubscriber, error: SocketIOConnectionError): void {
+  private reportSubscriberError(subscriber: Pick<SocketIOSubscriber, 'onError'>, error: SocketIOConnectionError): void {
     if (!subscriber.onError) {
       return;
     }

@@ -15,4 +15,8 @@ export class AuthService implements AuthServiceInterface {
   async signIn(login: string, password: string): Promise<void> {
     await this.authGateway.signIn(login, password);
   }
+
+  issueSocketTicket() {
+    return this.authGateway.issueSocketTicket();
+  }
 }

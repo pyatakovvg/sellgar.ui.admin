@@ -22,5 +22,6 @@ declare interface Window {
 
 	    GATEWAY_API: string;
 	    CDN_IMAGES_URL: string;
+	    SOCKET_GATEWAY_API: string;
 	  };
 	}

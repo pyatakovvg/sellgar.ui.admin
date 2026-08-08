@@ -12,6 +12,7 @@
     "@hookform/resolvers": "5.7.1",
     "@library/design": "0.0.1",
     "@library/domain": "0.0.1",
+    "@library/provider": "0.0.1",
     "@sellgar/app": "0.0.1",
     "classnames": "2.5.1",
     "date-fns": "4.4.0",

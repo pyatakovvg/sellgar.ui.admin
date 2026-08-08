@@ -37,6 +37,8 @@
 - `frames/*` - цельные drawer/modal workflows с собственными bindings/controller/view.
 - `widgets/*` - встраиваемые reusable widgets.
 - `library/*` - общие слои. `library/design` не должен зависеть от domain/pages/widgets.
+- `library/provider` - reusable singleton providers и concrete realtime Hub adapters.
+- `library/socket-io` - demand-driven Socket.IO connections без domain-specific контрактов.
 - `library/sellgar.kit.ui` - nested submodule UI kit; его commit и gitlink admin UI фиксируются раздельно.
 - `library/sellgar.orm.ui` - nested submodule ORM UI; его commit и gitlink admin UI фиксируются раздельно.
 - `library/sellgar.app.ui` - nested submodule App UI; его commit и gitlink admin UI фиксируются раздельно.

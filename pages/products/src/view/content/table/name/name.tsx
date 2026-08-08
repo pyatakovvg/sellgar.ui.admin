@@ -1,11 +1,12 @@
 import { Typography, useCellData } from '@sellgar/kit';
 import { ProductEntity } from '@library/domain';
+import { reactive } from '@sellgar/app';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-export const Name: React.FC = () => {
+export const Name: React.FC = reactive(() => {
   const { data } = useCellData<ProductEntity>();
 
   return (
@@ -28,4 +29,4 @@ export const Name: React.FC = () => {
       </div>
     </div>
   );
-};
+});

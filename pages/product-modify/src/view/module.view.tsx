@@ -1,5 +1,5 @@
 import { Page } from '@library/design';
-import { useLoaderData, useSubmit } from '@sellgar/app';
+import { reactive, useLoaderData, useSubmit } from '@sellgar/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
@@ -12,7 +12,7 @@ import { ProductControllerInterface } from '../classes/controller/product-contro
 import { IFormData, schema } from './schema.ts';
 import { toProductFormData } from './form-values.ts';
 
-export const ModuleView = () => {
+export const ModuleView = reactive(() => {
   const product = useLoaderData(ProductControllerInterface);
   const isEdit = Boolean(product?.uuid);
   const submit = useSubmit(ProductControllerInterface);
@@ -61,4 +61,4 @@ export const ModuleView = () => {
       </form>
     </ReactHookForm.FormProvider>
   );
-};
+});

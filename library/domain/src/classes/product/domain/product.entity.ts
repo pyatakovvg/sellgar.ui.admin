@@ -1,5 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 import { IsArray, IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { Entity } from '@sellgar/app';
 
 import { ProductStatus } from './product-status.enum.ts';
 
@@ -9,6 +10,7 @@ import { CategoryEntity } from '../../category';
 
 import { ProductPropertyEntity } from './product-property.entity.ts';
 
+@Entity({ identity: 'uuid' })
 export class ProductEntity {
   @Expose()
   @IsUUID()

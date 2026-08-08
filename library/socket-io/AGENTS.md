@@ -18,8 +18,12 @@ Socket.IO endpoint. Физическое соединение существуе
 - Первая подписка запускает соединение, освобождение последней останавливает его.
 - Socket.IO Manager выполняет штатный reconnect. Пакет повторно вызывает `connect()`
   только когда автоматический reconnect не активен, но спрос ещё существует.
-- URL, namespace, event names, auth payload и transport DTO принадлежат concrete
-  adapter-у приложения, а не этому пакету.
+- URL, namespace, event names, auth payload и domain-specific event payload принадлежат
+  concrete adapter-у приложения, а не этому пакету.
+- Общий wire-контракт `realtime.event.v1`, используемый всеми concrete adapters,
+  принадлежит `@library/socket-io`; product/order-specific payload остаётся у своего provider-а.
+- `subscribeDelivery()` централизованно валидирует envelope, сериализует delivery,
+  маршрутизирует по `eventType`, отправляет ACK после handlers и делает reconnect при ошибке.
 
 ## Проверка
 
