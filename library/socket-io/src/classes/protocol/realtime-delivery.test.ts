@@ -1,4 +1,4 @@
-import { parseRealtimeDelivery } from './realtime-delivery.ts';
+import { parseRealtimeDelivery, realtimeDeliveryRoom } from './realtime-delivery.ts';
 
 describe('parseRealtimeDelivery', () => {
   it('parses the shared realtime envelope', () => {
@@ -12,6 +12,16 @@ describe('parseRealtimeDelivery', () => {
         audience: { type: 'unknown', uuid: 'not-a-uuid' },
       }),
     ).toThrow('Realtime delivery has an invalid audience.');
+  });
+
+  it('parses the system broadcast audience without an artificial UUID', () => {
+    const delivery = {
+      ...createDelivery(),
+      audience: { type: 'broadcast' },
+    };
+
+    expect(parseRealtimeDelivery(delivery)).toEqual(delivery);
+    expect(realtimeDeliveryRoom({ type: 'broadcast' })).toBe('broadcast');
   });
 });
 

@@ -1,11 +1,18 @@
 import { isDateString, isUUID } from 'class-validator';
 
-export type RealtimeAudienceType = 'job' | 'shop' | 'tenant' | 'user';
+export type RealtimeAudienceType = 'broadcast' | 'job' | 'shop' | 'tenant' | 'user';
+export type RealtimeAddressedAudienceType = Exclude<RealtimeAudienceType, 'broadcast'>;
 
-export interface RealtimeAudience {
-  readonly type: RealtimeAudienceType;
+export interface RealtimeBroadcastAudience {
+  readonly type: 'broadcast';
+}
+
+export interface RealtimeAddressedAudience {
+  readonly type: RealtimeAddressedAudienceType;
   readonly uuid: string;
 }
+
+export type RealtimeAudience = RealtimeBroadcastAudience | RealtimeAddressedAudience;
 
 export interface RealtimeDelivery<TPayload = unknown> {
   readonly audience: RealtimeAudience;
@@ -18,7 +25,7 @@ export interface RealtimeDelivery<TPayload = unknown> {
   readonly sequence: string;
 }
 
-const AUDIENCE_TYPES: readonly RealtimeAudienceType[] = ['job', 'shop', 'tenant', 'user'];
+const ADDRESSED_AUDIENCE_TYPES: readonly RealtimeAddressedAudienceType[] = ['job', 'shop', 'tenant', 'user'];
 
 export const parseRealtimeDelivery = (value: unknown): RealtimeDelivery => {
   if (!isRecord(value)) {
@@ -64,10 +71,18 @@ export const parseRealtimeDelivery = (value: unknown): RealtimeDelivery => {
   };
 };
 
+export const realtimeDeliveryRoom = (audience: RealtimeAudience): string => {
+  return audience.type === 'broadcast' ? 'broadcast' : `${audience.type}:${audience.uuid}`;
+};
+
 const parseAudience = (value: unknown): RealtimeAudience => {
+  if (isRecord(value) && value.type === 'broadcast') {
+    return { type: 'broadcast' };
+  }
+
   if (
     !isRecord(value) ||
-    !AUDIENCE_TYPES.includes(value.type as RealtimeAudienceType) ||
+    !ADDRESSED_AUDIENCE_TYPES.includes(value.type as RealtimeAddressedAudienceType) ||
     typeof value.uuid !== 'string' ||
     !isUUID(value.uuid)
   ) {
@@ -75,7 +90,7 @@ const parseAudience = (value: unknown): RealtimeAudience => {
   }
 
   return {
-    type: value.type as RealtimeAudienceType,
+    type: value.type as RealtimeAddressedAudienceType,
     uuid: value.uuid,
   };
 };

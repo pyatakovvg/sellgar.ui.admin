@@ -213,7 +213,7 @@ describe('SocketIOConnection', () => {
     expect(handler).toHaveBeenCalledWith(delivery.payload, delivery);
     expect(socket.timeout).toHaveBeenCalledWith(5_000);
     expect(socket.emitWithAck).toHaveBeenCalledWith('realtime.ack.v1', {
-      room: 'user:66713624-6013-46b1-97c9-0f0166594491',
+      room: 'broadcast',
       sequence: '42',
     });
     expect(handler.mock.invocationCallOrder[0]).toBeLessThan(
@@ -339,8 +339,7 @@ const createSocket = () => {
 
 const createDelivery = () => ({
   audience: {
-    type: 'user',
-    uuid: '66713624-6013-46b1-97c9-0f0166594491',
+    type: 'broadcast',
   },
   deliveryId: 'd40e2681-2898-473a-98cc-0f5a76265310',
   eventType: 'product.updated',
