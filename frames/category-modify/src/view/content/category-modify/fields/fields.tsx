@@ -1,7 +1,7 @@
 import { Form, ImageGallery } from '@library/design';
-import { CategoryEntity, CreateCategoryInput } from '@library/domain';
+import { CategoryEntity, FileServiceInterface } from '@library/domain';
 import { Caption, Field, Input, Label, Select, Textarea } from '@sellgar/kit';
-import { useController, useLoaderData } from '@sellgar/app';
+import { useDependency, useLoaderData } from '@sellgar/app';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -39,9 +39,9 @@ const flattenCategories = (items: CategoryEntity[], excludedUuid?: string, level
 };
 
 export const Fields: React.FC<FieldsProps> = (props) => {
-  const controller = useController(CategoryModifyControllerInterface);
-  const category = useLoaderData(CategoryModifyControllerInterface) as CategoryEntity | undefined;
-  const categories = useLoaderData(CategoryListControllerInterface) as CategoryEntity[];
+  const fileService = useDependency(FileServiceInterface);
+  const category = useLoaderData(CategoryModifyControllerInterface);
+  const categories = useLoaderData(CategoryListControllerInterface);
   const { control } = useFormContext<IFormData>();
 
   const categoryOptions = React.useMemo(
@@ -56,14 +56,14 @@ export const Fields: React.FC<FieldsProps> = (props) => {
         control={control}
         disabled={props.inProcess}
         render={({ field, fieldState: { error } }) => {
-          const image = field.value as CreateCategoryInput['image'] | undefined;
+          const image = field.value;
           const items = image
             ? [
                 {
-                  id: image.localId ?? image.imageUuid ?? 'image',
-                  src: image.imageUuid ? controller.getFileImageUrl(image.imageUuid) : undefined,
+                  id: image.imageUuid ?? 'image',
+                  src: image.imageUuid ? fileService.getPublicImageUrl(image.imageUuid) : undefined,
                   file: image.file,
-                  fileName: image.fileName,
+                  fileName: image.file?.name,
                 },
               ]
             : [];
@@ -88,9 +88,7 @@ export const Fields: React.FC<FieldsProps> = (props) => {
                         }
 
                         field.onChange({
-                          localId: globalThis.crypto.randomUUID(),
                           file,
-                          fileName: file.name,
                           alt: null,
                         });
                       }}

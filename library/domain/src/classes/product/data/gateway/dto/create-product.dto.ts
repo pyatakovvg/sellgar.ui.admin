@@ -1,81 +1,9 @@
 import { Expose, Type } from 'class-transformer';
-import { IsArray, IsInstance, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-import type {
-  CreateProductInput,
-  ProductPropertyInput,
-  ProductVariantImageInput,
-  ProductVariantInput,
-} from '../input/create-product.input.ts';
+import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
-class ProductPropertyDto implements ProductPropertyInput {
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
-  @Expose()
-  @IsUUID()
-  propertyUuid: string;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  optionUuid?: string | null;
-
-  @Expose()
-  @IsString()
-  value: string;
-}
-
-class ProductVariantImageDto implements ProductVariantImageInput {
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  imageUuid?: string;
-
-  @Expose()
-  @IsInstance(File)
-  @IsOptional()
-  file?: File;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  alt?: string | null;
-}
-
-class ProductVariantDto implements ProductVariantInput {
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
-  @Expose()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ProductVariantImageDto)
-  @IsOptional()
-  images?: ProductVariantImageDto[];
-
-  @Expose()
-  @IsString()
-  name: string;
-
-  @Expose()
-  @IsString()
-  description: string;
-
-  @Expose()
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => ProductPropertyDto)
-  properties: ProductPropertyDto[];
-}
+import type { CreateProductInput } from '../input/create-product.input.ts';
+import { ProductPropertyDto } from './product-property.dto.ts';
+import { ProductVariantDto } from './product-variant.dto.ts';
 
 export class CreateProductDto implements CreateProductInput {
   @Expose()

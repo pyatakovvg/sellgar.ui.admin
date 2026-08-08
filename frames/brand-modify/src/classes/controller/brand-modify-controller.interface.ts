@@ -10,6 +10,5 @@ export abstract class BrandModifyControllerInterface extends FrameControllerInte
 
   abstract action(args: FrameControllerActionArgs<BrandModifyFrameParams, BrandModifyActionPayload>): Promise<void>;
 
-  abstract getFileImageUrl(fileUuid: string): string;
   abstract toList(): Promise<void>;
 }

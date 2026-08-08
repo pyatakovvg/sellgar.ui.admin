@@ -8,6 +8,6 @@ import { UserResultEntity } from '../../domain/user-result.entity.ts';
 export abstract class UserGatewayInterface {
   abstract getAll(filter: FilterUserInput): Promise<UserResultEntity>;
   abstract getByUuid(uuid: string): Promise<UserEntity>;
-  abstract update(uuid: string, input: UpdateUserInput): Promise<UserEntity>;
+  abstract update(input: UpdateUserInput): Promise<UserEntity>;
   abstract create(input: CreateUserInput): Promise<UserEntity>;
 }

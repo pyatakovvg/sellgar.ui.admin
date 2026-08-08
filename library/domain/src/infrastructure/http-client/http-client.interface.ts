@@ -1,11 +1,4 @@
-export interface HttpRequestConfig<D = unknown> {
-  headers?: HeadersInit;
-  params?: object;
-  responseType?: 'json' | 'text' | 'blob';
-  signal?: AbortSignal;
-  withCredentials?: boolean;
-  data?: D;
-}
+import type { HttpRequestConfig } from './http-request-config.interface.ts';
 
 export abstract class HttpClientInterface {
   abstract abort(reason?: any): void;

@@ -1,7 +1,7 @@
 import { Expose, Type } from 'class-transformer';
 import { IsBoolean, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
-import { ImageEntity } from '../../variant/index.ts';
+import { ImageEntity } from '../../image';
 
 export class BrandImageEntity {
   @Expose()

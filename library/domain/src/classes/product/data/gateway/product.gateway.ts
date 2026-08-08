@@ -9,7 +9,7 @@ import { ProductResultEntity } from '../../domain/product-result.entity.ts';
 import { ProductFormDataFactoryInterface } from './factory/product-form-data-factory.interface.ts';
 import { CreateProductInput } from './input/create-product.input.ts';
 import { UpdateProductInput } from './input/update-product.input.ts';
-import { ProductDtoMapperInterface } from './mapper/product-dto-mapper.interface.ts';
+import { ProductDtoMapper } from './mapper/product-dto.mapper.ts';
 import { ProductGatewayInterface } from './product-gateway.interface.ts';
 
 @Injectable()
@@ -17,7 +17,6 @@ export class ProductGateway implements ProductGatewayInterface {
   constructor(
     @Inject(ConfigInterface) private readonly config: ConfigInterface,
     @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
-    @Inject(ProductDtoMapperInterface) private readonly dtoMapper: ProductDtoMapperInterface,
     @Inject(ProductFormDataFactoryInterface) private readonly formDataFactory: ProductFormDataFactoryInterface,
   ) {}
 
@@ -34,7 +33,7 @@ export class ProductGateway implements ProductGatewayInterface {
   }
 
   async create(input: CreateProductInput): Promise<ProductEntity> {
-    const dto = this.dtoMapper.create(input);
+    const dto = ProductDtoMapper.create(input);
     await validateOrReject(dto);
     const result = await this.httpClient.post(
       this.config.get('GATEWAY_API') + '/v2/products',
@@ -44,7 +43,7 @@ export class ProductGateway implements ProductGatewayInterface {
   }
 
   async update(uuid: string, input: UpdateProductInput): Promise<ProductEntity> {
-    const dto = this.dtoMapper.update(input);
+    const dto = ProductDtoMapper.update(input);
     await validateOrReject(dto);
     const result = await this.httpClient.patch(
       this.config.get('GATEWAY_API') + '/v2/products/' + uuid,

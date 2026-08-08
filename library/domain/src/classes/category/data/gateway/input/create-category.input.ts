@@ -1,10 +1,4 @@
-export interface CategoryImageInput {
-  localId?: string;
-  imageUuid?: string;
-  file?: File;
-  fileName?: string;
-  alt?: string | null;
-}
+import type { CategoryImageInput } from './category-image.input.ts';
 
 export interface CreateCategoryInput {
   parentUuid?: string | null;

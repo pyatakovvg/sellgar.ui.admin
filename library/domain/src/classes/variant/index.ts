@@ -1,4 +1,3 @@
-export { ImageEntity } from './domain/image.entity.ts';
 export { ProductVariantResultEntity } from './domain/product-variant-result.entity.ts';
 export { VariantEntity } from './domain/variant.entity.ts';
 export { VariantImageEntity } from './domain/variant-image.entity.ts';

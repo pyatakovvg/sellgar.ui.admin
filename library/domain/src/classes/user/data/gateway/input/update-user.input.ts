@@ -1,6 +1,4 @@
-export interface UpdatePersonInput {
-  uuid: string;
-}
+import type { UpdatePersonInput } from './update-person.input.ts';
 
 export interface UpdateUserInput {
   uuid: string;

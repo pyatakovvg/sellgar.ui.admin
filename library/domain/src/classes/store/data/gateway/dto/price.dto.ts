@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 import { IsString, Matches } from 'class-validator';
-import type { StorePriceInput } from '../input/create-store-product.input.ts';
+import type { StorePriceInput } from '../input/store-price.input.ts';
 
 export class PriceDto implements StorePriceInput {
   @Expose()

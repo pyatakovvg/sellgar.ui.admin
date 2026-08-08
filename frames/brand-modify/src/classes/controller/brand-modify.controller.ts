@@ -1,4 +1,4 @@
-import { BrandServiceInterface, CreateBrandInput, FileServiceInterface, UpdateBrandInput } from '@library/domain';
+import { BrandServiceInterface } from '@library/domain';
 
 import {
   Controller,
@@ -16,7 +16,6 @@ import { BrandModifyFrameParams } from '../params';
 export class BrandModifyController implements BrandModifyControllerInterface {
   constructor(
     @Inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface,
-    @Inject(FileServiceInterface) private readonly fileService: FileServiceInterface,
     @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
     @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
@@ -30,18 +29,14 @@ export class BrandModifyController implements BrandModifyControllerInterface {
   }
 
   async action(args: FrameControllerActionArgs<BrandModifyFrameParams, BrandModifyActionPayload>) {
-    if (args.props.uuid) {
-      await this.brandService.update(args.props.uuid, args.payload as UpdateBrandInput);
+    if ('uuid' in args.payload) {
+      await this.brandService.update(args.payload.uuid, args.payload);
     } else {
-      await this.brandService.create(args.payload as CreateBrandInput);
+      await this.brandService.create(args.payload);
     }
 
     await this.revalidateService.revalidate();
     await this.frameService.close();
-  }
-
-  getFileImageUrl(fileUuid: string) {
-    return this.fileService.getPublicImageUrl(fileUuid);
   }
 
   async toList() {

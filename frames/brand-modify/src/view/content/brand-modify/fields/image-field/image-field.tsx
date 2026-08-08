@@ -1,11 +1,10 @@
 import { Form, ImageGallery, type ImageGalleryItem } from '@library/design';
+import { FileServiceInterface } from '@library/domain';
 import { Caption, Field, Label } from '@sellgar/kit';
-import * as AppRuntime from '@sellgar/app';
+import { useDependency } from '@sellgar/app';
 
 import React from 'react';
 import * as RHF from 'react-hook-form';
-
-import { BrandModifyControllerInterface } from '../../../../../classes/controller/brand-modify-controller.interface.ts';
 
 import * as FS from '../../form.schema.ts';
 
@@ -24,16 +23,16 @@ const toImageGalleryItems = (
 
   return [
     {
-      id: image.localId ?? image.imageUuid ?? 'image',
+      id: image.imageUuid ?? 'image',
       src: image.imageUuid ? getFileImageUrl(image.imageUuid) : undefined,
       file: image.file,
-      fileName: image.fileName,
+      fileName: image.file?.name,
     },
   ];
 };
 
 export const ImageField: React.FC<ImageFieldProps> = (props) => {
-  const controller = AppRuntime.useController(BrandModifyControllerInterface);
+  const fileService = useDependency(FileServiceInterface);
   const {
     field,
     fieldState: { error },
@@ -43,7 +42,7 @@ export const ImageField: React.FC<ImageFieldProps> = (props) => {
     disabled: props.inProcess,
   });
 
-  const getFileImageUrl = (imageUuid: string) => controller.getFileImageUrl(imageUuid);
+  const getFileImageUrl = (imageUuid: string) => fileService.getPublicImageUrl(imageUuid);
   const items = toImageGalleryItems(field.value, getFileImageUrl);
 
   const handleSelect = (files: File[]) => {
@@ -54,9 +53,7 @@ export const ImageField: React.FC<ImageFieldProps> = (props) => {
     }
 
     field.onChange({
-      localId: globalThis.crypto.randomUUID(),
       file,
-      fileName: file.name,
       alt: null,
     });
   };

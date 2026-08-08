@@ -9,7 +9,7 @@ describe('CategoryFormDataFactory', () => {
       code: 'category',
       name: 'Category',
       description: 'Description',
-      image: { imageUuid: '16b16fc6-d252-4846-8840-c9241749711e', fileName: 'category.png' },
+      image: { imageUuid: '16b16fc6-d252-4846-8840-c9241749711e' },
     });
 
     const formData = new CategoryFormDataFactory().create(dto);
@@ -18,8 +18,26 @@ describe('CategoryFormDataFactory', () => {
     expect([...formData.keys()]).toEqual(['payload']);
     expect(payload.image).toEqual({
       imageUuid: '16b16fc6-d252-4846-8840-c9241749711e',
-      fileName: 'category.png',
       alt: null,
     });
+  });
+
+  it('переносит новый файл в FormData и генерирует транспортные поля', () => {
+    const file = new File(['category'], 'category.png', { type: 'image/png' });
+    const dto = Object.assign(new CreateCategoryDto(), {
+      code: 'category',
+      name: 'Category',
+      description: 'Description',
+      image: { file, alt: 'Category image' },
+    });
+
+    const formData = new CategoryFormDataFactory().create(dto);
+    const payload = JSON.parse(String(formData.get('payload')));
+    const localId = payload.image.localId;
+
+    expect(localId).toEqual(expect.any(String));
+    expect(formData.get(`image:${localId}`)).toMatchObject({ name: 'category.png', type: 'image/png', size: 8 });
+    expect(payload.image).toEqual({ localId, fileName: 'category.png', alt: 'Category image' });
+    expect(payload.image).not.toHaveProperty('file');
   });
 });

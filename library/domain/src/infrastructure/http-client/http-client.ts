@@ -19,7 +19,8 @@ import { WafBlockedException } from './exceptions/waf-blocked.exception.ts';
 
 import { DeviceServiceInterface } from '../device/service/device-service.interface.ts';
 
-import { HttpClientInterface, type HttpRequestConfig } from './http-client.interface.ts';
+import { HttpClientInterface } from './http-client.interface.ts';
+import type { HttpRequestConfig } from './http-request-config.interface.ts';
 
 @Injectable()
 export class HttpClient implements HttpClientInterface {

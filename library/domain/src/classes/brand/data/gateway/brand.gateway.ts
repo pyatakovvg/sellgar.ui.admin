@@ -6,11 +6,10 @@ import { ConfigInterface } from '../../../../infrastructure/config/config.interf
 import { HttpClientInterface } from '../../../../infrastructure/http-client/http-client.interface.ts';
 import { BrandEntity } from '../../domain/brand.entity.ts';
 import { BrandResultEntity } from '../../domain/brand-result.entity.ts';
-import { CreateBrandDto } from './dto/create-brand.dto.ts';
-import { UpdateBrandDto } from './dto/update-brand.dto.ts';
 import { BrandFormDataFactoryInterface } from './factory/brand-form-data-factory.interface.ts';
 import { CreateBrandInput } from './input/create-brand.input.ts';
 import { UpdateBrandInput } from './input/update-brand.input.ts';
+import { BrandDtoMapper } from './mapper/brand-dto.mapper.ts';
 import { BrandGatewayInterface } from './brand-gateway.interface.ts';
 
 @Injectable()
@@ -22,7 +21,7 @@ export class BrandGateway implements BrandGatewayInterface {
   ) {}
 
   async update(uuid: string, input: UpdateBrandInput): Promise<BrandEntity> {
-    const dto = plainToInstance(UpdateBrandDto, input);
+    const dto = BrandDtoMapper.update(input);
     await validateOrReject(dto);
     const result = await this.httpClient.patch(
       this.config.get('GATEWAY_API') + '/v2/brands/' + uuid,
@@ -32,7 +31,7 @@ export class BrandGateway implements BrandGatewayInterface {
   }
 
   async create(input: CreateBrandInput): Promise<BrandEntity> {
-    const dto = plainToInstance(CreateBrandDto, input);
+    const dto = BrandDtoMapper.create(input);
     await validateOrReject(dto);
     const result = await this.httpClient.post(
       this.config.get('GATEWAY_API') + '/v2/brands',

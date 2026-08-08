@@ -23,8 +23,18 @@ const createInput = (file: File): CreateProductInput => ({
 describe('ProductDtoMapper', () => {
   it('сохраняет исходный File при создании вложенного DTO', () => {
     const file = new File(['image'], 'product.png', { type: 'image/png' });
-    const dto = new ProductDtoMapper().create(createInput(file));
+    const input = createInput(file);
+    Object.freeze(input.variants[0].images?.[0]);
+    Object.freeze(input.variants[0].images);
+    Object.freeze(input.variants[0]);
+    Object.freeze(input.variants);
+    Object.freeze(input);
 
+    const dto = ProductDtoMapper.create(input);
+
+    expect(dto).not.toBe(input);
+    expect(dto.variants).not.toBe(input.variants);
+    expect(dto.variants[0].images?.[0]).not.toBe(input.variants[0].images?.[0]);
     expect(dto.variants[0].images?.[0].file).toBe(file);
   });
 
@@ -35,7 +45,13 @@ describe('ProductDtoMapper', () => {
       uuid: 'c7fd8d23-c843-4d47-8d23-33698a5f034f',
       version: 3,
     };
-    const dto = new ProductDtoMapper().update(input);
+    Object.freeze(input.variants[0].images?.[0]);
+    Object.freeze(input.variants[0].images);
+    Object.freeze(input.variants[0]);
+    Object.freeze(input.variants);
+    Object.freeze(input);
+
+    const dto = ProductDtoMapper.update(input);
 
     expect(dto.uuid).toBe(input.uuid);
     expect(dto.version).toBe(input.version);

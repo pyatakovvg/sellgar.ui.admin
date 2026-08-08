@@ -1,33 +1,8 @@
 import { Expose, Type } from 'class-transformer';
-import { IsInstance, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-import type { CategoryImageInput, CreateCategoryInput } from '../input/create-category.input.ts';
+import { IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
-export class CategoryImageDto implements CategoryImageInput {
-  @Expose()
-  @IsString()
-  @IsOptional()
-  localId?: string;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  imageUuid?: string;
-
-  @Expose()
-  @IsInstance(File)
-  @IsOptional()
-  file?: File;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  fileName?: string;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  alt?: string | null;
-}
+import type { CreateCategoryInput } from '../input/create-category.input.ts';
+import { CategoryImageDto } from './category-image.dto.ts';
 
 export class CreateCategoryDto implements CreateCategoryInput {
   @Expose()

@@ -2,7 +2,7 @@ import { Expose, Type } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
 import { PriceDto } from './price.dto.ts';
-import type { StoreOfferInput } from '../input/create-store-product.input.ts';
+import type { StoreOfferInput } from '../input/store-offer.input.ts';
 
 export class StoreOfferDto implements StoreOfferInput {
   @Expose()

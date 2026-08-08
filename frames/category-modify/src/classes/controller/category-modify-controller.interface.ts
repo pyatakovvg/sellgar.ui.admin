@@ -12,6 +12,5 @@ export abstract class CategoryModifyControllerInterface extends FrameControllerI
     args: FrameControllerActionArgs<CategoryModifyFrameParams, CategoryModifyActionPayload>,
   ): Promise<void>;
 
-  abstract getFileImageUrl(fileUuid: string): string;
   abstract toList(): Promise<void>;
 }

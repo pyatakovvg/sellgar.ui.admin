@@ -1,20 +1,4 @@
-export interface PropertyOptionMetadataInput {
-  uuid?: string;
-  valueType: 'TEXT' | 'COLOR' | 'IMAGE' | 'ICON';
-  sortOrder?: number;
-  textValue?: string | null;
-  colorValue?: string | null;
-  fileUuid?: string | null;
-  iconCode?: string | null;
-}
-
-export interface PropertyOptionInput {
-  uuid?: string;
-  code: string;
-  name: string;
-  sortOrder?: number;
-  metadata?: PropertyOptionMetadataInput[];
-}
+import type { PropertyOptionInput } from './property-option.input.ts';
 
 export interface CreatePropertyInput {
   unitUuid?: string | null;

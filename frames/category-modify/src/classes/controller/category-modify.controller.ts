@@ -1,9 +1,4 @@
-import {
-  CategoryServiceInterface,
-  CreateCategoryInput,
-  FileServiceInterface,
-  UpdateCategoryInput,
-} from '@library/domain';
+import { CategoryServiceInterface } from '@library/domain';
 
 import {
   Controller,
@@ -24,7 +19,6 @@ import { CategoryModifyFrameParams } from '../params';
 export class CategoryModifyController implements CategoryModifyControllerInterface {
   constructor(
     @Inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface,
-    @Inject(FileServiceInterface) private readonly fileService: FileServiceInterface,
     @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
     @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
@@ -38,18 +32,14 @@ export class CategoryModifyController implements CategoryModifyControllerInterfa
   }
 
   async action(args: FrameControllerActionArgs<CategoryModifyFrameParams, CategoryModifyActionPayload>) {
-    if (args.props.uuid) {
-      await this.categoryService.update(args.props.uuid, args.payload as UpdateCategoryInput);
+    if ('uuid' in args.payload) {
+      await this.categoryService.update(args.payload.uuid, args.payload);
     } else {
-      await this.categoryService.create(args.payload as CreateCategoryInput);
+      await this.categoryService.create(args.payload);
     }
 
     await this.revalidateService.revalidate();
     await this.frameService.close();
-  }
-
-  getFileImageUrl(fileUuid: string) {
-    return this.fileService.getPublicImageUrl(fileUuid);
   }
 
   async toList() {

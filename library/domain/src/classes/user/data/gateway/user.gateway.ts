@@ -35,10 +35,10 @@ export class UserGateway implements UserGatewayInterface {
     return this.toUser(result);
   }
 
-  async update(uuid: string, input: UpdateUserInput): Promise<UserEntity> {
+  async update(input: UpdateUserInput): Promise<UserEntity> {
     const dto = plainToInstance(UpdateUserDto, input);
     await validateOrReject(dto);
-    const result = await this.httpClient.put(this.config.get('GATEWAY_API') + '/users/' + uuid, dto);
+    const result = await this.httpClient.put(this.config.get('GATEWAY_API') + '/users/' + dto.uuid, dto);
     return this.toUser(result);
   }
 

@@ -6,11 +6,10 @@ import { ConfigInterface } from '../../../../infrastructure/config/config.interf
 import { HttpClientInterface } from '../../../../infrastructure/http-client/http-client.interface.ts';
 import { CategoryEntity } from '../../domain/category.entity.ts';
 import { CategoryResultEntity } from '../../domain/category-result.entity.ts';
-import { CreateCategoryDto } from './dto/create-category.dto.ts';
-import { UpdateCategoryDto } from './dto/update-category.dto.ts';
 import { CategoryFormDataFactoryInterface } from './factory/category-form-data-factory.interface.ts';
 import { CreateCategoryInput } from './input/create-category.input.ts';
 import { UpdateCategoryInput } from './input/update-category.input.ts';
+import { CategoryDtoMapper } from './mapper/category-dto.mapper.ts';
 import { CategoryGatewayInterface } from './category-gateway.interface.ts';
 
 @Injectable()
@@ -22,7 +21,7 @@ export class CategoryGateway implements CategoryGatewayInterface {
   ) {}
 
   async update(uuid: string, input: UpdateCategoryInput): Promise<CategoryEntity> {
-    const dto = plainToInstance(UpdateCategoryDto, input);
+    const dto = CategoryDtoMapper.update(input);
     await validateOrReject(dto);
     const result = await this.httpClient.patch(
       this.config.get('GATEWAY_API') + '/v2/categories/' + uuid,
@@ -32,7 +31,7 @@ export class CategoryGateway implements CategoryGatewayInterface {
   }
 
   async create(input: CreateCategoryInput): Promise<CategoryEntity> {
-    const dto = plainToInstance(CreateCategoryDto, input);
+    const dto = CategoryDtoMapper.create(input);
     await validateOrReject(dto);
     const result = await this.httpClient.post(
       this.config.get('GATEWAY_API') + '/v2/categories',

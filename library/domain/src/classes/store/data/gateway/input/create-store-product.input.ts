@@ -1,15 +1,4 @@
-export interface StorePriceInput {
-  value: string;
-  currencyCode: string;
-}
-
-export interface StoreOfferInput {
-  uuid?: string;
-  variantUuid: string;
-  article?: string | null;
-  currentPrice: StorePriceInput;
-  showing: boolean;
-}
+import type { StoreOfferInput } from './store-offer.input.ts';
 
 export interface CreateStoreProductInput {
   commandId: string;

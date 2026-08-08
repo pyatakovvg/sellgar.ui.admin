@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 import { IsString } from 'class-validator';
-import type { ProductVariantInput } from '../input/create-variant.input.ts';
+import type { ProductVariantInput } from '../input/product-variant.input.ts';
 
 export class ProductVariantDto implements ProductVariantInput {
   @Expose()

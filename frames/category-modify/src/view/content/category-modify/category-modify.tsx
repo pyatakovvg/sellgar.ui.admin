@@ -1,8 +1,7 @@
-import { CategoryEntity } from '@library/domain';
 import { useLoaderData, useSubmit } from '@sellgar/app';
 
 import React from 'react';
-import { FormProvider, type Resolver, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { CategoryModifyControllerInterface } from '../../../classes/controller/category-modify-controller.interface.ts';
@@ -14,7 +13,7 @@ import { schema, type IFormData } from './form.schema.ts';
 import s from './default.module.scss';
 
 export const CategoryModify: React.FC = () => {
-  const category = useLoaderData(CategoryModifyControllerInterface) as CategoryEntity | undefined;
+  const category = useLoaderData(CategoryModifyControllerInterface);
   const submit = useSubmit(CategoryModifyControllerInterface);
 
   const methods = useForm<IFormData>({
@@ -26,7 +25,7 @@ export const CategoryModify: React.FC = () => {
       description: category?.description ?? '',
       image: category?.image ?? null,
     },
-    resolver: yupResolver(schema) as Resolver<IFormData>,
+    resolver: yupResolver(schema),
   });
 
   const handleSubmit = methods.handleSubmit(async (values) => {

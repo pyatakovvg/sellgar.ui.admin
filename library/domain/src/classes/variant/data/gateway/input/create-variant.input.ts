@@ -1,7 +1,4 @@
-export interface ProductVariantInput {
-  name: string;
-  description: string;
-}
+import type { ProductVariantInput } from './product-variant.input.ts';
 
 export interface CreateVariantInput {
   name: string;

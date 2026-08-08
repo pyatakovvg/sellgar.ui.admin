@@ -1,73 +1,8 @@
 import { Expose, Type } from 'class-transformer';
-import { IsArray, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-import type {
-  CreatePropertyInput,
-  PropertyOptionInput,
-  PropertyOptionMetadataInput,
-} from '../input/create-property.input.ts';
+import { IsArray, IsIn, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
-export class PropertyOptionMetadataDto implements PropertyOptionMetadataInput {
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
-  @Expose()
-  @IsString()
-  valueType: 'TEXT' | 'COLOR' | 'IMAGE' | 'ICON';
-
-  @Expose()
-  @IsNumber()
-  @IsOptional()
-  sortOrder?: number;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  textValue?: string | null;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  colorValue?: string | null;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  fileUuid?: string | null;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  iconCode?: string | null;
-}
-
-export class PropertyOptionDto implements PropertyOptionInput {
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
-  @Expose()
-  @IsString()
-  code: string;
-
-  @Expose()
-  @IsString()
-  name: string;
-
-  @Expose()
-  @IsNumber()
-  @IsOptional()
-  sortOrder?: number;
-
-  @Expose()
-  @ValidateNested({ each: true })
-  @Type(() => PropertyOptionMetadataDto)
-  @IsArray()
-  @IsOptional()
-  metadata?: PropertyOptionMetadataDto[];
-}
+import type { CreatePropertyInput } from '../input/create-property.input.ts';
+import { PropertyOptionDto } from './property-option.dto.ts';
 
 export class CreatePropertyDto implements CreatePropertyInput {
   @Expose()
@@ -84,7 +19,7 @@ export class CreatePropertyDto implements CreatePropertyInput {
   name: string;
 
   @Expose()
-  @IsString()
+  @IsIn(['TEXT', 'NUMBER', 'BOOLEAN', 'OPTION', 'DATE'])
   type: 'TEXT' | 'NUMBER' | 'BOOLEAN' | 'OPTION' | 'DATE';
 
   @Expose()

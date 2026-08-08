@@ -21,7 +21,7 @@ export class UserService implements UserServiceInterface {
   }
 
   update(input: UpdateUserInput): Promise<UserEntity> {
-    return this.userGateway.update(input.uuid, input);
+    return this.userGateway.update(input);
   }
 
   create(input: CreateUserInput): Promise<UserEntity> {

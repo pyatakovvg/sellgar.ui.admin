@@ -1,4 +1,4 @@
-export interface CreatePersonInput {}
+import type { CreatePersonInput } from './create-person.input.ts';
 
 export interface CreateUserInput {
   email: string;

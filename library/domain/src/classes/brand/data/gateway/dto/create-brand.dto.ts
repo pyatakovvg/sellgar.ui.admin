@@ -1,33 +1,8 @@
 import { Expose, Type } from 'class-transformer';
-import { IsInstance, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-import type { BrandImageInput, CreateBrandInput } from '../input/create-brand.input.ts';
+import { IsOptional, IsString, ValidateNested } from 'class-validator';
 
-export class BrandImageDto implements BrandImageInput {
-  @Expose()
-  @IsString()
-  @IsOptional()
-  localId?: string;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  imageUuid?: string;
-
-  @Expose()
-  @IsInstance(File)
-  @IsOptional()
-  file?: File;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  fileName?: string;
-
-  @Expose()
-  @IsString()
-  @IsOptional()
-  alt?: string | null;
-}
+import type { CreateBrandInput } from '../input/create-brand.input.ts';
+import { BrandImageDto } from './brand-image.dto.ts';
 
 export class CreateBrandDto implements CreateBrandInput {
   @Expose()

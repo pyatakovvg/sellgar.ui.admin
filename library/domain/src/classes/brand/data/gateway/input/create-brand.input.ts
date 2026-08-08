@@ -1,10 +1,4 @@
-export interface BrandImageInput {
-  localId?: string;
-  imageUuid?: string;
-  file?: File;
-  fileName?: string;
-  alt?: string | null;
-}
+import type { BrandImageInput } from './brand-image.input.ts';
 
 export interface CreateBrandInput {
   code: string;

@@ -8,22 +8,23 @@ import { CategoryFormDataFactoryInterface } from './category-form-data-factory.i
 export class CategoryFormDataFactory implements CategoryFormDataFactoryInterface {
   create(dto: CreateCategoryDto | UpdateCategoryDto): FormData {
     const formData = new FormData();
-    const image = dto.image?.file
-      ? {
-          localId: dto.image.localId ?? globalThis.crypto.randomUUID(),
-          fileName: dto.image.fileName ?? dto.image.file.name,
-          alt: dto.image.alt ?? null,
-        }
-      : dto.image
-        ? {
-            imageUuid: dto.image.imageUuid,
-            fileName: dto.image.fileName,
-            alt: dto.image.alt ?? null,
-          }
-        : null;
+    let image:
+      { localId: string; fileName: string; alt: string | null } | { imageUuid?: string; alt: string | null } | null =
+      null;
 
-    if (dto.image?.file && image?.localId) {
-      formData.append(`image:${image.localId}`, dto.image.file, dto.image.file.name);
+    if (dto.image?.file) {
+      const localId = globalThis.crypto.randomUUID();
+      image = {
+        localId,
+        fileName: dto.image.file.name,
+        alt: dto.image.alt ?? null,
+      };
+      formData.append(`image:${localId}`, dto.image.file, dto.image.file.name);
+    } else if (dto.image) {
+      image = {
+        imageUuid: dto.image.imageUuid,
+        alt: dto.image.alt ?? null,
+      };
     }
 
     formData.append('payload', JSON.stringify({ ...dto, image }));
