@@ -187,13 +187,12 @@ describe('SocketIOConnection', () => {
     socketIOMock.io.mockReturnValue(socket);
     const connection = new SocketIOConnection('/realtime');
 
-    await expect(
-      connection.request('realtime.ack.v1', { room: 'user:user-1', sequence: '42' }, { timeoutMs: 5_000 }),
-    ).resolves.toEqual({ room: 'user:user-1', sequence: '42' });
+    await expect(connection.request('realtime.ack.v1', { sequence: '42' }, { timeoutMs: 5_000 })).resolves.toEqual({
+      sequence: '42',
+    });
 
     expect(socket.timeout).toHaveBeenCalledWith(5_000);
     expect(socket.emitWithAck).toHaveBeenCalledWith('realtime.ack.v1', {
-      room: 'user:user-1',
       sequence: '42',
     });
   });
@@ -213,7 +212,6 @@ describe('SocketIOConnection', () => {
     expect(handler).toHaveBeenCalledWith(delivery.payload, delivery);
     expect(socket.timeout).toHaveBeenCalledWith(5_000);
     expect(socket.emitWithAck).toHaveBeenCalledWith('realtime.ack.v1', {
-      room: 'broadcast',
       sequence: '42',
     });
     expect(handler.mock.invocationCallOrder[0]).toBeLessThan(
@@ -338,9 +336,7 @@ const createSocket = () => {
 };
 
 const createDelivery = () => ({
-  audience: {
-    type: 'broadcast',
-  },
+  channel: 'products',
   deliveryId: 'd40e2681-2898-473a-98cc-0f5a76265310',
   eventType: 'product.updated',
   expiresAt: '2026-08-08T12:05:00.000Z',

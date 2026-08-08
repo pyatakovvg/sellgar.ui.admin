@@ -35,6 +35,17 @@ describe('SocketIOConnections', () => {
     expect(socketIOMock.io).toHaveBeenCalledTimes(2);
   });
 
+  it('creates independent physical connections for different transport paths', () => {
+    socketIOMock.io.mockImplementation(() => createSocket());
+    const connections = new SocketIOConnections();
+
+    const products = connections.get('http://localhost:4040', { path: '/socket.io/products' });
+    const store = connections.get('http://localhost:4040', { path: '/socket.io/store' });
+
+    expect(products).not.toBe(store);
+    expect(socketIOMock.io).toHaveBeenCalledTimes(2);
+  });
+
   it('forwards endpoint-specific transport options and disables eager connection', () => {
     socketIOMock.io.mockReturnValue(createSocket());
     const connections = new SocketIOConnections();

@@ -1,12 +1,7 @@
 export { SocketIOBindings } from './classes/classes.bindings.ts';
 export {
   parseRealtimeDelivery,
-  realtimeDeliveryRoom,
-  type RealtimeAddressedAudience,
-  type RealtimeAddressedAudienceType,
-  type RealtimeAudience,
-  type RealtimeAudienceType,
-  type RealtimeBroadcastAudience,
+  type RealtimeChannel,
   type RealtimeDelivery,
 } from './classes/protocol/realtime-delivery.ts';
 export {

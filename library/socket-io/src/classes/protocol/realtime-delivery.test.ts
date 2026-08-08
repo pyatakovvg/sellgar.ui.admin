@@ -1,35 +1,22 @@
-import { parseRealtimeDelivery, realtimeDeliveryRoom } from './realtime-delivery.ts';
+import { parseRealtimeDelivery } from './realtime-delivery.ts';
 
 describe('parseRealtimeDelivery', () => {
-  it('parses the shared realtime envelope', () => {
+  it('parses the shared channel delivery envelope', () => {
     expect(parseRealtimeDelivery(createDelivery())).toEqual(createDelivery());
   });
 
-  it('rejects an invalid audience', () => {
+  it('rejects an unsupported channel', () => {
     expect(() =>
       parseRealtimeDelivery({
         ...createDelivery(),
-        audience: { type: 'unknown', uuid: 'not-a-uuid' },
+        channel: 'unknown',
       }),
-    ).toThrow('Realtime delivery has an invalid audience.');
-  });
-
-  it('parses the system broadcast audience without an artificial UUID', () => {
-    const delivery = {
-      ...createDelivery(),
-      audience: { type: 'broadcast' },
-    };
-
-    expect(parseRealtimeDelivery(delivery)).toEqual(delivery);
-    expect(realtimeDeliveryRoom({ type: 'broadcast' })).toBe('broadcast');
+    ).toThrow('Realtime delivery has an invalid channel.');
   });
 });
 
 const createDelivery = () => ({
-  audience: {
-    type: 'user',
-    uuid: '66713624-6013-46b1-97c9-0f0166594491',
-  },
+  channel: 'products',
   deliveryId: 'd40e2681-2898-473a-98cc-0f5a76265310',
   eventType: 'product.updated',
   expiresAt: '2026-08-08T12:05:00.000Z',

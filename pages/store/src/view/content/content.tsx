@@ -86,7 +86,7 @@ export const Content: React.FC = () => {
             <Expand
               render={({ row }) => (
                 <div className={s.variants}>
-                  <VariantList storeProduct={row} data={row.offers} />
+                  <VariantList storeProduct={row} />
                 </div>
               )}
             />

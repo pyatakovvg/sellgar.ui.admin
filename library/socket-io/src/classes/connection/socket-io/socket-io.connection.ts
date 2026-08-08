@@ -1,9 +1,5 @@
 import { io, type Socket } from 'socket.io-client';
-import {
-  parseRealtimeDelivery,
-  realtimeDeliveryRoom,
-  type RealtimeDelivery,
-} from '../../protocol/realtime-delivery.ts';
+import { parseRealtimeDelivery, type RealtimeDelivery } from '../../protocol/realtime-delivery.ts';
 
 import type {
   SocketIOConnectionError,
@@ -315,7 +311,6 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
           await this.request(
             DELIVERY_ACK_EVENT,
             {
-              room: realtimeDeliveryRoom(parsedDelivery.audience),
               sequence: parsedDelivery.sequence,
             },
             { timeoutMs: DELIVERY_ACK_TIMEOUT_MS },

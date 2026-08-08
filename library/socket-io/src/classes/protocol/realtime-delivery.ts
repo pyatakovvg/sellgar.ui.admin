@@ -1,21 +1,9 @@
 import { isDateString, isUUID } from 'class-validator';
 
-export type RealtimeAudienceType = 'broadcast' | 'job' | 'shop' | 'tenant' | 'user';
-export type RealtimeAddressedAudienceType = Exclude<RealtimeAudienceType, 'broadcast'>;
-
-export interface RealtimeBroadcastAudience {
-  readonly type: 'broadcast';
-}
-
-export interface RealtimeAddressedAudience {
-  readonly type: RealtimeAddressedAudienceType;
-  readonly uuid: string;
-}
-
-export type RealtimeAudience = RealtimeBroadcastAudience | RealtimeAddressedAudience;
+export type RealtimeChannel = 'offers' | 'products';
 
 export interface RealtimeDelivery<TPayload = unknown> {
-  readonly audience: RealtimeAudience;
+  readonly channel: RealtimeChannel;
   readonly deliveryId: string;
   readonly eventType: string;
   readonly expiresAt: string;
@@ -25,14 +13,16 @@ export interface RealtimeDelivery<TPayload = unknown> {
   readonly sequence: string;
 }
 
-const ADDRESSED_AUDIENCE_TYPES: readonly RealtimeAddressedAudienceType[] = ['job', 'shop', 'tenant', 'user'];
+const REALTIME_CHANNELS: readonly RealtimeChannel[] = ['offers', 'products'];
 
 export const parseRealtimeDelivery = (value: unknown): RealtimeDelivery => {
   if (!isRecord(value)) {
     throw new Error('Realtime delivery must be an object.');
   }
 
-  const audience = parseAudience(value.audience);
+  if (!REALTIME_CHANNELS.includes(value.channel as RealtimeChannel)) {
+    throw new Error('Realtime delivery has an invalid channel.');
+  }
 
   if (typeof value.deliveryId !== 'string' || !isUUID(value.deliveryId)) {
     throw new Error('Realtime delivery has an invalid deliveryId.');
@@ -60,7 +50,7 @@ export const parseRealtimeDelivery = (value: unknown): RealtimeDelivery => {
   }
 
   return {
-    audience,
+    channel: value.channel as RealtimeChannel,
     deliveryId: value.deliveryId,
     eventType: value.eventType,
     expiresAt: value.expiresAt,
@@ -68,30 +58,6 @@ export const parseRealtimeDelivery = (value: unknown): RealtimeDelivery => {
     payload: value.payload,
     schemaVersion: value.schemaVersion as number,
     sequence: value.sequence,
-  };
-};
-
-export const realtimeDeliveryRoom = (audience: RealtimeAudience): string => {
-  return audience.type === 'broadcast' ? 'broadcast' : `${audience.type}:${audience.uuid}`;
-};
-
-const parseAudience = (value: unknown): RealtimeAudience => {
-  if (isRecord(value) && value.type === 'broadcast') {
-    return { type: 'broadcast' };
-  }
-
-  if (
-    !isRecord(value) ||
-    !ADDRESSED_AUDIENCE_TYPES.includes(value.type as RealtimeAddressedAudienceType) ||
-    typeof value.uuid !== 'string' ||
-    !isUUID(value.uuid)
-  ) {
-    throw new Error('Realtime delivery has an invalid audience.');
-  }
-
-  return {
-    type: value.type as RealtimeAddressedAudienceType,
-    uuid: value.uuid,
   };
 };
 

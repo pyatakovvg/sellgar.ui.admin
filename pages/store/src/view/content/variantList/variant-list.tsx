@@ -1,5 +1,6 @@
-import { Dot, Table } from '@sellgar/kit';
-import { StoreOfferEntity, StoreProductEntity } from '@library/domain';
+import { Table } from '@sellgar/kit';
+import { StoreProductEntity } from '@library/domain';
+import { reactive } from '@sellgar/app';
 
 import React from 'react';
 
@@ -14,13 +15,12 @@ import s from './default.module.scss';
 
 interface IProps {
   storeProduct: StoreProductEntity;
-  data: StoreOfferEntity[];
 }
 
-export const VariantList: React.FC<IProps> = (props) => {
+export const VariantList: React.FC<IProps> = reactive((props) => {
   return (
     <div className={s.wrapper}>
-      <Table surface={'embedded'} size={'sm'} style={'secondary'} data={{ nodes: props.data }}>
+      <Table surface={'embedded'} size={'sm'} style={'secondary'} data={{ nodes: props.storeProduct.offers }}>
         {({ Column }) => (
           <>
             <Column width={36}>
@@ -107,4 +107,4 @@ export const VariantList: React.FC<IProps> = (props) => {
       </Table>
     </div>
   );
-};
+});

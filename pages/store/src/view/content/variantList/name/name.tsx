@@ -1,11 +1,12 @@
 import { StoreOfferEntity } from '@library/domain';
 import { Typography, useCellData } from '@sellgar/kit';
+import { reactive } from '@sellgar/app';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-export const Name: React.FC = () => {
+export const Name: React.FC = reactive(() => {
   const { data } = useCellData<StoreOfferEntity>();
 
   return (
@@ -17,4 +18,4 @@ export const Name: React.FC = () => {
       </div>
     </div>
   );
-};
+});

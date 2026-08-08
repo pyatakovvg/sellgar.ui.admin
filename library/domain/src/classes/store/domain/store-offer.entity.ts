@@ -1,4 +1,5 @@
 import { Expose, Type } from 'class-transformer';
+import { Entity } from '@sellgar/app';
 import {
   IsArray,
   IsBoolean,
@@ -21,6 +22,7 @@ import { StoreOfferInventoryEntity } from './store-offer-inventory.entity.ts';
 
 import { StoreInventoryMovementEntity } from './store-inventory-movement.entity.ts';
 
+@Entity({ identity: 'uuid' })
 export class StoreOfferEntity {
   @Expose()
   @IsUUID()

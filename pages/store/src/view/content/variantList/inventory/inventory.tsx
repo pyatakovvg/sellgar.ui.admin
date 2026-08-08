@@ -1,5 +1,6 @@
 import { StoreOfferEntity } from '@library/domain';
 import { Typography, useCellData } from '@sellgar/kit';
+import { reactive } from '@sellgar/app';
 
 import React from 'react';
 
@@ -9,7 +10,7 @@ interface IProps {
   value: 'quantity' | 'reserved' | 'available';
 }
 
-export const Inventory: React.FC<IProps> = (props) => {
+export const Inventory: React.FC<IProps> = reactive((props) => {
   const { data } = useCellData<StoreOfferEntity>();
   const value = data.inventory?.[props.value] ?? 0;
 
@@ -20,4 +21,4 @@ export const Inventory: React.FC<IProps> = (props) => {
       </Typography>
     </div>
   );
-};
+});

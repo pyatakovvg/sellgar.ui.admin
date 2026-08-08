@@ -1,12 +1,13 @@
 import { StoreOfferEntity } from '@library/domain';
 import { Typography, useCellData } from '@sellgar/kit';
+import { reactive } from '@sellgar/app';
 import { amountFormat } from '@utils/format';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-export const Price: React.FC = () => {
+export const Price: React.FC = reactive(() => {
   const { data } = useCellData<StoreOfferEntity>();
   const currentPrice = data.currentPrice;
 
@@ -30,4 +31,4 @@ export const Price: React.FC = () => {
       </Typography>
     </div>
   );
-};
+});

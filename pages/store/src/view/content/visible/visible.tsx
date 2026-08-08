@@ -1,11 +1,12 @@
 import { Dot, useCellData } from '@sellgar/kit';
 import { StoreProductEntity } from '@library/domain';
+import { reactive } from '@sellgar/app';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-export const Visible: React.FC = () => {
+export const Visible: React.FC = reactive(() => {
   const { data } = useCellData<StoreProductEntity>();
 
   return (
@@ -13,4 +14,4 @@ export const Visible: React.FC = () => {
       <Dot size={'lg'} color={data.showing ? 'green' : 'gray'} />
     </div>
   );
-};
+});

@@ -13,7 +13,8 @@ export class SocketIOConnections implements SocketIOConnectionsInterface {
   private readonly connections = new Map<string, SocketIOConnectionInterface>();
 
   get(url: string, options?: SocketIOConnectionOptions): SocketIOConnectionInterface {
-    const connection = this.connections.get(url);
+    const key = this.connectionKey(url, options);
+    const connection = this.connections.get(key);
 
     if (connection) {
       return connection;
@@ -21,8 +22,12 @@ export class SocketIOConnections implements SocketIOConnectionsInterface {
 
     const createdConnection = new SocketIOConnection(url, options);
 
-    this.connections.set(url, createdConnection);
+    this.connections.set(key, createdConnection);
 
     return createdConnection;
+  }
+
+  private connectionKey(url: string, options?: SocketIOConnectionOptions): string {
+    return `${url}\u0000${options?.path ?? '/socket.io'}`;
   }
 }

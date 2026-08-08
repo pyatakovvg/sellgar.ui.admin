@@ -1,11 +1,12 @@
 import { StoreProductEntity } from '@library/domain';
 import { Typography, useCellData } from '@sellgar/kit';
+import { reactive } from '@sellgar/app';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-export const Showcase: React.FC = () => {
+export const Showcase: React.FC = reactive(() => {
   const { data } = useCellData<StoreProductEntity>();
   const totalOffers = data.offers.length;
   const configuredOffers = data.offers.filter((offer) => offer.showing).length;
@@ -23,4 +24,4 @@ export const Showcase: React.FC = () => {
       </Typography>
     </div>
   );
-};
+});

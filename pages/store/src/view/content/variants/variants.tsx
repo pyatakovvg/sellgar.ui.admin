@@ -1,5 +1,6 @@
 import { StoreProductEntity } from '@library/domain';
 import { Typography, useCellData } from '@sellgar/kit';
+import { reactive } from '@sellgar/app';
 
 import React from 'react';
 
@@ -17,7 +18,7 @@ const formatVariantCount = (count: number): string => {
   return `${count} вариантов`;
 };
 
-export const Variants: React.FC = () => {
+export const Variants: React.FC = reactive(() => {
   const { data } = useCellData<StoreProductEntity>();
 
   return (
@@ -27,4 +28,4 @@ export const Variants: React.FC = () => {
       </Typography>
     </div>
   );
-};
+});

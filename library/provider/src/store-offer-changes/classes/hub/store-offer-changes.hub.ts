@@ -2,12 +2,12 @@ import { AuthServiceInterface, ConfigInterface } from '@library/domain';
 import { SocketIOConnectionsInterface, type SocketIOConnectionInterface } from '@library/socket-io';
 import { Inject, Injectable } from '@sellgar/app';
 
-import { ProductChangesHubInterface } from './product-changes-hub.interface.ts';
-import type { ProductChangesListener } from './product-changes-listener.interface.ts';
-import { parseProductUpdatedPayload } from './product-updated.payload.ts';
+import { StoreOfferChangesHubInterface } from './store-offer-changes-hub.interface.ts';
+import type { StoreOfferChangesListener } from './store-offer-changes-listener.interface.ts';
+import { parseStoreProductUpdatedPayload } from './store-product-updated.payload.ts';
 
 @Injectable()
-export class ProductChangesHub implements ProductChangesHubInterface {
+export class StoreOfferChangesHub implements StoreOfferChangesHubInterface {
   private readonly connection: SocketIOConnectionInterface;
 
   constructor(
@@ -27,17 +27,16 @@ export class ProductChangesHub implements ProductChangesHubInterface {
           });
       },
       forceNew: true,
-      path: '/socket.io/products',
+      path: '/socket.io/store',
       transports: ['websocket'],
       withCredentials: true,
     });
   }
 
-  subscribe(listener: ProductChangesListener): () => Promise<void> {
-    const subscription = this.connection.subscribeDelivery('product.updated', async (value: unknown) => {
-      const payload = parseProductUpdatedPayload(value);
-
-      await listener.updated(payload.productUuid, payload.version);
+  subscribe(listener: StoreOfferChangesListener): () => Promise<void> {
+    const subscription = this.connection.subscribeDelivery('store.product.updated', async (value: unknown) => {
+      const payload = parseStoreProductUpdatedPayload(value);
+      await listener.updated(payload.storeProductUuid, payload.version);
     });
 
     return () => subscription.dispose();

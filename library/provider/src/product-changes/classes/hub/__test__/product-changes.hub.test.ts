@@ -8,14 +8,20 @@ import {
 import { ProductChangesHub } from '../product-changes.hub.ts';
 
 describe('ProductChangesHub', () => {
-  it('gets a short-lived ticket and opens the realtime namespace lazily', async () => {
+  it('gets a short-lived ticket and opens the products transport lazily', async () => {
     const fixture = createFixture();
 
     new ProductChangesHub(fixture.config, fixture.auth, fixture.connections);
 
     expect(fixture.connections.get).toHaveBeenCalledWith(
-      'http://localhost:4040/realtime',
-      expect.objectContaining({ transports: ['websocket'], withCredentials: true }),
+      'http://localhost:4040',
+      expect.objectContaining({
+        addTrailingSlash: false,
+        forceNew: true,
+        path: '/socket.io/products',
+        transports: ['websocket'],
+        withCredentials: true,
+      }),
     );
 
     const options = fixture.connections.get.mock.calls[0]?.[1];
@@ -31,6 +37,22 @@ describe('ProductChangesHub', () => {
 
     await vi.waitFor(() => expect(callback).toHaveBeenCalledWith({ ticket: 'socket-ticket' }));
     expect(fixture.auth.issueSocketTicket).toHaveBeenCalledOnce();
+  });
+
+  it('does not send credentials when the user session cannot issue a ticket', async () => {
+    const fixture = createFixture();
+    fixture.auth.issueSocketTicket.mockRejectedValueOnce(new Error('Unauthorized'));
+
+    new ProductChangesHub(fixture.config, fixture.auth, fixture.connections);
+
+    const auth = fixture.connections.get.mock.calls[0]?.[1]?.auth;
+    const callback = vi.fn();
+
+    if (typeof auth === 'function') {
+      auth(callback);
+    }
+
+    await vi.waitFor(() => expect(callback).toHaveBeenCalledWith({}));
   });
 
   it('subscribes to product.updated and passes a validated product payload to the listener', async () => {
