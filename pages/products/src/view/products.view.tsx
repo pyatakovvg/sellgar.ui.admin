@@ -1,19 +1,19 @@
+import { Page } from '@library/design';
+
 import React from 'react';
 
 import { Header } from './header';
 import { Content } from './content';
 
-import s from './default.module.scss';
-
-export const ProductsView = () => {
+export const ProductsView: React.FC = () => {
   return (
-    <div className={s.wrapper}>
-      <div className={s.header}>
+    <Page>
+      <Page.Header>
         <Header />
-      </div>
-      <div className={s.content}>
+      </Page.Header>
+      <Page.Content>
         <Content />
-      </div>
-    </div>
+      </Page.Content>
+    </Page>
   );
 };

@@ -4,13 +4,11 @@ import React from 'react';
 
 import s from './default.module.scss';
 
-interface IProps {}
-
-export const Info: React.FC<React.PropsWithChildren<IProps>> = (props) => {
+export const Title: React.FC = () => {
   return (
     <div className={s.wrapper}>
-      <Typography size={'body-m'} weight={'medium'}>
-        <p>{props.children}</p>
+      <Typography size={'h6'} weight={'semi-bold'}>
+        <h2>Товары</h2>
       </Typography>
     </div>
   );

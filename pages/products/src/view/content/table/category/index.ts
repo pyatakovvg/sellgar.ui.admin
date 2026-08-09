@@ -1,1 +1,1 @@
-export { Category } from './category.tsx';
+export { Category } from './category';
