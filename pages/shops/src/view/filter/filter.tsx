@@ -1,18 +1,15 @@
 import React from 'react';
-import * as ReactHookForm from 'react-hook-form';
 
-import { Form } from './form';
+import { Search } from './search';
 
-export const Filter = () => {
-  const methods = ReactHookForm.useForm({
-    defaultValues: {
-      search: '',
-    },
-  });
+import s from './default.module.scss';
 
+export const Filter: React.FC = () => {
   return (
-    <ReactHookForm.FormProvider {...methods}>
-      <Form />
-    </ReactHookForm.FormProvider>
+    <div className={s.wrapper}>
+      <div className={s.search}>
+        <Search />
+      </div>
+    </div>
   );
 };

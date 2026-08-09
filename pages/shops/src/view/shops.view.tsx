@@ -1,23 +1,23 @@
+import { Page } from '@library/design';
+
 import React from 'react';
 
 import { Header } from './header';
 import { Filter } from './filter';
 import { Content } from './content';
 
-import s from './default.module.scss';
-
-export const ShopsView = () => {
+export const ShopsView: React.FC = () => {
   return (
-    <div className={s.wrapper}>
-      <div className={s.header}>
+    <Page>
+      <Page.Header>
         <Header />
-      </div>
-      <div className={s.filter}>
+      </Page.Header>
+      <Page.Filter>
         <Filter />
-      </div>
-      <div className={s.content}>
+      </Page.Filter>
+      <Page.Content>
         <Content />
-      </div>
-    </div>
+      </Page.Content>
+    </Page>
   );
 };
