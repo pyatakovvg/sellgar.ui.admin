@@ -6,3 +6,5 @@ export const schema = yup
     password: yup.string().required('Неверный формат'),
   })
   .required();
+
+export type TFormValues = yup.InferType<typeof schema>;

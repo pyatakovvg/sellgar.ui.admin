@@ -1,0 +1,11 @@
+.wrapper {
+  display: block;
+}
+
+.field {
+  display: block;
+
+  & + & {
+    margin: var(--numbers-16) 0 0;
+  }
+}

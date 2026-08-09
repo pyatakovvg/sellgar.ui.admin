@@ -6,9 +6,8 @@ export const useSignInRequest = () => {
   const controller = useController(SignInControllerInterface);
   const navigate = useNavigate();
 
-  return (async (login: string, password: string) => {
+  return async (login: string, password: string) => {
     await controller.signIn(login, password);
-
-    navigate.replace('/');
-  });
+    await navigate.replace('/');
+  };
 };

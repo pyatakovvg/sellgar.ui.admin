@@ -1,1 +1,1 @@
-export { SignInView } from './sign-in.view.tsx';
+export { SignInView } from './sign-in.view';
