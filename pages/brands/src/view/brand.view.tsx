@@ -6,12 +6,18 @@ import { Content } from './content';
 
 import s from './default.module.scss';
 
-export const BrandView = () => {
+export const BrandView: React.FC = () => {
   return (
     <div className={s.wrapper}>
-      <Header />
-      <Filter />
-      <Content />
+      <div className={s.header}>
+        <Header />
+      </div>
+      <div className={s.filter}>
+        <Filter />
+      </div>
+      <div className={s.content}>
+        <Content />
+      </div>
     </div>
   );
 };

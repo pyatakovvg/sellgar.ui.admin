@@ -1,12 +1,13 @@
-import { useLoaderData } from '@sellgar/app';
-
 import React from 'react';
 
 import { Table } from './table';
-import { BrandsControllerInterface } from '../../classes/controller/brand-controller.interface.ts';
 
-export const Content = () => {
-  const brand = useLoaderData(BrandsControllerInterface);
+import s from './default.module.scss';
 
-  return <Table data={brand.data} />;
+export const Content: React.FC = () => {
+  return (
+    <div className={s.wrapper}>
+      <Table />
+    </div>
+  );
 };

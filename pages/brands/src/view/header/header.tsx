@@ -1,16 +1,19 @@
-import { Typography, Icon } from '@sellgar/kit';
-
 import React from 'react';
+
+import { Create } from './create';
+import { Title } from './title';
 
 import s from './default.module.scss';
 
-export const Header = () => {
+export const Header: React.FC = () => {
   return (
     <div className={s.wrapper}>
-      <Icon className={s.icon} icon={'copyright-line'} />
-      <Typography size={'h6'} weight={'semi-bold'}>
-        <h2 className={s.text}>Бренды</h2>
-      </Typography>
+      <div className={s.title}>
+        <Title />
+      </div>
+      <div className={s.create}>
+        <Create />
+      </div>
     </div>
   );
 };

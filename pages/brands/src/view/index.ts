@@ -1,1 +1,1 @@
-export { BrandView } from './brand.view.tsx';
+export { BrandView } from './brand.view';

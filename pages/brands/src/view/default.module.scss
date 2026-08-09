@@ -4,14 +4,21 @@
   flex: 1 0;
 }
 
-.filter {
-  position: sticky;
-  top: 0;
+.header {
   display: flex;
   flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
 }
 
 .content {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }

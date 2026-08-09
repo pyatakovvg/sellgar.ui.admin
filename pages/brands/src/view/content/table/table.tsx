@@ -1,55 +1,56 @@
-import { BrandEntity } from '@library/domain';
-import { Table as TableComponent } from '@sellgar/kit';
 import { BrandModifyFrame } from '@frame/brand-modify';
-import { useFrame } from '@sellgar/app';
+import * as App from '@sellgar/app';
+import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
 
+import { BrandsControllerInterface } from '../../../classes/controller/brand-controller.interface.ts';
+
 import { Name } from './name';
-import { Info } from './info';
+import { Description } from './description';
 
-interface IProps {
-  data: BrandEntity[];
-}
+import s from './default.module.scss';
 
-export const Table: React.FC<IProps> = (props) => {
-  const brandModifyFrame = useFrame(BrandModifyFrame);
+export const Table: React.FC = () => {
+  const brands = App.useLoaderData(BrandsControllerInterface);
+  const brandModifyFrame = App.useFrame(BrandModifyFrame);
 
   return (
-    <TableComponent
-      data={{ nodes: props.data }}
-      surface="embedded"
-      layout={{ scroll: 'external', stickyHeader: true }}
-      row={{
-        handlers: {
-          click: ({ row }) => void brandModifyFrame.open({ uuid: row.uuid }),
-        },
-      }}
-    >
-      {({ Column }) => (
-        <>
-          <Column width={600}>
-            {({ Head, Cell }) => (
-              <>
-                <Head label={'Наименование'} />
-                <Cell>
-                  <Name />
-                </Cell>
-              </>
-            )}
-          </Column>
-          <Column>
-            {({ Head, Cell }) => (
-              <>
-                <Head label={'Описание'} />
-                <Cell>
-                  <Info />
-                </Cell>
-              </>
-            )}
-          </Column>
-        </>
-      )}
-    </TableComponent>
+    <div className={s.wrapper}>
+      <TableComponent
+        size={'md'}
+        data={{ nodes: brands.data }}
+        row={{
+          handlers: {
+            click: ({ row }) => void brandModifyFrame.open({ uuid: row.uuid }),
+          },
+        }}
+      >
+        {({ Column }) => (
+          <>
+            <Column>
+              {({ Head, Cell }) => (
+                <>
+                  <Head label={'Наименование'} />
+                  <Cell>
+                    <Name />
+                  </Cell>
+                </>
+              )}
+            </Column>
+            <Column>
+              {({ Head, Cell }) => (
+                <>
+                  <Head label={'Описание'} />
+                  <Cell>
+                    <Description />
+                  </Cell>
+                </>
+              )}
+            </Column>
+          </>
+        )}
+      </TableComponent>
+    </div>
   );
 };
