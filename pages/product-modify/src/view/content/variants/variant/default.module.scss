@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  padding: var(--numbers-16) var(--numbers-24) var(--numbers-24);
+  border: var(--numbers-1) solid var(--border-base-divider);
+  border-radius: var(--measurements-radius-lg);
+  background: var(--background-surface-neutral);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  margin: var(--numbers-16) 0 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  margin: var(--numbers-16) 0 0;
+}

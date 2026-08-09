@@ -1,1 +1,1 @@
-export { Variants } from './variants.tsx';
+export { Variants } from './variants';

@@ -1,12 +1,11 @@
-import { Field, Label, Caption, Input, Icon, Textarea, Button } from '@sellgar/kit';
-
 import React from 'react';
-import * as ReactHookForm from 'react-hook-form';
 
+import { VariantContext } from './context/variant.context.ts';
+import { Actions } from './actions';
 import { Gallery } from './gallery';
-import { Properties } from './properties';
+import { Fields } from './fields';
 
-import s from './variant.module.scss';
+import s from './default.module.scss';
 
 interface IProps {
   index: number;
@@ -16,111 +15,29 @@ interface IProps {
 }
 
 export const Variant: React.FC<IProps> = (props) => {
-  const { control } = ReactHookForm.useFormContext();
+  const contextValue = React.useMemo(
+    () => ({
+      index: props.index,
+      canDelete: props.canDelete,
+      copy: props.onCopy,
+      delete: props.onDelete,
+    }),
+    [props.canDelete, props.index, props.onCopy, props.onDelete],
+  );
 
   return (
-    <div className={s.wrapper}>
-      <div className={s.controls}>
-        <div className={s.button}>
-          <Button
-            type={'button'}
-            form={'icon'}
-            size={'sm'}
-            style={'ghost'}
-            leadIcon={<Icon icon={Icon.fileCopyLine} />}
-            onClick={() => props.onCopy()}
-          />
+    <VariantContext.Provider value={contextValue}>
+      <div className={s.wrapper}>
+        <div className={s.actions}>
+          <Actions />
         </div>
-        <div className={s.button}>
-          <Button
-            type={'button'}
-            form={'icon'}
-            size={'sm'}
-            style={'ghost'}
-            target={'destructive'}
-            disabled={!props.canDelete}
-            leadIcon={<Icon icon={Icon.deleteBin5Line} />}
-            onClick={() => props.onDelete()}
-          />
+        <div className={s.gallery}>
+          <Gallery />
+        </div>
+        <div className={s.content}>
+          <Fields />
         </div>
       </div>
-      <div className={s.line}>
-        <div className={s.field}>
-          <Field>
-            <Field.Label>
-              <Label label={'Изображение'} />
-            </Field.Label>
-            <Field.Content>
-              <Gallery index={props.index} />
-            </Field.Content>
-          </Field>
-        </div>
-      </div>
-      <div className={s.content}>
-        <div className={s.line}>
-          <div className={s.field}>
-            <ReactHookForm.Controller
-              control={control}
-              name={`variants.${props.index}.name`}
-              render={({ field, fieldState: { error } }) => (
-                <Field>
-                  <Field.Label>
-                    <Label label={'Наименование'} />
-                  </Field.Label>
-                  <Field.Content>
-                    <Input {...field} value={field.value ?? ''} target={error?.message ? 'destructive' : undefined} />
-                  </Field.Content>
-                  {error?.message && (
-                    <Field.Caption>
-                      <Caption state={'destructive'} caption={error.message} />
-                    </Field.Caption>
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-        </div>
-        <div className={s.line}>
-          <div className={s.field}>
-            <ReactHookForm.Controller
-              control={control}
-              name={`variants.${props.index}.description`}
-              render={({ field, fieldState: { error } }) => (
-                <Field>
-                  <Field.Label>
-                    <Label label={'Описание'} />
-                  </Field.Label>
-                  <Field.Content>
-                    <Textarea
-                      {...field}
-                      value={field.value ?? ''}
-                      target={error?.message ? 'destructive' : undefined}
-                      onInput={(event: React.FormEvent<HTMLTextAreaElement>) =>
-                        field.onChange(event.currentTarget.value)
-                      }
-                    />
-                  </Field.Content>
-                  {error?.message && (
-                    <Field.Caption>
-                      <Caption state={'destructive'} caption={error.message} />
-                    </Field.Caption>
-                  )}
-                </Field>
-              )}
-            />
-          </div>
-        </div>
-        <div className={s.line}>
-          <div className={s.field}>
-            <Properties
-              name={`variants.${props.index}.properties`}
-              label={'Свойства варианта'}
-              scope={'variant'}
-              variantIndex={props.index}
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    </VariantContext.Provider>
   );
 };

@@ -1,0 +1,12 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  gap: var(--numbers-16);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}

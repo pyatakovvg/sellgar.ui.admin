@@ -1,1 +1,1 @@
-export { Controls } from './controls.tsx';
+export { Controls } from './controls';

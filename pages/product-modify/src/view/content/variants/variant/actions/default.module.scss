@@ -1,0 +1,13 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  gap: var(--numbers-8);
+  justify-content: flex-end;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}

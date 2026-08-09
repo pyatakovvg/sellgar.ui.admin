@@ -1,1 +1,1 @@
-export { ModuleView } from './module.view.tsx';
+export { ModuleView } from './module.view';

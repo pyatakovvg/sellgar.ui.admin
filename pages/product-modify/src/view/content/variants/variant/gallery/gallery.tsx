@@ -1,20 +1,19 @@
 import { ImageGallery } from '@library/design';
 import { FileServiceInterface } from '@library/domain';
-import { useDependency } from '@sellgar/app';
+import * as App from '@sellgar/app';
+import { Field, Label } from '@sellgar/kit';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
 
+import { useVariant } from '../hooks/use-variant.hook.ts';
 import type { IFormData } from '../../../../schema.ts';
 
-interface IProps {
-  index: number;
-}
-
-export const Gallery: React.FC<IProps> = (props) => {
-  const fileService = useDependency(FileServiceInterface);
+export const Gallery: React.FC = () => {
+  const variant = useVariant();
+  const fileService = App.useDependency(FileServiceInterface);
   const { control, formState } = ReactHookForm.useFormContext<IFormData>();
-  const fieldName = `variants.${props.index}.images` as const;
+  const fieldName = `variants.${variant.index}.images` as const;
   const { append, fields, remove, move } = ReactHookForm.useFieldArray({
     control,
     name: fieldName,
@@ -48,17 +47,24 @@ export const Gallery: React.FC<IProps> = (props) => {
   };
 
   return (
-    <ImageGallery
-      items={fields.map((image) => ({
-        id: image.id,
-        src: image.imageUuid ? fileService.getPublicImageUrl(image.imageUuid) : undefined,
-        file: image.file,
-        fileName: image.file?.name,
-      }))}
-      disabled={formState.isSubmitting}
-      onSelect={handleFiles}
-      onRemove={handleRemove}
-      onReorder={handleReorder}
-    />
+    <Field>
+      <Field.Label>
+        <Label label={'Изображение'} />
+      </Field.Label>
+      <Field.Content>
+        <ImageGallery
+          items={fields.map((image) => ({
+            id: image.id,
+            src: image.imageUuid ? fileService.getPublicImageUrl(image.imageUuid) : undefined,
+            file: image.file,
+            fileName: image.file?.name,
+          }))}
+          disabled={formState.isSubmitting}
+          onSelect={handleFiles}
+          onRemove={handleRemove}
+          onReorder={handleReorder}
+        />
+      </Field.Content>
+    </Field>
   );
 };

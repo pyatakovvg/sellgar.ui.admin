@@ -1,5 +1,5 @@
 import { Page } from '@library/design';
-import { reactive, useLoaderData, useSubmit } from '@sellgar/app';
+import * as App from '@sellgar/app';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
@@ -9,13 +9,16 @@ import { Content } from './content';
 import { Controls } from './controls';
 import { ProductControllerInterface } from '../classes/controller/product-controller.interface.ts';
 
-import { IFormData, schema } from './schema.ts';
+import { schema } from './schema.ts';
+import type { IFormData } from './schema.ts';
 import { toProductFormData } from './form-values.ts';
 
-export const ModuleView = reactive(() => {
-  const product = useLoaderData(ProductControllerInterface);
+import s from './default.module.scss';
+
+const ModuleViewComponent: React.FC = () => {
+  const product = App.useLoaderData(ProductControllerInterface);
   const isEdit = Boolean(product?.uuid);
-  const submit = useSubmit(ProductControllerInterface);
+  const submit = App.useSubmit(ProductControllerInterface);
 
   const methods = ReactHookForm.useForm<IFormData>({
     mode: 'onBlur',
@@ -46,12 +49,12 @@ export const ModuleView = reactive(() => {
 
   return (
     <ReactHookForm.FormProvider {...methods}>
-      <form onSubmit={handleSubmit}>
+      <form className={s.wrapper} onSubmit={handleSubmit}>
         <Page>
           <Page.Header>
             <Page.Header.Title>{isEdit ? 'Редактирование товара' : 'Новый товар'}</Page.Header.Title>
             <Page.Header.Controls>
-              <Controls inProcess={submit.inProcess} />
+              <Controls />
             </Page.Header.Controls>
           </Page.Header>
           <Page.Content>
@@ -61,4 +64,6 @@ export const ModuleView = reactive(() => {
       </form>
     </ReactHookForm.FormProvider>
   );
-});
+};
+
+export const ModuleView = App.reactive(ModuleViewComponent);

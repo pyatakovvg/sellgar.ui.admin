@@ -4,7 +4,7 @@ import type { ProductFormData } from './form-values.ts';
 
 const requiredUuidSelect = () => yup.string().uuid('Необходимо выбрать').required('Необходимо выбрать');
 
-export const schema = yup.object({
+export const schema: yup.ObjectSchema<ProductFormData> = yup.object({
   name: yup.string().required('Необходимо заполнить'),
   brandUuid: yup.string().required('Необходимо выбрать'),
   categoryUuid: yup.string().required('Необходимо выбрать'),
@@ -53,6 +53,6 @@ export const schema = yup.object({
     )
     .min(1, 'Необходимо добавить вариант')
     .required(),
-}) as yup.ObjectSchema<ProductFormData>;
+});
 
 export type IFormData = yup.InferType<typeof schema>;

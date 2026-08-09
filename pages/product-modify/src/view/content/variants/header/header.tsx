@@ -1,31 +1,18 @@
-import { Typography, ButtonLink, Icon } from '@sellgar/kit';
-
 import React from 'react';
 
-import s from './header.module.scss';
+import { Title } from './title';
+import { Create } from './create';
 
-interface IProps {
-  onAdd(): void;
-}
+import s from './default.module.scss';
 
-export const Header: React.FC<IProps> = (props) => {
+export const Header: React.FC = () => {
   return (
     <div className={s.wrapper}>
-      <div className={s.content}>
-        <Typography size={'body-m'} weight={'semi-bold'}>
-          <p>Варианты товара</p>
-        </Typography>
+      <div className={s.title}>
+        <Title />
       </div>
-      <div className={s.control}>
-        <ButtonLink
-          type={'button'}
-          size={'sm'}
-          target={'info'}
-          leadIcon={<Icon icon={Icon.addLine} />}
-          onClick={() => props.onAdd()}
-        >
-          Добавить вариант
-        </ButtonLink>
+      <div className={s.create}>
+        <Create />
       </div>
     </div>
   );
