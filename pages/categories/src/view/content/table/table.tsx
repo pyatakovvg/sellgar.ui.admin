@@ -1,30 +1,29 @@
-import { CategoryEntity } from '@library/domain';
-import { Table as TableComponent } from '@sellgar/kit';
 import { CategoryModifyFrame } from '@frame/category-modify';
-import { useFrame } from '@sellgar/app';
+import * as App from '@sellgar/app';
+import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
 
+import { CategoryControllerInterface } from '../../../classes/controller/category-controller.interface.ts';
+
 import { Name } from './name';
-import { Info } from './info';
+import { Description } from './description';
 
 import s from './default.module.scss';
 
-interface IProps {
-  data: CategoryEntity[];
-}
-
-export const Table: React.FC<IProps> = (props) => {
-  const frame = useFrame(CategoryModifyFrame);
+export const Table: React.FC = () => {
+  const categories = App.useLoaderData(CategoryControllerInterface);
+  const categoryModifyFrame = App.useFrame(CategoryModifyFrame);
 
   return (
     <div className={s.wrapper}>
       <TableComponent
-        data={{ nodes: props.data }}
+        size={'md'}
+        data={{ nodes: categories.data }}
         tree={{ isUse: true, accessor: 'children' }}
         row={{
           handlers: {
-            click: ({ row }) => void frame.open({ uuid: row.uuid }),
+            click: ({ row }) => void categoryModifyFrame.open({ uuid: row.uuid }),
           },
         }}
       >
@@ -45,7 +44,7 @@ export const Table: React.FC<IProps> = (props) => {
                 <>
                   <Head label={'Описание'} />
                   <Cell>
-                    <Info />
+                    <Description />
                   </Cell>
                 </>
               )}

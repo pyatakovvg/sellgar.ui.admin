@@ -1,25 +1,18 @@
-import { Typography, Icon, Button } from '@sellgar/kit';
-import { CategoryModifyFrame } from '@frame/category-modify';
-import { useFrame } from '@sellgar/app';
-
 import React from 'react';
+
+import { Title } from './title';
+import { Create } from './create';
 
 import s from './default.module.scss';
 
-export const Header = () => {
-  const frame = useFrame(CategoryModifyFrame);
-
+export const Header: React.FC = () => {
   return (
     <div className={s.wrapper}>
-      <div className={s.header}>
-        <Typography size={'h6'} weight={'semi-bold'}>
-          <h6>Категории</h6>
-        </Typography>
+      <div className={s.title}>
+        <Title />
       </div>
-      <div>
-        <Button leadIcon={<Icon icon={'add-fill'} />} size={'sm'} onClick={() => void frame.open({})}>
-          Добавить категорию
-        </Button>
+      <div className={s.create}>
+        <Create />
       </div>
     </div>
   );

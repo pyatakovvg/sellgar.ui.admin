@@ -1,12 +1,13 @@
-import { Typography, useCellData } from '@sellgar/kit';
-import { CategoryEntity } from '@library/domain';
+import type { CategoryEntity } from '@library/domain';
+import * as Kit from '@sellgar/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-export const Info: React.FC = () => {
-  const { data } = useCellData<CategoryEntity>();
+export const Description: React.FC = () => {
+  const { data } = Kit.useCellData<CategoryEntity>();
 
   return (
     <div className={s.wrapper}>

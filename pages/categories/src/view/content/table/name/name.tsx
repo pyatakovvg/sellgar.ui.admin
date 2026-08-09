@@ -1,13 +1,13 @@
+import type { CategoryEntity } from '@library/domain';
+import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
-import { useCellData } from '@sellgar/kit';
-import { CategoryEntity } from '@library/domain';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
 export const Name: React.FC = () => {
-  const { deps, data } = useCellData<CategoryEntity>();
+  const { deps, data } = Kit.useCellData<CategoryEntity>();
 
   return (
     <div className={s.wrapper} style={{ padding: `0 0 0 var(--numbers-${deps * 12})` }}>

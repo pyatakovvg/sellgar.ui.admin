@@ -5,7 +5,7 @@ import React from 'react';
 import { Header } from './header';
 import { Content } from './content';
 
-export const CategoryView = () => {
+export const CategoryView: React.FC = () => {
   return (
     <Page>
       <Page.Header>
