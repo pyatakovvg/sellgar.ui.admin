@@ -1,29 +1,27 @@
-import { PropertyEntity } from '@library/domain';
-import { Table as TableComponent } from '@sellgar/kit';
 import { PropertyModifyFrame } from '@frame/property-modify';
-import { useFrame } from '@sellgar/app';
+import * as App from '@sellgar/app';
+import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
 
+import { PropertyControllerInterface } from '../../../classes/controller/property-controller.interface.ts';
+
 import { Name } from './name';
-import { Info } from './info';
+import { Description } from './description';
 
 import s from './default.module.scss';
 
-interface IProps {
-  data: PropertyEntity[];
-}
-
-export const Table: React.FC<IProps> = (props) => {
-  const frame = useFrame(PropertyModifyFrame);
+export const Table: React.FC = () => {
+  const properties = App.useLoaderData(PropertyControllerInterface) ?? [];
+  const propertyModifyFrame = App.useFrame(PropertyModifyFrame);
 
   return (
     <div className={s.wrapper}>
       <TableComponent
-        data={{ nodes: props.data }}
+        data={{ nodes: properties }}
         row={{
           handlers: {
-            click: ({ row }) => void frame.open({ uuid: row.uuid }),
+            click: ({ row }) => void propertyModifyFrame.open({ uuid: row.uuid }),
           },
         }}
       >
@@ -44,7 +42,7 @@ export const Table: React.FC<IProps> = (props) => {
                 <>
                   <Head label={'Описание'} />
                   <Cell>
-                    <Info />
+                    <Description />
                   </Cell>
                 </>
               )}

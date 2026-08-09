@@ -1,25 +1,18 @@
-import { Button, Icon, Typography } from '@sellgar/kit';
-import { PropertyModifyFrame } from '@frame/property-modify';
-import { useFrame } from '@sellgar/app';
-
 import React from 'react';
+
+import { Title } from './title';
+import { Create } from './create';
 
 import s from './default.module.scss';
 
-export const Header = () => {
-  const propertyFrame = useFrame(PropertyModifyFrame);
-
+export const Header: React.FC = () => {
   return (
     <div className={s.wrapper}>
-      <div className={s.header}>
-        <Typography size={'h6'} weight={'semi-bold'}>
-          <h6>Свойства</h6>
-        </Typography>
+      <div className={s.title}>
+        <Title />
       </div>
-      <div className={s.link}>
-        <Button size={'sm'} leadIcon={<Icon icon={'add-line'} />} onClick={() => void propertyFrame.open({})}>
-          Добавить свойство
-        </Button>
+      <div className={s.create}>
+        <Create />
       </div>
     </div>
   );

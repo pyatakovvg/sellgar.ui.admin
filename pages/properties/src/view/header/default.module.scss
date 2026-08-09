@@ -1,29 +1,18 @@
-
 .wrapper {
-
   display: flex;
   flex-direction: row;
   flex: 1 0;
   align-items: flex-end;
 }
 
-.header {
-
+.title {
   display: flex;
   flex-direction: column;
-  flex: 1 0;
+  flex: 1 1 auto;
 }
 
-.content {
-
-  display: block;
-}
-
-.link {
-
-  display: block;
-
-  & + & {
-    margin: 0 0 0 16px;
-  }
+.create {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
 }

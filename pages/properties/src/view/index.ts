@@ -1,1 +1,1 @@
-export { PropertyView } from './property.view.tsx';
+export { PropertyView } from './property.view';

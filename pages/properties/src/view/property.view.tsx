@@ -5,7 +5,7 @@ import React from 'react';
 import { Header } from './header';
 import { Content } from './content';
 
-export const PropertyView = () => {
+export const PropertyView: React.FC = () => {
   return (
     <Page>
       <Page.Header>
