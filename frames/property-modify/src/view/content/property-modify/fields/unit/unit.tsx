@@ -1,5 +1,5 @@
 import { Form } from '@library/design';
-import { UnitEntity } from '@library/domain';
+import type { UnitEntity } from '@library/domain';
 import { Caption, Field, Label, Select } from '@sellgar/kit';
 
 import React from 'react';
@@ -7,19 +7,19 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import type { IFormData } from '../../form.schema.ts';
 
-interface UnitProps {
+interface IProps {
   inProcess: boolean;
   units: UnitEntity[];
 }
 
-export const Unit: React.FC<UnitProps> = ({ inProcess, units }) => {
+export const Unit: React.FC<IProps> = (props) => {
   const { control } = useFormContext<IFormData>();
 
   return (
     <Controller
       name={'unitUuid'}
       control={control}
-      disabled={inProcess}
+      disabled={props.inProcess}
       render={({ field, fieldState: { error } }) => (
         <Form.Fields>
           <Form.Fields.Field>
@@ -33,9 +33,9 @@ export const Unit: React.FC<UnitProps> = ({ inProcess, units }) => {
                   isClearable={true}
                   optionKey={'uuid'}
                   optionValue={'name'}
-                  options={units}
+                  options={props.units}
                   value={field.value ?? undefined}
-                  disabled={inProcess}
+                  disabled={props.inProcess}
                   onBlur={field.onBlur}
                   onChange={(value) => field.onChange(value || undefined)}
                 />

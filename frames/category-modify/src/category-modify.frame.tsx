@@ -2,12 +2,14 @@ import { Frame, FrameDefinition, HashFrameSource, UseBindings } from '@sellgar/a
 
 import React from 'react';
 
-import { CategoryModifyBindings } from './classes/classes.di.ts';
-import { CategoryModifyFrameParams } from './classes/params';
-import { Exception, Fallback, FrameView } from './view';
-import { CategoryModifyFrameShell } from './shell';
-import { CATEGORY_MODIFY_FRAME_HASH_KEY } from './constants';
+import { CategoryModifyBindings } from './classes/classes.bindings.ts';
+import { CategoryModifyFrameParams } from './classes/params/frame.params.ts';
+import { Exception } from './components/exception';
+import { Fallback } from './components/fallback';
+import { CATEGORY_MODIFY_FRAME_HASH_KEY } from './constants/category-modify.constants.ts';
 import { MainLayout } from './layout/main';
+import { CategoryModifyFrameShell } from './shell';
+import { FrameView } from './view/frame.view.tsx';
 
 @UseBindings(CategoryModifyBindings)
 @Frame<CategoryModifyFrameParams>({

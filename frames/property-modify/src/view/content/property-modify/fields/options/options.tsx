@@ -12,11 +12,11 @@ import { OptionRow } from './option-row.tsx';
 
 import s from './default.module.scss';
 
-interface OptionsProps {
+interface IProps {
   inProcess: boolean;
 }
 
-export const Options: React.FC<OptionsProps> = ({ inProcess }) => {
+export const Options: React.FC<IProps> = (props) => {
   const {
     control,
     formState: { errors },
@@ -51,7 +51,7 @@ export const Options: React.FC<OptionsProps> = ({ inProcess }) => {
                 size={'xs'}
                 style={'secondary'}
                 leadIcon={<AddLineIcon />}
-                disabled={inProcess}
+                disabled={props.inProcess}
                 onClick={() => optionRows.append(createEmptyOption())}
               >
                 Добавить опцию
@@ -73,7 +73,7 @@ export const Options: React.FC<OptionsProps> = ({ inProcess }) => {
                       key={option.id}
                       fieldId={option.id}
                       index={index}
-                      inProcess={inProcess}
+                      inProcess={props.inProcess}
                       onDelete={() => optionRows.remove(index)}
                     />
                   ))}

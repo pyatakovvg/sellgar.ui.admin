@@ -8,11 +8,11 @@ import type { IFormData } from '../form.schema.ts';
 
 import s from './default.module.scss';
 
-interface FieldsProps {
+interface IProps {
   inProcess: boolean;
 }
 
-export const Fields: React.FC<FieldsProps> = (props) => {
+export const Fields: React.FC<IProps> = (props) => {
   const { control } = useFormContext<IFormData>();
 
   return (
@@ -29,7 +29,13 @@ export const Fields: React.FC<FieldsProps> = (props) => {
                   <Label label={'Код'} />
                 </Field.Label>
                 <Field.Content>
-                  <Input {...field} autoFocus={true} target={error?.message ? 'destructive' : undefined} size={'md'} placeholder={'Код'} />
+                  <Input
+                    {...field}
+                    autoFocus={true}
+                    target={error?.message ? 'destructive' : undefined}
+                    size={'md'}
+                    placeholder={'Код'}
+                  />
                 </Field.Content>
                 {error?.message && (
                   <Field.Caption>
@@ -53,7 +59,12 @@ export const Fields: React.FC<FieldsProps> = (props) => {
                   <Label label={'Наименование'} />
                 </Field.Label>
                 <Field.Content>
-                  <Input {...field} target={error?.message ? 'destructive' : undefined} size={'md'} placeholder={'Наименование'} />
+                  <Input
+                    {...field}
+                    target={error?.message ? 'destructive' : undefined}
+                    size={'md'}
+                    placeholder={'Наименование'}
+                  />
                 </Field.Content>
                 {error?.message && (
                   <Field.Caption>
@@ -77,7 +88,12 @@ export const Fields: React.FC<FieldsProps> = (props) => {
                   <Label label={'Описание'} />
                 </Field.Label>
                 <Field.Content>
-                  <Textarea {...field} target={error?.message ? 'destructive' : undefined} size={'md'} placeholder={'Описание'} />
+                  <Textarea
+                    {...field}
+                    target={error?.message ? 'destructive' : undefined}
+                    size={'md'}
+                    placeholder={'Описание'}
+                  />
                 </Field.Content>
                 {error?.message && (
                   <Field.Caption>

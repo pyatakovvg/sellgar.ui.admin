@@ -8,7 +8,7 @@ import * as RHF from 'react-hook-form';
 
 import * as FS from '../../form.schema.ts';
 
-interface ImageFieldProps {
+interface IProps {
   control: RHF.Control<FS.IFormData>;
   inProcess: boolean;
 }
@@ -31,7 +31,7 @@ const toImageGalleryItems = (
   ];
 };
 
-export const ImageField: React.FC<ImageFieldProps> = (props) => {
+export const ImageField: React.FC<IProps> = (props) => {
   const fileService = useDependency(FileServiceInterface);
   const {
     field,

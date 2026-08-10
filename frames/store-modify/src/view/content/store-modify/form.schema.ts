@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-interface IForm {
+export interface IFormData {
   shopUuid: string;
   productUuid: string;
   showing: boolean;
@@ -24,7 +24,7 @@ const priceSchema = yup.object({
   currencyCode: yup.string().required('Необходимо выбрать'),
 });
 
-export const schema = yup.object({
+export const schema: yup.ObjectSchema<IFormData> = yup.object({
   shopUuid: yup.string().required('Необходимо выбрать'),
   productUuid: yup.string().required('Необходимо выбрать'),
   showing: yup.boolean().required('Необходимо выбрать'),
@@ -41,6 +41,4 @@ export const schema = yup.object({
     )
     .min(1, 'У товара должен быть хотя бы один вариант')
     .required('У товара должен быть хотя бы один вариант'),
-}) as yup.ObjectSchema<IForm>;
-
-export type IFormData = yup.InferType<typeof schema>;
+});

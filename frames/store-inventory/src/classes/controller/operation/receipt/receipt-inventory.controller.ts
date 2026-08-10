@@ -1,22 +1,22 @@
 import { StoreServiceInterface } from '@library/domain';
-import { Controller, FrameServiceInterface, Inject, type FrameControllerActionArgs } from '@sellgar/app';
-
 import {
-  ReceiptInventoryActionPayload,
-  ReceiptInventoryControllerInterface,
-} from './receipt-inventory-controller.interface.ts';
-import { StoreInventoryFrameParams } from '../../../params';
+  Controller,
+  FrameServiceInterface,
+  Inject,
+  RevalidateServiceInterface,
+} from '@sellgar/app';
+
+import { ReceiptInventoryControllerInterface } from './receipt-inventory-controller.interface.ts';
 
 @Controller()
 export class ReceiptInventoryController implements ReceiptInventoryControllerInterface {
   constructor(
     @Inject(StoreServiceInterface) private readonly storeService: StoreServiceInterface,
     @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
-  async action(
-    args: FrameControllerActionArgs<StoreInventoryFrameParams, ReceiptInventoryActionPayload>,
-  ): Promise<void> {
+  async action(args: Parameters<ReceiptInventoryControllerInterface['action']>[0]): Promise<void> {
     await this.storeService.receiptInventory({
       commandId: crypto.randomUUID(),
       offerUuid: args.props.offerUuid,
@@ -25,6 +25,7 @@ export class ReceiptInventoryController implements ReceiptInventoryControllerInt
       reason: args.payload.reason || null,
     });
 
+    await this.revalidateService.revalidate();
     await this.frameService.close();
   }
 }

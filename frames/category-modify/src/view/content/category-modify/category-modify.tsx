@@ -4,8 +4,8 @@ import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { CategoryModifyControllerInterface } from '../../../classes/controller/category-modify-controller.interface.ts';
-import { CATEGORY_MODIFY_FORM_ID } from '../../../constants';
+import { CategoryModifyControllerInterface } from '../../../classes/controller/category-modify/category-modify-controller.interface.ts';
+import { CATEGORY_MODIFY_FORM_ID } from '../../../constants/category-modify.constants.ts';
 
 import { Fields } from './fields';
 import { schema, type IFormData } from './form.schema.ts';

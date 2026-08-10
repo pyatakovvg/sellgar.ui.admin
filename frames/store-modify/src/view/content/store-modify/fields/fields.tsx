@@ -1,4 +1,4 @@
-import { CurrencyEntity } from '@library/domain';
+import type { CurrencyEntity } from '@library/domain';
 
 import React from 'react';
 
@@ -9,12 +9,12 @@ import { Shop } from './shop';
 
 import s from './default.module.scss';
 
-interface FieldsProps {
+interface IProps {
   currencies: CurrencyEntity[];
   products: ProductOption[];
 }
 
-export const Fields: React.FC<FieldsProps> = ({ currencies, products }) => {
+export const Fields: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <div className={s.fields}>
@@ -24,7 +24,7 @@ export const Fields: React.FC<FieldsProps> = ({ currencies, products }) => {
         <div className={s.field}>
           <Showing />
         </div>
-        <ProductOffers currencies={currencies} products={products} />
+        <ProductOffers currencies={props.currencies} products={props.products} />
       </div>
     </div>
   );

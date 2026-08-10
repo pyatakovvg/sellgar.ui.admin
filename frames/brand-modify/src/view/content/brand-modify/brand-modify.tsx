@@ -4,9 +4,9 @@ import React from 'react';
 import * as RHF from 'react-hook-form';
 import * as YR from '@hookform/resolvers/yup';
 
-import { BrandModifyControllerInterface } from '../../../classes/controller/brand-modify-controller.interface.ts';
+import { BrandModifyControllerInterface } from '../../../classes/controller/brand-modify/brand-modify-controller.interface.ts';
 
-import { BRAND_MODIFY_FORM_ID } from '../../../constants';
+import { BRAND_MODIFY_FORM_ID } from '../../../constants/brand-modify.constants.ts';
 
 import * as FS from './form.schema.ts';
 

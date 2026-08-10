@@ -1,12 +1,11 @@
-import { ShopEntity } from '@library/domain';
 import { useLoaderData, useSubmit } from '@sellgar/app';
 
 import React from 'react';
-import { FormProvider, type Resolver, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { ShopModifyControllerInterface } from '../../../classes/controller/shop-modify-controller.interface.ts';
-import { SHOP_MODIFY_FORM_ID } from '../../../constants';
+import { ShopModifyControllerInterface } from '../../../classes/controller/shop-modify/shop-modify-controller.interface.ts';
+import { SHOP_MODIFY_FORM_ID } from '../../../constants/shop-modify.constants.ts';
 
 import { Fields } from './fields';
 import { schema, type IFormData } from './form.schema.ts';
@@ -14,7 +13,7 @@ import { schema, type IFormData } from './form.schema.ts';
 import s from './default.module.scss';
 
 export const ShopModify: React.FC = () => {
-  const data = useLoaderData(ShopModifyControllerInterface) as ShopEntity | undefined;
+  const data = useLoaderData(ShopModifyControllerInterface);
   const submit = useSubmit(ShopModifyControllerInterface);
 
   const methods = useForm<IFormData>({
@@ -22,7 +21,7 @@ export const ShopModify: React.FC = () => {
     defaultValues: {
       name: data?.name ?? '',
     },
-    resolver: yupResolver(schema) as Resolver<IFormData>,
+    resolver: yupResolver(schema),
   });
 
   const handleSubmit = methods.handleSubmit(async (values) => {

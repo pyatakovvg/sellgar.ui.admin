@@ -1,15 +1,10 @@
-import { StoreOfferEntity, StoreProductEntity } from '@library/domain';
 import { FrameControllerInterface, type FrameControllerLoaderArgs } from '@sellgar/app';
 
-import { StoreInventoryFrameParams } from '../../params';
-
-export interface StoreInventoryLoaderData {
-  storeProduct: StoreProductEntity;
-  offer: StoreOfferEntity;
-}
+import type { StoreInventoryResultEntity } from './domain/store-inventory-result.entity.ts';
+import { StoreInventoryFrameParams } from '../../params/frame.params.ts';
 
 export abstract class StoreInventoryContextControllerInterface extends FrameControllerInterface<StoreInventoryFrameParams> {
-  abstract loader(args: FrameControllerLoaderArgs<StoreInventoryFrameParams>): Promise<StoreInventoryLoaderData>;
+  abstract loader(args: FrameControllerLoaderArgs<StoreInventoryFrameParams>): Promise<StoreInventoryResultEntity>;
 
-  abstract toList(): Promise<void>;
+  abstract close(): Promise<void>;
 }

@@ -1,6 +1,6 @@
 import { FrameControllerInterface, type FrameControllerActionArgs } from '@sellgar/app';
 
-import { StoreInventoryFrameParams } from '../../../params';
+import { StoreInventoryFrameParams } from '../../../params/frame.params.ts';
 
 export interface ReceiptInventoryActionPayload {
   expectedVersion: number;

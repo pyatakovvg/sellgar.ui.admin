@@ -1,4 +1,4 @@
-import { PropertyEntity } from '@library/domain';
+import type { PropertyEntity } from '@library/domain';
 
 import * as yup from 'yup';
 
@@ -23,11 +23,14 @@ export interface IFormData {
   }>;
 }
 
-export const schema = yup.object({
+export const schema: yup.ObjectSchema<IFormData> = yup.object({
   unitUuid: yup.string().uuid('Неверный формат').optional(),
   code: yup.string().required('Необходимо заполнить'),
   name: yup.string().required('Необходимо заполнить'),
-  type: yup.mixed<PropertyEntity['type']>().oneOf(['TEXT', 'NUMBER', 'BOOLEAN', 'OPTION', 'DATE']).required('Необходимо выбрать'),
+  type: yup
+    .mixed<PropertyEntity['type']>()
+    .oneOf(['TEXT', 'NUMBER', 'BOOLEAN', 'OPTION', 'DATE'])
+    .required('Необходимо выбрать'),
   description: yup.string().required('Необходимо заполнить'),
   options: yup
     .array(
@@ -80,4 +83,4 @@ export const schema = yup.object({
       return new Set(codes).size === codes.length;
     })
     .required(),
-}) as yup.ObjectSchema<IFormData>;
+});

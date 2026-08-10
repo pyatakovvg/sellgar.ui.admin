@@ -1,10 +1,9 @@
-import { UnitEntity } from '@library/domain';
 import { useLoaderData } from '@sellgar/app';
 
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import { UnitListControllerInterface } from '../../../../classes/controller/unit-list-controller.interface.ts';
+import { UnitListControllerInterface } from '../../../../classes/controller/unit-list/unit-list-controller.interface.ts';
 import type { IFormData } from '../form.schema.ts';
 import { Code } from './code';
 import { Description } from './description';
@@ -15,23 +14,23 @@ import { Unit } from './unit';
 
 import s from './default.module.scss';
 
-interface FieldsProps {
+interface IProps {
   inProcess: boolean;
 }
 
-export const Fields: React.FC<FieldsProps> = ({ inProcess }) => {
-  const units = useLoaderData(UnitListControllerInterface) as UnitEntity[];
+export const Fields: React.FC<IProps> = (props) => {
+  const units = useLoaderData(UnitListControllerInterface);
   const { control } = useFormContext<IFormData>();
   const propertyType = useWatch({ control, name: 'type' });
 
   return (
     <div className={s.wrapper}>
-      <Code inProcess={inProcess} />
-      <Name inProcess={inProcess} />
-      <Description inProcess={inProcess} />
-      <Type inProcess={inProcess} />
-      {propertyType === 'NUMBER' && <Unit inProcess={inProcess} units={units} />}
-      {propertyType === 'OPTION' && <Options inProcess={inProcess} />}
+      <Code inProcess={props.inProcess} />
+      <Name inProcess={props.inProcess} />
+      <Description inProcess={props.inProcess} />
+      <Type inProcess={props.inProcess} />
+      {propertyType === 'NUMBER' && <Unit inProcess={props.inProcess} units={units} />}
+      {propertyType === 'OPTION' && <Options inProcess={props.inProcess} />}
     </div>
   );
 };

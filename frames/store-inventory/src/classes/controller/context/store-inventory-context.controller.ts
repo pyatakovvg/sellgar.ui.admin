@@ -1,11 +1,11 @@
 import { StoreServiceInterface } from '@library/domain';
-import { Controller, FrameServiceInterface, Inject, type FrameControllerLoaderArgs } from '@sellgar/app';
+import { Controller, FrameServiceInterface, Inject } from '@sellgar/app';
 
-import {
-  StoreInventoryContextControllerInterface,
-  StoreInventoryLoaderData,
-} from './store-inventory-context-controller.interface.ts';
-import { StoreInventoryFrameParams } from '../../params';
+import { plainToInstance } from 'class-transformer';
+import { validateOrReject } from 'class-validator';
+
+import { StoreInventoryContextControllerInterface } from './store-inventory-context-controller.interface.ts';
+import { StoreInventoryResultEntity } from './domain/store-inventory-result.entity.ts';
 
 @Controller()
 export class StoreInventoryContextController implements StoreInventoryContextControllerInterface {
@@ -14,7 +14,7 @@ export class StoreInventoryContextController implements StoreInventoryContextCon
     @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
   ) {}
 
-  async loader(args: FrameControllerLoaderArgs<StoreInventoryFrameParams>): Promise<StoreInventoryLoaderData> {
+  async loader(args: Parameters<StoreInventoryContextControllerInterface['loader']>[0]) {
     const storeProduct = await this.storeService.findByUuid(args.props.storeProductUuid);
     const offer = storeProduct.offers.find((item) => item.uuid === args.props.offerUuid);
 
@@ -22,13 +22,17 @@ export class StoreInventoryContextController implements StoreInventoryContextCon
       throw new Error('Предложение товара на складе не найдено.');
     }
 
-    return {
+    const result = plainToInstance(StoreInventoryResultEntity, {
       storeProduct,
       offer,
-    };
+    });
+
+    await validateOrReject(result);
+
+    return result;
   }
 
-  async toList(): Promise<void> {
+  async close(): Promise<void> {
     await this.frameService.close();
   }
 }

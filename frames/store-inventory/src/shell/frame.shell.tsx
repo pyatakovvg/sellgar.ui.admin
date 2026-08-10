@@ -1,5 +1,5 @@
+import { FrameShell, type FrameShellContextInterface, type FrameShellInterface } from '@sellgar/app';
 import { Modal } from '@sellgar/kit';
-import { FrameShell, FrameShellInterface, type FrameShellContextInterface } from '@sellgar/app';
 
 import React from 'react';
 

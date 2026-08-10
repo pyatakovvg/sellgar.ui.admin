@@ -11,16 +11,16 @@ import { OptionMetadataRow } from './option-metadata-row.tsx';
 
 import s from './default.module.scss';
 
-interface OptionRowProps {
+interface IProps {
   fieldId: string;
   index: number;
   inProcess: boolean;
   onDelete: () => void;
 }
 
-export const OptionRow: React.FC<OptionRowProps> = ({ fieldId, index, inProcess, onDelete }) => {
+export const OptionRow: React.FC<IProps> = (props) => {
   const { control } = useFormContext<IFormData>();
-  const metadataFields = useFieldArray({ control, name: `options.${index}.metadata` });
+  const metadataFields = useFieldArray({ control, name: `options.${props.index}.metadata` });
   const y = Motion.useMotionValue(0);
   const dragControls = Motion.useDragControls();
 
@@ -43,8 +43,8 @@ export const OptionRow: React.FC<OptionRowProps> = ({ fieldId, index, inProcess,
     <Motion.Reorder.Item
       className={s.option}
       as={'div'}
-      id={fieldId}
-      value={fieldId}
+      id={props.fieldId}
+      value={props.fieldId}
       style={{ y }}
       dragListener={false}
       dragControls={dragControls}
@@ -54,9 +54,9 @@ export const OptionRow: React.FC<OptionRowProps> = ({ fieldId, index, inProcess,
           <Icon className={s.optionDragIcon} icon={Icon.dotsOutLine} />
         </div>
         <Controller
-          name={`options.${index}.code`}
+          name={`options.${props.index}.code`}
           control={control}
-          disabled={inProcess}
+          disabled={props.inProcess}
           render={({ field, fieldState: { error } }) => (
             <Field>
               <Field.Content>
@@ -71,13 +71,18 @@ export const OptionRow: React.FC<OptionRowProps> = ({ fieldId, index, inProcess,
           )}
         />
         <Controller
-          name={`options.${index}.name`}
+          name={`options.${props.index}.name`}
           control={control}
-          disabled={inProcess}
+          disabled={props.inProcess}
           render={({ field, fieldState: { error } }) => (
             <Field>
               <Field.Content>
-                <Input {...field} target={error?.message ? 'destructive' : undefined} size={'md'} placeholder={'Название'} />
+                <Input
+                  {...field}
+                  target={error?.message ? 'destructive' : undefined}
+                  size={'md'}
+                  placeholder={'Название'}
+                />
               </Field.Content>
               {error?.message && (
                 <Field.Caption>
@@ -95,8 +100,8 @@ export const OptionRow: React.FC<OptionRowProps> = ({ fieldId, index, inProcess,
             style={'ghost'}
             target={'destructive'}
             leadIcon={<DeleteBin5LineIcon />}
-            disabled={inProcess}
-            onClick={onDelete}
+            disabled={props.inProcess}
+            onClick={props.onDelete}
           />
         </div>
       </div>
@@ -109,7 +114,7 @@ export const OptionRow: React.FC<OptionRowProps> = ({ fieldId, index, inProcess,
             size={'xs'}
             style={'secondary'}
             leadIcon={<AddLineIcon />}
-            disabled={inProcess}
+            disabled={props.inProcess}
             onClick={() => metadataFields.append(createEmptyOptionMetadata())}
           >
             Добавить значение
@@ -128,9 +133,9 @@ export const OptionRow: React.FC<OptionRowProps> = ({ fieldId, index, inProcess,
               <OptionMetadataRow
                 key={metadata.id}
                 fieldId={metadata.id}
-                optionIndex={index}
+                optionIndex={props.index}
                 index={metadataIndex}
-                inProcess={inProcess}
+                inProcess={props.inProcess}
                 onDelete={() => metadataFields.remove(metadataIndex)}
               />
             ))}

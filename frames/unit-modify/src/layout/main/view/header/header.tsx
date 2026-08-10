@@ -3,7 +3,7 @@ import { useLoaderData } from '@sellgar/app';
 
 import React from 'react';
 
-import { UnitModifyControllerInterface } from '../../../../classes/controller/unit-modify-controller.interface.ts';
+import { UnitModifyControllerInterface } from '../../../../classes/controller/unit-modify/unit-modify-controller.interface.ts';
 
 import s from './default.module.scss';
 
@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
 
   return (
     <div className={s.wrapper}>
-      <Typography size={'body-l'}>
+      <Typography size={'body-m'} weight={'medium'}>
         <p className={s.label}>{unit ? 'Редактировать размерность' : 'Новая размерность'}</p>
       </Typography>
       <Drawer.Close />

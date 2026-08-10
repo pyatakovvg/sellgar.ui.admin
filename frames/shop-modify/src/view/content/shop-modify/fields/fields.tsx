@@ -8,11 +8,11 @@ import type { IFormData } from '../form.schema.ts';
 
 import s from './default.module.scss';
 
-interface FieldsProps {
+interface IProps {
   inProcess: boolean;
 }
 
-export const Fields: React.FC<FieldsProps> = (props) => {
+export const Fields: React.FC<IProps> = (props) => {
   const { control } = useFormContext<IFormData>();
 
   return (

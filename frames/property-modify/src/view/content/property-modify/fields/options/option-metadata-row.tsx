@@ -3,14 +3,15 @@ import { DeleteBin5LineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 import * as Motion from 'framer-motion';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, type Control, useFormContext } from 'react-hook-form';
 
 import { metadataValueTypes } from '../../form-values.ts';
 import type { IFormData } from '../../form.schema.ts';
+import { MetadataInput } from './metadata-input.tsx';
 
 import s from './default.module.scss';
 
-interface OptionMetadataRowProps {
+interface IProps {
   fieldId: string;
   optionIndex: number;
   index: number;
@@ -21,11 +22,19 @@ interface OptionMetadataRowProps {
 type MetadataPath = `options.${number}.metadata.${number}`;
 type MetadataValueType = IFormData['options'][number]['metadata'][number]['valueType'];
 
-export const OptionMetadataRow: React.FC<OptionMetadataRowProps> = ({ fieldId, optionIndex, index, inProcess, onDelete }) => {
+const createMetadataPath = (optionIndex: number, index: number): MetadataPath => {
+  return `options.${optionIndex}.metadata.${index}`;
+};
+
+const isMetadataValueType = (value: unknown): value is MetadataValueType => {
+  return value === 'TEXT' || value === 'COLOR' || value === 'IMAGE' || value === 'ICON';
+};
+
+export const OptionMetadataRow: React.FC<IProps> = (props) => {
   const { control, setValue, watch } = useFormContext<IFormData>();
   const y = Motion.useMotionValue(0);
   const dragControls = Motion.useDragControls();
-  const path = `options.${optionIndex}.metadata.${index}` as MetadataPath;
+  const path = createMetadataPath(props.optionIndex, props.index);
   const valueType = watch(`${path}.valueType`);
 
   const handleValueTypeChange = (value: MetadataValueType | undefined) => {
@@ -42,8 +51,8 @@ export const OptionMetadataRow: React.FC<OptionMetadataRowProps> = ({ fieldId, o
     <Motion.Reorder.Item
       className={s.metadataRow}
       as={'div'}
-      id={fieldId}
-      value={fieldId}
+      id={props.fieldId}
+      value={props.fieldId}
       style={{ y }}
       dragListener={false}
       dragControls={dragControls}
@@ -54,7 +63,7 @@ export const OptionMetadataRow: React.FC<OptionMetadataRowProps> = ({ fieldId, o
       <Controller
         name={`${path}.valueType`}
         control={control}
-        disabled={inProcess}
+        disabled={props.inProcess}
         render={({ field, fieldState: { error } }) => (
           <Field>
             <Field.Content>
@@ -64,9 +73,9 @@ export const OptionMetadataRow: React.FC<OptionMetadataRowProps> = ({ fieldId, o
                 options={metadataValueTypes}
                 target={error?.message ? 'destructive' : undefined}
                 value={field.value}
-                disabled={inProcess}
+                disabled={props.inProcess}
                 onBlur={field.onBlur}
-                onChange={(value) => handleValueTypeChange(value as MetadataValueType | undefined)}
+                onChange={(value) => handleValueTypeChange(isMetadataValueType(value) ? value : undefined)}
               />
             </Field.Content>
             {error?.message && (
@@ -77,7 +86,9 @@ export const OptionMetadataRow: React.FC<OptionMetadataRowProps> = ({ fieldId, o
           </Field>
         )}
       />
-      <div className={s.metadataValue}>{renderMetadataValue({ control, path, valueType, inProcess })}</div>
+      <div className={s.metadataValue}>
+        {renderMetadataValue({ control, path, valueType, inProcess: props.inProcess })}
+      </div>
       <div className={s.metadataControl}>
         <Button.Icon
           type={'button'}
@@ -86,8 +97,8 @@ export const OptionMetadataRow: React.FC<OptionMetadataRowProps> = ({ fieldId, o
           style={'ghost'}
           target={'destructive'}
           leadIcon={<DeleteBin5LineIcon />}
-          disabled={inProcess}
-          onClick={onDelete}
+          disabled={props.inProcess}
+          onClick={props.onDelete}
         />
       </div>
     </Motion.Reorder.Item>
@@ -95,7 +106,7 @@ export const OptionMetadataRow: React.FC<OptionMetadataRowProps> = ({ fieldId, o
 };
 
 interface RenderMetadataValueArgs {
-  control: ReturnType<typeof useFormContext<IFormData>>['control'];
+  control: Control<IFormData>;
   path: MetadataPath;
   valueType: MetadataValueType;
   inProcess: boolean;
@@ -142,48 +153,17 @@ const renderMetadataValue = ({ control, path, valueType, inProcess }: RenderMeta
         />
       );
     case 'IMAGE':
-      return <MetadataInput control={control} name={`${path}.fileUuid`} inProcess={inProcess} placeholder={'UUID файла'} />;
+      return (
+        <MetadataInput control={control} name={`${path}.fileUuid`} inProcess={inProcess} placeholder={'UUID файла'} />
+      );
     case 'ICON':
-      return <MetadataInput control={control} name={`${path}.iconCode`} inProcess={inProcess} placeholder={'Код иконки'} />;
+      return (
+        <MetadataInput control={control} name={`${path}.iconCode`} inProcess={inProcess} placeholder={'Код иконки'} />
+      );
     case 'TEXT':
     default:
-      return <MetadataInput control={control} name={`${path}.textValue`} inProcess={inProcess} placeholder={'Значение'} />;
+      return (
+        <MetadataInput control={control} name={`${path}.textValue`} inProcess={inProcess} placeholder={'Значение'} />
+      );
   }
-};
-
-interface MetadataInputProps {
-  control: RenderMetadataValueArgs['control'];
-  name: `${MetadataPath}.${'textValue' | 'fileUuid' | 'iconCode'}`;
-  type?: 'text';
-  inProcess: boolean;
-  placeholder: string;
-}
-
-const MetadataInput: React.FC<MetadataInputProps> = ({ control, name, type = 'text', inProcess, placeholder }) => {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      disabled={inProcess}
-      render={({ field, fieldState: { error } }) => (
-        <Field>
-          <Field.Content>
-            <Input
-              {...field}
-              value={field.value ?? ''}
-              type={type}
-              target={error?.message ? 'destructive' : undefined}
-              size={'md'}
-              placeholder={placeholder}
-            />
-          </Field.Content>
-          {error?.message && (
-            <Field.Caption>
-              <Caption state={'destructive'} caption={error.message} />
-            </Field.Caption>
-          )}
-        </Field>
-      )}
-    />
-  );
 };

@@ -6,18 +6,18 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import type { IFormData } from '../../form.schema.ts';
 
-interface DescriptionProps {
+interface IProps {
   inProcess: boolean;
 }
 
-export const Description: React.FC<DescriptionProps> = ({ inProcess }) => {
+export const Description: React.FC<IProps> = (props) => {
   const { control } = useFormContext<IFormData>();
 
   return (
     <Controller
       name={'description'}
       control={control}
-      disabled={inProcess}
+      disabled={props.inProcess}
       render={({ field, fieldState: { error } }) => (
         <Form.Fields>
           <Form.Fields.Field>
@@ -26,7 +26,12 @@ export const Description: React.FC<DescriptionProps> = ({ inProcess }) => {
                 <Label label={'Описание'} />
               </Field.Label>
               <Field.Content>
-                <Textarea {...field} target={error?.message ? 'destructive' : undefined} size={'md'} placeholder={'Описание'} />
+                <Textarea
+                  {...field}
+                  target={error?.message ? 'destructive' : undefined}
+                  size={'md'}
+                  placeholder={'Описание'}
+                />
               </Field.Content>
               {error?.message && (
                 <Field.Caption>

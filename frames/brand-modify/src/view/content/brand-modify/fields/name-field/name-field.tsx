@@ -6,12 +6,12 @@ import * as RHF from 'react-hook-form';
 
 import * as FS from '../../form.schema.ts';
 
-interface NameFieldProps {
+interface IProps {
   control: RHF.Control<FS.IFormData>;
   inProcess: boolean;
 }
 
-export const NameField: React.FC<NameFieldProps> = (props) => {
+export const NameField: React.FC<IProps> = (props) => {
   const {
     field,
     fieldState: { error },

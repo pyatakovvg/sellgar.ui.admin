@@ -3,11 +3,11 @@ import { useController, useSubmit } from '@sellgar/app';
 
 import React from 'react';
 
-import { StoreInventoryContextControllerInterface } from '../../../../classes/controller/context';
-import { AdjustInventoryControllerInterface } from '../../../../classes/controller/operation/adjust';
-import { ReceiptInventoryControllerInterface } from '../../../../classes/controller/operation/receipt';
-import { WriteOffInventoryControllerInterface } from '../../../../classes/controller/operation/write-off';
-import { STORE_INVENTORY_FORM_ID } from '../../../../constants';
+import { StoreInventoryContextControllerInterface } from '../../../../classes/controller/context/store-inventory-context-controller.interface.ts';
+import { AdjustInventoryControllerInterface } from '../../../../classes/controller/operation/adjust/adjust-inventory-controller.interface.ts';
+import { ReceiptInventoryControllerInterface } from '../../../../classes/controller/operation/receipt/receipt-inventory-controller.interface.ts';
+import { WriteOffInventoryControllerInterface } from '../../../../classes/controller/operation/write-off/write-off-inventory-controller.interface.ts';
+import { STORE_INVENTORY_FORM_ID } from '../../../../constants/store-inventory.constants.ts';
 
 import s from './default.module.scss';
 
@@ -20,7 +20,13 @@ export const Controls: React.FC = () => {
 
   return (
     <div className={s.wrapper}>
-      <Button type={'button'} disabled={inProcess} size={'sm'} style={'secondary'} onClick={() => controller.toList()}>
+      <Button
+        type={'button'}
+        disabled={inProcess}
+        size={'sm'}
+        style={'secondary'}
+        onClick={() => void controller.close()}
+      >
         Отмена
       </Button>
       <Button type={'submit'} form={STORE_INVENTORY_FORM_ID} disabled={inProcess} size={'sm'} target={'info'}>

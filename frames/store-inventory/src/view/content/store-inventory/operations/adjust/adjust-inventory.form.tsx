@@ -1,12 +1,12 @@
-import { FormProvider, type Resolver, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useLoaderData, useSubmit } from '@sellgar/app';
 
 import React from 'react';
 
-import { AdjustInventoryControllerInterface } from '../../../../../classes/controller/operation/adjust';
-import { StoreInventoryContextControllerInterface } from '../../../../../classes/controller/context';
-import { STORE_INVENTORY_FORM_ID } from '../../../../../constants';
+import { StoreInventoryContextControllerInterface } from '../../../../../classes/controller/context/store-inventory-context-controller.interface.ts';
+import { AdjustInventoryControllerInterface } from '../../../../../classes/controller/operation/adjust/adjust-inventory-controller.interface.ts';
+import { STORE_INVENTORY_FORM_ID } from '../../../../../constants/store-inventory.constants.ts';
 import { InventoryOperationFields } from '../shared';
 import { schema, type AdjustInventoryFormData } from './form.schema.ts';
 
@@ -21,7 +21,7 @@ export const AdjustInventoryForm: React.FC = () => {
       quantity: data.offer.inventory?.quantity ?? 0,
       reason: '',
     },
-    resolver: yupResolver(schema) as Resolver<AdjustInventoryFormData>,
+    resolver: yupResolver(schema),
   });
 
   const handleSubmit = methods.handleSubmit(async (values) => {

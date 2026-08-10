@@ -2,19 +2,22 @@ import { Frame, FrameDefinition, HashFrameSource, UseBindings } from '@sellgar/a
 
 import React from 'react';
 
-import { FrameView } from './view';
+import { ShopModifyBindings } from './classes/classes.bindings.ts';
+import { ShopModifyFrameParams } from './classes/params/frame.params.ts';
+import { Exception } from './components/exception';
+import { Fallback } from './components/fallback';
+import { SHOP_MODIFY_FRAME_HASH_KEY } from './constants/shop-modify.constants.ts';
 import { MainLayout } from './layout/main';
 import { ShopModifyFrameShell } from './shell';
-import { SHOP_MODIFY_FRAME_HASH_KEY } from './constants';
-
-import { ShopModifyFrameParams } from './classes/params';
-import { ShopModifyBindings } from './classes/classes.di.ts';
+import { FrameView } from './view/frame.view.tsx';
 
 @UseBindings(ShopModifyBindings)
 @Frame<ShopModifyFrameParams>({
+  exception: <Exception />,
+  fallback: <Fallback />,
   layouts: [MainLayout],
   shell: ShopModifyFrameShell,
   source: HashFrameSource.create(SHOP_MODIFY_FRAME_HASH_KEY, ShopModifyFrameParams),
-  view: <FrameView />,
+  view: FrameView,
 })
 export class ShopModifyFrame extends FrameDefinition<ShopModifyFrameParams> {}

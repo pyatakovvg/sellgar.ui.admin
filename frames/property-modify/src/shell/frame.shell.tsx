@@ -1,6 +1,5 @@
+import { FrameShell, type FrameShellContextInterface, type FrameShellInterface } from '@sellgar/app';
 import { Drawer } from '@sellgar/kit';
-import { FrameShell, FrameShellInterface } from '@sellgar/app';
-import type { FrameShellContextInterface } from '@sellgar/app';
 
 import React from 'react';
 
@@ -8,7 +7,7 @@ import React from 'react';
 export class PropertyModifyFrameShell implements FrameShellInterface {
   render(context: FrameShellContextInterface): React.ReactNode {
     return (
-      <Drawer closeOnEscape={true} closeOnOverlay={true} open={context.open} onClose={() => context.close()}>
+      <Drawer closeOnEscape={true} closeOnOverlay={true} open={context.open} onClose={() => void context.close()}>
         {context.content}
       </Drawer>
     );

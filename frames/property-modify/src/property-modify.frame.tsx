@@ -2,12 +2,14 @@ import { Frame, FrameDefinition, HashFrameSource, UseBindings } from '@sellgar/a
 
 import React from 'react';
 
-import { PropertyModifyBindings } from './classes/classes.di.ts';
-import { PropertyModifyFrameParams } from './classes/params';
-import { PROPERTY_MODIFY_FRAME_HASH_KEY } from './constants';
+import { PropertyModifyBindings } from './classes/classes.bindings.ts';
+import { PropertyModifyFrameParams } from './classes/params/frame.params.ts';
+import { Exception } from './components/exception';
+import { Fallback } from './components/fallback';
+import { PROPERTY_MODIFY_FRAME_HASH_KEY } from './constants/property-modify.constants.ts';
 import { MainLayout } from './layout/main';
-import { Exception, Fallback, FrameView } from './view';
 import { PropertyModifyFrameShell } from './shell';
+import { FrameView } from './view/frame.view.tsx';
 
 @UseBindings(PropertyModifyBindings)
 @Frame<PropertyModifyFrameParams>({

@@ -5,7 +5,7 @@ export interface WriteOffInventoryFormData {
   reason: string;
 }
 
-export const schema = yup.object({
+export const schema: yup.ObjectSchema<WriteOffInventoryFormData> = yup.object({
   quantity: yup
     .number()
     .typeError('Необходимо указать число')
@@ -13,4 +13,4 @@ export const schema = yup.object({
     .min(1, 'Количество списания должно быть больше нуля')
     .required('Необходимо указать количество'),
   reason: yup.string().default(''),
-}) as yup.ObjectSchema<WriteOffInventoryFormData>;
+});

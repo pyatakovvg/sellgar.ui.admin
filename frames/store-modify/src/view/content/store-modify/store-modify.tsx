@@ -1,14 +1,13 @@
-import { CurrencyEntity, ProductEntity, StoreProductEntity } from '@library/domain';
 import { useLoaderData, useSubmit } from '@sellgar/app';
 
 import React from 'react';
-import { FormProvider, type Resolver, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { CurrencyListControllerInterface } from '../../../classes/controller/currency-list-controller.interface.ts';
-import { ProductListControllerInterface } from '../../../classes/controller/product-list-controller.interface.ts';
-import { StoreModifyControllerInterface } from '../../../classes/controller/store-modify-controller.interface.ts';
-import { STORE_MODIFY_FORM_ID } from '../../../constants';
+import { CurrencyListControllerInterface } from '../../../classes/controller/currency-list/currency-list-controller.interface.ts';
+import { ProductListControllerInterface } from '../../../classes/controller/product-list/product-list-controller.interface.ts';
+import { StoreModifyControllerInterface } from '../../../classes/controller/store-modify/store-modify-controller.interface.ts';
+import { STORE_MODIFY_FORM_ID } from '../../../constants/store-modify.constants.ts';
 import { Fields } from './fields';
 import { type ProductOption } from './fields/product-offers/product-option.ts';
 import { schema, type IFormData } from './form.schema.ts';
@@ -16,11 +15,11 @@ import { schema, type IFormData } from './form.schema.ts';
 import s from './default.module.scss';
 
 export const StoreModify: React.FC = () => {
-  const data = useLoaderData(StoreModifyControllerInterface) as StoreProductEntity | undefined;
-  const currency = useLoaderData(CurrencyListControllerInterface) as CurrencyEntity[];
-  const loadedProducts = useLoaderData(ProductListControllerInterface) as ProductEntity[];
+  const data = useLoaderData(StoreModifyControllerInterface);
+  const currencies = useLoaderData(CurrencyListControllerInterface);
+  const loadedProducts = useLoaderData(ProductListControllerInterface);
   const submit = useSubmit(StoreModifyControllerInterface);
-  const defaultCurrencyCode = currency[0]?.code ?? '';
+  const defaultCurrencyCode = currencies[0]?.code ?? '';
   const initialProduct = React.useMemo<ProductOption | undefined>(() => {
     if (!data) {
       return undefined;
@@ -78,7 +77,7 @@ export const StoreModify: React.FC = () => {
       showing: data?.showing ?? false,
       offers: defaultOffers,
     },
-    resolver: yupResolver(schema) as Resolver<IFormData>,
+    resolver: yupResolver(schema),
   });
 
   const handleSubmit = methods.handleSubmit(async (values) => {
@@ -91,7 +90,7 @@ export const StoreModify: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <form id={STORE_MODIFY_FORM_ID} className={s.wrapper} onSubmit={handleSubmit}>
-        <Fields currencies={currency} products={products} />
+        <Fields currencies={currencies} products={products} />
       </form>
     </FormProvider>
   );

@@ -3,7 +3,7 @@ import { useLoaderData } from '@sellgar/app';
 
 import React from 'react';
 
-import { StoreInventoryContextControllerInterface } from '../../../../classes/controller/context';
+import { StoreInventoryContextControllerInterface } from '../../../../classes/controller/context/store-inventory-context-controller.interface.ts';
 
 import s from './default.module.scss';
 

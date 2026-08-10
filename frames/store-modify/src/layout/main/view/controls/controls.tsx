@@ -1,12 +1,11 @@
 import { useController, useSubmit } from '@sellgar/app';
 import { Button } from '@sellgar/kit';
-import { ArrowLeftSLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 
-import { STORE_MODIFY_FORM_ID } from '../../../../constants';
+import { STORE_MODIFY_FORM_ID } from '../../../../constants/store-modify.constants.ts';
 
-import { StoreModifyControllerInterface } from '../../../../classes/controller/store-modify-controller.interface.ts';
+import { StoreModifyControllerInterface } from '../../../../classes/controller/store-modify/store-modify-controller.interface.ts';
 
 import s from './default.module.scss';
 
@@ -17,19 +16,10 @@ export const Controls: React.FC = () => {
 
   return (
     <div className={s.wrapper}>
-      <Button
-        leadIcon={<ArrowLeftSLineIcon />}
-        style={'secondary'}
-        disabled={submit.inProcess}
-        onClick={() => controller.toList()}
-      >
-        Назад
+      <Button type={'button'} style={'secondary'} disabled={submit.inProcess} onClick={() => void controller.close()}>
+        Отмена
       </Button>
-      <Button
-        type={'submit'}
-        form={STORE_MODIFY_FORM_ID}
-        inProcess={submit.inProcess}
-      >
+      <Button type={'submit'} form={STORE_MODIFY_FORM_ID} inProcess={submit.inProcess}>
         Сохранить
       </Button>
     </div>

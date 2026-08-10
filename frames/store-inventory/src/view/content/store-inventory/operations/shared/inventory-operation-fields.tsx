@@ -4,7 +4,7 @@ import { Caption, Field, Input, Label, Textarea } from '@sellgar/kit';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-interface InventoryOperationFieldsProps {
+interface IProps {
   inProcess: boolean;
   quantityLabel: string;
 }
@@ -14,7 +14,7 @@ interface InventoryOperationFormData {
   reason: string;
 }
 
-export const InventoryOperationFields: React.FC<InventoryOperationFieldsProps> = (props) => {
+export const InventoryOperationFields: React.FC<IProps> = (props) => {
   const { control } = useFormContext<InventoryOperationFormData>();
 
   return (

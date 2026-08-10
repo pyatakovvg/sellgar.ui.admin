@@ -6,13 +6,13 @@ import { useDependency, useLoaderData } from '@sellgar/app';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { CategoryListControllerInterface } from '../../../../classes/controller/category-list-controller.interface.ts';
-import { CategoryModifyControllerInterface } from '../../../../classes/controller/category-modify-controller.interface.ts';
+import { CategoryListControllerInterface } from '../../../../classes/controller/category-list/category-list-controller.interface.ts';
+import { CategoryModifyControllerInterface } from '../../../../classes/controller/category-modify/category-modify-controller.interface.ts';
 import type { IFormData } from '../form.schema.ts';
 
 import s from './default.module.scss';
 
-interface FieldsProps {
+interface IProps {
   inProcess: boolean;
 }
 
@@ -38,7 +38,7 @@ const flattenCategories = (items: CategoryEntity[], excludedUuid?: string, level
   });
 };
 
-export const Fields: React.FC<FieldsProps> = (props) => {
+export const Fields: React.FC<IProps> = (props) => {
   const fileService = useDependency(FileServiceInterface);
   const category = useLoaderData(CategoryModifyControllerInterface);
   const categories = useLoaderData(CategoryListControllerInterface);

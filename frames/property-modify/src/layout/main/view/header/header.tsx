@@ -3,7 +3,7 @@ import { useLoaderData } from '@sellgar/app';
 
 import React from 'react';
 
-import { PropertyModifyControllerInterface } from '../../../../classes/controller/property-modify-controller.interface.ts';
+import { PropertyModifyControllerInterface } from '../../../../classes/controller/property-modify/property-modify-controller.interface.ts';
 
 import s from './default.module.scss';
 
@@ -13,9 +13,7 @@ export const Header: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Typography size={'body-m'} weight={'medium'}>
-        <p className={s.label}>
-          {property ? 'Редактировать свойство' : 'Новое свойство'}
-        </p>
+        <p className={s.label}>{property ? 'Редактировать свойство' : 'Новое свойство'}</p>
       </Typography>
       <Drawer.Close />
     </div>

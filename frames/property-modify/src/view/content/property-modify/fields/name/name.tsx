@@ -6,18 +6,18 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import type { IFormData } from '../../form.schema.ts';
 
-interface NameProps {
+interface IProps {
   inProcess: boolean;
 }
 
-export const Name: React.FC<NameProps> = ({ inProcess }) => {
+export const Name: React.FC<IProps> = (props) => {
   const { control } = useFormContext<IFormData>();
 
   return (
     <Controller
       name={'name'}
       control={control}
-      disabled={inProcess}
+      disabled={props.inProcess}
       render={({ field, fieldState: { error } }) => (
         <Form.Fields>
           <Form.Fields.Field>
@@ -26,7 +26,12 @@ export const Name: React.FC<NameProps> = ({ inProcess }) => {
                 <Label label={'Наименование'} />
               </Field.Label>
               <Field.Content>
-                <Input {...field} target={error?.message ? 'destructive' : undefined} size={'md'} placeholder={'Наименование'} />
+                <Input
+                  {...field}
+                  target={error?.message ? 'destructive' : undefined}
+                  size={'md'}
+                  placeholder={'Наименование'}
+                />
               </Field.Content>
               {error?.message && (
                 <Field.Caption>

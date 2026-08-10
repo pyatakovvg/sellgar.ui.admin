@@ -1,12 +1,12 @@
-import { FormProvider, type Resolver, useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useLoaderData, useSubmit } from '@sellgar/app';
 
 import React from 'react';
 
-import { StoreInventoryContextControllerInterface } from '../../../../../classes/controller/context';
-import { WriteOffInventoryControllerInterface } from '../../../../../classes/controller/operation/write-off';
-import { STORE_INVENTORY_FORM_ID } from '../../../../../constants';
+import { StoreInventoryContextControllerInterface } from '../../../../../classes/controller/context/store-inventory-context-controller.interface.ts';
+import { WriteOffInventoryControllerInterface } from '../../../../../classes/controller/operation/write-off/write-off-inventory-controller.interface.ts';
+import { STORE_INVENTORY_FORM_ID } from '../../../../../constants/store-inventory.constants.ts';
 import { InventoryOperationFields } from '../shared';
 import { schema, type WriteOffInventoryFormData } from './form.schema.ts';
 
@@ -21,7 +21,7 @@ export const WriteOffInventoryForm: React.FC = () => {
       quantity: 1,
       reason: '',
     },
-    resolver: yupResolver(schema) as Resolver<WriteOffInventoryFormData>,
+    resolver: yupResolver(schema),
   });
 
   const handleSubmit = methods.handleSubmit(async (values) => {

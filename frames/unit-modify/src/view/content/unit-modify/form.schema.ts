@@ -6,8 +6,8 @@ export interface IFormData {
   description: string;
 }
 
-export const schema = yup.object({
+export const schema: yup.ObjectSchema<IFormData> = yup.object({
   code: yup.string().required('Необходимо заполнить'),
   name: yup.string().required('Необходимо заполнить'),
   description: yup.string().required('Необходимо заполнить'),
-}) as yup.ObjectSchema<IFormData>;
+});

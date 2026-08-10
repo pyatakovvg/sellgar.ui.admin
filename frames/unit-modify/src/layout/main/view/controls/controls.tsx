@@ -3,8 +3,8 @@ import { useController, useSubmit } from '@sellgar/app';
 
 import React from 'react';
 
-import { UnitModifyControllerInterface } from '../../../../classes/controller/unit-modify-controller.interface.ts';
-import { UNIT_MODIFY_FORM_ID } from '../../../../constants';
+import { UnitModifyControllerInterface } from '../../../../classes/controller/unit-modify/unit-modify-controller.interface.ts';
+import { UNIT_MODIFY_FORM_ID } from '../../../../constants/unit-modify.constants.ts';
 
 import s from './default.module.scss';
 
@@ -14,7 +14,13 @@ export const Controls: React.FC = () => {
 
   return (
     <div className={s.wrapper}>
-      <Button type={'button'} disabled={submit.inProcess} size={'sm'} style={'secondary'} onClick={() => controller.toList()}>
+      <Button
+        type={'button'}
+        disabled={submit.inProcess}
+        size={'sm'}
+        style={'secondary'}
+        onClick={() => void controller.close()}
+      >
         Отмена
       </Button>
       <Button type={'submit'} form={UNIT_MODIFY_FORM_ID} disabled={submit.inProcess} size={'sm'} target={'info'}>

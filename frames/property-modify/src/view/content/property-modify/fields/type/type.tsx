@@ -7,18 +7,18 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { propertyTypes } from '../../form-values.ts';
 import type { IFormData } from '../../form.schema.ts';
 
-interface TypeProps {
+interface IProps {
   inProcess: boolean;
 }
 
-export const Type: React.FC<TypeProps> = ({ inProcess }) => {
+export const Type: React.FC<IProps> = (props) => {
   const { control } = useFormContext<IFormData>();
 
   return (
     <Controller
       name={'type'}
       control={control}
-      disabled={inProcess}
+      disabled={props.inProcess}
       render={({ field, fieldState: { error } }) => (
         <Form.Fields>
           <Form.Fields.Field>
@@ -33,7 +33,7 @@ export const Type: React.FC<TypeProps> = ({ inProcess }) => {
                   optionValue={'name'}
                   options={propertyTypes}
                   value={field.value}
-                  disabled={inProcess}
+                  disabled={props.inProcess}
                   onBlur={field.onBlur}
                   onChange={field.onChange}
                 />

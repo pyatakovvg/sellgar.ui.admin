@@ -1,4 +1,4 @@
-import { CurrencyEntity } from '@library/domain';
+import type { CurrencyEntity } from '@library/domain';
 import { Badge, Caption, Checkbox, Field, Input, InputAmount2, Label, Select, TabMenu, Typography } from '@sellgar/kit';
 
 import React from 'react';
@@ -9,27 +9,27 @@ import { type ProductOption } from '../product-option.ts';
 
 import s from './default.module.scss';
 
-interface OffersProps {
+interface IProps {
   currencies: CurrencyEntity[];
   product?: ProductOption;
   fields: FieldArrayWithId<IFormData, 'offers', 'id'>[];
 }
 
-export const OffersTabs: React.FC<OffersProps> = ({ currencies, product, fields }) => {
+export const OffersTabs: React.FC<IProps> = (props) => {
   const {
     control,
     formState: { errors },
   } = useFormContext<IFormData>();
-  const variants = React.useMemo(() => product?.variants ?? [], [product]);
-  const firstVariantUuid = fields[0]?.variantUuid;
-  const tabMenuKey = React.useMemo(() => fields.map((offer) => offer.variantUuid).join('|'), [fields]);
+  const variants = React.useMemo(() => props.product?.variants ?? [], [props.product]);
+  const firstVariantUuid = props.fields[0]?.variantUuid;
+  const tabMenuKey = React.useMemo(() => props.fields.map((offer) => offer.variantUuid).join('|'), [props.fields]);
   const variantByUuid = React.useMemo(() => new Map(variants.map((variant) => [variant.uuid, variant])), [variants]);
 
-  if (!product && fields.length === 0) {
+  if (!props.product && props.fields.length === 0) {
     return null;
   }
 
-  if (product && variants.length === 0 && fields.length === 0) {
+  if (props.product && variants.length === 0 && props.fields.length === 0) {
     return (
       <div className={s.empty}>
         <Typography size={'caption-l'} weight={'regular'}>
@@ -44,7 +44,7 @@ export const OffersTabs: React.FC<OffersProps> = ({ currencies, product, fields 
       <TabMenu key={tabMenuKey} defaultTabName={firstVariantUuid}>
         <div className={s.tabs}>
           <TabMenu.Line size={'sm'}>
-            {fields.map((offer, index) => {
+            {props.fields.map((offer, index) => {
               const variant = variantByUuid.get(offer.variantUuid);
               const offerError = errors.offers?.[index];
               const hasErrors = !!(
@@ -65,7 +65,7 @@ export const OffersTabs: React.FC<OffersProps> = ({ currencies, product, fields 
             })}
           </TabMenu.Line>
         </div>
-        {fields.map((offer, index) => {
+        {props.fields.map((offer, index) => {
           return (
             <TabMenu.Content key={offer.id} name={offer.variantUuid}>
               <div className={s.fields}>
@@ -131,7 +131,7 @@ export const OffersTabs: React.FC<OffersProps> = ({ currencies, product, fields 
                         <Field.Content>
                           <Select
                             {...field}
-                            options={currencies}
+                            options={props.currencies}
                             optionKey={'code'}
                             optionValue={'code'}
                             onBlur={field.onBlur}

@@ -8,12 +8,12 @@ import { type ProductOption } from '../product-option.ts';
 
 import s from './default.module.scss';
 
-interface ProductProps {
+interface IProps {
   products: ProductOption[];
   onProductChange: (productUuid: string) => void;
 }
 
-export const ProductField: React.FC<ProductProps> = ({ products, onProductChange }) => {
+export const ProductField: React.FC<IProps> = (props) => {
   const { control } = useFormContext<IFormData>();
 
   return (
@@ -32,7 +32,7 @@ export const ProductField: React.FC<ProductProps> = ({ products, onProductChange
                   <Field.Content>
                     <Select
                       {...field}
-                      options={products}
+                      options={props.products}
                       optionKey={'uuid'}
                       optionValue={'name'}
                       onBlur={field.onBlur}
@@ -42,7 +42,7 @@ export const ProductField: React.FC<ProductProps> = ({ products, onProductChange
                         field.onChange(productUuid);
 
                         if (productUuid !== field.value) {
-                          onProductChange(productUuid);
+                          props.onProductChange(productUuid);
                         }
                       }}
                     />

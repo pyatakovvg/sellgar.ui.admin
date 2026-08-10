@@ -6,12 +6,12 @@ import * as RHF from 'react-hook-form';
 
 import * as FS from '../../form.schema.ts';
 
-interface DescriptionFieldProps {
+interface IProps {
   control: RHF.Control<FS.IFormData>;
   inProcess: boolean;
 }
 
-export const DescriptionField: React.FC<DescriptionFieldProps> = (props) => {
+export const DescriptionField: React.FC<IProps> = (props) => {
   const {
     field,
     fieldState: { error },

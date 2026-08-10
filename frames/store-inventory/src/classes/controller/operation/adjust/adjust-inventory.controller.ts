@@ -1,22 +1,22 @@
 import { StoreServiceInterface } from '@library/domain';
-import { Controller, FrameServiceInterface, Inject, type FrameControllerActionArgs } from '@sellgar/app';
-
 import {
-  AdjustInventoryActionPayload,
-  AdjustInventoryControllerInterface,
-} from './adjust-inventory-controller.interface.ts';
-import { StoreInventoryFrameParams } from '../../../params';
+  Controller,
+  FrameServiceInterface,
+  Inject,
+  RevalidateServiceInterface,
+} from '@sellgar/app';
+
+import { AdjustInventoryControllerInterface } from './adjust-inventory-controller.interface.ts';
 
 @Controller()
 export class AdjustInventoryController implements AdjustInventoryControllerInterface {
   constructor(
     @Inject(StoreServiceInterface) private readonly storeService: StoreServiceInterface,
     @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
-  async action(
-    args: FrameControllerActionArgs<StoreInventoryFrameParams, AdjustInventoryActionPayload>,
-  ): Promise<void> {
+  async action(args: Parameters<AdjustInventoryControllerInterface['action']>[0]): Promise<void> {
     await this.storeService.adjustInventory({
       commandId: crypto.randomUUID(),
       offerUuid: args.props.offerUuid,
@@ -25,6 +25,7 @@ export class AdjustInventoryController implements AdjustInventoryControllerInter
       reason: args.payload.reason || null,
     });
 
+    await this.revalidateService.revalidate();
     await this.frameService.close();
   }
 }

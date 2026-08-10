@@ -1,0 +1,31 @@
+import type { StoreProductEntity } from '@library/domain';
+import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@sellgar/app';
+
+import { StoreModifyFrameParams } from '../../params/frame.params.ts';
+
+export interface StoreModifyActionPayload {
+  shopUuid: string;
+  productUuid: string;
+  showing: boolean;
+  offers: {
+    uuid?: string;
+    variantUuid: string;
+    article: string;
+    currentPrice: {
+      value: string;
+      currencyCode: string;
+    };
+    showing: boolean;
+  }[];
+  expectedVersion?: number;
+}
+
+export abstract class StoreModifyControllerInterface extends FrameControllerInterface<StoreModifyFrameParams> {
+  abstract loader(args: FrameControllerLoaderArgs<StoreModifyFrameParams>): Promise<StoreProductEntity | undefined>;
+
+  abstract action(
+    args: FrameControllerActionArgs<StoreModifyFrameParams, StoreModifyActionPayload>,
+  ): Promise<StoreProductEntity>;
+
+  abstract close(): Promise<void>;
+}
