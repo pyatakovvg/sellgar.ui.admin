@@ -2,23 +2,23 @@ import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useSignInRequest } from '../../requests/sign-in.request';
+import { useSubmit } from '@sellgar/app';
+
+import { SignInControllerInterface } from '../../classes/controller/sign-in/sign-in-controller.interface.ts';
+import type { SignInInput } from '../../classes/controller/sign-in/input/sign-in.input.ts';
 
 import { Actions } from './actions';
 import { Fields } from './fields';
-import { schema, type TFormValues } from './schema';
+import { schema } from './schema';
 
 import s from './default.module.scss';
 
 export const Form: React.FC = () => {
-  const signInRequest = useSignInRequest();
-  const form = ReactHookForm.useForm<TFormValues>({
+  const submit = useSubmit(SignInControllerInterface);
+  const form = ReactHookForm.useForm<SignInInput>({
     resolver: yupResolver(schema, { abortEarly: false }),
   });
-
-  const handleSubmit = form.handleSubmit(async (values) => {
-    await signInRequest(values.login, values.password);
-  });
+  const handleSubmit = form.handleSubmit(submit);
 
   return (
     <ReactHookForm.FormProvider {...form}>

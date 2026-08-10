@@ -3406,16 +3406,14 @@ __metadata:
   resolution: "@page/sign-in@workspace:pages/sign-in"
   dependencies:
     "@hookform/resolvers": "npm:5.7.1"
-    "@library/push": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
     "@sellgar/kit": "npm:0.0.190"
     "@types/react": "npm:19.2.18"
     "@types/react-dom": "npm:19.2.4"
-    classnames: "npm:2.5.1"
     react: "npm:19.2.8"
     react-dom: "npm:19.2.8"
     react-hook-form: "npm:7.84.0"
-    react-router-dom: "npm:7.18.2"
     yup: "npm:1.7.1"
   languageName: unknown
   linkType: soft

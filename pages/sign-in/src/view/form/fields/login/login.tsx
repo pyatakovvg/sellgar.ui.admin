@@ -3,17 +3,14 @@ import { AtLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
-import { observer } from 'mobx-react';
 
-import { useInProcess } from '../../../../hooks/in-process.hook';
-import type { TFormValues } from '../../schema';
+import type { SignInInput } from '../../../../classes/controller/sign-in/input/sign-in.input.ts';
 
-const LoginComponent: React.FC = () => {
-  const inProcess = useInProcess();
+export const Login: React.FC = () => {
   const {
     register,
-    formState: { errors },
-  } = ReactHookForm.useFormContext<TFormValues>();
+    formState: { errors, isSubmitting },
+  } = ReactHookForm.useFormContext<SignInInput>();
   const errorMessage = errors.login?.message;
 
   return (
@@ -30,10 +27,10 @@ const LoginComponent: React.FC = () => {
           type={'email'}
           autoComplete={'email'}
           placeholder={'Email'}
-          disabled={inProcess}
+          disabled={isSubmitting}
         />
       </Field.Content>
-      {typeof errorMessage === 'string' && (
+      {errorMessage && (
         <Field.Caption>
           <Caption state={'destructive'} caption={errorMessage} />
         </Field.Caption>
@@ -41,5 +38,3 @@ const LoginComponent: React.FC = () => {
     </Field>
   );
 };
-
-export const Login = observer(LoginComponent);

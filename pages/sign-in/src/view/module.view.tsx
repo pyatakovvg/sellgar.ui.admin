@@ -7,7 +7,7 @@ import { Form } from './form';
 
 import s from './default.module.scss';
 
-export const SignInView: React.FC = () => {
+export const ModuleView: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <div className={s.container}>

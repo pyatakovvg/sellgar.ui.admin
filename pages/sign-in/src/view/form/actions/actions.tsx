@@ -1,29 +1,29 @@
 import { Button } from '@sellgar/kit';
 
 import React from 'react';
-import { observer } from 'mobx-react';
+import * as ReactHookForm from 'react-hook-form';
 
-import { useInProcess } from '../../../hooks/in-process.hook';
+import type { SignInInput } from '../../../classes/controller/sign-in/input/sign-in.input.ts';
 
 import s from './default.module.scss';
 
-const ActionsComponent: React.FC = () => {
-  const inProcess = useInProcess();
+export const Actions: React.FC = () => {
+  const {
+    formState: { isSubmitting },
+  } = ReactHookForm.useFormContext<SignInInput>();
 
   return (
     <div className={s.wrapper}>
       <div className={s.button}>
-        <Button type={'submit'} style={'primary'} inProcess={inProcess} disabled={inProcess}>
+        <Button type={'submit'} style={'primary'} inProcess={isSubmitting} disabled={isSubmitting}>
           Войти
         </Button>
       </div>
       <div className={s.button}>
-        <Button type={'button'} style={'ghost'} disabled={inProcess}>
+        <Button type={'button'} style={'ghost'} disabled={isSubmitting}>
           Забыли пароль?
         </Button>
       </div>
     </div>
   );
 };
-
-export const Actions = observer(ActionsComponent);
