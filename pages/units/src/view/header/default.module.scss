@@ -1,20 +1,19 @@
-
 .wrapper {
-
   display: flex;
   flex-direction: row;
   flex: 1 0;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.header {
-
+.title {
   display: flex;
-  flex-direction: column;
-  flex: 1 0;
+  flex-direction: row;
+  flex: 0 0 auto;
 }
 
-.content {
-
-  display: block;
+.create {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
 }

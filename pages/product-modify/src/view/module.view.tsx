@@ -2,53 +2,39 @@ import { Page } from '@library/design';
 import * as App from '@sellgar/app';
 
 import React from 'react';
-import * as ReactHookForm from 'react-hook-form';
-import * as ReactHookFormResolver from '@hookform/resolvers/yup';
+import * as RHF from 'react-hook-form';
+import * as YR from '@hookform/resolvers/yup';
+
+import { ProductFormMapper } from '../classes/controller/product/mapper/product-form.mapper.ts';
+import { ProductControllerInterface } from '../classes/controller/product/product-controller.interface.ts';
 
 import { Content } from './content';
 import { Controls } from './controls';
-import { ProductControllerInterface } from '../classes/controller/product-controller.interface.ts';
 
-import { schema } from './schema.ts';
-import type { IFormData } from './schema.ts';
-import { toProductFormData } from './form-values.ts';
+import * as FormSchema from './schema.ts';
 
 import s from './default.module.scss';
 
 const ModuleViewComponent: React.FC = () => {
-  const product = App.useLoaderData(ProductControllerInterface);
+  const loaderData = App.useLoaderData(ProductControllerInterface);
+  const product = loaderData.product;
   const isEdit = Boolean(product?.uuid);
   const submit = App.useSubmit(ProductControllerInterface);
 
-  const methods = ReactHookForm.useForm<IFormData>({
+  const form = RHF.useForm<FormSchema.IFormData>({
     mode: 'onBlur',
-    defaultValues: toProductFormData(product),
-    resolver: ReactHookFormResolver.yupResolver(schema),
+    defaultValues: ProductFormMapper.toFormInput(product),
+    resolver: YR.yupResolver(FormSchema.schema),
   });
 
   React.useEffect(() => {
-    methods.reset(toProductFormData(product));
-  }, [product?.uuid, product?.version]);
+    form.reset(ProductFormMapper.toFormInput(product));
+  }, [form, product?.uuid, product?.version]);
 
-  const handleSubmit = methods.handleSubmit(async (values: IFormData) => {
-    if (product?.uuid) {
-      const result = await submit({
-        uuid: product.uuid,
-        version: product.version,
-        ...values,
-      });
-
-      if (result) {
-        methods.reset(toProductFormData(result));
-      }
-      return;
-    }
-
-    await submit(values);
-  });
+  const handleSubmit = form.handleSubmit((input) => submit(input));
 
   return (
-    <ReactHookForm.FormProvider {...methods}>
+    <RHF.FormProvider {...form}>
       <form className={s.wrapper} onSubmit={handleSubmit}>
         <Page>
           <Page.Header>
@@ -62,7 +48,7 @@ const ModuleViewComponent: React.FC = () => {
           </Page.Content>
         </Page>
       </form>
-    </ReactHookForm.FormProvider>
+    </RHF.FormProvider>
   );
 };
 

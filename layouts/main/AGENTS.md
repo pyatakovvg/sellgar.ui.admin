@@ -4,15 +4,14 @@
 
 ## Назначение
 
-`@layout/main` - root visual wrapper приложения. Он подключает
-`ThemeWidgetProvider` и задаёт общий wrapper для всего app UI.
+`@layout/main` — root visual wrapper приложения и общий wrapper для всего app UI.
 
 Это root shell, а не navigation/auth/feature layout.
 
 ## Когда Открывать
 
-Открывать при изменениях root wrapper, placement `children`, подключения
-application-wide provider или взаимодействия с `@widget/theme`.
+Открывать при изменениях root wrapper, placement `children` и подключения
+application-wide provider.
 
 ## Границы
 
@@ -25,4 +24,3 @@ application-wide provider или взаимодействия с `@widget/theme`
 ## Проверка
 
 - Изменение Root wrapper/provider: build и smoke app startup.
-- Изменение Theme provider: проверить переключение темы.

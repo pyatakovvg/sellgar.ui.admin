@@ -1,1 +1,1 @@
-export * from './module.tsx';
+export { UnitsModule } from './units.module.tsx';

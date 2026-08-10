@@ -1,29 +1,27 @@
-import { UnitEntity } from '@library/domain';
-import { Table as TableComponent } from '@sellgar/kit';
 import { UnitModifyFrame } from '@frame/unit-modify';
-import { useFrame } from '@sellgar/app';
+import * as App from '@sellgar/app';
+import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
 
+import { UnitControllerInterface } from '../../../classes/controller/unit/unit-controller.interface.ts';
+
+import { Description } from './description';
 import { Name } from './name';
-import { Info } from './info';
 
 import s from './default.module.scss';
 
-interface IProps {
-  data: UnitEntity[];
-}
-
-export const Table: React.FC<IProps> = (props) => {
-  const frame = useFrame(UnitModifyFrame);
+export const Table: React.FC = () => {
+  const units = App.useLoaderData(UnitControllerInterface);
+  const unitModifyFrame = App.useFrame(UnitModifyFrame);
 
   return (
     <div className={s.wrapper}>
       <TableComponent
-        data={{ nodes: props.data }}
+        data={{ nodes: units.data }}
         row={{
           handlers: {
-            click: ({ row }) => void frame.open({ uuid: row.uuid }),
+            click: ({ row }) => void unitModifyFrame.open({ uuid: row.uuid }),
           },
         }}
       >
@@ -44,7 +42,7 @@ export const Table: React.FC<IProps> = (props) => {
                 <>
                   <Head label={'Описание'} />
                   <Cell>
-                    <Info />
+                    <Description />
                   </Cell>
                 </>
               )}

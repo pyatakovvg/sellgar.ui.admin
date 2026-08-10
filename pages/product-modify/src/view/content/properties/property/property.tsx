@@ -1,13 +1,16 @@
 import * as App from '@sellgar/app';
-import { Badge, Button, Caption, Checkbox, Datepicker, Field, Input, Select } from '@sellgar/kit';
+import { Button, Caption, Field, Select } from '@sellgar/kit';
 import { DeleteBin5LineIcon, DotsOutLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
-import * as ReactHookForm from 'react-hook-form';
 import * as Motion from 'framer-motion';
+import * as RHF from 'react-hook-form';
 
-import { ProductFormOptionsControllerInterface } from '../../../../classes/controller/product-form-options-controller.interface.ts';
+import { PropertyOptionsControllerInterface } from '../../../../classes/controller/property-options/property-options-controller.interface.ts';
 import type { IFormData } from '../../../schema.ts';
+
+import { ValueFactory } from './value-factory';
+
 import s from './default.module.scss';
 
 type PropertiesFieldName = 'properties' | `variants.${number}.properties`;
@@ -99,7 +102,7 @@ const getPropertyOptionUuidPath = (name: PropertiesFieldName, index: number): Pr
 };
 
 export const Property: React.FC<IProps> = (props) => {
-  const { control, setValue, getFieldState, formState } = ReactHookForm.useFormContext<IFormData>();
+  const { control, setValue } = RHF.useFormContext<IFormData>();
 
   const y = Motion.useMotionValue(0);
   const dragControls = Motion.useDragControls();
@@ -107,18 +110,16 @@ export const Property: React.FC<IProps> = (props) => {
   const propertyPath = getPropertyUuidPath(props.name, props.index);
   const valuePath = getPropertyValuePath(props.name, props.index);
   const optionUuidPath = getPropertyOptionUuidPath(props.name, props.index);
-  const productProperties = ReactHookForm.useWatch({ control, name: 'properties' }) ?? [];
-  const variants = ReactHookForm.useWatch({ control, name: 'variants' }) ?? [];
+  const productProperties = RHF.useWatch({ control, name: 'properties' }) ?? [];
+  const variants = RHF.useWatch({ control, name: 'variants' }) ?? [];
   const location = { index: props.index, scope: props.scope, variantIndex: props.variantIndex };
   const currentPropertyUuid = getCurrentPropertyUuid(location, productProperties, variants);
-  const { properties } = App.useLoaderData(ProductFormOptionsControllerInterface);
+  const properties = App.useLoaderData(PropertyOptionsControllerInterface).data;
   const property = properties.find((item) => item.uuid === currentPropertyUuid);
   const blockedPropertyUuids = getBlockedPropertyUuids(location, productProperties, variants, currentPropertyUuid);
   const options = properties.filter(
     (item) => item.uuid === currentPropertyUuid || !blockedPropertyUuids.has(item.uuid),
   );
-  const valueState = getFieldState(valuePath, formState);
-  const optionState = getFieldState(optionUuidPath, formState);
 
   const handlePropertyChange = (value?: string) => {
     const selectedProperty = properties.find((item) => item.uuid === value);
@@ -147,7 +148,7 @@ export const Property: React.FC<IProps> = (props) => {
         </div>
       </div>
       <div className={s.field}>
-        <ReactHookForm.Controller
+        <RHF.Controller
           control={control}
           name={propertyPath}
           render={({ field, fieldState: { error } }) => (
@@ -163,125 +164,21 @@ export const Property: React.FC<IProps> = (props) => {
                   onBlur={() => field.onBlur()}
                 />
               </Field.Content>
-              {error?.message && (
+              {error?.message ? (
                 <Field.Caption>
                   <Caption state={'destructive'} caption={error.message} />
                 </Field.Caption>
-              )}
+              ) : null}
             </Field>
           )}
         />
       </div>
       <div className={s.field}>
-        {property?.type === 'OPTION' && (
-          <ReactHookForm.Controller
-            control={control}
-            name={optionUuidPath}
-            render={({ field }) => (
-              <Field>
-                <Field.Content>
-                  <Select
-                    optionKey={'uuid'}
-                    optionValue={'name'}
-                    options={property.options ?? []}
-                    target={optionState.error?.message || valueState.error?.message ? 'destructive' : undefined}
-                    value={field.value ?? undefined}
-                    onChange={(value) => {
-                      const option = property.options?.find((item) => item.uuid === value);
-
-                      field.onChange(value ?? null);
-                      setValue(valuePath, option?.code ?? '', { shouldValidate: true, shouldDirty: true });
-                    }}
-                    onBlur={() => field.onBlur()}
-                  />
-                </Field.Content>
-                {(optionState.error?.message || valueState.error?.message) && (
-                  <Field.Caption>
-                    <Caption
-                      state={'destructive'}
-                      caption={optionState.error?.message ?? valueState.error?.message ?? ''}
-                    />
-                  </Field.Caption>
-                )}
-              </Field>
-            )}
-          />
-        )}
-        {property?.type === 'BOOLEAN' && (
-          <ReactHookForm.Controller
-            control={control}
-            name={valuePath}
-            render={({ field, fieldState: { error } }) => (
-              <Field>
-                <Field.Content>
-                  <Checkbox
-                    checked={field.value === 'true'}
-                    label={'Да'}
-                    onBlur={field.onBlur}
-                    onChange={(event) => field.onChange(event.currentTarget.checked ? 'true' : 'false')}
-                  />
-                </Field.Content>
-                {error?.message && (
-                  <Field.Caption>
-                    <Caption state={'destructive'} caption={error.message} />
-                  </Field.Caption>
-                )}
-              </Field>
-            )}
-          />
-        )}
-        {property?.type === 'DATE' && (
-          <ReactHookForm.Controller
-            control={control}
-            name={valuePath}
-            render={({ field, fieldState: { error } }) => (
-              <Field>
-                <Field.Content>
-                  <Datepicker
-                    value={field.value || undefined}
-                    target={error?.message ? 'destructive' : undefined}
-                    onChange={(value) => field.onChange(value ?? '')}
-                    onBlur={() => field.onBlur()}
-                  />
-                </Field.Content>
-                {error?.message && (
-                  <Field.Caption>
-                    <Caption state={'destructive'} caption={error.message} />
-                  </Field.Caption>
-                )}
-              </Field>
-            )}
-          />
-        )}
-        {property?.type !== 'OPTION' && property?.type !== 'BOOLEAN' && property?.type !== 'DATE' && (
-          <ReactHookForm.Controller
-            control={control}
-            name={valuePath}
-            render={({ field, fieldState: { error } }) => (
-              <Field>
-                <Field.Content>
-                  <Input
-                    badge={property?.unit ? <Badge label={property?.unit.name} /> : undefined}
-                    {...field}
-                    type={property?.type === 'NUMBER' ? 'number' : 'text'}
-                    value={field.value ?? ''}
-                    target={error?.message ? 'destructive' : undefined}
-                  />
-                </Field.Content>
-                {error?.message && (
-                  <Field.Caption>
-                    <Caption state={'destructive'} caption={error.message} />
-                  </Field.Caption>
-                )}
-              </Field>
-            )}
-          />
-        )}
+        <ValueFactory property={property} valuePath={valuePath} optionUuidPath={optionUuidPath} />
       </div>
       <div className={s.field}>
-        <Button
+        <Button.Icon
           type={'button'}
-          form={'icon'}
           size={'sm'}
           style={'ghost'}
           target={'destructive'}

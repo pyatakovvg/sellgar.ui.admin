@@ -11,9 +11,11 @@ import {
   StoreLineIcon,
   UnsplashLineIcon,
 } from '@sellgar/kit/icons';
-import { ApplicationStoreInterface, useDependency } from '@sellgar/app';
 import { ProfileEntity } from '@library/domain';
-import { WidgetView } from '@widget/theme';
+import * as App from '@sellgar/app';
+import { ApplicationStoreInterface, WidgetHost } from '@sellgar/app';
+import { LogoutWidget } from '@widget/logout';
+import { ThemeWidget } from '@widget/theme';
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
@@ -39,7 +41,7 @@ const NavigationItem: React.FC<NavigationItemProps> = ({ caption, icon, to }) =>
 };
 
 export const Aside = () => {
-  const dataStore = useDependency(ApplicationStoreInterface);
+  const dataStore = App.useDependency(ApplicationStoreInterface);
   const profile = dataStore.get(ProfileEntity);
 
   return (
@@ -77,8 +79,9 @@ export const Aside = () => {
         </Sidebar.Middle>
 
         <Sidebar.Bottom>
-          <WidgetView />
+          <WidgetHost token={ThemeWidget} props={{}} />
           <NavigationItem to={'/settings'} icon={<Settings3LineIcon />} caption={'Настройки'} />
+          <WidgetHost token={LogoutWidget} />
         </Sidebar.Bottom>
       </Sidebar>
     </div>

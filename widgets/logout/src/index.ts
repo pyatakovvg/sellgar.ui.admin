@@ -1,1 +1,1 @@
-export { Widget } from './widget.tsx';
+export { LogoutWidget } from './logout.widget.tsx';

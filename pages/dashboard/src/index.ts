@@ -1,1 +1,1 @@
-export * from './module.tsx';
+export { DashboardModule } from './dashboard.module.tsx';

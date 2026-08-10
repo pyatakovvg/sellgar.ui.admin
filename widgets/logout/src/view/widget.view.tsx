@@ -1,20 +1,18 @@
-import { Button, Icon, Animate } from '@sellgar/kit';
-import { useController } from '@sellgar/app';
+import * as App from '@sellgar/app';
+import { Button } from '@sellgar/kit';
+import { LogoutBoxLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
-import { observer } from 'mobx-react';
+
+import { LogoutControllerInterface } from '../classes/controller/logout/logout-controller.interface.ts';
 
 import { Confirm } from './confirm';
 
-import { useLogout } from '../hooks/logout.request.ts';
-import { LogoutControllerInterface } from '../classes/controller/logout-controller.interface.ts';
+import s from './default.module.scss';
 
-export const WidgetView: React.FC = observer(() => {
+export const WidgetView: React.FC = () => {
   const [isConfirm, setConfirm] = React.useState(false);
-
-  const controller = useController(LogoutControllerInterface);
-
-  const logout = useLogout();
+  const submit = App.useSubmit(LogoutControllerInterface);
 
   const handleExit = () => {
     setConfirm(true);
@@ -23,7 +21,7 @@ export const WidgetView: React.FC = observer(() => {
   const handleApply = async () => {
     setConfirm(false);
 
-    await logout();
+    await submit();
   };
 
   const handleCancel = () => {
@@ -31,24 +29,18 @@ export const WidgetView: React.FC = observer(() => {
   };
 
   return (
-    <>
+    <div className={s.wrapper}>
       <Button
         style={'secondary'}
         size={'sm'}
-        leadIcon={
-          controller.logoutStore.inProcess ? (
-            <Animate.Spin>
-              <Icon icon={'loader-4-fill'} />
-            </Animate.Spin>
-          ) : (
-            <Icon icon={'logout-box-line'} />
-          )
-        }
+        disabled={submit.inProcess}
+        inProcess={submit.inProcess}
+        leadIcon={<LogoutBoxLineIcon />}
         onClick={handleExit}
       >
         Выйти
       </Button>
       <Confirm open={isConfirm} onApply={handleApply} onCancel={handleCancel} />
-    </>
+    </div>
   );
-});
+};

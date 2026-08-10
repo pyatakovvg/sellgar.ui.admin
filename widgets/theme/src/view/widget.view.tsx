@@ -1,28 +1,32 @@
-import { ButtonGroup, Button, Typography } from '@sellgar/kit';
+import * as App from '@sellgar/app';
+import { Button, ButtonGroup, Typography } from '@sellgar/kit';
 import { ShieldUserLineIcon, SunFillIcon, SunLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 
-import { context } from '../widget.context.ts';
+import type { ThemeWidgetProps } from '../classes/controller/theme/dto/theme-widget-props.dto.ts';
+import { ThemeControllerInterface } from '../classes/controller/theme/theme-controller.interface.ts';
+
+import { PreferenceIconFactory } from './preference-icon-factory';
 
 import s from './default.module.scss';
 
-interface IProps {
-  isOnlyIcon?: boolean;
-}
+const WidgetViewComponent: React.FC = () => {
+  const props = App.useWidgetProps<ThemeWidgetProps>();
+  const theme = App.useLoaderData(ThemeControllerInterface);
+  const submit = App.useSubmit(ThemeControllerInterface);
 
-export const WidgetView: React.FC<IProps> = (props) => {
-  const { setTheme, preference } = React.useContext(context);
-
-  if (props.isOnlyIcon) {
-    switch (preference) {
-      case 'dark':
-        return <Button.Icon size={'sm'} style={'secondary'} leadIcon={<SunFillIcon />} />;
-      case 'light':
-        return <Button.Icon size={'sm'} style={'secondary'} leadIcon={<SunLineIcon />} />;
-      default:
-        return <Button.Icon size={'sm'} style={'secondary'} leadIcon={<ShieldUserLineIcon />} />;
-    }
+  if (props.isOnlyIcon === true) {
+    return (
+      <Button.Icon
+        aria-label={'Сменить тему'}
+        size={'sm'}
+        style={'secondary'}
+        disabled={submit.inProcess}
+        leadIcon={<PreferenceIconFactory preference={theme.preference} />}
+        onClick={() => void submit({})}
+      />
+    );
   }
 
   return (
@@ -33,23 +37,32 @@ export const WidgetView: React.FC<IProps> = (props) => {
 
       <ButtonGroup size={'sm'}>
         <ButtonGroup.Icon
-          isActive={preference === 'system'}
+          disabled={submit.inProcess}
+          isActive={theme.preference === 'system'}
           leadIcon={<ShieldUserLineIcon />}
-          onClick={() => setTheme(undefined)}
+          onClick={() => void submit({ preference: 'system' })}
         >
           Системная
         </ButtonGroup.Icon>
         <ButtonGroup.Icon
-          isActive={preference === 'light'}
+          disabled={submit.inProcess}
+          isActive={theme.preference === 'light'}
           leadIcon={<SunLineIcon />}
-          onClick={() => setTheme('light')}
+          onClick={() => void submit({ preference: 'light' })}
         >
           Светлая
         </ButtonGroup.Icon>
-        <ButtonGroup.Icon isActive={preference === 'dark'} leadIcon={<SunFillIcon />} onClick={() => setTheme('dark')}>
+        <ButtonGroup.Icon
+          disabled={submit.inProcess}
+          isActive={theme.preference === 'dark'}
+          leadIcon={<SunFillIcon />}
+          onClick={() => void submit({ preference: 'dark' })}
+        >
           Темная
         </ButtonGroup.Icon>
       </ButtonGroup>
     </div>
   );
 };
+
+export const WidgetView = App.reactive(WidgetViewComponent);

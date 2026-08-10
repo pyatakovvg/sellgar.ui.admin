@@ -11,14 +11,17 @@
   "dependencies": {
     "@frame/store-inventory": "0.0.1",
     "@frame/store-modify": "0.0.1",
-    "@library/design": "0.0.1",
+    "@layout/navigate": "0.0.1",
     "@library/domain": "0.0.1",
+    "@library/provider": "0.0.1",
     "@sellgar/app": "0.0.1",
     "@sellgar/kit": "0.0.190",
-    "classnames": "2.5.1",
+    "@utils/format": "0.0.1",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "react-router-dom": "7.18.2"
+    "react-hook-form": "7.84.0"
   },
   "devDependencies": {
     "@types/react": "19.2.18",

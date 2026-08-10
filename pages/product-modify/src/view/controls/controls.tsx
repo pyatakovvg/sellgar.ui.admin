@@ -3,7 +3,7 @@ import { Button } from '@sellgar/kit';
 
 import React from 'react';
 
-import { ProductControllerInterface } from '../../classes/controller/product-controller.interface.ts';
+import { ProductControllerInterface } from '../../classes/controller/product/product-controller.interface.ts';
 
 import s from './default.module.scss';
 

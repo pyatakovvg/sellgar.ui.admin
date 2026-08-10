@@ -1,13 +1,14 @@
-import { Typography, useCellData } from '@sellgar/kit';
-import { StoreProductEntity } from '@library/domain';
-import { reactive } from '@sellgar/app';
+import type { StoreProductEntity } from '@library/domain';
+import * as App from '@sellgar/app';
+import * as Kit from '@sellgar/kit';
+import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-export const Shop: React.FC = reactive(() => {
-  const { data } = useCellData<StoreProductEntity>();
+const ShopComponent: React.FC = () => {
+  const { data } = Kit.useCellData<StoreProductEntity>();
 
   return (
     <div className={s.wrapper}>
@@ -16,4 +17,6 @@ export const Shop: React.FC = reactive(() => {
       </Typography>
     </div>
   );
-});
+};
+
+export const Shop = App.reactive(ShopComponent);

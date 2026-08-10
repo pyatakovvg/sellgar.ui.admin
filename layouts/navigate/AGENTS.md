@@ -11,3 +11,5 @@
 - Использовать SVG-иконки из `@sellgar/kit/icons`.
 - Desktop/tablet поведение должно оставаться согласованным.
 - Не добавлять page-specific loaders или mutations.
+- Theme и logout controls рендерить через `WidgetHost` с публичными tokens
+  `ThemeWidget` и `LogoutWidget`.

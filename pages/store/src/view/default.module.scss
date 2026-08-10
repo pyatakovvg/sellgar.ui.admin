@@ -2,6 +2,19 @@
   display: flex;
   flex-direction: column;
   flex: 1 0;
-  padding: 24px;
+  padding: var(--numbers-24);
   gap: var(--numbers-24);
+}
+
+.header,
+.filter {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
 }

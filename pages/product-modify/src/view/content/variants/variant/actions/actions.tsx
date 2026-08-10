@@ -13,9 +13,8 @@ export const Actions: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <div className={s.action}>
-        <Button
+        <Button.Icon
           type={'button'}
-          form={'icon'}
           size={'sm'}
           style={'ghost'}
           leadIcon={<FileCopyLineIcon />}
@@ -23,9 +22,8 @@ export const Actions: React.FC = () => {
         />
       </div>
       <div className={s.action}>
-        <Button
+        <Button.Icon
           type={'button'}
-          form={'icon'}
           size={'sm'}
           style={'ghost'}
           target={'destructive'}

@@ -1,1 +1,1 @@
-export * from './module.tsx';
+export { CategoriesModule } from './categories.module.tsx';

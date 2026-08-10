@@ -7,9 +7,12 @@
   overflow: auto;
 }
 
+.indentation {
+  flex: 0 0 var(--numbers-12);
+}
+
 .content {
   display: flex;
-  flex-direction: column;
   flex: 1 0;
   margin: 0 0 0 var(--numbers-8);
   overflow: auto;

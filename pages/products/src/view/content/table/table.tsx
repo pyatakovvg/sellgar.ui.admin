@@ -3,7 +3,7 @@ import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
 
-import { ProductsControllerInterface } from '../../../classes/controller/products-controller.interface.ts';
+import { ProductControllerInterface } from '../../../classes/controller/product/product-controller.interface.ts';
 
 import { Name } from './name';
 import { Category } from './category';
@@ -11,8 +11,8 @@ import { Category } from './category';
 import s from './default.module.scss';
 
 export const Table: React.FC = () => {
-  const products = App.useLoaderData(ProductsControllerInterface);
-  const navigate = App.useNavigate();
+  const controller = App.useController(ProductControllerInterface);
+  const products = App.useLoaderData(ProductControllerInterface);
 
   return (
     <div className={s.wrapper}>
@@ -20,7 +20,7 @@ export const Table: React.FC = () => {
         data={{ nodes: products.data }}
         row={{
           handlers: {
-            click: ({ row }) => void navigate.to('/products/' + row.uuid),
+            click: ({ row }) => void controller.open(row.uuid),
           },
         }}
       >

@@ -1,27 +1,28 @@
 import React from 'react';
-import * as ReactHookForm from 'react-hook-form';
+import * as RHF from 'react-hook-form';
 
+import { ProductFormMapper } from '../../../classes/controller/product/mapper/product-form.mapper.ts';
+import type { IFormData } from '../../schema.ts';
+
+import { VariantsContext } from './context/variants.context.ts';
 import { Header } from './header';
 import { Variant } from './variant';
 
-import { VariantsContext } from './context/variants.context.ts';
-import { copyVariantFormData, createEmptyVariant } from '../../form-values.ts';
-import type { IFormData } from '../../schema.ts';
 import s from './default.module.scss';
 
 export const Variants: React.FC = () => {
-  const { control, getValues } = ReactHookForm.useFormContext<IFormData>();
-  const { fields, append, insert, remove } = ReactHookForm.useFieldArray({ control, name: 'variants' });
+  const { control, getValues } = RHF.useFormContext<IFormData>();
+  const { fields, append, insert, remove } = RHF.useFieldArray({ control, name: 'variants' });
 
   const contextValue = React.useMemo(
     () => ({
-      add: () => append(createEmptyVariant()),
+      add: () => append(ProductFormMapper.createEmptyVariant()),
     }),
     [append],
   );
 
   const handleCopy = (index: number) => {
-    insert(index + 1, copyVariantFormData(getValues(`variants.${index}`)));
+    insert(index + 1, ProductFormMapper.copyVariant(getValues(`variants.${index}`)));
   };
 
   return (

@@ -4,14 +4,14 @@ import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
 
-import { ShopsControllerInterface } from '../../../classes/controller/shops-controller.interface.ts';
+import { ShopControllerInterface } from '../../../classes/controller/shop/shop-controller.interface.ts';
 
 import { Name } from './name';
 
 import s from './default.module.scss';
 
 export const Table: React.FC = () => {
-  const shops = App.useLoaderData(ShopsControllerInterface);
+  const shops = App.useLoaderData(ShopControllerInterface);
   const shopModifyFrame = App.useFrame(ShopModifyFrame);
 
   return (

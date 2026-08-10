@@ -1,51 +1,49 @@
-import * as yup from 'yup';
+import * as Yup from 'yup';
 
-import type { ProductFormData } from './form-values.ts';
+import type { ProductFormInput } from '../classes/controller/product/input/product-form.input.ts';
 
-const requiredUuidSelect = () => yup.string().uuid('Необходимо выбрать').required('Необходимо выбрать');
+const requiredUuidSelect = () => Yup.string().uuid('Необходимо выбрать').required('Необходимо выбрать');
 
-export const schema: yup.ObjectSchema<ProductFormData> = yup.object({
-  name: yup.string().required('Необходимо заполнить'),
-  brandUuid: yup.string().required('Необходимо выбрать'),
-  categoryUuid: yup.string().required('Необходимо выбрать'),
-  description: yup.string().required('Необходимо заполнить'),
-  properties: yup
-    .array()
+export const schema: Yup.ObjectSchema<ProductFormInput> = Yup.object({
+  uuid: Yup.string().uuid().optional(),
+  version: Yup.number().integer().optional(),
+  name: Yup.string().required('Необходимо заполнить'),
+  brandUuid: Yup.string().required('Необходимо выбрать'),
+  categoryUuid: Yup.string().required('Необходимо выбрать'),
+  description: Yup.string().required('Необходимо заполнить'),
+  properties: Yup.array()
     .of(
-      yup.object({
-        uuid: yup.string().optional(),
+      Yup.object({
+        uuid: Yup.string().optional(),
         propertyUuid: requiredUuidSelect(),
-        optionUuid: yup.string().uuid('Необходимо выбрать').nullable().optional(),
-        value: yup.string().required('Необходимо заполнить'),
+        optionUuid: Yup.string().uuid('Необходимо выбрать').nullable().optional(),
+        value: Yup.string().required('Необходимо заполнить'),
       }),
     )
     .required(),
-  variants: yup
-    .array()
+  variants: Yup.array()
     .of(
-      yup.object({
-        images: yup
-          .array()
+      Yup.object({
+        images: Yup.array()
           .of(
-            yup.object({
-              uuid: yup.string().optional(),
-              imageUuid: yup.string().optional(),
-              file: yup.mixed<File>().optional(),
-              alt: yup.string().nullable().optional(),
+            Yup.object({
+              uuid: Yup.string().optional(),
+              imageUuid: Yup.string().optional(),
+              file: Yup.mixed<File>().optional(),
+              alt: Yup.string().nullable().optional(),
             }),
           )
           .required(),
-        uuid: yup.string().optional(),
-        name: yup.string().required('Необходимо заполнить'),
-        description: yup.string().required('Необходимо заполнить'),
-        properties: yup
-          .array()
+        uuid: Yup.string().optional(),
+        name: Yup.string().required('Необходимо заполнить'),
+        description: Yup.string().required('Необходимо заполнить'),
+        properties: Yup.array()
           .of(
-            yup.object({
-              uuid: yup.string().optional(),
+            Yup.object({
+              uuid: Yup.string().optional(),
               propertyUuid: requiredUuidSelect(),
-              optionUuid: yup.string().uuid('Необходимо выбрать').nullable().optional(),
-              value: yup.string().required('Необходимо заполнить'),
+              optionUuid: Yup.string().uuid('Необходимо выбрать').nullable().optional(),
+              value: Yup.string().required('Необходимо заполнить'),
             }),
           )
           .required(),
@@ -55,4 +53,4 @@ export const schema: yup.ObjectSchema<ProductFormData> = yup.object({
     .required(),
 });
 
-export type IFormData = yup.InferType<typeof schema>;
+export type IFormData = Yup.InferType<typeof schema>;

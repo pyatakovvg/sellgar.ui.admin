@@ -4,26 +4,26 @@
 
 ## Назначение
 
-`@widget/theme` - provider темы и view переключателя темы. Хранит настройку
-темы, учитывает `prefers-color-scheme`, выставляет `data-theme` на `html` и даёт
-UI переключения темы.
-
-Пакет экспортирует React provider/view напрямую и не является декларацией
-`@sellgar/app` widget.
+`@widget/theme` — runtime Widget переключения темы. Хранит настройку темы,
+учитывает `prefers-color-scheme`, выставляет `data-theme` на `html` и даёт UI
+переключения темы.
 
 ## Границы
 
-- Публичные экспорты: `WidgetProvider`, `WidgetView`.
-- Публичные props `WidgetView`: `isOnlyIcon?: boolean`.
-- Внутренние hooks/context не экспортировать без явной потребности внешних
-  потребителей.
+- Публичный экспорт: `ThemeWidget`.
+- Widget props содержат `isOnlyIcon?: boolean` и выводятся потребителем из
+  `WidgetDefinition`; отдельно их не экспортировать.
+- Не создавать `widget.provider.tsx` и приватный React Context. Lifecycle темы
+  реализовывать runtime provider из `src/providers/`.
+- Preference меняется через controller action, а widget-owned состояние хранится
+  в локальном store.
 - Storage key/value для настройки темы считать задачей миграции.
 - Общие settings/preferences, backend profile settings, design tokens, route
   policies и правила размещения в layout здесь не размещать.
 
 ## Проверка
 
-- Изменение provider/storage/system theme: сборка и ручная проверка
+- Изменение runtime provider/storage/system theme: сборка и ручная проверка
   переключения темы.
-- Изменение view: проверить потребителей в main/navigate layouts.
+- Изменение view: проверить потребителей в navigate layout.
 - Изменение DOM/theme-контракта: проверить `data-theme` и визуальный результат.

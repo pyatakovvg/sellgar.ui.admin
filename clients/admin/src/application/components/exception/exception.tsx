@@ -2,13 +2,13 @@ import { UnauthorizedException } from '@library/domain';
 import { useException } from '@sellgar/app';
 
 import React from 'react';
-import { useRouteError, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import { Default } from './default';
 import { Validation } from './validation';
 
 export const Exception: React.FC = () => {
-  const error = useRouteError() as Error;
+  const error = useException();
 
   if (error instanceof UnauthorizedException) {
     return <Navigate to={'/sign-in'} />;
@@ -17,7 +17,7 @@ export const Exception: React.FC = () => {
   if (Array.isArray(error)) {
     return <Validation />;
   }
-  return <Default error={error} />;
+  return <Default error={normalizeError(error)} />;
 };
 
 export const Failed: React.FC = () => {

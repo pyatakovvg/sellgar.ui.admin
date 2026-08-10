@@ -3,9 +3,9 @@ import * as App from '@sellgar/app';
 import { Caption, Field, Label, Select } from '@sellgar/kit';
 
 import React from 'react';
-import * as ReactHookForm from 'react-hook-form';
+import * as RHF from 'react-hook-form';
 
-import { ProductFormOptionsControllerInterface } from '../../../../../classes/controller/product-form-options-controller.interface.ts';
+import { CategoryOptionsControllerInterface } from '../../../../../classes/controller/category-options/category-options-controller.interface.ts';
 import type { IFormData } from '../../../../schema.ts';
 
 type TCategoryOption = CategoryEntity & {
@@ -23,12 +23,12 @@ const flattenCategories = (items: CategoryEntity[], level = 0): TCategoryOption[
 };
 
 export const Category: React.FC = () => {
-  const { control } = ReactHookForm.useFormContext<IFormData>();
-  const options = App.useLoaderData(ProductFormOptionsControllerInterface);
-  const categoryOptions = React.useMemo(() => flattenCategories(options.categories), [options.categories]);
+  const { control } = RHF.useFormContext<IFormData>();
+  const categories = App.useLoaderData(CategoryOptionsControllerInterface);
+  const categoryOptions = React.useMemo(() => flattenCategories(categories.data), [categories.data]);
 
   return (
-    <ReactHookForm.Controller
+    <RHF.Controller
       control={control}
       name={'categoryUuid'}
       render={({ field, fieldState: { error } }) => (
@@ -47,11 +47,11 @@ export const Category: React.FC = () => {
               onBlur={field.onBlur}
             />
           </Field.Content>
-          {error?.message && (
+          {error?.message ? (
             <Field.Caption>
               <Caption state={'destructive'} caption={error.message} />
             </Field.Caption>
-          )}
+          ) : null}
         </Field>
       )}
     />

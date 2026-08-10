@@ -10,7 +10,10 @@ export const Name: React.FC = () => {
   const { deps, data } = Kit.useCellData<CategoryEntity>();
 
   return (
-    <div className={s.wrapper} style={{ padding: `0 0 0 var(--numbers-${deps * 12})` }}>
+    <div className={s.wrapper}>
+      {Array.from({ length: deps }, (_, depth) => (
+        <span key={depth} className={s.indentation} aria-hidden={true} />
+      ))}
       <div className={s.content}>
         <Typography size={'caption-l'} weight={'semi-bold'}>
           <p className={s.text}>{data.name}</p>

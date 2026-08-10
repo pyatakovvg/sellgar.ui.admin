@@ -3,13 +3,14 @@ import { AddLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 import * as Motion from 'framer-motion';
-import * as ReactHookForm from 'react-hook-form';
+import * as RHF from 'react-hook-form';
+
+import { ProductFormMapper } from '../../../classes/controller/product/mapper/product-form.mapper.ts';
+import type { IFormData } from '../../schema.ts';
 
 import { Empty } from './empty';
 import { Property } from './property';
 
-import { createEmptyProperty } from '../../form-values.ts';
-import type { IFormData } from '../../schema.ts';
 import s from './default.module.scss';
 
 type PropertiesFieldName = 'properties' | `variants.${number}.properties`;
@@ -22,14 +23,14 @@ interface IProps {
 }
 
 export const Properties: React.FC<IProps> = (props) => {
-  const { control } = ReactHookForm.useFormContext<IFormData>();
-  const { fields, append, remove, move } = ReactHookForm.useFieldArray({
+  const { control } = RHF.useFormContext<IFormData>();
+  const { fields, append, remove, move } = RHF.useFieldArray({
     control,
     name: props.name,
   });
 
   const handleAddProperty = () => {
-    append(createEmptyProperty());
+    append(ProductFormMapper.createEmptyProperty());
   };
 
   const handleReorder = (value: string[]) => {
@@ -65,8 +66,9 @@ export const Properties: React.FC<IProps> = (props) => {
           </div>
         </Field.Label>
         <Field.Content>
-          {fields.length === 0 && <Empty />}
-          {fields.length > 0 && (
+          {fields.length === 0 ? (
+            <Empty />
+          ) : (
             <Motion.MotionConfig reducedMotion={'always'}>
               <Motion.Reorder.Group
                 className={s.content}

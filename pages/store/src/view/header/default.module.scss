@@ -5,13 +5,8 @@
   align-items: flex-end;
 }
 
-.header {
+.title {
   display: flex;
   flex-direction: column;
   flex: 1 0;
-  color: var(--text-base-primary);
-}
-
-.content {
-  display: block;
 }

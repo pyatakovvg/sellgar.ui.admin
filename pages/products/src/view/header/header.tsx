@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Title } from './title';
 import { Create } from './create';
+import { Title } from './title';
 
 import s from './default.module.scss';
 

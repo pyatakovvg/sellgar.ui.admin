@@ -4,7 +4,7 @@ import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
 
-import { BrandsControllerInterface } from '../../../classes/controller/brand-controller.interface.ts';
+import { BrandControllerInterface } from '../../../classes/controller/brand/brand-controller.interface.ts';
 
 import { Name } from './name';
 import { Description } from './description';
@@ -12,7 +12,7 @@ import { Description } from './description';
 import s from './default.module.scss';
 
 export const Table: React.FC = () => {
-  const brands = App.useLoaderData(BrandsControllerInterface);
+  const brands = App.useLoaderData(BrandControllerInterface);
   const brandModifyFrame = App.useFrame(BrandModifyFrame);
 
   return (

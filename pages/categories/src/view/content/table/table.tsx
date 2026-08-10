@@ -4,7 +4,7 @@ import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
 
-import { CategoryControllerInterface } from '../../../classes/controller/category-controller.interface.ts';
+import { CategoryControllerInterface } from '../../../classes/controller/category/category-controller.interface.ts';
 
 import { Name } from './name';
 import { Description } from './description';

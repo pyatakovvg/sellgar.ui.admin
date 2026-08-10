@@ -1,23 +1,23 @@
-import { Table } from '@sellgar/kit';
 import { StoreModifyFrame } from '@frame/store-modify';
-import { useFrame, useLoaderData } from '@sellgar/app';
+import * as App from '@sellgar/app';
+import { Table } from '@sellgar/kit';
 
 import React from 'react';
 
+import { StoreControllerInterface } from '../../classes/controller/store/store-controller.interface.ts';
+
 import { Name } from './name';
 import { Shop } from './shop';
-import { Variants } from './variants';
 import { Showcase } from './showcase';
+import { VariantList } from './variant-list';
+import { Variants } from './variants';
 import { Visible } from './visible';
-import { VariantList } from './variantList';
-
-import { StoreControllerInterface } from '../../classes/controller/store-controller.interface.ts';
 
 import s from './default.module.scss';
 
 export const Content: React.FC = () => {
-  const loaderData = useLoaderData(StoreControllerInterface);
-  const storeModifyFrame = useFrame(StoreModifyFrame);
+  const loaderData = App.useLoaderData(StoreControllerInterface);
+  const storeModifyFrame = App.useFrame(StoreModifyFrame);
 
   return (
     <div className={s.wrapper}>
@@ -35,11 +35,9 @@ export const Content: React.FC = () => {
           <>
             <Column width={24}>
               {({ Cell }) => (
-                <>
-                  <Cell>
-                    <Visible />
-                  </Cell>
-                </>
+                <Cell>
+                  <Visible />
+                </Cell>
               )}
             </Column>
             <Column>

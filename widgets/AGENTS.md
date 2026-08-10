@@ -7,6 +7,7 @@
 ## Текущие пакеты
 
 - `widgets/logout` - logout control.
+- `widgets/theme` - theme preference control.
 - `widgets/gallery` - reusable gallery UI.
 
 ## Правила

@@ -1,20 +1,20 @@
 import { ImageGallery } from '@library/design';
-import { FileServiceInterface } from '@library/domain';
 import * as App from '@sellgar/app';
 import { Field, Label } from '@sellgar/kit';
 
 import React from 'react';
-import * as ReactHookForm from 'react-hook-form';
+import * as RHF from 'react-hook-form';
 
+import { ProductControllerInterface } from '../../../../../classes/controller/product/product-controller.interface.ts';
 import { useVariant } from '../hooks/use-variant.hook.ts';
 import type { IFormData } from '../../../../schema.ts';
 
 export const Gallery: React.FC = () => {
   const variant = useVariant();
-  const fileService = App.useDependency(FileServiceInterface);
-  const { control, formState } = ReactHookForm.useFormContext<IFormData>();
+  const loaderData = App.useLoaderData(ProductControllerInterface);
+  const { control, formState } = RHF.useFormContext<IFormData>();
   const fieldName = `variants.${variant.index}.images` as const;
-  const { append, fields, remove, move } = ReactHookForm.useFieldArray({
+  const { append, fields, remove, move } = RHF.useFieldArray({
     control,
     name: fieldName,
   });
@@ -55,7 +55,7 @@ export const Gallery: React.FC = () => {
         <ImageGallery
           items={fields.map((image) => ({
             id: image.id,
-            src: image.imageUuid ? fileService.getPublicImageUrl(image.imageUuid) : undefined,
+            src: image.imageUuid ? loaderData.imageUrls[image.imageUuid] : undefined,
             file: image.file,
             fileName: image.file?.name,
           }))}
