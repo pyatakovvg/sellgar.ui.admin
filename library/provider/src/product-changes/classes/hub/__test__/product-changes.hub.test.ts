@@ -1,4 +1,4 @@
-import { type AuthServiceInterface, type ConfigInterface } from '@library/domain';
+import { ProductEntity, type AuthServiceInterface, type ConfigInterface } from '@library/domain';
 import {
   type SocketIOConnectionInterface,
   type SocketIOConnectionOptions,
@@ -64,7 +64,14 @@ describe('ProductChangesHub', () => {
     await fixture.emit(createProductPayload());
 
     expect(fixture.connection.subscribeDelivery).toHaveBeenCalledWith('product.updated', expect.any(Function));
-    expect(listener.updated).toHaveBeenCalledWith('39782b12-1077-4b75-94d2-c783e2ce8817', 5);
+    expect(listener.updated).toHaveBeenCalledWith(expect.any(ProductEntity));
+    expect(listener.updated).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'Product',
+        uuid: '39782b12-1077-4b75-94d2-c783e2ce8817',
+        version: 5,
+      }),
+    );
   });
 
   it('rejects an invalid product payload', async () => {
@@ -74,9 +81,7 @@ describe('ProductChangesHub', () => {
 
     hub.subscribe(listener);
 
-    await expect(fixture.emit({ productUuid: 'not-a-uuid', version: 0 })).rejects.toThrow(
-      'product.updated has an invalid payload.',
-    );
+    await expect(fixture.emit({ uuid: 'not-a-uuid' })).rejects.toBeDefined();
 
     expect(listener.updated).not.toHaveBeenCalled();
   });
@@ -125,6 +130,33 @@ const createFixture = () => {
 };
 
 const createProductPayload = () => ({
-  productUuid: '39782b12-1077-4b75-94d2-c783e2ce8817',
+  brand: {
+    code: 'brand',
+    createdAt: '2026-08-08T12:00:00.000Z',
+    description: 'Brand description',
+    name: 'Brand',
+    updatedAt: '2026-08-08T12:00:00.000Z',
+    uuid: '35f44766-20e9-44be-a3f3-dbeacbe49bf7',
+    version: 1,
+  },
+  brandUuid: '35f44766-20e9-44be-a3f3-dbeacbe49bf7',
+  category: {
+    code: 'category',
+    createdAt: '2026-08-08T12:00:00.000Z',
+    description: 'Category description',
+    name: 'Category',
+    updatedAt: '2026-08-08T12:00:00.000Z',
+    uuid: 'f334ff3d-e8f7-4080-b8f0-35e66c4d876e',
+    version: 1,
+  },
+  categoryUuid: 'f334ff3d-e8f7-4080-b8f0-35e66c4d876e',
+  createdAt: '2026-08-08T12:00:00.000Z',
+  description: 'Product description',
+  name: 'Product',
+  properties: [],
+  status: 'active',
+  updatedAt: '2026-08-08T12:00:00.000Z',
+  uuid: '39782b12-1077-4b75-94d2-c783e2ce8817',
+  variants: [],
   version: 5,
 });

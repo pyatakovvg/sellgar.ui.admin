@@ -1,3 +1,5 @@
+import type { ProductEntity } from '@library/domain';
+
 export interface ProductChangesListener {
-  readonly updated: (productUuid: string, version: number) => Promise<void>;
+  readonly updated: (payload: ProductEntity) => Promise<void>;
 }

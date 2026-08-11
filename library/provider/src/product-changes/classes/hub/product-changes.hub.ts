@@ -1,10 +1,11 @@
-import { AuthServiceInterface, ConfigInterface } from '@library/domain';
+import { AuthServiceInterface, ConfigInterface, ProductEntity } from '@library/domain';
 import { SocketIOConnectionsInterface, type SocketIOConnectionInterface } from '@library/socket-io';
 import { Inject, Injectable } from '@sellgar/app';
+import { plainToInstance } from 'class-transformer';
+import { validateOrReject } from 'class-validator';
 
 import { ProductChangesHubInterface } from './product-changes-hub.interface.ts';
 import type { ProductChangesListener } from './product-changes-listener.interface.ts';
-import { parseProductUpdatedPayload } from './product-updated.payload.ts';
 
 @Injectable()
 export class ProductChangesHub implements ProductChangesHubInterface {
@@ -35,9 +36,10 @@ export class ProductChangesHub implements ProductChangesHubInterface {
 
   subscribe(listener: ProductChangesListener): () => Promise<void> {
     const subscription = this.connection.subscribeDelivery('product.updated', async (value: unknown) => {
-      const payload = parseProductUpdatedPayload(value);
+      const payload: ProductEntity = plainToInstance(ProductEntity, value);
 
-      await listener.updated(payload.productUuid, payload.version);
+      await validateOrReject(payload);
+      await listener.updated(payload);
     });
 
     return () => subscription.dispose();
