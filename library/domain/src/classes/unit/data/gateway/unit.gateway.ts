@@ -1,9 +1,10 @@
-import { Inject, Injectable } from '@sellgar/app';
+import { Inject, Injectable, RequestExecutorInterface } from '@sellgar/app';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../../infrastructure/config/config.interface.ts';
-import { HttpClientInterface } from '../../../../infrastructure/http-client/http-client.interface.ts';
+import { DeviceServiceInterface } from '../../../../infrastructure/device/service/device-service.interface.ts';
+import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
 import { UnitEntity } from '../../domain/unit.entity.ts';
 import { UnitResultEntity } from '../../domain/unit-result.entity.ts';
 import { CreateUnitDto } from './dto/create-unit.dto.ts';
@@ -16,30 +17,43 @@ import { UnitGatewayInterface } from './unit-gateway.interface.ts';
 export class UnitGateway implements UnitGatewayInterface {
   constructor(
     @Inject(ConfigInterface) private readonly config: ConfigInterface,
-    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(DeviceServiceInterface) private readonly deviceService: DeviceServiceInterface,
+    @Inject(RequestExecutorInterface) private readonly requestExecutor: RequestExecutorInterface,
   ) {}
 
   async update(uuid: string, input: UpdateUnitInput): Promise<UnitEntity> {
     const dto = plainToInstance(UpdateUnitDto, input);
     await validateOrReject(dto);
-    const result = await this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/units/' + uuid, dto);
+    const result = await this.requestExecutor.run({ scope: `unit:update:${uuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.patch(this.config.get('GATEWAY_API') + '/v2/units/' + uuid, dto);
+    });
     return this.toUnit(result);
   }
 
   async create(input: CreateUnitInput): Promise<UnitEntity> {
     const dto = plainToInstance(CreateUnitDto, input);
     await validateOrReject(dto);
-    const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/units', dto);
+    const result = await this.requestExecutor.run({ scope: 'unit:create' }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.post(this.config.get('GATEWAY_API') + '/v2/units', dto);
+    });
     return this.toUnit(result);
   }
 
   async findByUuid(uuid: string): Promise<UnitEntity> {
-    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/units/' + uuid);
+    const result = await this.requestExecutor.run({ scope: `unit:${uuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.get(this.config.get('GATEWAY_API') + '/v2/units/' + uuid);
+    });
     return this.toUnit(result);
   }
 
   async findAll(): Promise<UnitResultEntity> {
-    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/units');
+    const result = await this.requestExecutor.run({ scope: 'units:list' }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.get(this.config.get('GATEWAY_API') + '/v2/units');
+    });
     const entity = plainToInstance(UnitResultEntity, result);
     await validateOrReject(entity);
     return entity;

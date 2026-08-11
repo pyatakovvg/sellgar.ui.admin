@@ -1,8 +1,9 @@
-import { ProfileEntity, ProfileServiceInterface, UnauthorizedException } from '@library/domain';
+import { ProfileEntity, ProfileServiceInterface } from '@library/domain';
 import {
   ApplicationStoreInterface,
   Inject,
   Initializer,
+  UnauthorizedException,
   type ApplicationInitializerContextInterface,
   type ApplicationInitializerInterface,
 } from '@sellgar/app';

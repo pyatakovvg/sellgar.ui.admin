@@ -84,6 +84,4 @@ export type {
   WriteOffOfferInventoryInput,
 } from './classes/index.ts';
 
-export { HttpException } from './infrastructure/http-client/exceptions/http.exception.ts';
-export { UnauthorizedException } from './infrastructure/http-client/exceptions/unauthorized.exception.ts';
 export { ConfigInterface } from './infrastructure/config/config.interface.ts';

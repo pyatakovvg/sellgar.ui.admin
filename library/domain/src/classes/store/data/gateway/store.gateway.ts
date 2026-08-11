@@ -1,9 +1,10 @@
-import { Inject, Injectable } from '@sellgar/app';
+import { Inject, Injectable, RequestExecutorInterface } from '@sellgar/app';
 import { plainToInstance, type ClassConstructor } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../../infrastructure/config/config.interface.ts';
-import { HttpClientInterface } from '../../../../infrastructure/http-client/http-client.interface.ts';
+import { DeviceServiceInterface } from '../../../../infrastructure/device/service/device-service.interface.ts';
+import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
 import { StoreOfferInventoryEntity } from '../../domain/store-offer-inventory.entity.ts';
 import { StoreProductEntity } from '../../domain/store-product.entity.ts';
 import { StoreProductResultEntity } from '../../domain/store-product-result.entity.ts';
@@ -27,64 +28,95 @@ import { StoreGatewayInterface } from './store-gateway.interface.ts';
 export class StoreGateway implements StoreGatewayInterface {
   constructor(
     @Inject(ConfigInterface) private readonly config: ConfigInterface,
-    @Inject(HttpClientInterface) private readonly httpClient: HttpClientInterface,
+    @Inject(DeviceServiceInterface) private readonly deviceService: DeviceServiceInterface,
+    @Inject(RequestExecutorInterface) private readonly requestExecutor: RequestExecutorInterface,
   ) {}
 
   async findAll(query?: StoreProductQueryInput): Promise<StoreProductResultEntity> {
     const dto = await this.toDto(StoreProductQueryDto, query ?? {});
-    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store/products', { params: dto });
+    const result = await this.requestExecutor.run({ scope: 'store-products:list' }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.get(this.config.get('GATEWAY_API') + '/v2/store/products', { params: dto });
+    });
     return this.toEntity(StoreProductResultEntity, result);
   }
 
   async findByUuid(uuid: string): Promise<StoreProductEntity> {
-    const result = await this.httpClient.get(this.config.get('GATEWAY_API') + '/v2/store/products/' + uuid);
+    const result = await this.requestExecutor.run({ scope: `store-product:${uuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.get(this.config.get('GATEWAY_API') + '/v2/store/products/' + uuid);
+    });
     return this.toEntity(StoreProductEntity, result);
   }
 
   async create(input: CreateStoreProductInput): Promise<StoreProductEntity> {
     const dto = await this.toDto(CreateStoreProductDto, input);
-    const result = await this.httpClient.post(this.config.get('GATEWAY_API') + '/v2/store/products', dto);
+    const result = await this.requestExecutor.run({ scope: 'store-product:create' }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.post(this.config.get('GATEWAY_API') + '/v2/store/products', dto);
+    });
     return this.toEntity(StoreProductEntity, result);
   }
 
   async update(input: UpdateStoreProductInput): Promise<StoreProductEntity> {
     const dto = await this.toDto(UpdateStoreProductDto, input);
-    const result = await this.httpClient.patch(this.config.get('GATEWAY_API') + '/v2/store/products/' + dto.uuid, dto);
+    const result = await this.requestExecutor.run({ scope: `store-product:update:${dto.uuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.patch(this.config.get('GATEWAY_API') + '/v2/store/products/' + dto.uuid, dto);
+    });
     return this.toEntity(StoreProductEntity, result);
   }
 
   async archive(input: ArchiveStoreProductInput): Promise<StoreProductEntity> {
     const dto = await this.toDto(ArchiveStoreProductDto, input);
-    const result = await this.httpClient.patch(
-      this.config.get('GATEWAY_API') + `/v2/store/products/${dto.uuid}/archive`,
-      dto,
-    );
+    const result = await this.requestExecutor.run({ scope: `store-product:archive:${dto.uuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.patch(this.config.get('GATEWAY_API') + `/v2/store/products/${dto.uuid}/archive`, dto);
+    });
     return this.toEntity(StoreProductEntity, result);
   }
 
   async receiptInventory(input: ReceiptOfferInventoryInput): Promise<StoreOfferInventoryEntity> {
     const dto = await this.toDto(ReceiptOfferInventoryDto, input);
-    const result = await this.httpClient.post(
-      this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/receipt`,
-      dto,
+    const result = await this.requestExecutor.run(
+      { scope: `store-offer-inventory:receipt:${dto.offerUuid}` },
+      ({ signal }) => {
+        const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+        return request.post(
+          this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/receipt`,
+          dto,
+        );
+      },
     );
     return this.toEntity(StoreOfferInventoryEntity, result);
   }
 
   async writeOffInventory(input: WriteOffOfferInventoryInput): Promise<StoreOfferInventoryEntity> {
     const dto = await this.toDto(WriteOffOfferInventoryDto, input);
-    const result = await this.httpClient.post(
-      this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/write-off`,
-      dto,
+    const result = await this.requestExecutor.run(
+      { scope: `store-offer-inventory:write-off:${dto.offerUuid}` },
+      ({ signal }) => {
+        const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+        return request.post(
+          this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/write-off`,
+          dto,
+        );
+      },
     );
     return this.toEntity(StoreOfferInventoryEntity, result);
   }
 
   async adjustInventory(input: AdjustOfferInventoryInput): Promise<StoreOfferInventoryEntity> {
     const dto = await this.toDto(AdjustOfferInventoryDto, input);
-    const result = await this.httpClient.post(
-      this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/adjust`,
-      dto,
+    const result = await this.requestExecutor.run(
+      { scope: `store-offer-inventory:adjust:${dto.offerUuid}` },
+      ({ signal }) => {
+        const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+        return request.post(
+          this.config.get('GATEWAY_API') + `/v2/store/products/offers/${dto.offerUuid}/inventory/adjust`,
+          dto,
+        );
+      },
     );
     return this.toEntity(StoreOfferInventoryEntity, result);
   }

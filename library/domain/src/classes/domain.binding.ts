@@ -2,7 +2,6 @@ import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/
 
 import { ConfigBinding } from '../infrastructure/config/config.binding.ts';
 import { DeviceBinding } from '../infrastructure/device/device.binding.ts';
-import { HttpClientBinding } from '../infrastructure/http-client/http-client.binding.ts';
 import { StorageBinding } from '../infrastructure/storage/storage.binding.ts';
 import { AuthBinding } from './auth/auth.binding.ts';
 import { BrandBinding } from './brand/brand.binding.ts';
@@ -23,7 +22,6 @@ import { VariantBinding } from './variant/variant.binding.ts';
 export class DomainBinding extends BindingModuleInterface {
   register(registry: BindingRegistryInterface): void {
     new ConfigBinding().register(registry);
-    new HttpClientBinding().register(registry);
     new DeviceBinding().register(registry);
     new StorageBinding().register(registry);
     new AuthBinding().register(registry);
