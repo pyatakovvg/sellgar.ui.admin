@@ -1,8 +1,10 @@
 import { ProductEntity } from '@library/domain';
 import type { RuntimeProviderCleanup } from '@sellgar/app';
 
-import type { ProductChangesListener } from '../classes/hub/product-changes-listener.interface.ts';
-import { ProductChangesHubInterface } from '../classes/hub/product-changes-hub.interface.ts';
+import {
+  ProductChangesHubInterface,
+  type ProductChangesListener,
+} from '../classes/hub/product-changes-hub.interface.ts';
 import { ProductChangesProvider } from '../product-changes.provider.ts';
 
 describe('ProductChangesProvider', () => {

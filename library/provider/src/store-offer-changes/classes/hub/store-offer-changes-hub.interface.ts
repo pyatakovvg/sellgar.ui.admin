@@ -1,4 +1,8 @@
-import type { StoreOfferChangesListener } from './store-offer-changes-listener.interface.ts';
+import type { StoreProductEntity } from '@library/domain';
+
+export interface StoreOfferChangesListener {
+  readonly updated: (payload: StoreProductEntity) => Promise<void>;
+}
 
 export abstract class StoreOfferChangesHubInterface {
   abstract subscribe(listener: StoreOfferChangesListener): () => Promise<void>;

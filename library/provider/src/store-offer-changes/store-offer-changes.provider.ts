@@ -1,4 +1,4 @@
-import { StoreOfferEntity, StoreProductEntity, StoreServiceInterface } from '@library/domain';
+import { StoreProductEntity } from '@library/domain';
 import { SocketIOBindings } from '@library/socket-io';
 import {
   Inject,
@@ -18,25 +18,12 @@ export class StoreOfferChangesProvider implements SingletonProviderInterface {
   constructor(
     @Inject(StoreOfferChangesHubInterface)
     private readonly hub: StoreOfferChangesHubInterface,
-    @Inject(StoreServiceInterface)
-    private readonly store: StoreServiceInterface,
   ) {}
 
   setup(): RuntimeProviderResult {
     return this.hub.subscribe({
-      updated: async (storeProductUuid, expectedVersion) => {
-        const storeProduct = await this.store.findByUuid(storeProductUuid);
-
-        if (storeProduct.version < expectedVersion) {
-          throw new Error(
-            `Store product ${storeProductUuid} version ${storeProduct.version} is behind realtime version ${expectedVersion}`,
-          );
-        }
-
-        for (const offer of storeProduct.offers) {
-          updateEntity(StoreOfferEntity, offer);
-        }
-        updateEntity(StoreProductEntity, storeProduct);
+      updated: async (payload) => {
+        updateEntity(StoreProductEntity, payload);
       },
     });
   }

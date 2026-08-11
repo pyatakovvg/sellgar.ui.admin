@@ -4,8 +4,7 @@ import { Inject, Injectable } from '@sellgar/app';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
-import { ProductChangesHubInterface } from './product-changes-hub.interface.ts';
-import type { ProductChangesListener } from './product-changes-listener.interface.ts';
+import { ProductChangesHubInterface, type ProductChangesListener } from './product-changes-hub.interface.ts';
 
 @Injectable()
 export class ProductChangesHub implements ProductChangesHubInterface {

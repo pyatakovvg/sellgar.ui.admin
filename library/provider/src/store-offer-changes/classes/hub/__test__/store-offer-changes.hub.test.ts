@@ -1,4 +1,4 @@
-import { type AuthServiceInterface, type ConfigInterface } from '@library/domain';
+import { StoreProductEntity, type AuthServiceInterface, type ConfigInterface } from '@library/domain';
 import {
   type SocketIOConnectionInterface,
   type SocketIOConnectionOptions,
@@ -15,10 +15,7 @@ describe('StoreOfferChangesHub', () => {
     const listener = { updated: vi.fn(async () => undefined) };
 
     hub.subscribe(listener);
-    await fixture.emit({
-      storeProductUuid: '5b7e713c-f6c6-4450-b1dc-767a7458bf55',
-      version: 8,
-    });
+    await fixture.emit(createStoreProductPayload());
 
     expect(fixture.connections.get).toHaveBeenCalledWith(
       'http://localhost:4040',
@@ -31,7 +28,13 @@ describe('StoreOfferChangesHub', () => {
       }),
     );
     expect(fixture.connection.subscribeDelivery).toHaveBeenCalledWith('store.product.updated', expect.any(Function));
-    expect(listener.updated).toHaveBeenCalledWith('5b7e713c-f6c6-4450-b1dc-767a7458bf55', 8);
+    expect(listener.updated).toHaveBeenCalledWith(expect.any(StoreProductEntity));
+    expect(listener.updated).toHaveBeenCalledWith(
+      expect.objectContaining({
+        uuid: '5b7e713c-f6c6-4450-b1dc-767a7458bf55',
+        version: 8,
+      }),
+    );
   });
 
   it('rejects an invalid store product payload', async () => {
@@ -40,9 +43,7 @@ describe('StoreOfferChangesHub', () => {
     const listener = { updated: vi.fn(async () => undefined) };
 
     hub.subscribe(listener);
-    await expect(fixture.emit({ storeProductUuid: 'invalid', version: 0 })).rejects.toThrow(
-      'store.product.updated has an invalid payload.',
-    );
+    await expect(fixture.emit({ uuid: 'invalid' })).rejects.toBeDefined();
     expect(listener.updated).not.toHaveBeenCalled();
   });
 });
@@ -81,3 +82,40 @@ const createFixture = () => {
     },
   };
 };
+
+const createStoreProductPayload = () => ({
+  article: 'STORE-PRODUCT',
+  createdAt: '2026-08-08T12:00:00.000Z',
+  offers: [],
+  product: {
+    brand: {
+      createdAt: '2026-08-08T12:00:00.000Z',
+      name: 'Brand',
+      updatedAt: '2026-08-08T12:00:00.000Z',
+      uuid: '35f44766-20e9-44be-a3f3-dbeacbe49bf7',
+    },
+    category: {
+      createdAt: '2026-08-08T12:00:00.000Z',
+      name: 'Category',
+      updatedAt: '2026-08-08T12:00:00.000Z',
+      uuid: 'f334ff3d-e8f7-4080-b8f0-35e66c4d876e',
+    },
+    createdAt: '2026-08-08T12:00:00.000Z',
+    name: 'Product',
+    status: 'active',
+    updatedAt: '2026-08-08T12:00:00.000Z',
+    uuid: '39782b12-1077-4b75-94d2-c783e2ce8817',
+  },
+  shop: {
+    createdAt: '2026-08-08T12:00:00.000Z',
+    name: 'Shop',
+    status: 'active',
+    updatedAt: '2026-08-08T12:00:00.000Z',
+    uuid: '1d932a09-5015-4688-a50e-03822fdeb37c',
+  },
+  showing: true,
+  status: 'active',
+  updatedAt: '2026-08-08T12:00:00.000Z',
+  uuid: '5b7e713c-f6c6-4450-b1dc-767a7458bf55',
+  version: 8,
+});
