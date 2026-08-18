@@ -10,6 +10,9 @@ Socket.IO Hub, domain entity и lifecycle providers из `@sellgar/app`.
 - Один provider живёт в `src/<provider>/` и экспортируется через package facade.
 - Provider получает Hub через локальный abstract token и не создаёт transport connection.
 - Hub владеет URL, product event name, product-specific payload и вызовом listener-а.
+- Если delivery требует route-specific context, конкретный Hub подписывается на
+  location и обновляет context только принадлежащего событию delivery lease.
+  Общий transport provider не подписывается на location.
 - Общий realtime delivery envelope и channel принадлежат `@library/socket-io`.
 - Порядок delivery, ACK и reconnect принадлежат `@library/socket-io`.
 - Физический connection lifecycle и reconnect принадлежат `@library/socket-io`.

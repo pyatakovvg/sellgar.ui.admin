@@ -9,6 +9,7 @@ import type {
   SocketIOConnectionRequestOptions,
   SocketIOConnectionSubscription,
   SocketIOConnectionSubscriptionOptions,
+  SocketIODeliverySubscription,
   SocketIORealtimeDeliveryHandler,
 } from '../../service/socket-io-connections/socket-io-connections.interface.ts';
 
@@ -17,6 +18,8 @@ const CONNECTION_STABLE_AFTER_MS = 30_000;
 const DELIVERY_EVENT = 'realtime.event.v1';
 const DELIVERY_ACK_EVENT = 'realtime.ack.v1';
 const DELIVERY_READY_EVENT = 'realtime.ready.v1';
+const DELIVERY_SUBSCRIPTION_CONTEXT_EVENT = 'realtime.subscription.context.v1';
+const DELIVERY_SUBSCRIPTION_DISPOSE_EVENT = 'realtime.subscription.dispose.v1';
 const DELIVERY_ACK_TIMEOUT_MS = 5_000;
 
 interface SocketIOSubscriber {
@@ -30,9 +33,12 @@ interface SocketIOEventSubscribers {
 }
 
 interface SocketIODeliverySubscriber {
+  context?: object;
+  contextRevision: number;
   readonly eventType: string;
   readonly handler: SocketIORealtimeDeliveryHandler;
   readonly onError?: SocketIOConnectionSubscriptionOptions['onError'];
+  readonly subscriptionId: string;
 }
 
 export class SocketIOConnection implements SocketIOConnectionInterface {
@@ -41,6 +47,7 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
   private readonly deliverySubscribers = new Set<SocketIODeliverySubscriber>();
   private deliveryExecution = Promise.resolve();
   private deliveryGeneration = 0;
+  private deliverySubscriptionSequence = 0;
   private deliverySubscription: SocketIOConnectionSubscription | undefined;
   private retryAttempt = 0;
   private retryTimer: ReturnType<typeof setTimeout> | undefined;
@@ -70,17 +77,19 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
     this.scheduleRetry();
   }
 
-  subscribeDelivery<TPayload = unknown>(
+  subscribeDelivery<TPayload = unknown, TContext extends object = Record<string, unknown>>(
     eventType: string,
     handler: SocketIORealtimeDeliveryHandler<TPayload>,
     options: SocketIOConnectionSubscriptionOptions = {},
-  ): SocketIOConnectionSubscription {
+  ): SocketIODeliverySubscription<TContext> {
     this.assertActive();
 
     const subscriber: SocketIODeliverySubscriber = {
+      contextRevision: 0,
       eventType,
       handler: handler as SocketIORealtimeDeliveryHandler,
       onError: options.onError,
+      subscriptionId: String(++this.deliverySubscriptionSequence),
     };
 
     this.deliverySubscribers.add(subscriber);
@@ -95,6 +104,13 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
         }
 
         active = false;
+
+        if (this.socket.connected && subscriber.context !== undefined) {
+          this.socket.emit(DELIVERY_SUBSCRIPTION_DISPOSE_EVENT, {
+            subscriptionId: subscriber.subscriptionId,
+          });
+        }
+
         this.deliverySubscribers.delete(subscriber);
 
         if (this.deliverySubscribers.size === 0) {
@@ -102,6 +118,18 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
 
           this.deliverySubscription = undefined;
           await subscription?.dispose();
+        }
+      },
+      updateContext: (context: TContext) => {
+        if (!active) {
+          throw new Error('Socket.IO delivery subscription уже освобождена.');
+        }
+
+        subscriber.context = context;
+        subscriber.contextRevision += 1;
+
+        if (this.socket.connected) {
+          this.emitDeliverySubscriptionContext(subscriber);
         }
       },
     };
@@ -181,6 +209,7 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
     this.connectedOnce = true;
     this.clearRetry();
     this.clearStableConnectionTimer();
+    this.synchronizeDeliverySubscriptionContexts();
     this.stableConnectionTimer = setTimeout(() => {
       this.stableConnectionTimer = undefined;
 
@@ -335,6 +364,25 @@ export class SocketIOConnection implements SocketIOConnectionInterface {
       });
 
     return this.deliveryExecution;
+  }
+
+  private emitDeliverySubscriptionContext(subscriber: SocketIODeliverySubscriber): void {
+    if (subscriber.context === undefined) {
+      return;
+    }
+
+    this.socket.emit(DELIVERY_SUBSCRIPTION_CONTEXT_EVENT, {
+      context: subscriber.context,
+      eventType: subscriber.eventType,
+      revision: subscriber.contextRevision,
+      subscriptionId: subscriber.subscriptionId,
+    });
+  }
+
+  private synchronizeDeliverySubscriptionContexts(): void {
+    for (const subscriber of this.deliverySubscribers) {
+      this.emitDeliverySubscriptionContext(subscriber);
+    }
   }
 
   private applyDesiredState(): void {

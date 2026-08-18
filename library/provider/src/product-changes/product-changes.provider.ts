@@ -2,6 +2,7 @@ import { ProductEntity } from '@library/domain';
 import { SocketIOBindings } from '@library/socket-io';
 import {
   Inject,
+  insertEntity,
   type RuntimeProviderResult,
   SingletonProvider,
   type SingletonProviderInterface,
@@ -22,6 +23,9 @@ export class ProductChangesProvider implements SingletonProviderInterface {
 
   setup(): RuntimeProviderResult {
     return this.hub.subscribe({
+      created: async (payload) => {
+        insertEntity(ProductEntity, payload, { position: 'start' });
+      },
       updated: async (payload) => {
         updateEntity(ProductEntity, payload);
       },

@@ -15,5 +15,6 @@ export {
   type SocketIOConnectionRequestOptions,
   type SocketIOConnectionSubscription,
   type SocketIOConnectionSubscriptionOptions,
+  type SocketIODeliverySubscription,
   type SocketIORealtimeDeliveryHandler,
 } from './classes/service/socket-io-connections/socket-io-connections.interface.ts';

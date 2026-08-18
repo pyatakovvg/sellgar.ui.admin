@@ -1,5 +1,6 @@
-import { ProductEntity } from '@library/domain';
+import { ProductEntity, ProductResultEntity } from '@library/domain';
 import type { RuntimeProviderCleanup } from '@sellgar/app';
+import { plainToInstance } from 'class-transformer';
 
 import {
   ProductChangesHubInterface,
@@ -8,6 +9,25 @@ import {
 import { ProductChangesProvider } from '../product-changes.provider.ts';
 
 describe('ProductChangesProvider', () => {
+  it('adds a created product to the start of an opened product collection', async () => {
+    const existingProduct = createProduct('a438434d-4467-4c00-a61f-299ea4dd204f', 4, 'Existing');
+    const createdProduct = createProduct('521524f6-06d1-4e42-9aa3-af1b6789d183', 1, 'Created');
+    const result = plainToInstance(ProductResultEntity, {
+      data: [existingProduct],
+    });
+    const hub = new TestProductChangesHub();
+    const provider = new ProductChangesProvider(hub);
+
+    const dispose = provider.setup();
+    assertRuntimeProviderCleanup(dispose);
+
+    await hub.emitCreated(createdProduct);
+
+    expect(result.data).toEqual([createdProduct, existingProduct]);
+
+    await dispose();
+  });
+
   it('updates the opened entity from the delivered product', async () => {
     const productUuid = 'a438434d-4467-4c00-a61f-299ea4dd204f';
     const openedProduct = createProduct(productUuid, 4, 'Before');
@@ -42,6 +62,14 @@ class TestProductChangesHub extends ProductChangesHubInterface {
     return async () => {
       this.listener = undefined;
     };
+  }
+
+  async emitCreated(product: ProductEntity): Promise<void> {
+    if (!this.listener) {
+      throw new Error('Product changes listener is not subscribed.');
+    }
+
+    await this.listener.created(product);
   }
 
   async emitUpdated(product: ProductEntity): Promise<void> {

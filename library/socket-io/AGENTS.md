@@ -27,6 +27,11 @@
 - `subscribeDelivery()` централизованно валидирует envelope, сериализует delivery,
   маршрутизирует по `eventType`, отправляет ACK текущего соединения после handlers
   и делает reconnect при ошибке.
+- Lease от `subscribeDelivery()` может хранить непрозрачный subscription context.
+  Transport отправляет context с `subscriptionId` и `revision` при изменении,
+  повторяет актуальное состояние после reconnect и сообщает об освобождении lease.
+- Формат context и источник его изменений принадлежат concrete Hub. Пакет не
+  подписывается на router/location и не интерпретирует фильтры.
 
 ## Проверка
 

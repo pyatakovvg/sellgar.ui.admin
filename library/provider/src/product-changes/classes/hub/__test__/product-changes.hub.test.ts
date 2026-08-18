@@ -2,16 +2,19 @@ import { ProductEntity, type AuthServiceInterface, type ConfigInterface } from '
 import {
   type SocketIOConnectionInterface,
   type SocketIOConnectionOptions,
+  type SocketIODeliverySubscription,
   type SocketIOConnectionsInterface,
   type SocketIORealtimeDeliveryHandler,
 } from '@library/socket-io';
+import type { LocationServiceInterface, LocationServiceListener, RouterLocationSnapshot } from '@sellgar/app';
+
 import { ProductChangesHub } from '../product-changes.hub.ts';
 
 describe('ProductChangesHub', () => {
   it('gets a short-lived ticket and opens the products transport lazily', async () => {
     const fixture = createFixture();
 
-    new ProductChangesHub(fixture.config, fixture.auth, fixture.connections);
+    new ProductChangesHub(fixture.config, fixture.auth, fixture.connections, fixture.locationService);
 
     expect(fixture.connections.get).toHaveBeenCalledWith(
       'http://localhost:4040',
@@ -43,7 +46,7 @@ describe('ProductChangesHub', () => {
     const fixture = createFixture();
     fixture.auth.issueSocketTicket.mockRejectedValueOnce(new Error('Unauthorized'));
 
-    new ProductChangesHub(fixture.config, fixture.auth, fixture.connections);
+    new ProductChangesHub(fixture.config, fixture.auth, fixture.connections, fixture.locationService);
 
     const auth = fixture.connections.get.mock.calls[0]?.[1]?.auth;
     const callback = vi.fn();
@@ -55,15 +58,21 @@ describe('ProductChangesHub', () => {
     await vi.waitFor(() => expect(callback).toHaveBeenCalledWith({}));
   });
 
-  it('subscribes to product.updated and passes a validated product payload to the listener', async () => {
+  it('subscribes to product events and passes validated product payloads to their listeners', async () => {
     const fixture = createFixture();
-    const hub = new ProductChangesHub(fixture.config, fixture.auth, fixture.connections);
-    const listener = { updated: vi.fn(async () => undefined) };
+    const hub = new ProductChangesHub(fixture.config, fixture.auth, fixture.connections, fixture.locationService);
+    const listener = {
+      created: vi.fn(async () => undefined),
+      updated: vi.fn(async () => undefined),
+    };
 
     hub.subscribe(listener);
-    await fixture.emit(createProductPayload());
+    await fixture.emit('product.created', createProductPayload());
+    await fixture.emit('product.updated', createProductPayload());
 
+    expect(fixture.connection.subscribeDelivery).toHaveBeenCalledWith('product.created', expect.any(Function));
     expect(fixture.connection.subscribeDelivery).toHaveBeenCalledWith('product.updated', expect.any(Function));
+    expect(listener.created).toHaveBeenCalledWith(expect.any(ProductEntity));
     expect(listener.updated).toHaveBeenCalledWith(expect.any(ProductEntity));
     expect(listener.updated).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -76,24 +85,75 @@ describe('ProductChangesHub', () => {
 
   it('rejects an invalid product payload', async () => {
     const fixture = createFixture();
-    const hub = new ProductChangesHub(fixture.config, fixture.auth, fixture.connections);
-    const listener = { updated: vi.fn(async () => undefined) };
+    const hub = new ProductChangesHub(fixture.config, fixture.auth, fixture.connections, fixture.locationService);
+    const listener = {
+      created: vi.fn(async () => undefined),
+      updated: vi.fn(async () => undefined),
+    };
 
     hub.subscribe(listener);
 
-    await expect(fixture.emit({ uuid: 'not-a-uuid' })).rejects.toBeDefined();
+    await expect(fixture.emit('product.updated', { uuid: 'not-a-uuid' })).rejects.toBeDefined();
 
     expect(listener.updated).not.toHaveBeenCalled();
+  });
+
+  it('synchronizes the current route only with the product.created subscription', async () => {
+    const fixture = createFixture();
+    const hub = new ProductChangesHub(fixture.config, fixture.auth, fixture.connections, fixture.locationService);
+    const listener = {
+      created: vi.fn(async () => undefined),
+      updated: vi.fn(async () => undefined),
+    };
+
+    const dispose = hub.subscribe(listener);
+    const createdSubscription = fixture.subscription('product.created');
+    const updatedSubscription = fixture.subscription('product.updated');
+
+    expect(createdSubscription.updateContext).toHaveBeenCalledOnce();
+    expect(createdSubscription.updateContext).toHaveBeenLastCalledWith({
+      pathname: '/products',
+      search: '?status=active',
+    });
+    expect(updatedSubscription.updateContext).not.toHaveBeenCalled();
+
+    fixture.changeLocation('/products', '?status=archived');
+
+    expect(createdSubscription.updateContext).toHaveBeenCalledTimes(2);
+    expect(createdSubscription.updateContext).toHaveBeenLastCalledWith({
+      pathname: '/products',
+      search: '?status=archived',
+    });
+
+    fixture.changeLocation('/products', '?status=archived');
+
+    expect(createdSubscription.updateContext).toHaveBeenCalledTimes(2);
+
+    await dispose();
+
+    expect(fixture.unsubscribeLocation).toHaveBeenCalledOnce();
+    expect(createdSubscription.dispose).toHaveBeenCalledOnce();
+    expect(updatedSubscription.dispose).toHaveBeenCalledOnce();
   });
 });
 
 const createFixture = () => {
-  let handler: SocketIORealtimeDeliveryHandler | undefined;
+  const handlers = new Map<string, SocketIORealtimeDeliveryHandler>();
+  const subscriptions = new Map<string, TestDeliverySubscription>();
+  let location = createLocation('/products', '?status=active');
+  let locationListener: LocationServiceListener | undefined;
+  const unsubscribeLocation = vi.fn();
   const connection = {
-    subscribeDelivery: vi.fn((_eventType: string, subscribedHandler: SocketIORealtimeDeliveryHandler) => {
-      handler = subscribedHandler;
+    subscribeDelivery: vi.fn((eventType: string, subscribedHandler: SocketIORealtimeDeliveryHandler) => {
+      const subscription: TestDeliverySubscription = {
+        dispose: vi.fn(async () => undefined),
+        updateContext: vi.fn(),
+      };
 
-      return { dispose: vi.fn(async () => undefined) };
+      handlers.set(eventType, subscribedHandler);
+      subscriptions.set(eventType, subscription);
+
+      return subscription;
     }),
   } as unknown as SocketIOConnectionInterface & {
     subscribeDelivery: ReturnType<typeof vi.fn>;
@@ -114,20 +174,64 @@ const createFixture = () => {
   const config = {
     get: vi.fn(() => 'http://localhost:4040'),
   } as unknown as ConfigInterface;
+  const locationService = {
+    get location() {
+      return location;
+    },
+    subscribe: vi.fn((listener: LocationServiceListener) => {
+      locationListener = listener;
+
+      return unsubscribeLocation;
+    }),
+  } as unknown as LocationServiceInterface;
+
   return {
     auth,
+    changeLocation(pathname: string, search: string) {
+      location = createLocation(pathname, search);
+      locationListener?.(location);
+    },
     config,
     connection,
     connections,
-    async emit(payload: unknown) {
+    async emit(eventType: string, payload: unknown) {
+      const handler = handlers.get(eventType);
+
       if (!handler) {
-        throw new Error('Realtime event handler is not subscribed.');
+        throw new Error(`Realtime event handler is not subscribed: ${eventType}.`);
       }
 
       await handler(payload, undefined as never);
     },
+    locationService,
+    subscription(eventType: string): TestDeliverySubscription {
+      const subscription = subscriptions.get(eventType);
+
+      if (!subscription) {
+        throw new Error(`Realtime delivery subscription was not created: ${eventType}.`);
+      }
+
+      return subscription;
+    },
+    unsubscribeLocation,
   };
 };
+
+type TestDeliverySubscription = SocketIODeliverySubscription & {
+  dispose: ReturnType<typeof vi.fn>;
+  updateContext: ReturnType<typeof vi.fn>;
+};
+
+const createLocation = (pathname: string, search: string): RouterLocationSnapshot => ({
+  hash: '',
+  hashParams: {},
+  key: 'location-key',
+  params: {},
+  pathname,
+  search,
+  searchParams: {},
+  state: undefined,
+});
 
 const createProductPayload = () => ({
   brand: {

@@ -28,6 +28,12 @@ export interface SocketIOConnectionSubscription {
   dispose(): Promise<void>;
 }
 
+export interface SocketIODeliverySubscription<
+  TContext extends object = Record<string, unknown>,
+> extends SocketIOConnectionSubscription {
+  updateContext(context: TContext): void;
+}
+
 export interface SocketIOConnectionRequestOptions {
   readonly timeoutMs?: number;
 }
@@ -37,11 +43,11 @@ export type SocketIOConnectionOptions = Omit<Partial<ManagerOptions & SocketOpti
 export interface SocketIOConnectionInterface {
   reconnect(): void;
 
-  subscribeDelivery<TPayload = unknown>(
+  subscribeDelivery<TPayload = unknown, TContext extends object = Record<string, unknown>>(
     eventType: string,
     handler: SocketIORealtimeDeliveryHandler<TPayload>,
     options?: SocketIOConnectionSubscriptionOptions,
-  ): SocketIOConnectionSubscription;
+  ): SocketIODeliverySubscription<TContext>;
 
   subscribe<TArguments extends unknown[]>(
     event: string,

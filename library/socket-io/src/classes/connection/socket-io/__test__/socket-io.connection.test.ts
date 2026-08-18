@@ -221,6 +221,57 @@ describe('SocketIOConnection', () => {
     await subscription.dispose();
   });
 
+  it('stores context on one delivery subscription and synchronizes it on connect and reconnect', async () => {
+    const socket = createSocket();
+    socketIOMock.io.mockReturnValue(socket);
+    const connection = new SocketIOConnection('/realtime');
+    const createdSubscription = connection.subscribeDelivery<unknown, { readonly search: string }>(
+      'product.created',
+      vi.fn(),
+    );
+    const updatedSubscription = connection.subscribeDelivery('product.updated', vi.fn());
+
+    createdSubscription.updateContext({ search: '?status=active' });
+
+    expect(socket.emit).not.toHaveBeenCalled();
+
+    socket.connected = true;
+    socket.dispatch('connect');
+
+    expect(socket.emit).toHaveBeenLastCalledWith('realtime.subscription.context.v1', {
+      context: { search: '?status=active' },
+      eventType: 'product.created',
+      revision: 1,
+      subscriptionId: '1',
+    });
+
+    createdSubscription.updateContext({ search: '?status=archived' });
+
+    expect(socket.emit).toHaveBeenLastCalledWith('realtime.subscription.context.v1', {
+      context: { search: '?status=archived' },
+      eventType: 'product.created',
+      revision: 2,
+      subscriptionId: '1',
+    });
+
+    socket.dispatch('connect');
+
+    expect(socket.emit).toHaveBeenLastCalledWith('realtime.subscription.context.v1', {
+      context: { search: '?status=archived' },
+      eventType: 'product.created',
+      revision: 2,
+      subscriptionId: '1',
+    });
+
+    await createdSubscription.dispose();
+
+    expect(socket.emit).toHaveBeenLastCalledWith('realtime.subscription.dispose.v1', {
+      subscriptionId: '1',
+    });
+
+    await updatedSubscription.dispose();
+  });
+
   it('reconnects without acknowledging when a realtime delivery handler fails', async () => {
     const error = new Error('Product was not applied.');
     const onError = vi.fn();
@@ -286,6 +337,7 @@ const createSocket = () => {
     connected: false,
     connect: vi.fn(),
     disconnect: vi.fn(),
+    emit: vi.fn(),
     emitWithAck: vi.fn(async (_event: string, payload: unknown) => payload),
     io: {
       off: vi.fn((event: string, handler: (...arguments_: unknown[]) => void) => {
