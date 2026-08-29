@@ -8,6 +8,7 @@ import type { ModuleMetadata } from '../../../module/declaration/module';
 import { ModuleHost } from '../../../module/rendering/module-host';
 import { ExceptionProvider } from '../../../runtime/exception/exception-context';
 import { RuntimeScopeProvider } from '../../../runtime/scope/runtime-scope-context';
+import { RuntimeErrorBoundary } from '../../../runtime/exception/runtime-error-boundary';
 
 interface IProps {
   readonly children: React.ReactNode;
@@ -27,9 +28,15 @@ export const RouteHost: React.FC<IProps> = (props) => {
   const content = resolveRouteContent(props, snapshot);
 
   return (
-    <RuntimeScopeProvider scope={props.runtime.getRouteScope()}>
-      {renderLayouts(props.layouts, content)}
-    </RuntimeScopeProvider>
+    <RuntimeErrorBoundary
+      exception={props.components.exception}
+      onError={(error) => void props.runtime.failRender(error)}
+      resetKeys={[props.runtime]}
+    >
+      <RuntimeScopeProvider scope={props.runtime.getRouteScope()}>
+        {renderLayouts(props.layouts, content)}
+      </RuntimeScopeProvider>
+    </RuntimeErrorBoundary>
   );
 };
 

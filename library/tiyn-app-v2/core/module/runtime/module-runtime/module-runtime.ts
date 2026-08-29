@@ -488,6 +488,28 @@ export class ModuleRuntime<TPresentation = unknown> {
     };
   }
 
+  async failRender(error: unknown): Promise<void> {
+    const moduleRuntime = this.getActiveModuleOrNull();
+
+    if (!moduleRuntime || !this.transitionToFailed(moduleRuntime, error)) {
+      return;
+    }
+
+    await reportRuntimeFailure(
+      this.ownerScope.get(RuntimeFailureReporterInterface),
+      captureRuntimeFailure(error, {
+        operation: 'render',
+        owner: moduleRuntime.owner,
+        participant: { kind: 'runtime' },
+      }),
+      moduleRuntime.owner,
+      'module.failed',
+      'failed',
+    );
+    this.scheduleModuleDispose(moduleRuntime);
+    await this.waitForCleanup();
+  }
+
   commit(): void {
     if (this.state.phase !== 'pending') {
       return;

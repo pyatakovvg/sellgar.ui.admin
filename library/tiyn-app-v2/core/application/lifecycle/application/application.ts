@@ -125,6 +125,27 @@ export abstract class Application<
     return this.lifecycleSnapshot;
   }
 
+  async failRender(error: unknown): Promise<void> {
+    if (this.state === 'disposed' || this.state === 'disposing' || this.state === 'failed') {
+      return;
+    }
+
+    const failure = captureRuntimeFailure(error, createApplicationRuntimeSource('render'));
+
+    this.navigationAbortController?.abort(error);
+    this.initializerAbortController?.abort(error);
+    this.setPendingNavigation(null);
+    this.fail(error);
+    await this.routerRuntime?.dispose();
+    await reportRuntimeFailure(
+      this.scope.get(RuntimeFailureReporterInterface),
+      failure,
+      { kind: 'application' },
+      'application.failed',
+      'failed',
+    );
+  }
+
   compose(): void {
     if (this.state === 'composed' || this.state === 'ready') {
       return;

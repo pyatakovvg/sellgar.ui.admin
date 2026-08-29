@@ -11,10 +11,11 @@ interface IProps {
   }) => React.ReactNode;
   readonly end?: boolean;
   readonly navigation: NavigationRequestFactory;
+  readonly viewTransition?: boolean;
 }
 
-export const NavItem: React.FC<IProps> = ({ end = true, ...props }) => {
-  const control = useNavigationControl(props.navigation, end);
+export const NavItem: React.FC<IProps> = ({ end = true, viewTransition = false, ...props }) => {
+  const control = useNavigationControl(props.navigation, end, viewTransition);
 
   return props.children({
     execute: control.execute,

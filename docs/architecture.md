@@ -19,7 +19,8 @@ Host не должен становиться местом для feature UI и�
 - `Application` собирает runtime.
 - `Route` и `Router` задают route tree.
 - `@Module` описывает route-level страницу.
-- `@Frame` описывает nested workflow; route graph задаёт address и загрузку.
+- `frames/*` описывают nested workflows, но используют единую runtime-декларацию
+  `@Module`; route graph задаёт address, lazy load и shell.
 - `@UseBindings` подключает DI bindings к application, page, frame или widget.
 - Policies на route выполняют auth-gating.
 

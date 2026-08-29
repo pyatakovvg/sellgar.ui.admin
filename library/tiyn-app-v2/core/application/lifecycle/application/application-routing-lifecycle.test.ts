@@ -128,6 +128,17 @@ describe('Application routing lifecycle', () => {
     vi.restoreAllMocks();
   });
 
+  it('rejects a duplicate Route class token during application composition', async () => {
+    const router = new Router({
+      routes: [createModuleRoute(FirstRoute, 'first'), createModuleRoute(FirstRoute, 'duplicate')],
+    });
+    const app = new TestApplication(router, async () => undefined);
+
+    expect(() => app.compose()).toThrow('Route token зарегистрирован повторно: FirstRoute');
+
+    await app.dispose();
+  });
+
   it('reuses a common owner branch between siblings and disposes only the replaced suffix', async () => {
     const app = await createApplication(createBranchRouter(), (navigate) =>
       navigate.through(WorkspaceRoute, { params: { workspaceId: 'workspace-1' } }).to(FirstRoute),
@@ -270,6 +281,37 @@ describe('Application routing lifecycle', () => {
     expect(firstAvailableApp.activeRoutes.at(-1)!.getSnapshot().phase).toBe('active');
     expect(getRouteDefinition(firstAvailableApp.activeRoutes.at(-1)!.route).token).toBe(AvailableRoute);
     await firstAvailableApp.dispose();
+  });
+
+  it('keeps a Module render failure inside its ModuleRuntime', async () => {
+    const app = await createApplication(createBranchRouter(), (navigate) =>
+      navigate.through(WorkspaceRoute, { params: { workspaceId: 'workspace-1' } }).to(FirstRoute),
+    );
+    const routeRuntime = app.activeRoutes.at(-1)!;
+    const moduleRuntime = routeRuntime.getModuleRuntime();
+    const error = new Error('module render failed');
+
+    await moduleRuntime.failRender(error);
+
+    expect(moduleRuntime.getSnapshot()).toEqual({ error, phase: 'failed' });
+    expect(routeRuntime.getSnapshot()).toEqual({ error: null, phase: 'active' });
+    expect(app.routerPhase).toBe('active');
+
+    await app.dispose();
+  });
+
+  it('moves the Application to failed and releases its Router branch after an application render failure', async () => {
+    const app = await createApplication(createBranchRouter(), (navigate) => navigate.to(OtherRoute));
+    const routeRuntime = app.activeRoutes[0]!;
+    const error = new Error('application render failed');
+
+    await app.failRender(error);
+
+    expect(app.lifecycle).toEqual({ error, phase: 'failed' });
+    expect(app.routerPhase).toBe('disposed');
+    expect(routeRuntime.getSnapshot().phase).toBe('disposed');
+
+    await app.dispose();
   });
 
   it('revalidates the complete active branch for repeated navigation from every navigation scope', async () => {

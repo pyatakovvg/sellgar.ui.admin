@@ -21,6 +21,7 @@ import { RouterHost } from '../../../router/rendering/router-host';
 import { NavigationStateProvider } from '../../../router/runtime/navigation-state-context';
 import { ExceptionProvider } from '../../../runtime/exception/exception-context';
 import { RuntimeScopeProvider } from '../../../runtime/scope/runtime-scope-context';
+import { RuntimeErrorBoundary } from '../../../runtime/exception/runtime-error-boundary';
 import type { ApplicationComponents, ResolvedApplicationRouting } from '../../config/application-configurator';
 import { ApplicationComponentsProvider } from '../application-components-context';
 import { OverlayHost } from '../overlay-host';
@@ -32,6 +33,7 @@ export interface ApplicationViewSource {
   readonly components: ApplicationComponents;
   readonly createHref: (navigation: NavigationState) => string;
   readonly features: readonly ApplicationFeatureInterface[];
+  readonly failRender: (error: unknown) => void | Promise<void>;
   readonly getLifecycle: () => ApplicationLifecycleSnapshot;
   readonly getNavigation: () => ApplicationNavigationSnapshot;
   readonly layouts: readonly LayoutConstructor[];
@@ -64,6 +66,9 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
 
   let content: React.ReactNode;
   let frame: React.ReactNode = null;
+  let applicationFeatures: React.ReactNode = null;
+  let modalFeatures: React.ReactNode = null;
+  let notificationFeatures: React.ReactNode = null;
 
   if (lifecycle.phase === 'failed') {
     content = (
@@ -90,20 +95,25 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
         runtime={props.source.routerRuntime}
       />
     );
+    applicationFeatures = renderApplicationFeatures(props.source.features, PresentationLayer.Application);
+    modalFeatures = renderApplicationFeatures(props.source.features, PresentationLayer.Modal);
+    notificationFeatures = renderApplicationFeatures(props.source.features, PresentationLayer.Notification);
   }
 
   return (
     <RuntimeScopeProvider scope={props.source.scope}>
       <NavigationStateProvider createHref={props.source.createHref} snapshot={navigation}>
         <ApplicationComponentsProvider components={props.source.components}>
-          <OverlayHost
-            frame={frame}
-            modal={renderApplicationFeatures(props.source.features, PresentationLayer.Modal)}
-            notification={renderApplicationFeatures(props.source.features, PresentationLayer.Notification)}
+          <RuntimeErrorBoundary
+            exception={props.source.components.failed ?? props.source.components.exception}
+            onError={(error) => void props.source.failRender(error)}
+            resetKeys={[props.source]}
           >
-            <div className={s.wrapper}>{content}</div>
-            {renderApplicationFeatures(props.source.features, PresentationLayer.Application)}
-          </OverlayHost>
+            <OverlayHost frame={frame} modal={modalFeatures} notification={notificationFeatures}>
+              <div className={s.wrapper}>{content}</div>
+              {applicationFeatures}
+            </OverlayHost>
+          </RuntimeErrorBoundary>
         </ApplicationComponentsProvider>
       </NavigationStateProvider>
     </RuntimeScopeProvider>

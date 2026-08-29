@@ -13,16 +13,34 @@ export interface NavigationControl {
   readonly target: NavigationState;
 }
 
-export const useNavigationControl = (factory: NavigationRequestFactory, end: boolean): NavigationControl => {
+export const useNavigationControl = (
+  factory: NavigationRequestFactory,
+  end: boolean,
+  viewTransition = false,
+): NavigationControl => {
   const navigate = useNavigate();
   const navigation = useNavigationState();
   const request = createNavigationRequest(factory);
   const target = resolveNavigateRequest(navigate, request);
 
   return {
-    execute: () => executeNavigateRequest(navigate, request),
+    execute: () => executeNavigationControl(() => executeNavigateRequest(navigate, request), viewTransition),
     isActive: matchesNavigationState(navigation.snapshot.navigation, target, { end }),
     isPending: matchesNavigationState(navigation.snapshot.pending, target, { end }),
     target,
   };
+};
+
+export const executeNavigationControl = async (
+  execute: () => Promise<void>,
+  viewTransition: boolean,
+): Promise<void> => {
+  if (!viewTransition || typeof document === 'undefined' || typeof document.startViewTransition !== 'function') {
+    await execute();
+    return;
+  }
+
+  const transition = document.startViewTransition(execute);
+
+  await transition.updateCallbackDone;
 };

@@ -29,6 +29,16 @@ export const renderApplicationFeatures = (
   return features.map((feature, index) => {
     const registration = applicationFeatureRenderers.get(feature);
 
-    return registration?.layer === layer ? <React.Fragment key={index}>{registration.render()}</React.Fragment> : null;
+    return registration?.layer === layer ? (
+      <ApplicationFeaturePresentation key={index} renderer={registration.render} />
+    ) : null;
   });
+};
+
+interface ApplicationFeaturePresentationProps {
+  readonly renderer: ApplicationFeatureRenderer;
+}
+
+const ApplicationFeaturePresentation: React.FC<ApplicationFeaturePresentationProps> = (props) => {
+  return <>{props.renderer()}</>;
 };

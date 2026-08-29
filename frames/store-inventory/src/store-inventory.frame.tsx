@@ -1,5 +1,5 @@
 import { UseBindings } from '@sellgar/app-v2';
-import { Frame } from '@sellgar/app-v2/react';
+import { Module } from '@sellgar/app-v2/react';
 
 import React from 'react';
 
@@ -10,7 +10,7 @@ import { MainLayout } from './layout/main';
 import { FrameView } from './view/frame.view.tsx';
 
 @UseBindings(StoreInventoryBindings)
-@Frame({
+@Module({
   exception: <Exception />,
   fallback: <Fallback />,
   layouts: [MainLayout],

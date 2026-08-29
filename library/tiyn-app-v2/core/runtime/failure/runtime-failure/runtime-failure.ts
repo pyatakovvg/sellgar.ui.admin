@@ -9,11 +9,6 @@ export type RuntimeOwner =
       readonly instanceId: string;
       readonly kind: 'widget';
       readonly token: DependencyToken<unknown>;
-    }
-  | {
-      readonly instanceId: string;
-      readonly kind: 'frame';
-      readonly token: DependencyToken<unknown>;
     };
 
 export type RuntimeParticipant =
@@ -35,11 +30,11 @@ export interface RuntimeFailureSource {
 
 export type RuntimeFailureDisposition =
   | 'application.activation-failed'
+  | 'application.failed'
   | 'route.activation-failed'
   | 'module.activation-failed'
   | 'module.failed'
   | 'widget.failed'
-  | 'frame.failed'
   | 'action.failed'
   | 'revalidate.failed'
   | 'event-handler.contained'
@@ -78,7 +73,7 @@ export abstract class RuntimeFailureReporterInterface {
 let failureSequence = 0;
 let runtimeInstanceSequence = 0;
 
-export const createRuntimeInstanceId = (kind: 'frame' | 'widget'): string => {
+export const createRuntimeInstanceId = (kind: 'widget'): string => {
   return `${kind}:${++runtimeInstanceSequence}`;
 };
 

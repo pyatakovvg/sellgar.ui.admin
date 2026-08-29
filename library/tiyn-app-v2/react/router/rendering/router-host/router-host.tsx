@@ -7,6 +7,7 @@ import type { ApplicationComponents } from '../../../application/config/applicat
 import { renderLayouts } from '../../../layout/rendering/layout-renderer';
 import type { ModuleMetadata } from '../../../module/declaration/module';
 import { ExceptionProvider } from '../../../runtime/exception/exception-context';
+import { RuntimeErrorBoundary } from '../../../runtime/exception/runtime-error-boundary';
 import { getRoutePresentationDefinition } from '../../declaration/route';
 import { getRouterPresentationDefinition } from '../../declaration/router';
 import { RouteHost } from '../route-host';
@@ -35,7 +36,15 @@ export const RouterHost: React.FC<IProps> = (props) => {
     notFound: definition.notFound ?? props.components.notFound,
   };
 
-  return <>{renderLayouts(definition.layouts, renderRouterContent(props, components, snapshot))}</>;
+  return (
+    <RuntimeErrorBoundary
+      exception={components.exception}
+      onError={(error) => void props.runtime.failRender(error)}
+      resetKeys={[props.runtime]}
+    >
+      {renderLayouts(definition.layouts, renderRouterContent(props, components, snapshot))}
+    </RuntimeErrorBoundary>
+  );
 };
 
 const renderRouterContent = (

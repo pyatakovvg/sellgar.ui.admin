@@ -16,11 +16,12 @@ interface IProps {
   }) => React.ReactNode;
   readonly end?: boolean;
   readonly navigation: NavigationRequestFactory;
+  readonly viewTransition?: boolean;
 }
 
-export const NavLink: React.FC<IProps> = ({ end = true, ...props }) => {
+export const NavLink: React.FC<IProps> = ({ end = true, viewTransition = false, ...props }) => {
   const navigation = useNavigationState();
-  const control = useNavigationControl(props.navigation, end);
+  const control = useNavigationControl(props.navigation, end, viewTransition);
   const href = navigation.createHref(control.target);
   const onClick: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
     if (!canNavigate(event)) {

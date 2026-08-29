@@ -33,9 +33,6 @@ export interface ResolvedApplicationRouting {
 export abstract class ApplicationConfiguratorInterface extends CoreApplicationConfiguratorInterface {
   abstract components(components: ApplicationComponents): void;
 
-  /** @deprecated Используйте routing(). */
-  abstract frames(routing: ApplicationRouting): void;
-
   abstract layouts(layouts: readonly LayoutConstructor[]): void;
 
   abstract routing(routing: ApplicationRouting): void;

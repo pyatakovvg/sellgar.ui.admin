@@ -53,7 +53,7 @@ export const NestedRouterLayer: React.FC<IProps> = (props) => {
 
   return (
     <ShellHost>
-      <NestedRouterHost routing={props.routing} runtime={activeChild.runtime}>
+      <NestedRouterHost exception={components.exception} routing={props.routing} runtime={activeChild.runtime}>
         <RouterHost components={components} pending={branch.childPending} runtime={activeChild.runtime} />
         {branch.childPending ? null : (
           <NestedRouterLayer components={components} routing={props.routing} runtime={activeChild.runtime} />

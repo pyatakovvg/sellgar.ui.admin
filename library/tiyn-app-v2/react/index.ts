@@ -10,13 +10,8 @@ export type {
 export { Layout } from './layout/declaration/layout';
 export type { LayoutConstructor, LayoutMetadata, LayoutViewProps } from './layout/declaration/layout';
 
-export { Module, Module as Frame } from './module/declaration/module';
-export type {
-  ModuleConstructor,
-  ModuleConstructor as FrameConstructor,
-  ModuleMetadata,
-  ModuleMetadata as FrameMetadata,
-} from './module/declaration/module';
+export { Module } from './module/declaration/module';
+export type { ModuleConstructor, ModuleMetadata } from './module/declaration/module';
 
 export type { RenderableView } from './view/renderable-view';
 

@@ -1,5 +1,7 @@
 import { param, segments, type NavigationRequestFactory } from '@sellgar/app-v2';
+import * as ReactFacade from '@sellgar/app-v2/react';
 import { NavItem, NavLink, Route, Router } from '@sellgar/app-v2/react';
+import type { ApplicationConfiguratorInterface } from '@sellgar/app-v2/react';
 
 abstract class OneRoute {
   abstract readonly oneId: string;
@@ -52,6 +54,7 @@ const validNavigation = (
       {({ execute }) => <button onClick={() => void execute()}>Open</button>}
     </NavItem>
     <NavLink
+      viewTransition
       navigation={(navigate) =>
         navigate.through(OneRoute, { params: { oneId: 'one-1' } }).to(TwiceRoute, {
           params: { twiceId: 'twice-2' },
@@ -125,7 +128,15 @@ const invalidContracts = (): void => {
   </NavLink>;
 };
 
+const removedCompatibilityContracts = (app: ApplicationConfiguratorInterface): void => {
+  // @ts-expect-error Frame compatibility alias is intentionally absent.
+  void ReactFacade.Frame;
+  // @ts-expect-error frames() compatibility method is intentionally absent.
+  void app.frames;
+};
+
 void router;
 void staticNavigation;
 void validNavigation;
 void invalidContracts;
+void removedCompatibilityContracts;

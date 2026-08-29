@@ -30,11 +30,12 @@ Controller loader results читаются во view через `useLoaderData(C
 
 ## Frame и nested routing
 
-Drawer workflows объявляются через `@Frame`, а address/token/shell задаются host route graph.
+Drawer workflows остаются пакетами `frames/*`, но объявляются через единый
+`@Module`; address/token/shell задаются host route graph.
 
 ```tsx
 @UseBindings(BrandModifyBindings)
-@Frame({
+@Module({
   view: FrameView,
 })
 export class BrandModifyFrame {}

@@ -293,8 +293,8 @@ observable state на controller token; второй action того же token 
 `failed`. Action не запускает implicit revalidate и не добавляет несуществующих
 provider phases.
 
-`react/module` владеет React-реализацией `@Module` и прямым compatibility alias
-`Frame = Module`; `react/layout` — React-реализацией `@Layout`. Их metadata
+`react/module` владеет единственной React-реализацией `@Module`; compatibility
+alias `Frame` отсутствует. `react/layout` владеет React-реализацией `@Layout`. Их metadata
 сохраняет reference-поля `view`, `fallback`, `exception`, `layouts` и
 `providers`, не добавляя `bindings`: binding modules по-прежнему подключаются
 core-декоратором `@UseBindings`. Внутренний `ReactModuleExportResolver` принимает
@@ -368,7 +368,9 @@ Layout tokens активируются как binding owners RouteScope, а их
 добавляются после явно объявленных Route providers в runtime composition.
 `RouteHost` является функциональной presentation boundary: подписывается на
 свой RouteRuntime, предоставляет RouteScope и оборачивает
-контент layouts этой Route. При замене RouteRuntime его subtree remount-ится,
+контент layouts этой Route. React render error передаётся в
+`RouteRuntime.failRender()` и не переводит соседнюю либо ancestor Route в
+`failed`. При замене RouteRuntime его subtree remount-ится,
 поэтому локальное React-состояние прежней Route не протекает в новую ветку.
 
 `core/router/runtime/router-runtime` владеет logical transaction выбранного
@@ -405,6 +407,12 @@ presentation overrides, а committed nested Router передаёт отдель
 application-level frame layer с сохранением logical owner RouteScope.
 Redirect не становится render state и продолжает обычную application navigation
 transaction.
+
+React render boundaries следуют core ownership: Module view/layouts сообщают
+ошибку `ModuleRuntime`, Route layouts — `RouteRuntime`, Router layouts и shell —
+`RouterRuntime`, application layouts/features — `Application`. Shell presentation
+вызывается внутри дочернего React-компонента, поэтому синхронная ошибка
+`shell.render()` также перехватывается Router boundary.
 
 Route и Router declarations сохраняют `canMatch`/`canActivate`, Route также
 сохраняет `canAction`. Общий `core/policy` переносит reference-контракты
@@ -519,7 +527,8 @@ entrypoint экспортирует renderer-specific `Application`, configurato
 declarations и root Router host, который создаётся через `createView()`. Host
 читает lifecycle, navigation decision и root Route/Module snapshots из
 единственного core runtime; собственного navigation state у adapter нет.
-`routing()` и deprecated `frames()` используют одно configuration state.
+`routing()` является единственной renderer-specific конфигурацией presentation
+вложенных Router; compatibility method `frames()` отсутствует.
 Renderer-specific `Router` расширяет core declaration только presentation-
 полями и хранит их отдельно от core definition. Root host не применяет shell;
 application layouts оборачивают только presentation root Router, а отдельный

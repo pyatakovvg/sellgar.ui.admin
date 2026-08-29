@@ -38,10 +38,6 @@ export class ApplicationConfig extends CoreApplicationConfig implements Applicat
     this.applicationComponents = Object.freeze({ ...components });
   }
 
-  frames(routing: ApplicationRouting): void {
-    this.routing(routing);
-  }
-
   layouts(layouts: readonly LayoutConstructor[]): void {
     this.applicationLayouts = Object.freeze([...layouts]);
   }

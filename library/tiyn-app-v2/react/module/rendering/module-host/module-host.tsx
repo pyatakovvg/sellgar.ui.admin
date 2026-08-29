@@ -7,6 +7,7 @@ import { renderLayouts } from '../../../layout/rendering/layout-renderer';
 import type { ModuleMetadata } from '../../declaration/module';
 import { renderView } from '../../../view/renderable-view';
 import { ExceptionProvider } from '../../../runtime/exception/exception-context';
+import { RuntimeErrorBoundary } from '../../../runtime/exception/runtime-error-boundary';
 import { RuntimeScopeProvider } from '../../../runtime/scope/runtime-scope-context';
 
 interface IProps {
@@ -40,10 +41,16 @@ export const ModuleHost: React.FC<IProps> = (props) => {
   const metadata = presentationModule.definition.presentation;
 
   return (
-    <RuntimeScopeProvider scope={presentationModule.scope}>
-      <ControllerRuntimeProvider value={props.routeRuntime}>
-        {renderLayouts(metadata.layouts ?? [], renderView(metadata.view, {}))}
-      </ControllerRuntimeProvider>
-    </RuntimeScopeProvider>
+    <RuntimeErrorBoundary
+      exception={metadata.exception ?? props.exception}
+      onError={(error) => void props.moduleRuntime.failRender(error)}
+      resetKeys={[props.moduleRuntime]}
+    >
+      <RuntimeScopeProvider scope={presentationModule.scope}>
+        <ControllerRuntimeProvider value={props.routeRuntime}>
+          {renderLayouts(metadata.layouts ?? [], renderView(metadata.view, {}))}
+        </ControllerRuntimeProvider>
+      </RuntimeScopeProvider>
+    </RuntimeErrorBoundary>
   );
 };

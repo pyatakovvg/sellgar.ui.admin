@@ -12,6 +12,7 @@
     "./react/index.ts",
     "./native/index.ts",
     "./fsm/index.ts",
-    "./contracts/navigation-contracts.fixture.tsx"
+    "./contracts/navigation-contracts.fixture.tsx",
+    "./contracts/react-facade.fixture.tsx"
   ]
 }

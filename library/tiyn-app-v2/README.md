@@ -18,8 +18,9 @@ Admin UI как первый реальный consumer.
 [package.json](package.json). Renderer-зависимости объявлены optional peers и не
 становятся обязательными зависимостями core-only consumer; отдельный
 `typecheck:core` компилирует только публичный core facade без ambient React
-types. Compile-time fixture дополнительно фиксирует exact params для `to()` и
-`through()` и React navigation controls. Реализация начата с renderer-independent route graph,
+types. Compile-time fixtures дополнительно фиксируют React facade, отсутствие
+compatibility aliases, exact params для `to()`/`through()` и React navigation
+controls. Реализация начата с renderer-independent route graph,
 structured address и navigation resolution. Из существующего `@sellgar/app` в
 `core` перенесены базовые DI contracts/scope, session state, application store,
 initializers, application feature activation, runtime failure flow, disposable
@@ -32,8 +33,8 @@ Core `Application` остаётся внутренней реализацией.
 core lifecycle и `RouterRuntime`. Application host подписывается через
 `useSyncExternalStore`, отображает splash/application failure, Router-owned
 `forbidden`/`not-found`/`exception`, application layouts и Module presentation
-корневой Route-ветки. Конфигурация `routing()` и deprecated alias `frames()` хранят один
-React presentation contract. Вложенный Router проецируется через локальный
+корневой Route-ветки. Конфигурация `routing()` хранит React presentation
+contract вложенных Router. Вложенный Router проецируется через локальный
 `Router.shell` либо default `app.routing({ shell })`; renderer-декларация
 называется `@Shell`. Core регистрирует
 renderer-neutral application features и активирует их bindings в общем
@@ -98,8 +99,8 @@ ApplicationScope владеет общим ProviderScope: runtime providers по
 Core также содержит renderer-neutral основу ModuleRuntime: lazy export
 сначала проходит adapter-owned compatibility resolver, затем создаются
 ModuleScope, controllers и provider pipeline; pending runtime явно commit-ится
-либо освобождается. React entrypoint предоставляет `@Module`, прямой alias
-`Frame`, `@Layout`, `@Shell` и `RenderableView`; внутренний React resolver
+либо освобождается. React entrypoint предоставляет `@Module`, `@Layout`,
+`@Shell` и `RenderableView`; внутренний React resolver
 принимает ровно один совместимый lazy export и переносит его module/layout
 bindings и providers в core definition до запуска прикладного runtime-кода.
 Initial load выполняет provider `initialize`, затем provider `prepare` и guarded
@@ -107,7 +108,9 @@ controller loaders в одной concurrent operation, после чего `acti
 атомарно публикуют loader data. Renderer не участвует в provider lifecycle:
 React render и StrictMode replay не запускают hooks. Dispose прерывает operation,
 ждёт её физического завершения, выполняет retained cleanup и обязательный
-provider `dispose`. Ошибка lifecycle переводит только ModuleRuntime в `failed`.
+provider `dispose`. Ошибка lifecycle или render его view/layouts переводит
+только ModuleRuntime в `failed`; React boundary передаёт render failure core
+runtime и освобождает его controllers/providers.
 Module view получает свой ModuleScope и typed controller runtime через
 React contexts; публичный adapter экспортирует reference hooks `useController`,
 `useLoaderData`, `useSubmit`, `useParams`, `useRevalidate` и `useDependency`.
@@ -247,7 +250,9 @@ Route token через `useRouteActive` и `useRoutePending`. Для декла�
 Оба собирают тот же типизированный
 `navigation={(navigate) => navigate.through(...).to(...)` request, что и
 imperative service; URL строит только href-capability web bridge, а renderer
-transport в matching не участвует.
+transport в matching не участвует. Optional `viewTransition` оборачивает
+исполнение того же request в browser View Transition API и прозрачно выполняет
+обычную navigation, когда capability недоступна.
 Application подключает к operation coordinator один session-refresh handler.
 Волна повторяет `canMatch`/`canActivate` всей committed Router/Route-цепочки,
 затем loaders и provider `revalidate` без initial lifecycle и без

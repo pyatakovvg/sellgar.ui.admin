@@ -59,7 +59,8 @@
 ## Runtime правила
 
 - Pages используют `@Module` и `@UseBindings`.
-- Frames используют `@Frame` и `@UseBindings`; source и shell задаются route graph/application routing.
+- Frames остаются feature-пакетами `frames/*`, но runtime-декларация у них единая с pages: `@Module` и
+  `@UseBindings`; address и shell задаются route graph/application routing.
 - Route identifiers приходят в `ControllerArgs<WithParams<...>>['params']`; тип выводить из token через `RouteParams<typeof Token>`.
 - Navigation выполнять через `useNavigate()`/`NavigateServiceInterface` и route token, без строковых URL.
 - Табличное открытие drawer делать через click row, если действие является основным для строки.

@@ -36,6 +36,7 @@ export abstract class Application extends CoreApplication<ModuleMetadata, Applic
     const source: ApplicationViewSource = Object.freeze({
       components: this.reactConfig.componentsValue,
       createHref: (navigation: NavigationState) => this.createHref(navigation),
+      failRender: (error: unknown) => this.failRender(error),
       features: this.reactConfig.featuresValue,
       getLifecycle: () => this.lifecycle,
       getNavigation: () => this.getNavigationSnapshot(),
