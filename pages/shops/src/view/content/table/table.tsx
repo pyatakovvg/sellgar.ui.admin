@@ -1,5 +1,5 @@
-import { ShopModifyFrame } from '@frame/shop-modify';
-import * as App from '@sellgar/app';
+import { ShopModifyRoute } from '@library/route-tokens';
+import * as App from '@sellgar/app-v2/react';
 import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
@@ -12,7 +12,7 @@ import s from './default.module.scss';
 
 export const Table: React.FC = () => {
   const shops = App.useLoaderData(ShopControllerInterface);
-  const shopModifyFrame = App.useFrame(ShopModifyFrame);
+  const navigate = App.useNavigate();
 
   return (
     <div className={s.wrapper}>
@@ -20,7 +20,7 @@ export const Table: React.FC = () => {
         data={{ nodes: shops.data }}
         row={{
           handlers: {
-            click: ({ row }) => void shopModifyFrame.open({ uuid: row.uuid }),
+            click: ({ row }) => void navigate.to(ShopModifyRoute, { params: { uuid: row.uuid } }),
           },
         }}
       >

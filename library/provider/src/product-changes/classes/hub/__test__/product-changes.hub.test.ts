@@ -6,7 +6,7 @@ import {
   type SocketIOConnectionsInterface,
   type SocketIORealtimeDeliveryHandler,
 } from '@library/socket-io';
-import type { LocationServiceInterface, LocationServiceListener, RouterLocationSnapshot } from '@sellgar/app';
+import type { LocationServiceInterface, LocationServiceListener, RouterLocationSnapshot } from '@sellgar/app-v2';
 
 import { ProductChangesHub } from '../product-changes.hub.ts';
 
@@ -141,6 +141,7 @@ const createFixture = () => {
   const handlers = new Map<string, SocketIORealtimeDeliveryHandler>();
   const subscriptions = new Map<string, TestDeliverySubscription>();
   let location = createLocation('/products', '?status=active');
+  window.history.replaceState({}, '', '/products?status=active');
   let locationListener: LocationServiceListener | undefined;
   const unsubscribeLocation = vi.fn();
   const connection = {
@@ -188,6 +189,7 @@ const createFixture = () => {
   return {
     auth,
     changeLocation(pathname: string, search: string) {
+      window.history.replaceState({}, '', pathname + search);
       location = createLocation(pathname, search);
       locationListener?.(location);
     },
@@ -222,14 +224,9 @@ type TestDeliverySubscription = SocketIODeliverySubscription & {
   updateContext: ReturnType<typeof vi.fn>;
 };
 
-const createLocation = (pathname: string, search: string): RouterLocationSnapshot => ({
-  hash: '',
-  hashParams: {},
-  key: 'location-key',
+const createLocation = (_pathname: string, search: string): RouterLocationSnapshot => ({
   params: {},
-  pathname,
-  search,
-  searchParams: {},
+  query: Object.fromEntries(new URLSearchParams(search)),
   state: undefined,
 });
 

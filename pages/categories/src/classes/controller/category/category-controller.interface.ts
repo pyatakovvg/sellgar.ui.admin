@@ -1,6 +1,5 @@
 import type { CategoryResultEntity } from '@library/domain';
-import type { ControllerInterface } from '@sellgar/app';
 
-export abstract class CategoryControllerInterface implements ControllerInterface {
+export abstract class CategoryControllerInterface {
   abstract loader(): Promise<CategoryResultEntity>;
 }

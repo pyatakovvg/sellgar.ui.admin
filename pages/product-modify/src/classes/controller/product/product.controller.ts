@@ -2,8 +2,9 @@ import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
 import { FileServiceInterface, ProductServiceInterface } from '@library/domain';
+import { ProductModifyRoute } from '@library/route-tokens';
 
-import { Controller, Inject, NavigateServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
+import { Controller, Inject, NavigateServiceInterface, RevalidateServiceInterface } from '@sellgar/app-v2';
 
 import { ProductModifyResultEntity } from './domain/product-modify-result.entity.ts';
 import { ProductFormMapper } from './mapper/product-form.mapper.ts';
@@ -35,7 +36,7 @@ export class ProductController implements ProductControllerInterface {
 
     const result = await this.productService.create(ProductFormMapper.toCreateInput(args.payload));
 
-    await this.navigateService.to('/products/' + result.uuid);
+    await this.navigateService.to(ProductModifyRoute, { params: { uuid: result.uuid } });
 
     return result;
   }

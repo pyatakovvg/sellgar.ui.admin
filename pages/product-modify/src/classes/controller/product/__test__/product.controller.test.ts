@@ -1,5 +1,6 @@
 import type { FileServiceInterface, ProductEntity, ProductServiceInterface } from '@library/domain';
-import type { NavigateServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
+import { ProductModifyRoute } from '@library/route-tokens';
+import type { NavigateServiceInterface, RevalidateServiceInterface } from '@sellgar/app-v2';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ProductController } from '../product.controller.ts';
@@ -80,7 +81,9 @@ describe('ProductController', () => {
 
     expect(fixture.productService.create).toHaveBeenCalledWith(payload);
     expect(vi.mocked(fixture.productService.create).mock.calls[0][0].variants[0].images?.[0].file).toBe(file);
-    expect(fixture.navigateService.to).toHaveBeenCalledWith('/products/' + result.uuid);
+    expect(fixture.navigateService.to).toHaveBeenCalledWith(ProductModifyRoute, {
+      params: { uuid: result.uuid },
+    });
   });
 
   it('передаёт update payload в сервис без преобразования', async () => {

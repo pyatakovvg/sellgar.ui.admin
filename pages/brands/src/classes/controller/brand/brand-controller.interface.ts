@@ -1,6 +1,5 @@
 import type { BrandResultEntity } from '@library/domain';
-import type { ControllerInterface } from '@sellgar/app';
 
-export abstract class BrandControllerInterface implements ControllerInterface {
+export abstract class BrandControllerInterface {
   abstract loader(): Promise<BrandResultEntity>;
 }

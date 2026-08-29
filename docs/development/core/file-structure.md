@@ -5,7 +5,7 @@
 - `clients/admin` - Vite application host.
 - `layouts/*` - layout workspaces.
 - `pages/*` - route-level page workspaces.
-- `frames/*` - drawer/modal frame workspaces.
+- `frames/*` - nested Drawer frame workspaces.
 - `widgets/*` - embedded widget workspaces.
 - `library/*` - shared libraries.
 - `utils/*` - utility packages.
@@ -41,14 +41,13 @@ frames/<name>/
   src/
     index.ts
     <name>.frame.tsx
-    shell.tsx
     classes/
     view/
     hooks/
     requests/
 ```
 
-Frames использовать для drawer/modal workflows. Frame должен владеть controller, loader, form view, mutation hooks и shell.
+Frames использовать для nested Drawer workflows. Frame владеет controller, loader, form view и mutation hooks; общий shell принадлежит application host.
 
 ## Widget-Пакет
 
@@ -66,7 +65,7 @@ widgets/<name>/
     hooks/
 ```
 
-Widgets использовать только для reusable embedded UI. Не использовать widgets как drawer/modal feature containers.
+Widgets использовать только для reusable embedded UI. Не использовать widgets как Drawer feature containers.
 
 ## Library-Пакет
 

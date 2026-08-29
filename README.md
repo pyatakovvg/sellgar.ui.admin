@@ -5,8 +5,9 @@
 ## Стек
 
 - React 19, Vite, TypeScript.
-- Runtime приложения: `@sellgar/app`.
-- DI: bindings из `@sellgar/app` и `inversify`.
+- Runtime приложения: `@sellgar/app-v2`.
+- Route tokens: отдельный пакет `@library/route-tokens`.
+- DI: bindings из `@sellgar/app-v2` и `inversify`.
 - UI kit: `@sellgar/kit`, иконки из `@sellgar/kit/icons`.
 - Доменный слой и HTTP: `@library/domain`.
 
@@ -14,7 +15,7 @@
 
 - `clients/admin/src/main.tsx` подключает стили `@sellgar/kit` и глобальные стили.
 - `clients/admin/src/bootstrap.tsx` создает `AdminApplication`, рендерит React root и запускает initializer.
-- `clients/admin/src/application/admin.application.tsx` описывает layouts, initializers, policies, routes и frames.
+- `clients/admin/src/application/admin.application.tsx` описывает application-wide components, shell, initializers и features; route graph находится в `src/application/routes`.
 - `clients/admin/src/application/bindings/admin.bindings.ts` регистрирует application/domain зависимости.
 - `clients/admin/src/sw/service-worker.tsx` показывает UI обновления service worker.
 
@@ -23,7 +24,7 @@
 - `clients/admin` - host-приложение и composition root.
 - `layouts/*` - layout-пакеты приложения.
 - `pages/*` - route-level страницы.
-- `frames/*` - drawer/modal формы, открываемые через `useFrame`.
+- `frames/*` - вложенные route workflows, отображаемые через единый application-level `Drawer`.
 - `widgets/*` - переиспользуемые встраиваемые UI-блоки.
 - `library/*` - общие библиотеки runtime/design/domain/message/push.
 - `utils/*` - общие утилиты без UI.
@@ -34,11 +35,8 @@
 - `/` - dashboard.
 - `/shops` - магазины.
 - `/products` - список товаров, `/products/create` и `/products/:uuid` - форма товара.
-- `/store` - складские позиции, frame `store`.
-- `/brands` - бренды, frame `brand`.
-- `/categories` - категории, frame `category`.
-- `/units` - единицы измерения, frame `unit`.
-- `/properties` - характеристики, frame `property`.
+- `/store` - складские позиции и вложенные drawer routes.
+- `/brands`, `/categories`, `/units`, `/properties` - списки и вложенные create/edit drawer routes.
 
 ## Скрипты
 

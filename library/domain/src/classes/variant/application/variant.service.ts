@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@sellgar/app';
+import { Inject, Injectable } from '@sellgar/app-v2';
 
 import { VariantServiceInterface } from './variant-service.interface.ts';
 import { VariantGatewayInterface } from '../data/gateway/variant-gateway.interface.ts';

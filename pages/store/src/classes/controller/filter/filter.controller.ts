@@ -1,24 +1,24 @@
-import { Controller, Inject, LocationServiceInterface, NavigateServiceInterface } from '@sellgar/app';
+import { Controller, Inject, RouteQueryServiceInterface } from '@sellgar/app-v2';
 
-import { FilterDto } from './dto/filter.dto.ts';
 import { FilterControllerInterface } from './filter-controller.interface.ts';
-import type { FilterInput } from './input/filter.input.ts';
-import { FilterMapper } from './mapper/filter.mapper.ts';
+import { FilterQuery } from './query/filter.query.ts';
 
 @Controller()
 export class FilterController implements FilterControllerInterface {
   constructor(
-    @Inject(LocationServiceInterface) private readonly locationService: LocationServiceInterface,
-    @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
+    @Inject(RouteQueryServiceInterface)
+    private readonly query: RouteQueryServiceInterface,
   ) {}
 
-  loader(): FilterInput {
-    const filter = this.locationService.searchToObject(FilterDto);
-
-    return FilterMapper.fromDto(filter);
+  loader() {
+    return this.query.get(FilterQuery);
   }
 
-  apply(input: FilterInput): Promise<void> {
-    return this.navigateService.searchParams(FilterMapper.toSearchParams(input), { merge: true });
+  action({ payload }: Parameters<FilterControllerInterface['action']>[0]) {
+    return this.query.set(FilterQuery, payload);
+  }
+
+  async reset() {
+    await this.query.clear(FilterQuery);
   }
 }

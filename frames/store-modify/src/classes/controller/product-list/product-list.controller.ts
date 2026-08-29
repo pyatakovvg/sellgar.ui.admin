@@ -1,5 +1,5 @@
 import { ProductServiceInterface, type ProductEntity } from '@library/domain';
-import { Controller, Inject } from '@sellgar/app';
+import { Controller, Inject } from '@sellgar/app-v2';
 
 import { ProductListControllerInterface } from './product-list-controller.interface.ts';
 @Controller()

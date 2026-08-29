@@ -9,7 +9,7 @@
 - Вся документация пишется на русском языке.
 - Документация должна совпадать с текущими paths и package names репозитория.
 - Использовать `clients/admin`, `pages/*`, `frames/*`, `widgets/*`, `layouts/*`, `library/*`.
-- В примерах использовать `@sellgar/kit` и `@sellgar/app`.
+- В примерах использовать `@sellgar/kit`, `@sellgar/app-v2`, `@sellgar/app-v2/react` и `@library/route-tokens`.
 - Не возвращать устаревшие host paths, obsolete feature aliases или старые package names UI-kit.
 - Документация должна быть короткой и операционной.
 

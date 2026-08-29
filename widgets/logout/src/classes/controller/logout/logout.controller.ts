@@ -1,5 +1,5 @@
 import { AuthServiceInterface } from '@library/domain';
-import { ApplicationStoreInterface, Controller, Inject, SessionRuntimeStateInterface } from '@sellgar/app';
+import { ApplicationStoreInterface, Controller, Inject, SessionRuntimeStateInterface } from '@sellgar/app-v2';
 
 import { LogoutControllerInterface } from './logout-controller.interface.ts';
 

@@ -9,7 +9,7 @@
 Примеры:
 
 - добавить или удалить route;
-- подключить новый frame к route;
+- подключить новый nested frame router к route;
 - изменить auth policies;
 - зарегистрировать application-wide bindings.
 
@@ -24,7 +24,7 @@
 - route loader для list/details page;
 - route-level form page, например product modify.
 
-## Drawer или modal workflow
+## Drawer workflow
 
 Работать в `frames/<feature>`.
 
@@ -34,7 +34,9 @@
 - create/edit category;
 - create/edit unit;
 - create/edit property или property group;
-- create/edit store item через hash frame.
+- create/edit store item через tokenized nested route.
+
+Все feature frames используют общий application-level `Drawer`. Отдельный Modal shell не создавать; kit `Modal` допустим для confirmation/user-request overlays.
 
 ## Встраиваемый reusable block
 
@@ -45,11 +47,12 @@
 - logout control;
 - gallery UI, переиспользуемый page/form.
 
-Не помещать drawer/modal feature workflows в widgets.
+Не помещать drawer feature workflows в widgets.
 
 ## Общие UI, domain и runtime
 
 - `library/design` - только visual shared wrappers.
 - `library/domain` - entities, repositories, API clients и HTTP helpers.
-- `library/tiyn-app` - runtime changes.
+- `library/tiyn-app-v2` - runtime changes.
+- `library/route-tokens` - route token contracts.
 - `utils/*` - pure utility functions.

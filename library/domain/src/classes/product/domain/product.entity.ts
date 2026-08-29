@@ -1,6 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 import { IsArray, IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-import { Entity } from '@sellgar/app';
+import { Entity } from '@sellgar/app-v2';
 
 import { ProductStatus } from './product-status.enum.ts';
 

@@ -1,15 +1,15 @@
-import { ShopModifyFrame } from '@frame/shop-modify';
-import * as App from '@sellgar/app';
+import { ShopCreateRoute } from '@library/route-tokens';
+import * as App from '@sellgar/app-v2/react';
 import { Button } from '@sellgar/kit';
 import { AddLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 
 export const Create: React.FC = () => {
-  const shopModifyFrame = App.useFrame(ShopModifyFrame);
+  const navigate = App.useNavigate();
 
   const handleCreate = () => {
-    void shopModifyFrame.open({});
+    void navigate.to(ShopCreateRoute);
   };
 
   return (

@@ -1,5 +1,6 @@
 import type { CreateShopInput, ShopEntity, ShopServiceInterface, UpdateShopInput } from '@library/domain';
-import type { FrameServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
+import type { RevalidateServiceInterface } from '@sellgar/app-v2';
+import type { NavigateServiceInterface } from '@sellgar/app-v2';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ShopModifyController } from '../shop-modify.controller.ts';
@@ -10,12 +11,12 @@ const createController = () => {
     findByUuid: vi.fn(),
     update: vi.fn(),
   } as unknown as ShopServiceInterface;
-  const frameService = { close: vi.fn() } as unknown as FrameServiceInterface;
+  const navigateService = { close: vi.fn() } as unknown as NavigateServiceInterface;
   const revalidateService = { revalidate: vi.fn() } as unknown as RevalidateServiceInterface;
 
   return {
-    controller: new ShopModifyController(shopService, frameService, revalidateService),
-    frameService,
+    controller: new ShopModifyController(shopService, navigateService, revalidateService),
+    navigateService,
     revalidateService,
     shopService,
   };
@@ -28,7 +29,7 @@ describe('ShopModifyController', () => {
     await expect(
       fixture.controller.loader({
         params: {},
-        props: {},
+        params: {},
         request: new Request('http://localhost/shops'),
         signal: new AbortController().signal,
       }),
@@ -45,7 +46,7 @@ describe('ShopModifyController', () => {
     await expect(
       fixture.controller.loader({
         params: {},
-        props: { uuid: shop.uuid },
+        params: { uuid: shop.uuid },
         request: new Request('http://localhost/shops'),
         signal: new AbortController().signal,
       }),
@@ -59,7 +60,7 @@ describe('ShopModifyController', () => {
 
     await fixture.controller.close();
 
-    expect(fixture.frameService.close).toHaveBeenCalledOnce();
+    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 
   it('создаёт магазин и завершает frame workflow', async () => {
@@ -69,14 +70,14 @@ describe('ShopModifyController', () => {
     await fixture.controller.action({
       params: {},
       payload,
-      props: {},
+      params: {},
       request: new Request('http://localhost/shops', { method: 'POST' }),
       signal: new AbortController().signal,
     });
 
     expect(fixture.shopService.create).toHaveBeenCalledWith(payload);
     expect(fixture.revalidateService.revalidate).toHaveBeenCalledOnce();
-    expect(fixture.frameService.close).toHaveBeenCalledOnce();
+    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 
   it('определяет update по uuid в payload', async () => {
@@ -89,7 +90,7 @@ describe('ShopModifyController', () => {
     await fixture.controller.action({
       params: {},
       payload,
-      props: { uuid: payload.uuid },
+      params: { uuid: payload.uuid },
       request: new Request('http://localhost/shops', { method: 'POST' }),
       signal: new AbortController().signal,
     });

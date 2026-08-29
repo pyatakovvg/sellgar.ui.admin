@@ -1,6 +1,6 @@
 import { Expose, Type } from 'class-transformer';
 import { IsArray, ValidateNested } from 'class-validator';
-import { EntityCollection } from '@sellgar/app';
+import { EntityCollection } from '@sellgar/app-v2';
 
 import { MetaEntity } from '../../meta/index.ts';
 

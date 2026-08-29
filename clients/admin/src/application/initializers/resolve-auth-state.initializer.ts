@@ -1,12 +1,5 @@
 import { ProfileEntity, ProfileServiceInterface } from '@library/domain';
-import {
-  ApplicationStoreInterface,
-  Inject,
-  Initializer,
-  UnauthorizedException,
-  type ApplicationInitializerContextInterface,
-  type ApplicationInitializerInterface,
-} from '@sellgar/app';
+import { ApplicationStoreInterface, Inject, Initializer, UnauthorizedException, type ApplicationInitializerContextInterface, type ApplicationInitializerInterface } from '@sellgar/app-v2';
 
 @Initializer()
 export class ResolveAuthStateInitializer implements ApplicationInitializerInterface {

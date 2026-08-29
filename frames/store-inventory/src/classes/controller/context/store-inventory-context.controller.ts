@@ -1,5 +1,6 @@
 import { StoreServiceInterface } from '@library/domain';
-import { Controller, FrameServiceInterface, Inject } from '@sellgar/app';
+import { Controller, Inject } from '@sellgar/app-v2';
+import { NavigateServiceInterface } from '@sellgar/app-v2';
 
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
@@ -11,12 +12,12 @@ import { StoreInventoryResultEntity } from './domain/store-inventory-result.enti
 export class StoreInventoryContextController implements StoreInventoryContextControllerInterface {
   constructor(
     @Inject(StoreServiceInterface) private readonly storeService: StoreServiceInterface,
-    @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
   ) {}
 
   async loader(args: Parameters<StoreInventoryContextControllerInterface['loader']>[0]) {
-    const storeProduct = await this.storeService.findByUuid(args.props.storeProductUuid);
-    const offer = storeProduct.offers.find((item) => item.uuid === args.props.offerUuid);
+    const storeProduct = await this.storeService.findByUuid(args.params.storeProductUuid);
+    const offer = storeProduct.offers.find((item) => item.uuid === args.params.offerUuid);
 
     if (!offer) {
       throw new Error('Предложение товара на складе не найдено.');
@@ -33,6 +34,6 @@ export class StoreInventoryContextController implements StoreInventoryContextCon
   }
 
   async close(): Promise<void> {
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 }

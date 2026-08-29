@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
 
 import { ConfigBinding } from '../infrastructure/config/config.binding.ts';
 import { DeviceBinding } from '../infrastructure/device/device.binding.ts';

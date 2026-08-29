@@ -1,8 +1,5 @@
 import type { CurrencyEntity } from '@library/domain';
-import { FrameControllerInterface } from '@sellgar/app';
 
-import { StoreModifyFrameParams } from '../../params/frame.params.ts';
-
-export abstract class CurrencyListControllerInterface extends FrameControllerInterface<StoreModifyFrameParams> {
+export abstract class CurrencyListControllerInterface {
   abstract loader(): Promise<CurrencyEntity[]>;
 }

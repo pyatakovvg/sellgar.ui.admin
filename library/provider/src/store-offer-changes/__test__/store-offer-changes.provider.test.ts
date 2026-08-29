@@ -1,5 +1,5 @@
 import { StoreOfferEntity, StoreProductEntity } from '@library/domain';
-import type { RuntimeProviderCleanup } from '@sellgar/app';
+import type { ProviderCleanup } from '@sellgar/app-v2';
 
 import {
   StoreOfferChangesHubInterface,
@@ -18,8 +18,8 @@ describe('StoreOfferChangesProvider', () => {
     const hub = new TestStoreOfferChangesHub();
     const provider = new StoreOfferChangesProvider(hub);
 
-    const dispose = provider.setup();
-    assertRuntimeProviderCleanup(dispose);
+    const dispose = provider.activate();
+    assertProviderCleanup(dispose);
     await hub.emitUpdated(updatedStoreProduct);
 
     expect(openedStoreProduct.version).toBe(5);
@@ -29,7 +29,7 @@ describe('StoreOfferChangesProvider', () => {
   });
 });
 
-const assertRuntimeProviderCleanup: (value: unknown) => asserts value is RuntimeProviderCleanup = (value) => {
+const assertProviderCleanup: (value: unknown) => asserts value is ProviderCleanup = (value) => {
   if (typeof value !== 'function') {
     throw new Error('Provider cleanup was not created.');
   }

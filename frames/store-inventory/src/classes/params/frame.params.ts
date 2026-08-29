@@ -1,12 +1,4 @@
-import { Expose } from 'class-transformer';
-import { IsUUID } from 'class-validator';
+import { StoreInventoryRoute } from '@library/route-tokens';
+import type { RouteParams } from '@sellgar/app-v2';
 
-export class StoreInventoryFrameParams {
-  @Expose()
-  @IsUUID()
-  storeProductUuid: string;
-
-  @Expose()
-  @IsUUID()
-  offerUuid: string;
-}
+export type StoreInventoryFrameParams = RouteParams<typeof StoreInventoryRoute>;

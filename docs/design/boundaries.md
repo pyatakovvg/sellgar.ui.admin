@@ -12,7 +12,7 @@
 
 ## Frames
 
-`frames/*` владеют drawer/modal workflows. Frame должен быть цельным workflow: source, shell, controller, loader, view, requests и bindings.
+`frames/*` владеют nested Drawer workflows. Frame должен быть цельным workflow: controller, loader, view, requests и bindings. Общий shell принадлежит application host.
 
 ## Widgets
 
@@ -22,7 +22,8 @@
 
 - `library/domain` может знать о domain и HTTP.
 - `library/design` должен оставаться visual и domain-free.
-- `library/tiyn-app` владеет runtime behavior и меняется только когда этого требует app-level contract.
+- `library/tiyn-app-v2` владеет runtime behavior и меняется только когда этого требует app-level contract.
+- `library/route-tokens` владеет route token contracts.
 
 ## UI Kit
 

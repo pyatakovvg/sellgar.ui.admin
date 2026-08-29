@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
 
 import { SocketIOConnectionsInterface } from './service/socket-io-connections/socket-io-connections.interface.ts';
 import { SocketIOConnections } from './service/socket-io-connections/socket-io-connections.service.ts';

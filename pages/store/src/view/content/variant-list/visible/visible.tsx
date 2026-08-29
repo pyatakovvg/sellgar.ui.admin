@@ -1,5 +1,5 @@
 import type { StoreOfferEntity } from '@library/domain';
-import * as App from '@sellgar/app';
+import * as App from '@sellgar/app-v2/react';
 import * as Kit from '@sellgar/kit';
 import { CheckboxBlankCircleFillIcon, CheckboxBlankCircleLineIcon } from '@sellgar/kit/icons';
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@sellgar/app';
+import { Inject, Injectable } from '@sellgar/app-v2';
 
 import { CategoryServiceInterface } from './category-service.interface.ts';
 import { CategoryGatewayInterface } from '../data/gateway/category-gateway.interface.ts';

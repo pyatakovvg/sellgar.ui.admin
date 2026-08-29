@@ -1,4 +1,4 @@
-import type { RequestExecutionOptions, RequestExecutorInterface, RequestOperation } from '@sellgar/app';
+import type { RequestExecutionOptions, RequestExecutorInterface, RequestOperation } from '@sellgar/app-v2';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { ConfigInterface } from '../../../../../infrastructure/config/config.interface.ts';

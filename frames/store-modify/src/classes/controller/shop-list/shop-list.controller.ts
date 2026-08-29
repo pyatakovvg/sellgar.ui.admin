@@ -1,5 +1,5 @@
 import { ShopServiceInterface, type ShopEntity } from '@library/domain';
-import { Controller, Inject } from '@sellgar/app';
+import { Controller, Inject } from '@sellgar/app-v2';
 
 import { ShopListControllerInterface } from './shop-list-controller.interface.ts';
 @Controller()

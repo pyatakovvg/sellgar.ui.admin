@@ -1,5 +1,6 @@
 import type { StoreProductEntity, StoreServiceInterface } from '@library/domain';
-import type { FrameServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
+import type { RevalidateServiceInterface } from '@sellgar/app-v2';
+import type { NavigateServiceInterface } from '@sellgar/app-v2';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { StoreModifyActionPayload } from '../store-modify-controller.interface.ts';
@@ -12,12 +13,12 @@ const createController = () => {
     findByUuid: vi.fn(),
     update: vi.fn().mockResolvedValue(result),
   } as unknown as StoreServiceInterface;
-  const frameService = { close: vi.fn() } as unknown as FrameServiceInterface;
+  const navigateService = { close: vi.fn() } as unknown as NavigateServiceInterface;
   const revalidateService = { revalidate: vi.fn() } as unknown as RevalidateServiceInterface;
 
   return {
-    controller: new StoreModifyController(storeService, frameService, revalidateService),
-    frameService,
+    controller: new StoreModifyController(storeService, navigateService, revalidateService),
+    navigateService,
     result,
     revalidateService,
     storeService,
@@ -41,7 +42,7 @@ const payload: StoreModifyActionPayload = {
 const actionArgs = (nextPayload: StoreModifyActionPayload, uuid?: string) => ({
   params: {},
   payload: nextPayload,
-  props: { uuid },
+  params: { uuid },
   request: new Request('http://localhost/store', { method: 'POST' }),
   signal: new AbortController().signal,
 });
@@ -53,7 +54,7 @@ describe('StoreModifyController', () => {
     await expect(
       fixture.controller.loader({
         params: {},
-        props: {},
+        params: {},
         request: new Request('http://localhost/store'),
         signal: new AbortController().signal,
       }),
@@ -69,7 +70,7 @@ describe('StoreModifyController', () => {
     await expect(
       fixture.controller.loader({
         params: {},
-        props: { uuid: fixture.result.uuid },
+        params: { uuid: fixture.result.uuid },
         request: new Request('http://localhost/store'),
         signal: new AbortController().signal,
       }),
@@ -83,7 +84,7 @@ describe('StoreModifyController', () => {
 
     await fixture.controller.close();
 
-    expect(fixture.frameService.close).toHaveBeenCalledOnce();
+    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 
   it('создаёт складскую позицию, обновляет список и закрывает frame', async () => {
@@ -100,7 +101,7 @@ describe('StoreModifyController', () => {
       offers: payload.offers,
     });
     expect(fixture.revalidateService.revalidate).toHaveBeenCalledOnce();
-    expect(fixture.frameService.close).toHaveBeenCalledOnce();
+    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 
   it('обновляет открытую позицию с обязательной версией', async () => {

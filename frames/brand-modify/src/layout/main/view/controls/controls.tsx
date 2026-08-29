@@ -1,5 +1,5 @@
 import { Button } from '@sellgar/kit';
-import * as AppRuntime from '@sellgar/app';
+import * as AppRuntime from '@sellgar/app-v2/react';
 
 import React from 'react';
 

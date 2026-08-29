@@ -1,5 +1,6 @@
 import type { StoreServiceInterface } from '@library/domain';
-import type { FrameServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
+import type { RevalidateServiceInterface } from '@sellgar/app-v2';
+import type { NavigateServiceInterface } from '@sellgar/app-v2';
 import { describe, expect, it, vi } from 'vitest';
 
 import { AdjustInventoryController } from '../adjust-inventory.controller.ts';
@@ -7,14 +8,14 @@ import { AdjustInventoryController } from '../adjust-inventory.controller.ts';
 describe('AdjustInventoryController', () => {
   it('вызывает только команду корректировки остатка и завершает frame workflow', async () => {
     const storeService = { adjustInventory: vi.fn() } as unknown as StoreServiceInterface;
-    const frameService = { close: vi.fn() } as unknown as FrameServiceInterface;
+    const navigateService = { close: vi.fn() } as unknown as NavigateServiceInterface;
     const revalidateService = { revalidate: vi.fn() } as unknown as RevalidateServiceInterface;
-    const controller = new AdjustInventoryController(storeService, frameService, revalidateService);
+    const controller = new AdjustInventoryController(storeService, navigateService, revalidateService);
 
     await controller.action({
       params: {},
       payload: { expectedVersion: 3, quantity: 12, reason: '' },
-      props: { storeProductUuid: 'store-product', offerUuid: 'offer' },
+      params: { storeProductUuid: 'store-product', offerUuid: 'offer' },
       request: new Request('http://localhost/store', { method: 'POST' }),
       signal: new AbortController().signal,
     });
@@ -27,6 +28,6 @@ describe('AdjustInventoryController', () => {
       reason: null,
     });
     expect(revalidateService.revalidate).toHaveBeenCalledOnce();
-    expect(frameService.close).toHaveBeenCalledOnce();
+    expect(navigateService.close).toHaveBeenCalledOnce();
   });
 });

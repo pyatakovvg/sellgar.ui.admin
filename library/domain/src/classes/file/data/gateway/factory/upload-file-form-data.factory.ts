@@ -1,4 +1,4 @@
-import { Injectable } from '@sellgar/app';
+import { Injectable } from '@sellgar/app-v2';
 
 import { UploadFileEntity } from '../../../domain/upload-file.entity.ts';
 import { UploadFileFormDataFactoryInterface } from './upload-file-form-data-factory.interface.ts';

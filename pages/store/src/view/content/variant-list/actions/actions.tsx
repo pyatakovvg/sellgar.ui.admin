@@ -1,6 +1,6 @@
-import { StoreInventoryFrame } from '@frame/store-inventory';
 import type { StoreOfferEntity } from '@library/domain';
-import * as App from '@sellgar/app';
+import { StoreInventoryRoute } from '@library/route-tokens';
+import * as App from '@sellgar/app-v2/react';
 import * as Kit from '@sellgar/kit';
 import { Button } from '@sellgar/kit';
 import { StockLineIcon } from '@sellgar/kit/icons';
@@ -14,14 +14,16 @@ interface ActionsProps {
 }
 
 export const Actions: React.FC<ActionsProps> = (props) => {
-  const storeInventoryFrame = App.useFrame(StoreInventoryFrame);
+  const navigate = App.useNavigate();
   const { data } = Kit.useCellData<StoreOfferEntity>();
 
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
-    void storeInventoryFrame.open({
-      storeProductUuid: props.storeProductUuid,
-      offerUuid: data.uuid,
+    void navigate.to(StoreInventoryRoute, {
+      params: {
+        storeProductUuid: props.storeProductUuid,
+        offerUuid: data.uuid,
+      },
     });
   };
 

@@ -1,7 +1,7 @@
 import { Form, ImageGallery, type ImageGalleryItem } from '@library/design';
 import { FileServiceInterface } from '@library/domain';
 import { Caption, Field, Label } from '@sellgar/kit';
-import { useDependency } from '@sellgar/app';
+import { useDependency } from '@sellgar/app-v2/react';
 
 import React from 'react';
 import * as RHF from 'react-hook-form';

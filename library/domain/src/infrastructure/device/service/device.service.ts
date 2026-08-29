@@ -1,6 +1,6 @@
 import { uuid } from '@utils/generate';
 
-import { Inject, Injectable } from '@sellgar/app';
+import { Inject, Injectable } from '@sellgar/app-v2';
 
 import { StorageServiceInterface } from '../../storage/service/storage-service.interface.ts';
 

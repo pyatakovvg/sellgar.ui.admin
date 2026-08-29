@@ -1,4 +1,4 @@
-import { Injectable } from '@sellgar/app';
+import { Injectable } from '@sellgar/app-v2';
 
 import { StorageServiceInterface } from './storage-service.interface.ts';
 

@@ -1,4 +1,4 @@
-import * as App from '@sellgar/app';
+import * as App from '@sellgar/app-v2/react';
 import { Caption, Field, Label, Select } from '@sellgar/kit';
 
 import React from 'react';

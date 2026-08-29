@@ -1,4 +1,4 @@
-import * as App from '@sellgar/app';
+import * as App from '@sellgar/app-v2/react';
 import { Button, ButtonGroup, Typography } from '@sellgar/kit';
 import { ShieldUserLineIcon, SunFillIcon, SunLineIcon } from '@sellgar/kit/icons';
 

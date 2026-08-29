@@ -1,5 +1,5 @@
 import type { CreateUnitInput, UnitEntity } from '@library/domain';
-import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@sellgar/app';
+import type { ControllerArgs, WithParams, WithPayload } from '@sellgar/app-v2';
 
 import { UnitModifyFrameParams } from '../../params/frame.params.ts';
 
@@ -7,10 +7,10 @@ export interface UnitModifyActionPayload extends CreateUnitInput {
   version?: number;
 }
 
-export abstract class UnitModifyControllerInterface extends FrameControllerInterface<UnitModifyFrameParams> {
-  abstract loader(args: FrameControllerLoaderArgs<UnitModifyFrameParams>): Promise<UnitEntity | undefined>;
+export abstract class UnitModifyControllerInterface {
+  abstract loader(args: ControllerArgs<WithParams<UnitModifyFrameParams>>): Promise<UnitEntity | undefined>;
 
-  abstract action(args: FrameControllerActionArgs<UnitModifyFrameParams, UnitModifyActionPayload>): Promise<void>;
+  abstract action(args: ControllerArgs<WithPayload<UnitModifyActionPayload, WithParams<UnitModifyFrameParams>>>): Promise<void>;
 
   abstract close(): Promise<void>;
 }

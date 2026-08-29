@@ -1,4 +1,4 @@
-import { Injectable } from '@sellgar/app';
+import { Injectable } from '@sellgar/app-v2';
 
 import { CreateBrandDto } from '../dto/create-brand.dto.ts';
 import { UpdateBrandDto } from '../dto/update-brand.dto.ts';

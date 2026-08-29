@@ -1,6 +1,6 @@
 import { ShopServiceInterface } from '@library/domain';
 
-import { Controller, Inject } from '@sellgar/app';
+import { Controller, Inject } from '@sellgar/app-v2';
 
 import { ShopControllerInterface } from './shop-controller.interface.ts';
 

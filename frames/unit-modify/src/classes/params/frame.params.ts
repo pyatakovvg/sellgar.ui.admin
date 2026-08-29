@@ -1,9 +1,4 @@
-import { Expose } from 'class-transformer';
-import { IsOptional, IsUUID } from 'class-validator';
+import { UnitModifyRoute } from '@library/route-tokens';
+import type { RouteParams } from '@sellgar/app-v2';
 
-export class UnitModifyFrameParams {
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-}
+export type UnitModifyFrameParams = Partial<RouteParams<typeof UnitModifyRoute>>;

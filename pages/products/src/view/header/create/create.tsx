@@ -1,4 +1,4 @@
-import * as App from '@sellgar/app';
+import * as App from '@sellgar/app-v2/react';
 import { Button } from '@sellgar/kit';
 import { AddLineIcon } from '@sellgar/kit/icons';
 

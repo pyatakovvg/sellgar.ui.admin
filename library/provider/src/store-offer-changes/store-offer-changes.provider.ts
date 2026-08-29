@@ -2,29 +2,31 @@ import { StoreProductEntity } from '@library/domain';
 import { SocketIOBindings } from '@library/socket-io';
 import {
   Inject,
-  type RuntimeProviderResult,
-  SingletonProvider,
-  type SingletonProviderInterface,
+  Provider,
+  type ProviderInterface,
+  type ProviderResult,
   updateEntity,
   UseBindings,
-} from '@sellgar/app';
+} from '@sellgar/app-v2';
 
 import { StoreOfferChangesBindings } from './classes/classes.bindings.ts';
 import { StoreOfferChangesHubInterface } from './classes/hub/store-offer-changes-hub.interface.ts';
 
 @UseBindings(SocketIOBindings, StoreOfferChangesBindings)
-@SingletonProvider()
-export class StoreOfferChangesProvider implements SingletonProviderInterface {
+@Provider({ lifetime: 'application' })
+export class StoreOfferChangesProvider implements ProviderInterface {
   constructor(
     @Inject(StoreOfferChangesHubInterface)
     private readonly hub: StoreOfferChangesHubInterface,
   ) {}
 
-  setup(): RuntimeProviderResult {
+  activate(): ProviderResult {
     return this.hub.subscribe({
       updated: async (payload) => {
         updateEntity(StoreProductEntity, payload);
       },
     });
   }
+
+  dispose(): void {}
 }

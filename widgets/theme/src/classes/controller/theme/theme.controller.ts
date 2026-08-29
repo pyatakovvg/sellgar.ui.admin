@@ -1,4 +1,4 @@
-import { Controller, Inject } from '@sellgar/app';
+import { Controller, Inject } from '@sellgar/app-v2';
 
 import { ThemeStoreInterface } from '../../store/theme/theme-store.interface.ts';
 import type { ThemePreference } from '../../store/theme/theme-store.interface.ts';

@@ -1,7 +1,8 @@
-import { UnauthorizedException, useException } from '@sellgar/app';
+import { UnauthorizedException } from '@sellgar/app-v2';
+import { SignInRoute } from '@library/route-tokens';
+import { useException, useNavigate } from '@sellgar/app-v2/react';
 
 import React from 'react';
-import { Navigate } from 'react-router-dom';
 
 import { Default } from './default';
 import { Validation } from './validation';
@@ -10,13 +11,23 @@ export const Exception: React.FC = () => {
   const error = useException();
 
   if (error instanceof UnauthorizedException) {
-    return <Navigate to={'/sign-in'} />;
+    return <RedirectToSignIn />;
   }
 
   if (Array.isArray(error)) {
     return <Validation />;
   }
   return <Default error={normalizeError(error)} />;
+};
+
+const RedirectToSignIn: React.FC = () => {
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    void navigate.to(SignInRoute, { replace: true });
+  }, [navigate]);
+
+  return null;
 };
 
 export const Failed: React.FC = () => {

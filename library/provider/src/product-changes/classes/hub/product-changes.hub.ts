@@ -1,6 +1,6 @@
 import { AuthServiceInterface, ConfigInterface, ProductEntity } from '@library/domain';
 import { SocketIOConnectionsInterface, type SocketIOConnectionInterface } from '@library/socket-io';
-import { Inject, Injectable, LocationServiceInterface, type RouterLocationSnapshot } from '@sellgar/app';
+import { Inject, Injectable, LocationServiceInterface, type RouterLocationSnapshot } from '@sellgar/app-v2';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 
@@ -53,7 +53,8 @@ export class ProductChangesHub implements ProductChangesHubInterface {
         return;
       }
 
-      const nextLocationKey = `${location.pathname}\u0000${location.search}`;
+      const { pathname, search } = window.location;
+      const nextLocationKey = `${pathname}\u0000${search}`;
 
       if (nextLocationKey === locationKey) {
         return;
@@ -61,8 +62,8 @@ export class ProductChangesHub implements ProductChangesHubInterface {
 
       locationKey = nextLocationKey;
       createdSubscription.updateContext({
-        pathname: location.pathname,
-        search: location.search,
+        pathname,
+        search,
       });
     };
 

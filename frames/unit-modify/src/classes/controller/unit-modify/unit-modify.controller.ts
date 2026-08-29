@@ -1,10 +1,6 @@
 import { UnitServiceInterface } from '@library/domain';
-import {
-  Controller,
-  FrameServiceInterface,
-  Inject,
-  RevalidateServiceInterface,
-} from '@sellgar/app';
+import { Controller, Inject, RevalidateServiceInterface } from '@sellgar/app-v2';
+import { NavigateServiceInterface } from '@sellgar/app-v2';
 
 import { UnitModifyControllerInterface } from './unit-modify-controller.interface.ts';
 
@@ -12,25 +8,25 @@ import { UnitModifyControllerInterface } from './unit-modify-controller.interfac
 export class UnitModifyController implements UnitModifyControllerInterface {
   constructor(
     @Inject(UnitServiceInterface) private readonly unitService: UnitServiceInterface,
-    @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
     @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
   async loader(args: Parameters<UnitModifyControllerInterface['loader']>[0]) {
-    if (!args.props.uuid) {
+    if (!args.params.uuid) {
       return void 0;
     }
 
-    return this.unitService.findByUuid(args.props.uuid);
+    return this.unitService.findByUuid(args.params.uuid);
   }
 
   async action(args: Parameters<UnitModifyControllerInterface['action']>[0]) {
-    if (args.props.uuid) {
+    if (args.params.uuid) {
       if (args.payload.version === undefined) {
         throw new Error('Не передана версия размерности.');
       }
 
-      await this.unitService.update(args.props.uuid, {
+      await this.unitService.update(args.params.uuid, {
         ...args.payload,
         version: args.payload.version,
       });
@@ -43,10 +39,10 @@ export class UnitModifyController implements UnitModifyControllerInterface {
     }
 
     await this.revalidateService.revalidate();
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 
   async close() {
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 }

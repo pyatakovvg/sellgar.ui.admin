@@ -2,29 +2,7 @@
   display: grid;
   flex: 1 0;
   grid-template-columns: var(--numbers-280) 1fr;
+  background: var(--background-surface-default);
   height: 100%;
   overlay: auto;
-}
-
-.content {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0;
-  overflow: auto;
-}
-
-.content2 {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0;
-  background: red;
-  overflow: auto;
-}
-
-.content3 {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0;
-  background: blue;
-  overflow: auto;
 }

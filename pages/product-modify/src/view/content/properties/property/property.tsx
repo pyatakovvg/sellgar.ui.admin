@@ -1,4 +1,4 @@
-import * as App from '@sellgar/app';
+import * as App from '@sellgar/app-v2/react';
 import { Button, Caption, Field, Select } from '@sellgar/kit';
 import { DeleteBin5LineIcon, DotsOutLineIcon } from '@sellgar/kit/icons';
 

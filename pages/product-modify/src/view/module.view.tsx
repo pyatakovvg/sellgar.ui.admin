@@ -1,5 +1,5 @@
 import { Page } from '@library/design';
-import * as App from '@sellgar/app';
+import * as App from '@sellgar/app-v2/react';
 
 import React from 'react';
 import * as RHF from 'react-hook-form';

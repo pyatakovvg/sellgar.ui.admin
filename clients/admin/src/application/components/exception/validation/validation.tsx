@@ -1,7 +1,7 @@
 import { Typography, Container } from '@sellgar/kit';
+import { useException } from '@sellgar/app-v2/react';
 
 import React from 'react';
-import { useRouteError } from 'react-router-dom';
 import { ValidationError } from 'class-validator';
 
 import { Error } from './error';
@@ -44,7 +44,7 @@ const getErrors = (errors: ValidationError[]): any[] => {
 };
 
 export const Validation: React.FC = () => {
-  const errors = useRouteError() as ValidationError[];
+  const errors = useException() as ValidationError[];
 
   const errorsMessage = getErrors(errors);
 

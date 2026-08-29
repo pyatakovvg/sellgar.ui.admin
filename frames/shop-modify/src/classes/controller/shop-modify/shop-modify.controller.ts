@@ -1,11 +1,7 @@
 import { ShopServiceInterface } from '@library/domain';
 
-import {
-  Controller,
-  FrameServiceInterface,
-  Inject,
-  RevalidateServiceInterface,
-} from '@sellgar/app';
+import { Controller, Inject, RevalidateServiceInterface } from '@sellgar/app-v2';
+import { NavigateServiceInterface } from '@sellgar/app-v2';
 
 import { ShopModifyControllerInterface } from './shop-modify-controller.interface.ts';
 
@@ -13,16 +9,16 @@ import { ShopModifyControllerInterface } from './shop-modify-controller.interfac
 export class ShopModifyController implements ShopModifyControllerInterface {
   constructor(
     @Inject(ShopServiceInterface) private readonly shopService: ShopServiceInterface,
-    @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
     @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
   async loader(args: Parameters<ShopModifyControllerInterface['loader']>[0]) {
-    if (!args.props.uuid) {
+    if (!args.params.uuid) {
       return void 0;
     }
 
-    return this.shopService.findByUuid(args.props.uuid);
+    return this.shopService.findByUuid(args.params.uuid);
   }
 
   async action(args: Parameters<ShopModifyControllerInterface['action']>[0]) {
@@ -33,10 +29,10 @@ export class ShopModifyController implements ShopModifyControllerInterface {
     }
 
     await this.revalidateService.revalidate();
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 
   async close() {
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 }

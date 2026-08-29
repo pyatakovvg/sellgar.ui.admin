@@ -1,5 +1,5 @@
 import { CategoryServiceInterface, type CategoryEntity } from '@library/domain';
-import { Controller, Inject } from '@sellgar/app';
+import { Controller, Inject } from '@sellgar/app-v2';
 
 import { CategoryListControllerInterface } from './category-list-controller.interface.ts';
 @Controller()

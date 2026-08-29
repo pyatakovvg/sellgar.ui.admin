@@ -1,5 +1,6 @@
 import type { CategoryEntity, CategoryServiceInterface, CreateCategoryInput, UpdateCategoryInput } from '@library/domain';
-import type { FrameServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
+import type { RevalidateServiceInterface } from '@sellgar/app-v2';
+import type { NavigateServiceInterface } from '@sellgar/app-v2';
 import { describe, expect, it, vi } from 'vitest';
 
 import { CategoryModifyController } from '../category-modify.controller.ts';
@@ -11,17 +12,17 @@ const createController = () => {
     findByUuid: vi.fn(),
     update: vi.fn(),
   } as unknown as CategoryServiceInterface;
-  const frameService = {
+  const navigateService = {
     close: vi.fn(),
-  } as unknown as FrameServiceInterface;
+  } as unknown as NavigateServiceInterface;
   const revalidateService = {
     revalidate: vi.fn(),
   } as unknown as RevalidateServiceInterface;
 
   return {
     categoryService,
-    controller: new CategoryModifyController(categoryService, frameService, revalidateService),
-    frameService,
+    controller: new CategoryModifyController(categoryService, navigateService, revalidateService),
+    navigateService,
     revalidateService,
   };
 };
@@ -40,7 +41,7 @@ describe('CategoryModifyController', () => {
     await expect(
       fixture.controller.loader({
         params: {},
-        props: {},
+        params: {},
         request: new Request('http://localhost/categories'),
         signal: new AbortController().signal,
       }),
@@ -57,7 +58,7 @@ describe('CategoryModifyController', () => {
     await expect(
       fixture.controller.loader({
         params: {},
-        props: { uuid: category.uuid },
+        params: { uuid: category.uuid },
         request: new Request('http://localhost/categories'),
         signal: new AbortController().signal,
       }),
@@ -71,7 +72,7 @@ describe('CategoryModifyController', () => {
 
     await fixture.controller.close();
 
-    expect(fixture.frameService.close).toHaveBeenCalledOnce();
+    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 
   it('передаёт объект формы и File в create без преобразования', async () => {
@@ -82,7 +83,7 @@ describe('CategoryModifyController', () => {
     await fixture.controller.action({
       params: {},
       payload,
-      props: {},
+      params: {},
       request: new Request('http://localhost/categories', { method: 'POST' }),
       signal: new AbortController().signal,
     });
@@ -90,7 +91,7 @@ describe('CategoryModifyController', () => {
     expect(fixture.categoryService.create).toHaveBeenCalledWith(payload);
     expect(vi.mocked(fixture.categoryService.create).mock.calls[0][0].image?.file).toBe(file);
     expect(fixture.revalidateService.revalidate).toHaveBeenCalledOnce();
-    expect(fixture.frameService.close).toHaveBeenCalledOnce();
+    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 
   it('передаёт update payload в сервис без преобразования', async () => {
@@ -104,7 +105,7 @@ describe('CategoryModifyController', () => {
     await fixture.controller.action({
       params: {},
       payload,
-      props: { uuid: payload.uuid },
+      params: { uuid: payload.uuid },
       request: new Request('http://localhost/categories', { method: 'POST' }),
       signal: new AbortController().signal,
     });

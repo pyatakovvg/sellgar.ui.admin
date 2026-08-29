@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@sellgar/app';
+import { Inject, Injectable } from '@sellgar/app-v2';
 
 import { BrandServiceInterface } from './brand-service.interface.ts';
 import { BrandGatewayInterface } from '../data/gateway/brand-gateway.interface.ts';

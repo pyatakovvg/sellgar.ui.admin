@@ -1,6 +1,6 @@
 import { AuthServiceInterface, ConfigInterface, StoreProductEntity } from '@library/domain';
 import { SocketIOConnectionsInterface, type SocketIOConnectionInterface } from '@library/socket-io';
-import { Inject, Injectable } from '@sellgar/app';
+import { Inject, Injectable } from '@sellgar/app-v2';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 

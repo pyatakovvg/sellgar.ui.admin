@@ -1,5 +1,6 @@
 import type { CreatePropertyInput, PropertyEntity, PropertyServiceInterface, UpdatePropertyInput } from '@library/domain';
-import type { FrameServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
+import type { RevalidateServiceInterface } from '@sellgar/app-v2';
+import type { NavigateServiceInterface } from '@sellgar/app-v2';
 import { describe, expect, it, vi } from 'vitest';
 
 import { PropertyModifyController } from '../property-modify.controller.ts';
@@ -10,12 +11,12 @@ const createController = () => {
     findByUuid: vi.fn(),
     update: vi.fn(),
   } as unknown as PropertyServiceInterface;
-  const frameService = { close: vi.fn() } as unknown as FrameServiceInterface;
+  const navigateService = { close: vi.fn() } as unknown as NavigateServiceInterface;
   const revalidateService = { revalidate: vi.fn() } as unknown as RevalidateServiceInterface;
 
   return {
-    controller: new PropertyModifyController(propertyService, frameService, revalidateService),
-    frameService,
+    controller: new PropertyModifyController(propertyService, navigateService, revalidateService),
+    navigateService,
     propertyService,
     revalidateService,
   };
@@ -36,7 +37,7 @@ describe('PropertyModifyController', () => {
     await expect(
       fixture.controller.loader({
         params: {},
-        props: {},
+        params: {},
         request: new Request('http://localhost/properties'),
         signal: new AbortController().signal,
       }),
@@ -53,7 +54,7 @@ describe('PropertyModifyController', () => {
     await expect(
       fixture.controller.loader({
         params: {},
-        props: { uuid: property.uuid },
+        params: { uuid: property.uuid },
         request: new Request('http://localhost/properties'),
         signal: new AbortController().signal,
       }),
@@ -67,7 +68,7 @@ describe('PropertyModifyController', () => {
 
     await fixture.controller.close();
 
-    expect(fixture.frameService.close).toHaveBeenCalledOnce();
+    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 
   it('создаёт свойство и завершает frame workflow', async () => {
@@ -76,14 +77,14 @@ describe('PropertyModifyController', () => {
     await fixture.controller.action({
       params: {},
       payload: createPayload,
-      props: {},
+      params: {},
       request: new Request('http://localhost/properties', { method: 'POST' }),
       signal: new AbortController().signal,
     });
 
     expect(fixture.propertyService.create).toHaveBeenCalledWith(createPayload);
     expect(fixture.revalidateService.revalidate).toHaveBeenCalledOnce();
-    expect(fixture.frameService.close).toHaveBeenCalledOnce();
+    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 
   it('определяет update по uuid в payload', async () => {
@@ -97,7 +98,7 @@ describe('PropertyModifyController', () => {
     await fixture.controller.action({
       params: {},
       payload,
-      props: { uuid: payload.uuid },
+      params: { uuid: payload.uuid },
       request: new Request('http://localhost/properties', { method: 'POST' }),
       signal: new AbortController().signal,
     });

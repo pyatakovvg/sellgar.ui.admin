@@ -1,0 +1,64 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@sellgar/app-v2",
+  "version": "0.0.1",
+  "description": "Renderer-agnostic application framework v2 scaffold",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "typecheck:core": "tsc -p tsconfig.core.json"
+  },
+  "dependencies": {
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
+    "classnames": "2.5.1",
+    "inversify": "8.2.3",
+    "mobx": "6.16.1",
+    "reflect-metadata": "0.2.2"
+  },
+  "devDependencies": {
+    "@floating-ui/react": "0.27.19",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "mobx-react": "9.2.2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-error-boundary": "6.1.2",
+    "typescript": "6.0.3"
+  },
+  "peerDependencies": {
+    "@floating-ui/react": "^0.27.0",
+    "mobx-react": "^9.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-error-boundary": "^6.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@floating-ui/react": {
+      "optional": true
+    },
+    "mobx-react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    },
+    "react-error-boundary": {
+      "optional": true
+    }
+  },
+  "main": "./core/index.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": "./core/index.ts",
+    "./react": "./react/index.ts",
+    "./native": "./native/index.ts",
+    "./fsm": "./fsm/index.ts"
+  }
+}

@@ -1,5 +1,5 @@
 import { StoreProductEntity, type StoreServiceInterface } from '@library/domain';
-import type { FrameServiceInterface } from '@sellgar/app';
+import type { NavigateServiceInterface } from '@sellgar/app-v2';
 
 import { plainToInstance } from 'class-transformer';
 import { describe, expect, it, vi } from 'vitest';
@@ -70,11 +70,11 @@ const createController = () => {
   const storeService = {
     findByUuid: vi.fn().mockResolvedValue(storeProduct),
   } as unknown as StoreServiceInterface;
-  const frameService = { close: vi.fn() } as unknown as FrameServiceInterface;
+  const navigateService = { close: vi.fn() } as unknown as NavigateServiceInterface;
 
   return {
-    controller: new StoreInventoryContextController(storeService, frameService),
-    frameService,
+    controller: new StoreInventoryContextController(storeService, navigateService),
+    navigateService,
     offer,
     storeProduct,
     storeService,
@@ -88,7 +88,7 @@ describe('StoreInventoryContextController', () => {
     await expect(
       fixture.controller.loader({
         params: {},
-        props: {
+        params: {
           storeProductUuid: fixture.storeProduct.uuid,
           offerUuid: fixture.offer.uuid,
         },
@@ -109,7 +109,7 @@ describe('StoreInventoryContextController', () => {
     await expect(
       fixture.controller.loader({
         params: {},
-        props: {
+        params: {
           storeProductUuid: fixture.storeProduct.uuid,
           offerUuid: '00000000-0000-4000-8000-000000000099',
         },
@@ -124,6 +124,6 @@ describe('StoreInventoryContextController', () => {
 
     await fixture.controller.close();
 
-    expect(fixture.frameService.close).toHaveBeenCalledOnce();
+    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 });

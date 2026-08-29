@@ -1,15 +1,15 @@
-import { CategoryModifyFrame } from '@frame/category-modify';
-import * as App from '@sellgar/app';
+import { CategoryCreateRoute } from '@library/route-tokens';
+import * as App from '@sellgar/app-v2/react';
 import { Button } from '@sellgar/kit';
 import { AddFillIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 
 export const Create: React.FC = () => {
-  const categoryModifyFrame = App.useFrame(CategoryModifyFrame);
+  const navigate = App.useNavigate();
 
   const handleCreate = () => {
-    void categoryModifyFrame.open({});
+    void navigate.to(CategoryCreateRoute);
   };
 
   return (

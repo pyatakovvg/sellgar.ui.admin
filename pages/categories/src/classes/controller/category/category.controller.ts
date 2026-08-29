@@ -1,6 +1,6 @@
 import { CategoryServiceInterface } from '@library/domain';
 
-import { Controller, Inject } from '@sellgar/app';
+import { Controller, Inject } from '@sellgar/app-v2';
 
 import { CategoryControllerInterface } from './category-controller.interface.ts';
 

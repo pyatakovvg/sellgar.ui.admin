@@ -1,4 +1,4 @@
-import { FrameControllerInterface, type FrameControllerActionArgs } from '@sellgar/app';
+import type { ControllerArgs, WithParams, WithPayload } from '@sellgar/app-v2';
 
 import { StoreInventoryFrameParams } from '../../../params/frame.params.ts';
 
@@ -8,8 +8,8 @@ export interface AdjustInventoryActionPayload {
   reason?: string | null;
 }
 
-export abstract class AdjustInventoryControllerInterface extends FrameControllerInterface<StoreInventoryFrameParams> {
+export abstract class AdjustInventoryControllerInterface {
   abstract action(
-    args: FrameControllerActionArgs<StoreInventoryFrameParams, AdjustInventoryActionPayload>,
+    args: ControllerArgs<WithPayload<AdjustInventoryActionPayload, WithParams<StoreInventoryFrameParams>>>,
   ): Promise<void>;
 }

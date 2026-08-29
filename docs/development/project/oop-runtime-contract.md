@@ -1,6 +1,6 @@
 # OOP-Контракт Runtime
 
-Runtime приложения - `@sellgar/app`.
+Runtime приложения - `@sellgar/app-v2`; React API импортируется из `@sellgar/app-v2/react`.
 
 ## Application
 
@@ -28,23 +28,23 @@ export class ProductsModule {}
 
 Controller loader results читаются во view через `useLoaderData(ControllerInterface)`.
 
-## Frame
+## Frame и nested routing
 
-Drawer/modal workflows объявляются через `@Frame`.
+Drawer workflows объявляются через `@Frame`, а address/token/shell задаются host route graph.
 
 ```tsx
 @UseBindings(BrandModifyBindings)
-@Frame<BrandModifyFrameParams>({
-  shell: BrandModifyFrameShell,
-  source: HashFrameSource.create<BrandModifyFrameParams>('brand'),
+@Frame({
   view: FrameView,
 })
-export class BrandModifyFrame extends FrameDefinition<BrandModifyFrameParams> {}
+export class BrandModifyFrame {}
 ```
 
-Открывать frames из page UI через `useFrame(BrandModifyFrame)`.
+Открывать frame route через `useNavigate().to(BrandCreateRoute)` или `NavigateServiceInterface.to(Token, { params })`.
 
-Для hash frames loader arguments передают open props в `args.props`. Edit loaders должны читать identifiers сущностей из `args.props.uuid`, если frame implementation явно не документирует другой source.
+Loader/action получают tokenized identifiers в `args.params`. Тип params выводить через `RouteParams<typeof RouteToken>`; create route может использовать `Partial<...>`.
+
+Один application-level `Drawer` shell обслуживает все nested frame routers. Frame packages не создают собственные shell и Modal shell.
 
 ## Bindings
 

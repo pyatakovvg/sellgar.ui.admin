@@ -11,11 +11,12 @@
 
 ## Runtime
 
-- Routes и frames зарегистрированы в `AdminApplication` только если они нужны navigation.
+- Routes и nested frame routers зарегистрированы в `clients/admin/src/application/routes`.
 - Page data использует module controller loader data.
 - Frame data использует frame controller loader data.
-- Hash-frame loaders читают open props из `args.props`.
-- Drawer/modal forms живут в `frames/*`, а не в `widgets/*`.
+- Frame loaders читают tokenized route params из `args.params`.
+- Navigation использует `@library/route-tokens`, без строковых URL и `react-router-dom`.
+- Drawer forms живут в `frames/*`, используют единый application shell и не создают отдельный Modal shell.
 
 ## UI
 

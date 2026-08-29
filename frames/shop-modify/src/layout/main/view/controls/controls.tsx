@@ -1,4 +1,4 @@
-import { useController, useSubmit } from '@sellgar/app';
+import { useController, useSubmit } from '@sellgar/app-v2/react';
 import { Button } from '@sellgar/kit';
 
 import React from 'react';

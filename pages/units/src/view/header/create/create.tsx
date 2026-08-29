@@ -1,15 +1,15 @@
-import { UnitModifyFrame } from '@frame/unit-modify';
-import * as App from '@sellgar/app';
+import { UnitCreateRoute } from '@library/route-tokens';
+import * as App from '@sellgar/app-v2/react';
 import { Button } from '@sellgar/kit';
 import { AddLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 
 export const Create: React.FC = () => {
-  const unitModifyFrame = App.useFrame(UnitModifyFrame);
+  const navigate = App.useNavigate();
 
   const handleCreate = () => {
-    void unitModifyFrame.open({});
+    void navigate.to(UnitCreateRoute);
   };
 
   return (

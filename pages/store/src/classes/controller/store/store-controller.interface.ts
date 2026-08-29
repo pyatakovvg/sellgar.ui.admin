@@ -1,6 +1,5 @@
 import type { StoreProductResultEntity } from '@library/domain';
-import type { ControllerInterface } from '@sellgar/app';
 
-export abstract class StoreControllerInterface implements ControllerInterface {
+export abstract class StoreControllerInterface {
   abstract loader(): Promise<StoreProductResultEntity>;
 }

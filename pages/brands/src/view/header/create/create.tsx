@@ -1,15 +1,15 @@
-import { BrandModifyFrame } from '@frame/brand-modify';
-import * as App from '@sellgar/app';
+import { BrandCreateRoute } from '@library/route-tokens';
+import * as App from '@sellgar/app-v2/react';
 import { Button } from '@sellgar/kit';
 import { AddFillIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 
 export const Create: React.FC = () => {
-  const brandModifyFrame = App.useFrame(BrandModifyFrame);
+  const navigate = App.useNavigate();
 
   const handleCreate = () => {
-    void brandModifyFrame.open({});
+    void navigate.to(BrandCreateRoute);
   };
 
   return (

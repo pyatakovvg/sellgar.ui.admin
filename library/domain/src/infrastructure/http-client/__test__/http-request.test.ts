@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { UnauthorizedException } from '@sellgar/app';
+import { UnauthorizedException } from '@sellgar/app-v2';
 import { describe, expect, it } from 'vitest';
 
 import { HttpRequest } from '../index.ts';

@@ -1,4 +1,4 @@
-import type { LayoutViewProps } from '@sellgar/app';
+import type { LayoutViewProps } from '@sellgar/app-v2/react';
 
 import React from 'react';
 

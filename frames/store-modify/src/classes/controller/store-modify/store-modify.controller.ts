@@ -1,11 +1,7 @@
 import { StoreServiceInterface, type StoreProductEntity } from '@library/domain';
 
-import {
-  Controller,
-  FrameServiceInterface,
-  Inject,
-  RevalidateServiceInterface,
-} from '@sellgar/app';
+import { Controller, Inject, RevalidateServiceInterface } from '@sellgar/app-v2';
+import { NavigateServiceInterface } from '@sellgar/app-v2';
 
 import { StoreModifyControllerInterface } from './store-modify-controller.interface.ts';
 import { StoreModifyMapper } from './mapper/store-modify.mapper.ts';
@@ -14,26 +10,26 @@ import { StoreModifyMapper } from './mapper/store-modify.mapper.ts';
 export class StoreModifyController implements StoreModifyControllerInterface {
   constructor(
     @Inject(StoreServiceInterface) private readonly storeService: StoreServiceInterface,
-    @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
     @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
   async loader(args: Parameters<StoreModifyControllerInterface['loader']>[0]) {
-    if (!args.props.uuid) {
+    if (!args.params.uuid) {
       return void 0;
     }
 
-    return this.storeService.findByUuid(args.props.uuid);
+    return this.storeService.findByUuid(args.params.uuid);
   }
 
   async action(args: Parameters<StoreModifyControllerInterface['action']>[0]): Promise<StoreProductEntity> {
-    if (args.props.uuid) {
+    if (args.params.uuid) {
       if (args.payload.expectedVersion === undefined) {
         throw new Error('Не передана версия товара на складе.');
       }
 
       const result = await this.storeService.update({
-        uuid: args.props.uuid,
+        uuid: args.params.uuid,
         expectedVersion: args.payload.expectedVersion,
         ...StoreModifyMapper.toCreateInput(args.payload, crypto.randomUUID()),
       });
@@ -51,11 +47,11 @@ export class StoreModifyController implements StoreModifyControllerInterface {
   }
 
   async close() {
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 
   private async finish(): Promise<void> {
     await this.revalidateService.revalidate();
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 }

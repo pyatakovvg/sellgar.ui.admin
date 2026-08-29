@@ -1,6 +1,7 @@
-import { WidgetControllerInterface } from '@sellgar/app';
-import type { WidgetControllerActionArgs } from '@sellgar/app';
+import type { ControllerArgs, WithPayload, WithProps } from '@sellgar/app-v2';
 
-export abstract class LogoutControllerInterface extends WidgetControllerInterface {
-  abstract action(args: WidgetControllerActionArgs<Record<string, never>, void>): Promise<void>;
+export abstract class LogoutControllerInterface {
+  abstract action(
+    args: ControllerArgs<WithPayload<void, WithProps<Record<string, never>>>>,
+  ): Promise<void>;
 }

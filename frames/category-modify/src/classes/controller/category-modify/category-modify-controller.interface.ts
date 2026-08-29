@@ -1,15 +1,15 @@
 import type { CategoryEntity, CreateCategoryInput, UpdateCategoryInput } from '@library/domain';
-import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@sellgar/app';
+import type { ControllerArgs, WithParams, WithPayload } from '@sellgar/app-v2';
 
 import { CategoryModifyFrameParams } from '../../params/frame.params.ts';
 
 export type CategoryModifyActionPayload = CreateCategoryInput | UpdateCategoryInput;
 
-export abstract class CategoryModifyControllerInterface extends FrameControllerInterface<CategoryModifyFrameParams> {
-  abstract loader(args: FrameControllerLoaderArgs<CategoryModifyFrameParams>): Promise<CategoryEntity | undefined>;
+export abstract class CategoryModifyControllerInterface {
+  abstract loader(args: ControllerArgs<WithParams<CategoryModifyFrameParams>>): Promise<CategoryEntity | undefined>;
 
   abstract action(
-    args: FrameControllerActionArgs<CategoryModifyFrameParams, CategoryModifyActionPayload>,
+    args: ControllerArgs<WithPayload<CategoryModifyActionPayload, WithParams<CategoryModifyFrameParams>>>,
   ): Promise<void>;
 
   abstract close(): Promise<void>;

@@ -1,5 +1,5 @@
-import { StoreModifyFrame } from '@frame/store-modify';
-import * as App from '@sellgar/app';
+import { StoreModifyRoute } from '@library/route-tokens';
+import * as App from '@sellgar/app-v2/react';
 import { Table } from '@sellgar/kit';
 
 import React from 'react';
@@ -17,7 +17,7 @@ import s from './default.module.scss';
 
 export const Content: React.FC = () => {
   const loaderData = App.useLoaderData(StoreControllerInterface);
-  const storeModifyFrame = App.useFrame(StoreModifyFrame);
+  const navigate = App.useNavigate();
 
   return (
     <div className={s.wrapper}>
@@ -26,7 +26,7 @@ export const Content: React.FC = () => {
         data={{ nodes: loaderData.data }}
         row={{
           handlers: {
-            click: ({ row }) => void storeModifyFrame.open({ uuid: row.uuid }),
+            click: ({ row }) => void navigate.to(StoreModifyRoute, { params: { uuid: row.uuid } }),
             doubleClick: ({ context }) => context.expansion?.toggle(),
           },
         }}

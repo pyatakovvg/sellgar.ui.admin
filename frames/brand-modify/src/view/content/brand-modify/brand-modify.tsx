@@ -1,4 +1,4 @@
-import * as AppRuntime from '@sellgar/app';
+import * as AppRuntime from '@sellgar/app-v2/react';
 
 import React from 'react';
 import * as RHF from 'react-hook-form';

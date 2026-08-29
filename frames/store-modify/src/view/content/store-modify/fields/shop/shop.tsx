@@ -1,5 +1,5 @@
 import { Field, Label, Caption, Select } from '@sellgar/kit';
-import { useLoaderData } from '@sellgar/app';
+import { useLoaderData } from '@sellgar/app-v2/react';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';

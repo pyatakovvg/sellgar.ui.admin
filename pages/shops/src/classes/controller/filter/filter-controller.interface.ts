@@ -1,8 +1,8 @@
-import type { ControllerInterface } from '@sellgar/app';
+import type { ControllerArgs, QueryValue, WithPayload } from '@sellgar/app-v2';
 
-import type { FilterInput } from './input/filter.input.ts';
+import type { FilterQuery } from './query/filter.query.ts';
 
-export abstract class FilterControllerInterface implements ControllerInterface {
-  abstract loader(): FilterInput;
-  abstract apply(input: FilterInput): Promise<void>;
+export abstract class FilterControllerInterface {
+  abstract loader(): QueryValue<FilterQuery>;
+  abstract action(args: ControllerArgs<WithPayload<QueryValue<FilterQuery>>>): Promise<void>;
 }

@@ -1,5 +1,6 @@
 import { type ProductResultEntity, type ProductServiceInterface } from '@library/domain';
-import type { NavigateServiceInterface } from '@sellgar/app';
+import { ProductCreateRoute, ProductModifyRoute } from '@library/route-tokens';
+import type { NavigateServiceInterface } from '@sellgar/app-v2';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ProductController } from '../product.controller.ts';
@@ -30,7 +31,7 @@ describe('ProductController', () => {
 
     await fixture.controller.create();
 
-    expect(fixture.navigateService.to).toHaveBeenCalledWith('/products/create');
+    expect(fixture.navigateService.to).toHaveBeenCalledWith(ProductCreateRoute);
   });
 
   it('переходит к редактированию выбранного товара', async () => {
@@ -38,6 +39,8 @@ describe('ProductController', () => {
 
     await fixture.controller.open('product-uuid');
 
-    expect(fixture.navigateService.to).toHaveBeenCalledWith('/products/product-uuid');
+    expect(fixture.navigateService.to).toHaveBeenCalledWith(ProductModifyRoute, {
+      params: { uuid: 'product-uuid' },
+    });
   });
 });

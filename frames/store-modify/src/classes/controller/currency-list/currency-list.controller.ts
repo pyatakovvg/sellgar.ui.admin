@@ -1,5 +1,5 @@
 import { CurrencyServiceInterface, type CurrencyEntity } from '@library/domain';
-import { Controller, Inject } from '@sellgar/app';
+import { Controller, Inject } from '@sellgar/app-v2';
 
 import { CurrencyListControllerInterface } from './currency-list-controller.interface.ts';
 @Controller()

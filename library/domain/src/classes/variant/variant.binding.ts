@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
 
 import { VariantServiceInterface } from './application/variant-service.interface.ts';
 import { VariantService } from './application/variant.service.ts';

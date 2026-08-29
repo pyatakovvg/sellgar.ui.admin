@@ -1,5 +1,6 @@
 import { ProductChangesProvider } from '@library/provider';
-import { Module, UseBindings } from '@sellgar/app';
+import { UseBindings } from '@sellgar/app-v2';
+import { Module } from '@sellgar/app-v2/react';
 
 import { ProductModifyBindings } from './classes/classes.bindings.ts';
 

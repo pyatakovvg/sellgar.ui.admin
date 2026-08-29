@@ -5,7 +5,7 @@
 Текущие mutation flows являются page/frame-local и с точки зрения UI завершаются синхронно:
 
 - list pages загружают data через page controllers;
-- drawer/modal forms загружают edit data через frame controllers;
+- nested Drawer forms загружают edit data через frame controllers;
 - create/update requests вызывают owning controller;
 - после success view закрывает frame или выполняет navigation/revalidate по local behavior.
 

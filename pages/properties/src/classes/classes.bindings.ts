@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
 
 import { PropertyControllerInterface } from './controller/property/property-controller.interface.ts';
 import { PropertyController } from './controller/property/property.controller.ts';

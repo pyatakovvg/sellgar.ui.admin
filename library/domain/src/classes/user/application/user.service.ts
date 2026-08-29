@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@sellgar/app';
+import { Inject, Injectable } from '@sellgar/app-v2';
 
 import { UserServiceInterface } from './user-service.interface.ts';
 import { UserGatewayInterface } from '../data/gateway/user-gateway.interface.ts';

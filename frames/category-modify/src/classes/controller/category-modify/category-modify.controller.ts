@@ -1,11 +1,7 @@
 import { CategoryServiceInterface } from '@library/domain';
 
-import {
-  Controller,
-  FrameServiceInterface,
-  Inject,
-  RevalidateServiceInterface,
-} from '@sellgar/app';
+import { Controller, Inject, RevalidateServiceInterface } from '@sellgar/app-v2';
+import { NavigateServiceInterface } from '@sellgar/app-v2';
 
 import { CategoryModifyControllerInterface } from './category-modify-controller.interface.ts';
 
@@ -13,16 +9,16 @@ import { CategoryModifyControllerInterface } from './category-modify-controller.
 export class CategoryModifyController implements CategoryModifyControllerInterface {
   constructor(
     @Inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface,
-    @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
     @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
   async loader(args: Parameters<CategoryModifyControllerInterface['loader']>[0]) {
-    if (!args.props.uuid) {
+    if (!args.params.uuid) {
       return void 0;
     }
 
-    return this.categoryService.findByUuid(args.props.uuid);
+    return this.categoryService.findByUuid(args.params.uuid);
   }
 
   async action(args: Parameters<CategoryModifyControllerInterface['action']>[0]) {
@@ -33,10 +29,10 @@ export class CategoryModifyController implements CategoryModifyControllerInterfa
     }
 
     await this.revalidateService.revalidate();
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 
   async close() {
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 }

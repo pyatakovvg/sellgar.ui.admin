@@ -1,11 +1,7 @@
 import { BrandServiceInterface } from '@library/domain';
 
-import {
-  Controller,
-  FrameServiceInterface,
-  Inject,
-  RevalidateServiceInterface,
-} from '@sellgar/app';
+import { Controller, Inject, RevalidateServiceInterface } from '@sellgar/app-v2';
+import { NavigateServiceInterface } from '@sellgar/app-v2';
 
 import { BrandModifyControllerInterface } from './brand-modify-controller.interface.ts';
 
@@ -13,16 +9,16 @@ import { BrandModifyControllerInterface } from './brand-modify-controller.interf
 export class BrandModifyController implements BrandModifyControllerInterface {
   constructor(
     @Inject(BrandServiceInterface) private readonly brandService: BrandServiceInterface,
-    @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
     @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
   async loader(args: Parameters<BrandModifyControllerInterface['loader']>[0]) {
-    if (!args.props.uuid) {
+    if (!args.params.uuid) {
       return void 0;
     }
 
-    return this.brandService.findByUuid(args.props.uuid);
+    return this.brandService.findByUuid(args.params.uuid);
   }
 
   async action(args: Parameters<BrandModifyControllerInterface['action']>[0]) {
@@ -33,10 +29,10 @@ export class BrandModifyController implements BrandModifyControllerInterface {
     }
 
     await this.revalidateService.revalidate();
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 
   async close() {
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 }

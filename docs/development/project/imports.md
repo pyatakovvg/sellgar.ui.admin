@@ -14,7 +14,9 @@
 
 Runtime и UI imports:
 
-- `@sellgar/app` - application, routing, modules, frames, DI hooks и policies.
+- `@sellgar/app-v2` - renderer-neutral application/runtime/DI/router contracts.
+- `@sellgar/app-v2/react` - React declarations, hosts и hooks.
+- `@library/route-tokens` - tokenized navigation contracts.
 - `@sellgar/kit` - UI components.
 - `@sellgar/kit/icons` - SVG icon components.
 
@@ -33,10 +35,9 @@ Runtime и UI imports:
 
 ```tsx
 import { Button } from '@sellgar/kit';
-import { useFrame } from '@sellgar/app';
+import { BrandCreateRoute } from '@library/route-tokens';
+import { useNavigate } from '@sellgar/app-v2/react';
 import { AddLineIcon } from '@sellgar/kit/icons';
-
-import { BrandModifyFrame } from '@frame/brand-modify';
 
 import s from './header.module.scss';
 ```
@@ -52,6 +53,7 @@ import s from './default.module.scss';
 ## Запрещенные patterns
 
 - Obsolete module aliases из других projects.
+- Строковые URL и прямой `react-router-dom` в application code.
 - Старые package names UI-kit; текущий UI package - `@sellgar/kit`.
 - Font icon classes для новой работы с иконками. Использовать SVG icon exports из `@sellgar/kit/icons`.
 - Cross-package imports из private internals другого package: `src/view/...` или `src/classes/...`.

@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
 
 import { ThemeControllerInterface } from './controller/theme/theme-controller.interface.ts';
 import { ThemeController } from './controller/theme/theme.controller.ts';

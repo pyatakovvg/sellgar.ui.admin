@@ -1,7 +1,7 @@
 import { Form, ImageGallery } from '@library/design';
 import { CategoryEntity, FileServiceInterface } from '@library/domain';
 import { Caption, Field, Input, Label, Select, Textarea } from '@sellgar/kit';
-import { useDependency, useLoaderData } from '@sellgar/app';
+import { useDependency, useLoaderData } from '@sellgar/app-v2/react';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';

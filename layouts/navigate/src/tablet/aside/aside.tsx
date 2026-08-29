@@ -2,35 +2,45 @@ import { Sidebar, MenuItem, User } from '@sellgar/kit';
 import {
   CopyrightLineIcon,
   DashboardLineIcon,
-  FileTextLineIcon,
   Home2LineIcon,
   LinksLineIcon,
-  Settings3LineIcon,
   ShoppingBag3LineIcon,
   StockLineIcon,
   StoreLineIcon,
   UnsplashLineIcon,
 } from '@sellgar/kit/icons';
-import { ApplicationStoreInterface, useDependency } from '@sellgar/app';
+import { ApplicationStoreInterface, type NavigationRequestFactory } from '@sellgar/app-v2';
+import { NavLink, useDependency } from '@sellgar/app-v2/react';
 import { ProfileEntity } from '@library/domain';
+import {
+  BrandsRoute,
+  CategoriesRoute,
+  DashboardRoute,
+  ProductsRoute,
+  PropertiesRoute,
+  ShopsRoute,
+  StoreRoute,
+  UnitsRoute,
+} from '@library/route-tokens';
 
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 
 import s from './default.module.scss';
 
 interface NavigationItemProps {
   readonly caption: string;
   readonly icon: React.ReactNode;
-  readonly to: string;
+  readonly navigation: NavigationRequestFactory;
 }
 
-const NavigationItem: React.FC<NavigationItemProps> = ({ caption, icon, to }) => {
+const NavigationItem: React.FC<NavigationItemProps> = ({ caption, icon, navigation }) => {
   return (
     <Sidebar.Cell>
-      <NavLink className={s.link} to={to} viewTransition={true}>
-        {({ isActive, isPending }) => (
-          <MenuItem leadIcon={icon} caption={caption} isActive={isActive} isPending={isPending} />
+      <NavLink navigation={navigation}>
+        {({ anchor, isActive, isPending }) => (
+          <a {...anchor} className={s.link}>
+            <MenuItem leadIcon={icon} caption={caption} isActive={isActive} isPending={isPending} />
+          </a>
         )}
       </NavLink>
     </Sidebar.Cell>
@@ -55,28 +65,22 @@ export const Aside = () => {
         <Sidebar.Middle>
           <Sidebar.Block>
             <Sidebar.Additional>Компания</Sidebar.Additional>
-            <NavigationItem to={'/'} icon={<Home2LineIcon />} caption={'Главная'} />
-            <NavigationItem to={'/shops'} icon={<StoreLineIcon />} caption={'Магазины'} />
-            <NavigationItem to={'/products'} icon={<ShoppingBag3LineIcon />} caption={'Товары'} />
-            <NavigationItem to={'/store'} icon={<UnsplashLineIcon />} caption={'Склад'} />
+            <NavigationItem navigation={(navigate) => navigate.to(DashboardRoute)} icon={<Home2LineIcon />} caption={'Главная'} />
+            <NavigationItem navigation={(navigate) => navigate.to(ShopsRoute)} icon={<StoreLineIcon />} caption={'Магазины'} />
+            <NavigationItem navigation={(navigate) => navigate.to(ProductsRoute)} icon={<ShoppingBag3LineIcon />} caption={'Товары'} />
+            <NavigationItem navigation={(navigate) => navigate.to(StoreRoute)} icon={<UnsplashLineIcon />} caption={'Склад'} />
           </Sidebar.Block>
 
           <Sidebar.Block>
             <Sidebar.Additional>Параметры</Sidebar.Additional>
-            <NavigationItem to={'/brands'} icon={<CopyrightLineIcon />} caption={'Бренды'} />
-            <NavigationItem to={'/categories'} icon={<DashboardLineIcon />} caption={'Категории'} />
-            <NavigationItem to={'/units'} icon={<LinksLineIcon />} caption={'Единица измерения'} />
-            <NavigationItem to={'/properties'} icon={<StockLineIcon />} caption={'Свойства'} />
-          </Sidebar.Block>
-
-          <Sidebar.Block>
-            <Sidebar.Additional>Хранилище</Sidebar.Additional>
-            <NavigationItem to={'/files'} icon={<FileTextLineIcon />} caption={'Файлы'} />
+            <NavigationItem navigation={(navigate) => navigate.to(BrandsRoute)} icon={<CopyrightLineIcon />} caption={'Бренды'} />
+            <NavigationItem navigation={(navigate) => navigate.to(CategoriesRoute)} icon={<DashboardLineIcon />} caption={'Категории'} />
+            <NavigationItem navigation={(navigate) => navigate.to(UnitsRoute)} icon={<LinksLineIcon />} caption={'Единица измерения'} />
+            <NavigationItem navigation={(navigate) => navigate.to(PropertiesRoute)} icon={<StockLineIcon />} caption={'Свойства'} />
           </Sidebar.Block>
         </Sidebar.Middle>
 
         <Sidebar.Bottom>
-          <NavigationItem to={'/settings'} icon={<Settings3LineIcon />} caption={'Настройки'} />
         </Sidebar.Bottom>
       </Sidebar>
     </div>

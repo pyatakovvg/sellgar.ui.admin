@@ -1,5 +1,5 @@
 import type { StoreProductEntity } from '@library/domain';
-import { FrameControllerInterface, type FrameControllerActionArgs, type FrameControllerLoaderArgs } from '@sellgar/app';
+import type { ControllerArgs, WithParams, WithPayload } from '@sellgar/app-v2';
 
 import { StoreModifyFrameParams } from '../../params/frame.params.ts';
 
@@ -20,11 +20,11 @@ export interface StoreModifyActionPayload {
   expectedVersion?: number;
 }
 
-export abstract class StoreModifyControllerInterface extends FrameControllerInterface<StoreModifyFrameParams> {
-  abstract loader(args: FrameControllerLoaderArgs<StoreModifyFrameParams>): Promise<StoreProductEntity | undefined>;
+export abstract class StoreModifyControllerInterface {
+  abstract loader(args: ControllerArgs<WithParams<StoreModifyFrameParams>>): Promise<StoreProductEntity | undefined>;
 
   abstract action(
-    args: FrameControllerActionArgs<StoreModifyFrameParams, StoreModifyActionPayload>,
+    args: ControllerArgs<WithPayload<StoreModifyActionPayload, WithParams<StoreModifyFrameParams>>>,
   ): Promise<StoreProductEntity>;
 
   abstract close(): Promise<void>;

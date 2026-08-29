@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
 
 import { FolderServiceInterface } from './application/folder-service.interface.ts';
 import { FolderService } from './application/folder.service.ts';

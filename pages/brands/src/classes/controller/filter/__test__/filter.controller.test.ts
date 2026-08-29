@@ -1,35 +1,37 @@
-import type { LocationServiceInterface, NavigateServiceInterface } from '@sellgar/app';
+import type { RouteQueryServiceInterface } from '@sellgar/app-v2';
 import { describe, expect, it, vi } from 'vitest';
 
-import { FilterDto } from '../dto/filter.dto.ts';
 import { FilterController } from '../filter.controller.ts';
+import { FilterQuery } from '../query/filter.query.ts';
 
 const createController = (search?: string) => {
-  const searchToObject = vi.fn(() => ({ search }));
-  const searchParams = vi.fn().mockResolvedValue(undefined);
-  const locationService = { searchToObject } as unknown as LocationServiceInterface;
-  const navigateService = { searchParams } as unknown as NavigateServiceInterface;
+  const get = vi.fn(() => ({ search }));
+  const set = vi.fn().mockResolvedValue(undefined);
+  const queryService = { get, set } as unknown as RouteQueryServiceInterface;
 
   return {
-    controller: new FilterController(locationService, navigateService),
-    searchParams,
-    searchToObject,
+    controller: new FilterController(queryService),
+    get,
+    set,
   };
 };
 
 describe('FilterController', () => {
-  it('читает фильтр из query через DTO', () => {
+  it('читает фильтр из @Query', () => {
     const fixture = createController('nike');
 
     expect(fixture.controller.loader()).toEqual({ search: 'nike' });
-    expect(fixture.searchToObject).toHaveBeenCalledWith(FilterDto);
+    expect(fixture.get).toHaveBeenCalledWith(FilterQuery);
   });
 
-  it('нормализует и обновляет query', async () => {
+  it('передаёт query-модели параметры формы', async () => {
     const fixture = createController();
 
-    await fixture.controller.apply({ search: '  nike  ' });
+    await fixture.controller.action({
+      payload: { search: '  nike  ' },
+      signal: new AbortController().signal,
+    });
 
-    expect(fixture.searchParams).toHaveBeenCalledWith({ search: 'nike' }, { merge: true });
+    expect(fixture.set).toHaveBeenCalledWith(FilterQuery, { search: '  nike  ' });
   });
 });

@@ -1,10 +1,6 @@
 import { PropertyServiceInterface } from '@library/domain';
-import {
-  Controller,
-  FrameServiceInterface,
-  Inject,
-  RevalidateServiceInterface,
-} from '@sellgar/app';
+import { Controller, Inject, RevalidateServiceInterface } from '@sellgar/app-v2';
+import { NavigateServiceInterface } from '@sellgar/app-v2';
 
 import { PropertyModifyControllerInterface } from './property-modify-controller.interface.ts';
 
@@ -12,16 +8,16 @@ import { PropertyModifyControllerInterface } from './property-modify-controller.
 export class PropertyModifyController implements PropertyModifyControllerInterface {
   constructor(
     @Inject(PropertyServiceInterface) private readonly propertyService: PropertyServiceInterface,
-    @Inject(FrameServiceInterface) private readonly frameService: FrameServiceInterface,
+    @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
     @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
   async loader(args: Parameters<PropertyModifyControllerInterface['loader']>[0]) {
-    if (!args.props.uuid) {
+    if (!args.params.uuid) {
       return void 0;
     }
 
-    return this.propertyService.findByUuid(args.props.uuid);
+    return this.propertyService.findByUuid(args.params.uuid);
   }
 
   async action(args: Parameters<PropertyModifyControllerInterface['action']>[0]) {
@@ -32,10 +28,10 @@ export class PropertyModifyController implements PropertyModifyControllerInterfa
     }
 
     await this.revalidateService.revalidate();
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 
   async close() {
-    await this.frameService.close();
+    await this.navigateService.close();
   }
 }

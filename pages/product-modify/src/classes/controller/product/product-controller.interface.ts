@@ -1,10 +1,13 @@
 import type { ProductEntity } from '@library/domain';
-import type { ControllerActionArgs, ControllerInterface, ControllerLoaderArgs } from '@sellgar/app';
+import { ProductModifyRoute } from '@library/route-tokens';
+import type { ControllerArgs, RouteParams, WithParams, WithPayload } from '@sellgar/app-v2';
 
 import type { ProductModifyResultEntity } from './domain/product-modify-result.entity.ts';
 import type { ProductFormInput } from './input/product-form.input.ts';
 
-export abstract class ProductControllerInterface implements ControllerInterface {
-  abstract loader(args: ControllerLoaderArgs): Promise<ProductModifyResultEntity>;
-  abstract action(args: ControllerActionArgs<ProductFormInput>): Promise<ProductEntity>;
+export abstract class ProductControllerInterface {
+  abstract loader(
+    args: ControllerArgs<WithParams<Partial<RouteParams<typeof ProductModifyRoute>>>>,
+  ): Promise<ProductModifyResultEntity>;
+  abstract action(args: ControllerArgs<WithPayload<ProductFormInput>>): Promise<ProductEntity>;
 }

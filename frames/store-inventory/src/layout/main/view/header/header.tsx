@@ -1,5 +1,5 @@
-import { Modal, Typography } from '@sellgar/kit';
-import { useLoaderData } from '@sellgar/app';
+import { Drawer, Typography } from '@sellgar/kit';
+import { useLoaderData } from '@sellgar/app-v2/react';
 
 import React from 'react';
 
@@ -15,7 +15,7 @@ export const Header: React.FC = () => {
       <Typography size={'body-l'}>
         <p className={s.label}>Остаток: {data.offer.variant.name}</p>
       </Typography>
-      <Modal.Close />
+      <Drawer.Close />
     </div>
   );
 };

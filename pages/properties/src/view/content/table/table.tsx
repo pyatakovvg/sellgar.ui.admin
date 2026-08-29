@@ -1,5 +1,5 @@
-import { PropertyModifyFrame } from '@frame/property-modify';
-import * as App from '@sellgar/app';
+import { PropertyModifyRoute } from '@library/route-tokens';
+import * as App from '@sellgar/app-v2/react';
 import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';
@@ -13,7 +13,7 @@ import s from './default.module.scss';
 
 export const Table: React.FC = () => {
   const properties = App.useLoaderData(PropertyControllerInterface);
-  const propertyModifyFrame = App.useFrame(PropertyModifyFrame);
+  const navigate = App.useNavigate();
 
   return (
     <div className={s.wrapper}>
@@ -21,7 +21,7 @@ export const Table: React.FC = () => {
         data={{ nodes: properties.data }}
         row={{
           handlers: {
-            click: ({ row }) => void propertyModifyFrame.open({ uuid: row.uuid }),
+            click: ({ row }) => void navigate.to(PropertyModifyRoute, { params: { uuid: row.uuid } }),
           },
         }}
       >

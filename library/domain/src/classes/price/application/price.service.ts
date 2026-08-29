@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@sellgar/app';
+import { Inject, Injectable } from '@sellgar/app-v2';
 
 import { PriceServiceInterface } from './price-service.interface.ts';
 import { PriceGatewayInterface } from '../data/gateway/price-gateway.interface.ts';

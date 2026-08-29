@@ -1,4 +1,4 @@
-import { Inject, Injectable, RequestExecutorInterface } from '@sellgar/app';
+import { Inject, Injectable, RequestExecutorInterface } from '@sellgar/app-v2';
 
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';

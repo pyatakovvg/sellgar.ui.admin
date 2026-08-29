@@ -1,24 +1,6 @@
 import axios, { AxiosError, type AxiosInstance } from 'axios';
 import type { AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import {
-  BadGatewayException,
-  BadRequestException,
-  ConflictException,
-  ForbiddenException,
-  GatewayTimeoutException,
-  HttpException,
-  InternalServerErrorException,
-  LockoutException,
-  MethodNotAllowedException,
-  NetworkError,
-  NotFoundException,
-  RequestTimeoutException,
-  ServiceUnavailableException,
-  TooManyRequestsException,
-  TransportTimeoutError,
-  UnauthorizedException,
-  UnprocessableEntityException,
-} from '@sellgar/app';
+import { BadGatewayException, BadRequestException, ConflictException, ForbiddenException, GatewayTimeoutException, HttpException, InternalServerErrorException, LockoutException, MethodNotAllowedException, NetworkError, NotFoundException, RequestTimeoutException, ServiceUnavailableException, TooManyRequestsException, TransportTimeoutError, UnauthorizedException, UnprocessableEntityException } from '@sellgar/app-v2';
 
 export class HttpRequest {
   private readonly axiosInstance: AxiosInstance;

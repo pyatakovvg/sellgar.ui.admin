@@ -1,4 +1,5 @@
-import { UseBindings, Widget, WidgetDefinition } from '@sellgar/app';
+import { UseBindings } from '@sellgar/app-v2';
+import { Widget, WidgetDefinition } from '@sellgar/app-v2/react';
 
 import type { ThemeWidgetProps } from './classes/controller/theme/dto/theme-widget-props.dto.ts';
 import { ThemeBindings } from './classes/classes.bindings.ts';

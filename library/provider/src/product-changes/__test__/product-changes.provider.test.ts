@@ -1,5 +1,5 @@
 import { ProductEntity, ProductResultEntity } from '@library/domain';
-import type { RuntimeProviderCleanup } from '@sellgar/app';
+import type { ProviderCleanup } from '@sellgar/app-v2';
 import { plainToInstance } from 'class-transformer';
 
 import {
@@ -18,8 +18,8 @@ describe('ProductChangesProvider', () => {
     const hub = new TestProductChangesHub();
     const provider = new ProductChangesProvider(hub);
 
-    const dispose = provider.setup();
-    assertRuntimeProviderCleanup(dispose);
+    const dispose = provider.activate();
+    assertProviderCleanup(dispose);
 
     await hub.emitCreated(createdProduct);
 
@@ -35,8 +35,8 @@ describe('ProductChangesProvider', () => {
     const hub = new TestProductChangesHub();
     const provider = new ProductChangesProvider(hub);
 
-    const dispose = provider.setup();
-    assertRuntimeProviderCleanup(dispose);
+    const dispose = provider.activate();
+    assertProviderCleanup(dispose);
 
     await hub.emitUpdated(updatedProduct);
 
@@ -47,7 +47,7 @@ describe('ProductChangesProvider', () => {
   });
 });
 
-const assertRuntimeProviderCleanup: (value: unknown) => asserts value is RuntimeProviderCleanup = (value) => {
+const assertProviderCleanup: (value: unknown) => asserts value is ProviderCleanup = (value) => {
   if (typeof value !== 'function') {
     throw new Error('Provider cleanup was not created.');
   }
