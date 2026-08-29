@@ -327,6 +327,10 @@ controller token. Обе сохраняют runtime instances и текущую 
 `inProcess/error` и выполняются последовательной superseding queue. Abort,
 session revision, замена runtime и dispose запрещают применение late result;
 cleanup controller/provider ждёт физического завершения уже запущенного loader.
+Tokenless handle `useRevalidate()` запускает общую operation и агрегирует её
+state со state всех targeted operations. Keyed handle `useRevalidate(Token)`
+запускает и наблюдает только exact-token operation: общая revalidation физически
+выполняет loader этого controller, но не наследуется его keyed state.
 Пустой объект `revalidate({})` однозначно считается options, а не DI token.
 
 `core/controller/runtime` владеет общим invoker произвольных controller methods.

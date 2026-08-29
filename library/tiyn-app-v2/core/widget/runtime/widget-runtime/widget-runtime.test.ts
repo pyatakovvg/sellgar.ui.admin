@@ -134,6 +134,40 @@ describe('WidgetRuntime', () => {
     expect(runtime.getLoaderData(TestController)).toBe('latest');
   });
 
+  it('attributes general and targeted revalidation processes independently', async () => {
+    const deferred = createDeferred<void>();
+    const runtime = createRuntime({ value: 'ready' });
+
+    await runtime.load();
+    TestController.loaderDeferred = deferred;
+
+    const general = runtime.revalidate();
+
+    await waitFor(() => TestController.loadCount === 2);
+
+    expect(runtime.getRevalidateState()).toEqual({ error: undefined, inProcess: true });
+    expect(runtime.getRevalidateState(TestController)).toEqual({ error: undefined, inProcess: false });
+    expect(runtime.getRevalidateState(OtherController)).toEqual({ error: undefined, inProcess: false });
+
+    deferred.resolve();
+    await general;
+
+    const targetedDeferred = createDeferred<void>();
+
+    TestController.loaderDeferred = targetedDeferred;
+
+    const targeted = runtime.revalidate({ controllerToken: TestController });
+
+    await waitFor(() => TestController.loadCount === 3);
+
+    expect(runtime.getRevalidateState()).toEqual({ error: undefined, inProcess: true });
+    expect(runtime.getRevalidateState(TestController)).toEqual({ error: undefined, inProcess: true });
+    expect(runtime.getRevalidateState(OtherController)).toEqual({ error: undefined, inProcess: false });
+
+    targetedDeferred.resolve();
+    await targeted;
+  });
+
   it('cleans controllers and providers exactly once', async () => {
     const runtime = createRuntime({ value: 'ready' });
 
@@ -225,6 +259,8 @@ class TestController {
     TestController.disposeCount++;
   }
 }
+
+class OtherController {}
 
 @Provider()
 class TestProvider implements ProviderInterface<TestWidgetProps> {

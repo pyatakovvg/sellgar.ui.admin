@@ -126,6 +126,11 @@ loaders и явный provider `revalidate` без повтора `initialize`/`
 и без initial fallback. Global и targeted
 operations имеют observable state, последовательно supersede-ят устаревшую
 operation и не применяют late result после abort, session revision либо dispose.
+`useRevalidate()` без token запускает общую revalidation owner и агрегирует
+`inProcess/error` общей и любой targeted operation. `useRevalidate(Token)`
+запускает targeted revalidation и наблюдает только operation, явно адресованную
+этому token. Общая revalidation выполняет loaders всех controllers, но не
+переводит keyed handles в `inProcess` и не публикует в них общую ошибку.
 Произвольные методы controller вызываются через единый runtime invoker и
 application operation coordinator: сохраняются исходные аргументы, `this`,
 sync/async результат, controller attribution и одна refresh wave после изменения

@@ -36,6 +36,7 @@ import { RuntimeOperationCoordinator } from '../../../runtime/operation/runtime-
 import { isRuntimeExceptionSignal } from '../../../runtime/exception/runtime-exception';
 import { RevalidateServiceInterface } from '../../../revalidate/contract/revalidate-service';
 import { RuntimeRevalidateService } from '../../../revalidate/runtime/revalidate-service';
+import { resolveRuntimeRevalidateState } from '../../../revalidate/runtime/revalidate-state';
 
 export type ModuleRuntimeLoader = () => Promise<ModuleExports>;
 
@@ -423,24 +424,7 @@ export class ModuleRuntime<TPresentation = unknown> {
   }
 
   getRevalidateState(controllerToken?: DependencyToken<unknown>): ModuleRuntimeRevalidateState {
-    if (controllerToken !== undefined) {
-      const state = this.revalidateStates.get(controllerToken) ?? DEFAULT_REVALIDATE_STATE;
-
-      return {
-        error: state.error ?? this.revalidateState.error,
-        inProcess: state.inProcess || this.revalidateState.inProcess,
-      };
-    }
-
-    let error = this.revalidateState.error;
-    let inProcess = this.revalidateState.inProcess;
-
-    for (const state of this.revalidateStates.values()) {
-      error ??= state.error;
-      inProcess ||= state.inProcess;
-    }
-
-    return { error, inProcess };
+    return resolveRuntimeRevalidateState(controllerToken, this.revalidateState, this.revalidateStates);
   }
 
   getRevalidateRevision(): number {

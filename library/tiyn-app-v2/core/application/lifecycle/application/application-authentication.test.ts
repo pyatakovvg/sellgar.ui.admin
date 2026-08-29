@@ -115,6 +115,12 @@ class TestRouterBridge implements RouterBridgeInterface {
   dispose(): void {}
 }
 
+class DirectSignInTestRouterBridge extends TestRouterBridge {
+  override async initialize(context: RouterBridgeInitializeContextInterface): Promise<void> {
+    await context.navigate.to(SignInRoute);
+  }
+}
+
 class NestedTestRouterBridge extends TestRouterBridge {
   override async initialize(context: RouterBridgeInitializeContextInterface): Promise<void> {
     await context.restore(
@@ -227,6 +233,29 @@ describe('Application authentication lifecycle', () => {
 
     await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, ProtectedRoute)).toBe(true));
     expect(bridge.commits).toHaveLength(4);
+
+    await app.dispose();
+  });
+
+  it('redirects direct sign-in to the protected root after authentication without a saved location', async () => {
+    const bridge = new DirectSignInTestRouterBridge();
+    const app = new TestApplication(
+      bridge,
+      createAuthRouter(
+        vi.fn(async () => ({})),
+        vi.fn(async () => ({})),
+      ),
+    );
+
+    app.compose();
+    await app.initialize();
+
+    expect(matchesNavigationRoute(app.navigation.navigation, SignInRoute)).toBe(true);
+
+    await app.action('authenticate');
+
+    expect(app.session.phase).toBe('authenticated');
+    expect(matchesNavigationRoute(app.navigation.navigation, ProtectedRoute)).toBe(true);
 
     await app.dispose();
   });

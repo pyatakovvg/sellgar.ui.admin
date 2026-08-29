@@ -1403,25 +1403,23 @@ export class RouterRuntime<TPresentation = unknown> {
   ): Promise<boolean> {
     throwIfAborted(signal);
 
-    if (plan.localChanged) {
-      if (
-        !(await plan.runtime.policyRunner.test(
-          plan.runtime.definition.canMatch,
-          createPolicyContext(EMPTY_PARAMS, context, signal),
-        ))
-      ) {
+    if (
+      !(await plan.runtime.policyRunner.test(
+        plan.runtime.definition.canMatch,
+        createPolicyContext(EMPTY_PARAMS, context, signal),
+      ))
+    ) {
+      return false;
+    }
+
+    throwIfAborted(signal);
+
+    for (const entry of plan.nextRoutes) {
+      if (!(await entry.runtime.testCanMatch(createPolicyContext(entry.resolved.params, context, signal)))) {
         return false;
       }
 
       throwIfAborted(signal);
-
-      for (const entry of plan.createdRoutes) {
-        if (!(await entry.runtime.testCanMatch(createPolicyContext(entry.resolved.params, context, signal)))) {
-          return false;
-        }
-
-        throwIfAborted(signal);
-      }
     }
 
     return plan.childPlan ? await this.testPlanCanMatch(plan.childPlan, context, signal) : true;

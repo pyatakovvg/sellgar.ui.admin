@@ -17,6 +17,7 @@ import type { DependencyToken } from '../../../di/token/dependency-token';
 import { executeGuardedMethod } from '../../../guard/runtime/guard-method-executor';
 import { RevalidateServiceInterface } from '../../../revalidate/contract/revalidate-service';
 import { RuntimeRevalidateService } from '../../../revalidate/runtime/revalidate-service';
+import { resolveRuntimeRevalidateState } from '../../../revalidate/runtime/revalidate-state';
 import { isRuntimeExceptionSignal } from '../../../runtime/exception/runtime-exception';
 import {
   createRuntimeInstanceId,
@@ -211,24 +212,7 @@ export class WidgetRuntime<TProps extends object = Record<string, never>> {
   }
 
   getRevalidateState(controllerToken?: DependencyToken<unknown>): WidgetRuntimeRevalidateState {
-    if (controllerToken !== undefined) {
-      const state = this.revalidateStates.get(controllerToken) ?? DEFAULT_REVALIDATE_STATE;
-
-      return {
-        error: state.error ?? this.revalidateState.error,
-        inProcess: state.inProcess || this.revalidateState.inProcess,
-      };
-    }
-
-    let error = this.revalidateState.error;
-    let inProcess = this.revalidateState.inProcess;
-
-    for (const state of this.revalidateStates.values()) {
-      error ??= state.error;
-      inProcess ||= state.inProcess;
-    }
-
-    return { error, inProcess };
+    return resolveRuntimeRevalidateState(controllerToken, this.revalidateState, this.revalidateStates);
   }
 
   getScope(): WidgetScope {
