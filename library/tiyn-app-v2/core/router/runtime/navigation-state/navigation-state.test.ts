@@ -5,7 +5,13 @@ import { Route } from '../../declaration/route';
 import { Router } from '../../declaration/router';
 import { createCoreNavigate } from '../../service/navigate-service';
 
-import { matchesNavigationRoute, matchesNavigationState, type NavigationState } from './navigation-state.ts';
+import {
+  matchesNavigationRoute,
+  matchesNavigationState,
+  resolveNavigationControlState,
+  resolveNavigationRouteState,
+  type NavigationState,
+} from './navigation-state.ts';
 
 abstract class OneRoute {
   declare readonly id: string;
@@ -126,6 +132,70 @@ describe('matchesNavigationState', () => {
     expect(matchesNavigationState(twise, one, { end: false })).toBe(true);
     expect(matchesNavigationState(otherBranch, one, { end: false })).toBe(false);
     expect(matchesNavigationState(localDescendant, one)).toBe(false);
+  });
+});
+
+describe('resolveNavigationControlState', () => {
+  it('keeps an owner active without attributing a nested Router process to it', async () => {
+    const owner = await createOneNavigation();
+    const nested = await createNavigation();
+
+    expect(resolveNavigationControlState(nested, nested, owner)).toEqual({
+      isActive: true,
+      isPending: false,
+    });
+    expect(resolveNavigationControlState(owner, owner, owner)).toEqual({
+      isActive: true,
+      isPending: true,
+    });
+    expect(resolveNavigationControlState(owner, nested, nested)).toEqual({
+      isActive: false,
+      isPending: true,
+    });
+  });
+
+  it('attributes a pending process to the exact target query', async () => {
+    const target = await createOneNavigation();
+    const pending: NavigationState = {
+      ...target,
+      root: {
+        ...target.root,
+        query: { search: 'query' },
+      },
+    };
+
+    expect(resolveNavigationControlState(target, pending, target)).toEqual({
+      isActive: true,
+      isPending: false,
+    });
+  });
+
+  it('does not attribute an equal target started by another runtime', async () => {
+    const target = await createOneNavigation();
+    const pending: NavigationState = {
+      ...target,
+      initiator: { kind: 'route', runtimeId: 'route-runtime' },
+    };
+
+    expect(resolveNavigationControlState(target, pending, target)).toEqual({
+      isActive: true,
+      isPending: false,
+    });
+  });
+});
+
+describe('resolveNavigationRouteState', () => {
+  it('uses branch matching only for active state', async () => {
+    const nested = await createNavigation();
+
+    expect(resolveNavigationRouteState(nested, nested, OneRoute, { end: false })).toEqual({
+      isActive: true,
+      isPending: false,
+    });
+    expect(resolveNavigationRouteState(nested, nested, TwiseRoute)).toEqual({
+      isActive: true,
+      isPending: true,
+    });
   });
 });
 

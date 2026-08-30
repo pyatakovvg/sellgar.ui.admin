@@ -10,9 +10,6 @@ export type RevalidateHandler = (() => Promise<void>) & {
 
 export const useRevalidate = (controllerToken?: DependencyToken<unknown>): RevalidateHandler => {
   const runtime = useControllerRuntime();
-  const sessionRef = React.useRef<AbortController | null>(null);
-  const [inProcess, setInProcess] = React.useState(false);
-  const [error, setError] = React.useState<unknown>(undefined);
   const revision = React.useSyncExternalStore(
     React.useCallback((listener) => runtime.subscribe(listener), [runtime]),
     React.useCallback(() => runtime.getRevalidateRevision(), [runtime]),
@@ -23,49 +20,20 @@ export const useRevalidate = (controllerToken?: DependencyToken<unknown>): Reval
     [controllerToken, revision, runtime],
   );
 
-  React.useEffect(() => {
-    return () => {
-      sessionRef.current?.abort();
-      sessionRef.current = null;
-    };
-  }, []);
-
-  const revalidate = React.useCallback(async () => {
-    if (sessionRef.current || runtime.getRevalidateState(controllerToken).inProcess) {
-      throw new Error('Обновление контроллера уже выполняется.');
-    }
-
-    const abortController = new AbortController();
-
-    sessionRef.current = abortController;
-    setError(undefined);
-    setInProcess(true);
-
-    try {
-      await runtime.revalidate({
+  const revalidate = React.useCallback(
+    () =>
+      runtime.revalidate({
         controllerToken,
-        signal: abortController.signal,
-      });
-    } catch (cause) {
-      if (sessionRef.current === abortController) {
-        setError(cause);
-      }
-
-      throw cause;
-    } finally {
-      if (sessionRef.current === abortController) {
-        sessionRef.current = null;
-        setInProcess(false);
-      }
-    }
-  }, [controllerToken, runtime]);
+      }),
+    [controllerToken, runtime],
+  );
 
   return React.useMemo(
     () =>
       Object.assign(revalidate, {
-        error: runtimeState.error ?? error,
-        inProcess: runtimeState.inProcess || inProcess,
+        error: runtimeState.error,
+        inProcess: runtimeState.inProcess,
       }) as RevalidateHandler,
-    [error, inProcess, revalidate, runtimeState.error, runtimeState.inProcess],
+    [revalidate, runtimeState.error, runtimeState.inProcess],
   );
 };

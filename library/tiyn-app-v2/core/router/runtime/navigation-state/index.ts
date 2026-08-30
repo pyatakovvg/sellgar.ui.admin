@@ -3,8 +3,11 @@ export {
   areNavigationQueriesEqual,
   matchesNavigationRoute,
   matchesNavigationState,
+  resolveNavigationControlState,
+  resolveNavigationRouteState,
 } from './navigation-state.ts';
 export type {
+  NavigationControlState,
   NavigationInitiator,
   NavigationNotFoundBoundary,
   NavigationRouteEntry,

@@ -243,8 +243,12 @@ execute. Для ещё неактивной ancestry те же bindings испо
 Application navigation snapshot одновременно хранит committed и pending
 logical state. Pending target публикуется сразу при начале transaction,
 заменяется новым target при supersede или policy redirect и очищается после
-commit, interruption либо failure. React adapter сопоставляет это состояние по
-Route token через `useRouteActive` и `useRoutePending`. Для декларативного
+commit, interruption либо failure. Core отдельно вычисляет состояние target:
+active допускает продолжающуюся дочернюю Router-ветку, а pending требует точного
+совпадения инициатора, Router scopes, Route params и query. Поэтому nested transition не
+становится processing внешнего navigation control. Renderer adapter только
+подписывается на готовое core-состояние; `useRouteActive` и `useRoutePending` не
+задают собственных matching-правил. Для декларативного
 управления `NavItem` передаёт произвольному control `execute` и active/pending,
 а `NavLink` передаёт render delegate готовый объект `anchor` для голого `<a>`.
 Оба собирают тот же типизированный

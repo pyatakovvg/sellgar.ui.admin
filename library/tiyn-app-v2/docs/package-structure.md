@@ -332,6 +332,9 @@ state со state всех targeted operations. Keyed handle `useRevalidate(Token
 запускает и наблюдает только exact-token operation: общая revalidation физически
 выполняет loader этого controller, но не наследуется его keyed state.
 Пустой объект `revalidate({})` однозначно считается options, а не DI token.
+`inProcess/error` хранятся и агрегируются только core runtime; renderer hook
+подписывается на готовый snapshot и не создаёт локальную processing session,
+не дублирует error и не отменяет operation из-за собственного unmount.
 
 `core/controller/runtime` владеет общим invoker произвольных controller methods.
 `ModuleRuntime` разрешает controller instance и исполняет invoker внутри
@@ -379,6 +382,10 @@ scope есть одна локальная Route-ветка и не более �
 owner Route. Поэтому Router, объявленный на ancestor Route, создаётся именно под
 её `RouteScope`, не заменяет продолжающуюся main-ветку того же scope и может
 жить одновременно с её ModuleRuntime. Общий prefix RouteRuntime сохраняется.
+Core resolver также единолично вычисляет `active/pending` navigation control:
+active использует branch semantics, а pending — точный target с той же
+identity инициатора, иерархией Router scopes, params и query. Renderer не интерпретирует logical
+navigation state и выбирает только способ отображения готового результата.
 Новая ветка сначала проходит resolve, `canMatch`, `canActivate` и module prepare,
 после чего owner получает одноразовый `commit | discard`; до commit предыдущая
 ветка остаётся committed. Supersede и abort освобождают только candidate graph.

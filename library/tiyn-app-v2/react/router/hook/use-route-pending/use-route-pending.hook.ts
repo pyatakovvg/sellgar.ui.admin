@@ -1,5 +1,5 @@
 import type { RouteMatchOptions, RouteToken } from '../../../../core/router/declaration/route-token';
-import { matchesNavigationRoute } from '../../../../core/router/runtime/navigation-state';
+import { resolveNavigationRouteState } from '../../../../core/router/runtime/navigation-state';
 import { useNavigationState } from '../../runtime/navigation-state-context';
 
 export const useRoutePending = <TToken extends RouteToken>(
@@ -8,5 +8,6 @@ export const useRoutePending = <TToken extends RouteToken>(
 ): boolean => {
   const navigation = useNavigationState();
 
-  return matchesNavigationRoute(navigation.snapshot.pending, token, options);
+  return resolveNavigationRouteState(navigation.snapshot.navigation, navigation.snapshot.pending, token, options)
+    .isPending;
 };

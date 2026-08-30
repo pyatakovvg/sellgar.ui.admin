@@ -48,6 +48,11 @@ export interface NavigationStateMatchOptions {
   readonly end?: boolean;
 }
 
+export interface NavigationControlState {
+  readonly isActive: boolean;
+  readonly isPending: boolean;
+}
+
 export const matchesNavigationRoute = <TToken extends RouteToken>(
   navigation: NavigationState | null | undefined,
   token: TToken,
@@ -135,6 +140,49 @@ export const matchesNavigationState = (
   return matchesNavigationRouterState(navigation.root, target.root, options.end !== false);
 };
 
+export const resolveNavigationControlState = (
+  navigation: NavigationState | null | undefined,
+  pending: NavigationState | null | undefined,
+  target: NavigationState,
+  options: NavigationStateMatchOptions = {},
+): NavigationControlState => {
+  return Object.freeze({
+    isActive: matchesNavigationState(navigation, target, options),
+    isPending: matchesNavigationTarget(pending, target),
+  });
+};
+
+export const resolveNavigationRouteState = <TToken extends RouteToken>(
+  navigation: NavigationState | null | undefined,
+  pending: NavigationState | null | undefined,
+  token: TToken,
+  options: RouteMatchOptions<TToken> = {},
+): NavigationControlState => {
+  return Object.freeze({
+    isActive: matchesNavigationRoute(navigation, token, options),
+    isPending: matchesNavigationRoute(pending, token, { ...options, end: true }),
+  });
+};
+
+const matchesNavigationTarget = (navigation: NavigationState | null | undefined, target: NavigationState): boolean => {
+  if (!navigation) {
+    return false;
+  }
+
+  return (
+    areNavigationInitiatorsEqual(navigation.initiator, target.initiator) &&
+    matchesNavigationRouterTarget(navigation.root, target.root)
+  );
+};
+
+const areNavigationInitiatorsEqual = (left: NavigationInitiator | null, right: NavigationInitiator | null): boolean => {
+  if (left === null || right === null) {
+    return left === right;
+  }
+
+  return left.kind === right.kind && left.runtimeId === right.runtimeId;
+};
+
 const matchesNavigationRouterState = (
   navigation: NavigationRouterState,
   target: NavigationRouterState,
@@ -176,6 +224,38 @@ const matchesNavigationRouterState = (
   }
 
   return matchesNavigationRouterState(navigation.child, target.child, end);
+};
+
+const matchesNavigationRouterTarget = (navigation: NavigationRouterState, target: NavigationRouterState): boolean => {
+  if (
+    navigation.router !== target.router ||
+    navigation.owner !== target.owner ||
+    !areNavigationQueriesEqual(navigation.query, target.query) ||
+    target.path.length > navigation.path.length
+  ) {
+    return false;
+  }
+
+  const matchesTarget = target.path.every((entry, index) => {
+    const candidate = navigation.path[index];
+
+    return candidate?.route === entry.route && areNavigationParamsEqual(candidate.params, entry.params);
+  });
+
+  if (
+    !matchesTarget ||
+    !navigation.path
+      .slice(target.path.length)
+      .every((entry) => entry.token === undefined && getRouteDefinition(entry.route).address === undefined)
+  ) {
+    return false;
+  }
+
+  if (target.child === null || navigation.child === null) {
+    return target.child === navigation.child;
+  }
+
+  return matchesNavigationRouterTarget(navigation.child, target.child);
 };
 
 const collectNavigationRouteEntries = (router: NavigationRouterState): readonly NavigationRouteEntry[] => {
