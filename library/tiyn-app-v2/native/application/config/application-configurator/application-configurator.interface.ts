@@ -2,6 +2,7 @@ import type React from 'react';
 
 import { ApplicationConfiguratorInterface as CoreApplicationConfiguratorInterface } from '../../../../core/application/config/application-configurator';
 import type { LayoutConstructor } from '../../../layout/declaration/layout';
+import type { ShellConstructor } from '../../../router/declaration/shell';
 
 export interface ApplicationComponents {
   readonly exception?: React.ReactNode;
@@ -17,6 +18,7 @@ export interface ApplicationRouting {
   readonly fallback?: React.ReactNode;
   readonly forbidden?: React.ReactNode;
   readonly notFound?: React.ReactNode;
+  readonly shell?: ShellConstructor;
 }
 
 export interface ResolvedApplicationRouting {
@@ -24,6 +26,7 @@ export interface ResolvedApplicationRouting {
   readonly fallback: React.ReactNode;
   readonly forbidden: React.ReactNode;
   readonly notFound: React.ReactNode;
+  readonly shell?: ShellConstructor;
 }
 
 export abstract class ApplicationConfiguratorInterface extends CoreApplicationConfiguratorInterface {

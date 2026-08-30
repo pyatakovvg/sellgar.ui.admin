@@ -7,40 +7,73 @@ import type {
 } from '../../../../core/router/bridge/router-bridge';
 import { getRouteDefinition } from '../../../../core/router/declaration/route';
 import type { NavigationRouterState, NavigationState } from '../../../../core/router/runtime/navigation-state';
+import { createNativeLinkingTransport } from '../../transport/native-linking-transport';
+import type { NativeRouterTransportInterface } from '../../transport/native-router-transport';
 
 export interface NativeNavigationDriver {
-  commit(navigation: NavigationState, history: RouterBridgeHistoryEntryInterface): void | Promise<void>;
-
   rootBack(): void | Promise<void>;
 }
 
 export interface NativeRouterBridgeOptions {
-  readonly onCommit?: (navigation: NavigationState) => void;
+  readonly transport?: NativeRouterTransportInterface;
 }
 
-interface NativeCommittedNavigation {
-  readonly history: RouterBridgeHistoryEntryInterface;
-  readonly navigation: NavigationState;
+export interface NativeNavigationEntry {
+  readonly id: string;
+  readonly location: RouterBridgeLocationInterface;
 }
+
+export interface NativeNavigationSnapshot {
+  readonly entries: readonly NativeNavigationEntry[];
+  readonly index: number;
+}
+
+type NativeNavigationListener = () => void;
+
+const EMPTY_SNAPSHOT: NativeNavigationSnapshot = Object.freeze({ entries: Object.freeze([]), index: -1 });
 
 export class NativeRouterBridge implements RouterBridgeInterface {
   readonly runtimeRetention = 'retain' as const;
 
-  private committed: NativeCommittedNavigation | null = null;
   private context: RouterBridgeInitializeContextInterface | null = null;
   private driver: NativeNavigationDriver | null = null;
+  private readonly listeners = new Set<NativeNavigationListener>();
+  private snapshot = EMPTY_SNAPSHOT;
+  private readonly transport: NativeRouterTransportInterface;
+  private unsubscribeTransport: (() => void) | null = null;
 
-  constructor(private readonly options: NativeRouterBridgeOptions) {}
+  constructor(options: NativeRouterBridgeOptions) {
+    this.transport = options.transport ?? createNativeLinkingTransport();
+  }
 
   async initialize(context: RouterBridgeInitializeContextInterface): Promise<void> {
+    if (this.context) {
+      throw new Error('Native RouterBridge уже инициализирован.');
+    }
+
     this.context = context;
-    await context.navigate.root();
+    this.unsubscribeTransport = this.transport.subscribe(this.handleExternalLocation);
+    context.signal.addEventListener('abort', this.handleInitializationAbort, { once: true });
+
+    try {
+      const initialLocation = await this.transport.getInitialLocation(context.signal);
+
+      if (context.signal.aborted) return;
+
+      if (initialLocation) {
+        await context.restore(initialLocation, { blockersConfirmed: false });
+      } else {
+        await context.navigate.root();
+      }
+    } catch (error) {
+      this.dispose();
+      throw error;
+    }
   }
 
   async commit(navigation: NavigationState, context: RouterBridgeCommitContextInterface): Promise<void> {
-    this.committed = Object.freeze({ history: context.history, navigation });
-    await this.driver?.commit(navigation, context.history);
-    this.options.onCommit?.(navigation);
+    if (context.signal.aborted) return;
+    this.setSnapshot(projectCommit(this.snapshot, navigation, context.history));
   }
 
   async back(): Promise<void> {
@@ -53,6 +86,31 @@ export class NativeRouterBridge implements RouterBridgeInterface {
     return this.context?.cancelNavigation() ?? false;
   }
 
+  confirm(location: RouterBridgeLocationInterface, signal: AbortSignal): Promise<boolean> {
+    return this.requireContext().confirm(location, signal);
+  }
+
+  getSnapshot = (): NativeNavigationSnapshot => {
+    return this.snapshot;
+  };
+
+  async restore(location: RouterBridgeLocationInterface, blockersConfirmed = false): Promise<boolean> {
+    const previous = this.snapshot;
+    const traversed = location.entryId ? projectTraversal(previous, location.entryId) : null;
+
+    if (traversed) this.setSnapshot(traversed);
+
+    try {
+      const restored = await this.requireContext().restore(location, { blockersConfirmed });
+
+      if (!restored && traversed) this.setSnapshot(previous);
+      return restored;
+    } catch (error) {
+      if (traversed) this.setSnapshot(previous);
+      throw error;
+    }
+  }
+
   registerDriver(driver: NativeNavigationDriver): () => void {
     if (this.driver && this.driver !== driver) {
       throw new Error('Native router bridge уже подключён к navigation host.');
@@ -60,23 +118,43 @@ export class NativeRouterBridge implements RouterBridgeInterface {
 
     this.driver = driver;
 
-    if (this.committed) {
-      void driver.commit(this.committed.navigation, this.committed.history);
-    }
-
     return () => {
       if (this.driver === driver) this.driver = null;
     };
   }
+
+  subscribe = (listener: NativeNavigationListener): (() => void) => {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  };
 
   toLocation(navigation: NavigationState): RouterBridgeLocationInterface {
     return createBridgeLocation(navigation);
   }
 
   dispose(): void {
-    this.committed = null;
+    this.unsubscribeTransport?.();
+    this.unsubscribeTransport = null;
+    this.context?.signal.removeEventListener('abort', this.handleInitializationAbort);
     this.context = null;
     this.driver = null;
+    this.listeners.clear();
+    this.snapshot = EMPTY_SNAPSHOT;
+  }
+
+  private readonly handleExternalLocation = (location: RouterBridgeLocationInterface): void => {
+    void this.restore(location).catch(() => undefined);
+  };
+
+  private readonly handleInitializationAbort = (): void => {
+    this.dispose();
+  };
+
+  private setSnapshot(snapshot: NativeNavigationSnapshot): void {
+    if (snapshot === this.snapshot) return;
+
+    this.snapshot = snapshot;
+    for (const listener of this.listeners) listener();
   }
 
   private requireContext(): RouterBridgeInitializeContextInterface {
@@ -112,6 +190,49 @@ const createBridgeLocation = (navigation: NavigationState): RouterBridgeLocation
     query: navigation.root.query,
     revalidate: navigation.revalidation !== null,
     state: navigation.state,
+  });
+};
+
+const projectCommit = (
+  snapshot: NativeNavigationSnapshot,
+  navigation: NavigationState,
+  history: RouterBridgeHistoryEntryInterface,
+): NativeNavigationSnapshot => {
+  const entry = createNativeNavigationEntry(history.id, navigation);
+  let entries: readonly NativeNavigationEntry[];
+
+  switch (history.action) {
+    case 'reset':
+      entries = [entry];
+      break;
+    case 'pop':
+    case 'replace':
+    case 'update':
+      entries = [...snapshot.entries.slice(0, history.index), entry];
+      break;
+    case 'push':
+      entries = [...snapshot.entries.slice(0, history.index), entry];
+      break;
+  }
+
+  if (entries.length !== history.length || history.index !== history.length - 1) {
+    throw new Error('Core history commit нельзя спроецировать в native transport history.');
+  }
+
+  return Object.freeze({ entries: Object.freeze(entries), index: history.index });
+};
+
+const projectTraversal = (snapshot: NativeNavigationSnapshot, entryId: string): NativeNavigationSnapshot | null => {
+  const index = snapshot.entries.findIndex((entry) => entry.id === entryId);
+
+  if (index < 0 || index === snapshot.index) return null;
+  return Object.freeze({ entries: Object.freeze(snapshot.entries.slice(0, index + 1)), index });
+};
+
+const createNativeNavigationEntry = (id: string, navigation: NavigationState): NativeNavigationEntry => {
+  return Object.freeze({
+    id,
+    location: Object.freeze({ ...createBridgeLocation(navigation), entryId: id }),
   });
 };
 

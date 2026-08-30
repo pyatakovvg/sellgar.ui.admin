@@ -459,11 +459,12 @@ new Router({
   `app.routing()`, `Router`, Route и router bridge не принимают DOM selector,
   portal root или z-index. Web bootstrap создаёт один React root; portal остаётся
   частью того же React tree, отдельный React root для shell не допускается.
-- Core не требует `shell` у Router и не считает его отсутствием configuration
-  error. React Native navigator сам размещает Module выбранной Route как
-  отдельный screen, поэтому дополнительный frame/portal и `@Shell` ему не
-  нужны. Отсутствие shell допустимо, когда renderer host умеет непосредственно
-  разместить Route presentation.
+- Core не требует `shell` у Router: это renderer-specific declaration и поэтому
+  не является core configuration error. React и React Native adapters считают
+  `Route.routing` отдельной shell-presentation и разрешают её одинаково как
+  `Router.shell ?? app.routing({ shell })`; отсутствие обоих вариантов является
+  renderer configuration error. Обычная глубина `Route.routes` остаётся native
+  screen/Stack flow и не требует shell.
 - `shell` не выбирает navigation algorithm. В частности, соответствие Router
   native Stack, Tabs или Drawer принадлежит React Native bridge/renderer
   projection, а не `@Shell`.
@@ -2051,9 +2052,9 @@ new Route({
 - Ошибка bootstrap при повторной регистрации route class token.
 - React, React Native и non-URL fake bridge contract tests без зависимости core
   tests от конкретного renderer.
-- Web nested Router разрешает local/default `@Shell`, а React Native
-  размещает тот же Module как screen без frame shell; отсутствие shell не
-  отклоняется core как configuration error.
+- Web и React Native nested Router разрешают local/default `@Shell`; отсутствие
+  обоих вариантов отклоняется renderer как configuration error, но не core.
+  Native screen без shell строится через `Route.routes`, а не `Route.routing`.
 - Полная migration characterization для `ManagementPanelApplication`, включая
   active main Module плюс routing владельца на ancestor Route, policy
   continuation, root navigation, Link/NavItem pending state и scoped close из

@@ -1,4 +1,4 @@
-import { Controller } from '@sellgar/app-v2';
+import { Controller, Inject, RequestExecutorInterface, UnauthorizedException } from '@sellgar/app-v2';
 
 import { delay } from '../../../../../../shared/runtime/delay';
 import {
@@ -12,6 +12,17 @@ export class ProductDetailController extends ProductDetailControllerInterface {
 
   private readonly instance = ++ProductDetailController.nextInstance;
   private loads = 0;
+
+  constructor(
+    @Inject(RequestExecutorInterface)
+    private readonly requests: RequestExecutorInterface,
+  ) {
+    super();
+  }
+
+  action(): Promise<void> {
+    return this.requests.run(() => Promise.reject(new UnauthorizedException({ title: 'Native 401 probe' })));
+  }
 
   async loader({
     params,

@@ -3,7 +3,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-nati
 
 import { ProductModifyRoute } from '@library/route-tokens';
 import type { RouteParams } from '@sellgar/app-v2';
-import { NavItem, useLoaderData, useNavigate, useParams } from '@sellgar/app-v2/native';
+import { NavItem, useLoaderData, useNavigate, useParams, useSubmit } from '@sellgar/app-v2/native';
 
 import { ProductDetailControllerInterface } from '../classes/controller/product-detail/product-detail-controller.interface.ts';
 
@@ -11,6 +11,7 @@ export const ModuleView: React.FC = () => {
   const params = useParams<RouteParams<typeof ProductModifyRoute>>();
   const navigate = useNavigate();
   const runtime = useLoaderData(ProductDetailControllerInterface);
+  const expireSession = useSubmit(ProductDetailControllerInterface);
 
   return (
     <View style={styles.content}>
@@ -40,6 +41,20 @@ export const ModuleView: React.FC = () => {
           </Pressable>
         )}
       </NavItem>
+      <Pressable
+        accessibilityLabel="Simulate protected 401"
+        accessibilityRole="button"
+        accessibilityState={{ busy: expireSession.inProcess }}
+        disabled={expireSession.inProcess}
+        onPress={() => void expireSession()}
+        style={({ pressed }) => [styles.button, pressed ? styles.pressed : null]}
+      >
+        {expireSession.inProcess ? (
+          <ActivityIndicator color="#11131a" />
+        ) : (
+          <Text style={styles.buttonText}>Simulate protected 401</Text>
+        )}
+      </Pressable>
       <Pressable
         accessibilityLabel="Back to products"
         accessibilityRole="button"

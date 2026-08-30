@@ -41,7 +41,6 @@ export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props)
 
   React.useEffect(() => {
     const driver: NativeNavigationDriver = {
-      commit: () => undefined,
       rootBack: () => {
         const resolution = resolveRootBack(rootBackPressedAt.current, Date.now());
 

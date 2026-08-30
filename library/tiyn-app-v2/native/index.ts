@@ -79,7 +79,25 @@ export type { WidgetPreloadOptions } from '../core/widget/service/widget-preload
 
 export type { RouteDeclaration } from '../core/router/declaration/route';
 export { createNativeRouterBridge, NativeRouterBridge } from './router/bridge/native-router-bridge';
-export type { NativeNavigationDriver, NativeRouterBridgeOptions } from './router/bridge/native-router-bridge';
+export type {
+  NativeNavigationDriver,
+  NativeNavigationEntry,
+  NativeNavigationSnapshot,
+  NativeRouterBridgeOptions,
+} from './router/bridge/native-router-bridge';
+export {
+  createNativeLinkingTransport,
+  decodeNativeLocation,
+  NativeLinkingTransport,
+} from './router/transport/native-linking-transport';
+export type {
+  NativeLinkingTransportOptions,
+  NativeLocationCodecOptions,
+} from './router/transport/native-linking-transport';
+export type {
+  NativeRouterTransportInterface,
+  NativeRouterTransportListener,
+} from './router/transport/native-router-transport';
 export { Route } from './router/declaration/route';
 export type { RouteOptions } from './router/declaration/route';
 export { Router } from './router/declaration/router';

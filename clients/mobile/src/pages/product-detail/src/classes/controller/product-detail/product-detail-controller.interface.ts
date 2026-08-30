@@ -9,6 +9,8 @@ export interface ProductDetailLoaderData {
 }
 
 export abstract class ProductDetailControllerInterface {
+  abstract action(args: ControllerArgs): Promise<void>;
+
   abstract loader(
     args: ControllerArgs<WithParams<RouteParams<typeof ProductModifyRoute>>>,
   ): Promise<ProductDetailLoaderData>;

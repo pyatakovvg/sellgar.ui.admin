@@ -61,6 +61,7 @@ export const NestedRouterLayer: React.FC<IProps> = (props) => {
   return (
     <NestedRouterHost
       exception={components.exception}
+      routing={props.routing}
       runtime={'tree' in activeChild ? activeChild.tree.runtime : activeChild.runtime}
     >
       <RouterHost

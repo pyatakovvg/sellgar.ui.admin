@@ -8,15 +8,19 @@ import {
   UserRequestFeature,
   UserRequestPresentation,
 } from '@sellgar/app-v2/native';
+import { UseBindings } from '@sellgar/app-v2';
 
 import { BaseLayout } from '../layouts/base';
 import { Status } from './components/status';
+import { MobileBindings } from './bindings';
 import { ResolveSessionInitializer } from './initializers';
 import { createMobileRouter } from './routes';
 import { NavigationBlocker } from './presentations/navigation-blocker';
 import { DestructiveNotification, InfoNotification, SuccessNotification } from './presentations/notification';
 import { AlertUserRequest, ConfirmUserRequest, PromptUserRequest } from './presentations/user-request';
+import { DrawerShell } from '../shells/drawer/src';
 
+@UseBindings(MobileBindings)
 export class MobileApplication extends Application {
   protected configure(app: ApplicationConfiguratorInterface): void {
     app.components({
@@ -53,6 +57,7 @@ export class MobileApplication extends Application {
       fallback: <Status title="Loading nested route" loading />,
       forbidden: <Status title="Nested route forbidden" tone="error" />,
       notFound: <Status title="Nested route not found" tone="error" />,
+      shell: DrawerShell,
     });
     app.router(createMobileRouter());
   }

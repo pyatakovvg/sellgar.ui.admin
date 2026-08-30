@@ -3,7 +3,6 @@ import { param, segments } from '@sellgar/app-v2';
 import { Route, Router } from '@sellgar/app-v2/native';
 
 import { MainTabsLayout } from '../../layouts/main-tabs/src';
-import { DrawerShell } from '../../shells/drawer/src';
 import { RequireAnonymousSessionPolicy, RequireAuthenticatedSessionPolicy } from '../policies';
 
 export const createMobileRouter = (): Router => {
@@ -28,7 +27,6 @@ const createAnonymousBranch = (): Route => {
 
 const createAuthenticatedBranch = (): Route => {
   const brandsDrawer = new Router({
-    shell: DrawerShell,
     routes: [
       new Route({
         address: segments('create'),

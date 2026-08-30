@@ -30,6 +30,7 @@ export class ApplicationConfig extends CoreApplicationConfig implements Applicat
       fallback: this.applicationRouting.fallback ?? this.applicationComponents.fallback,
       forbidden: this.applicationRouting.forbidden ?? this.applicationComponents.forbidden,
       notFound: this.applicationRouting.notFound ?? this.applicationComponents.notFound,
+      ...(this.applicationRouting.shell ? { shell: this.applicationRouting.shell } : {}),
     });
   }
 
