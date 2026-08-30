@@ -1,7 +1,7 @@
 import React from 'react';
 
 import type { ApplicationNavigationDecision } from '../../../../core/application/lifecycle/application';
-import type { RouteRuntime } from '../../../../core/router/runtime/route-runtime';
+import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
 import type { RouterRuntime } from '../../../../core/router/runtime/router-runtime';
 import type { ApplicationComponents } from '../../../application/config/application-configurator';
 import { renderLayouts } from '../../../layout/rendering/layout-renderer';
@@ -12,7 +12,7 @@ import { getRoutePresentationDefinition } from '../../declaration/route';
 import { getRouterPresentationDefinition } from '../../declaration/router';
 import { RouteHost } from '../route-host';
 
-const routeRuntimeKeys = new WeakMap<RouteRuntime<ModuleMetadata>, string>();
+const routeRuntimeKeys = new WeakMap<RouteActivationRuntime<ModuleMetadata>, string>();
 let routeRuntimeKey = 0;
 
 interface IProps {
@@ -77,15 +77,19 @@ const renderRouterContent = (
     return components.fallback ?? null;
   }
 
-  return renderRoutePath(components, routes, branch.pendingRoute, 0);
+  return renderRoutePath(components, routes, branch.pendingLocalChange?.commonRouteCount ?? null, 0);
 };
 
 const renderRoutePath = (
   inheritedComponents: ApplicationComponents,
   routes: ReturnType<RouterRuntime<ModuleMetadata>['getBranchSnapshot']>['routes'],
-  pendingRoute: RouteRuntime<ModuleMetadata> | null,
+  pendingAfterRouteCount: number | null,
   index: number,
 ): React.ReactNode => {
+  if (pendingAfterRouteCount === index) {
+    return inheritedComponents.fallback ?? null;
+  }
+
   const runtime = routes[index];
 
   if (!runtime) {
@@ -99,22 +103,16 @@ const renderRoutePath = (
     forbidden: definition.forbidden ?? inheritedComponents.forbidden,
     notFound: definition.notFound ?? inheritedComponents.notFound,
   };
-  const childRoute = renderRoutePath(components, routes, pendingRoute, index + 1);
+  const childRoute = renderRoutePath(components, routes, pendingAfterRouteCount, index + 1);
 
   return (
-    <RouteHost
-      key={getRouteRuntimeKey(runtime)}
-      components={components}
-      layouts={definition.layouts}
-      pending={runtime === pendingRoute}
-      runtime={runtime}
-    >
+    <RouteHost key={getRouteRuntimeKey(runtime)} components={components} layouts={definition.layouts} runtime={runtime}>
       {childRoute}
     </RouteHost>
   );
 };
 
-const getRouteRuntimeKey = (runtime: RouteRuntime<ModuleMetadata>): string => {
+const getRouteRuntimeKey = (runtime: RouteActivationRuntime<ModuleMetadata>): string => {
   const current = routeRuntimeKeys.get(runtime);
 
   if (current) {

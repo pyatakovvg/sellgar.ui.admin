@@ -1,6 +1,9 @@
 import type { NavigationRequestFactory } from '../../../../core/router/service/navigation-request';
 import { createNavigationRequest } from '../../../../core/router/service/navigation-request';
-import { resolveNavigationControlState } from '../../../../core/router/runtime/navigation-state';
+import {
+  resolveNavigationControlState,
+  resolveNavigationRouteState,
+} from '../../../../core/router/runtime/navigation-state';
 import type { NavigationState } from '../../../../core/router/runtime/navigation-state';
 import { executeNavigateRequest, resolveNavigateRequest } from '../../../../core/router/service/navigate-service';
 import { useNavigationState } from '../../runtime/navigation-state-context';
@@ -22,13 +25,26 @@ export const useNavigationControl = (
   const navigation = useNavigationState();
   const request = createNavigationRequest(factory);
   const target = resolveNavigateRequest(navigate, request);
-  const state = resolveNavigationControlState(navigation.snapshot.navigation, navigation.snapshot.pending, target, {
-    end,
-  });
+  const targetState = resolveNavigationControlState(
+    navigation.snapshot.navigation,
+    navigation.snapshot.pending,
+    target,
+    { end },
+  );
+  const routeState = resolveNavigationRouteState(
+    navigation.snapshot.navigation,
+    navigation.snapshot.pending,
+    request.token,
+    {
+      end,
+      params: request.options.params,
+    },
+  );
 
   return {
     execute: () => executeNavigationControl(() => executeNavigateRequest(navigate, request), viewTransition),
-    ...state,
+    isActive: routeState.isActive,
+    isPending: targetState.isPending,
     target,
   };
 };

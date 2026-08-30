@@ -56,6 +56,7 @@ const createNavigationHarness = () => {
   });
   const navigate = createCoreNavigate({
     back: vi.fn(),
+    close: execute,
     current: () => current,
     execute,
     router: createRouter(),

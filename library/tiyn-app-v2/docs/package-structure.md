@@ -4,7 +4,7 @@
 - Статус реализации: in-progress
 
 Семантика framework зафиксирована в accepted
-[RFC](../../tiyn-app/docs/rfc/universal-core-renderers-router-bridge.md). Здесь
+[RFC](rfc/universal-core-renderers-router-bridge.md). Здесь
 описана только физическая граница package entrypoints.
 
 ```text
@@ -242,6 +242,18 @@ library/tiyn-app-v2/
         widget-runtime-context/
   native/
     index.ts
+    application/
+    controller/
+    features/
+    guard/
+    layout/
+    module/
+    reactive/
+    revalidate/
+    router/
+    runtime/
+    view/
+    widget/
   fsm/
     index.ts
 ```
@@ -542,10 +554,20 @@ application layouts оборачивают только presentation root Router
 application-level layer для committed child Router сохраняет Module владельца и проецирует дочерний
 host через `Router.shell ?? app.routing().shell`, Router layouts и его
 `RouterScope`. Декларация называется `@Shell`; отдельные `FrameRouter`,
-`FrameRoute` и `FrameLayer` в v2 не создаются. `native` содержит renderer surface
-navigation blocker: собственные presentation, registry, hook и application
-layer поверх общего core runtime. Полный Native Application/router adapter ещё
-не реализован. `fsm` пока остаётся пустой целью export map.
+`FrameRoute` и `FrameLayer` в v2 не создаются. `native` повторяет публичные
+framework-понятия React facade: Application/configurator, declarations,
+Widget, features/presentations, guards/reactive bridges, controller и router
+hooks, navigation controls и hosts. Renderer-specific различия остаются внутри
+presentation и native bridge; второй lifecycle или logical navigation state не
+создаются. Android playground в `clients/mobile` повторяет web composition
+structure и проверяет loader, action, revalidation, Route params и bridge
+history. Native Stack/Tabs projection использует renderer-neutral registry
+runtime entries из core: новый target имеет фазу `preparing`, текущий committed
+runtime остаётся `focused` до успешного commit, а посещённые history entries
+переходят в `retained`. Native host связывает physical stack entry с точным
+runtime key, показывает fallback только для нового target и сохранённую
+presentation для retained target. Query не входит в screen identity, Route
+params входят. `fsm` пока остаётся пустой целью export map.
 
 | Import                   | Файл              |
 | ------------------------ | ----------------- |

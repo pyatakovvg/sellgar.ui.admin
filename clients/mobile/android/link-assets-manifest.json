@@ -1,0 +1,81 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/geologica/Geologica-Black.ttf",
+      "sha1": "455882065118328f3c4353d015d902f58b8819db"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica-Bold.ttf",
+      "sha1": "6048fa242c2589b936ee7611209c542cd5c92f7a"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica-ExtraBold.ttf",
+      "sha1": "fe2aa9319aaf93ea79aa61220df8504c91638a70"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica-ExtraLight.ttf",
+      "sha1": "a68f6a210288e5cce282977649147698394ca76b"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica-Light.ttf",
+      "sha1": "5e63b9333e5965d2c88e458409e703cb55f0b60e"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica-Medium.ttf",
+      "sha1": "378c4e454d064cb6f31220c91e7fefe8bd37ea1f"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica-Regular.ttf",
+      "sha1": "095582fb5ad0ca02d463b3914a2d778a21abd285"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica-SemiBold.ttf",
+      "sha1": "c1868ec52caeb6e164776af101c26f7d5b7e8377"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica-Thin.ttf",
+      "sha1": "329053a2a2b338cc17b0f463b26dbf1980895993"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica_Cursive-Black.ttf",
+      "sha1": "9e09a107e87b28a57355e6ee75ec28f7a2ee81dd"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica_Cursive-Bold.ttf",
+      "sha1": "7ac9083682051b65a2c1db2478b49b9bcb4e7318"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica_Cursive-ExtraBold.ttf",
+      "sha1": "6d4f95075966109bb3170ecfe1128f2716783a33"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica_Cursive-ExtraLight.ttf",
+      "sha1": "760cfddece8fbd501958c1515c0922672bf48e16"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica_Cursive-Light.ttf",
+      "sha1": "488ebb808af360be2683fbd81c5e85a984247fc6"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica_Cursive-Medium.ttf",
+      "sha1": "bc23c61991056b423421c55b13e3d311f7865cc6"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica_Cursive-Regular.ttf",
+      "sha1": "2c0a386bdbe6893e8a11e97eede53db4ba117a6a"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica_Cursive-SemiBold.ttf",
+      "sha1": "2fd616a64dc75181e88d7aeb81d1c4542ebde9eb"
+    },
+    {
+      "path": "assets/fonts/geologica/Geologica_Cursive-Thin.ttf",
+      "sha1": "b984854364090c3a423bd23fb1762ecc2c426027"
+    },
+    {
+      "path": "assets/fonts/icomoon.ttf",
+      "sha1": "2262d7bf17b8882990295989ed814b07451bfe4a"
+    }
+  ]
+}

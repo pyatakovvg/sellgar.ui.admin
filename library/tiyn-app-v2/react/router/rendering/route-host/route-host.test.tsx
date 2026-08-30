@@ -8,6 +8,28 @@ import type { ModuleMetadata } from '../../../module/declaration/module';
 import { RouteHost } from './route-host.tsx';
 
 describe('RouteHost', () => {
+  it('renders only the child screen Module for a Route.routes stack', () => {
+    const scope = new ApplicationScope();
+    const getModuleRuntimeOrNull = vi.fn(() => null);
+    const snapshot = { error: null, phase: 'active' as const };
+    const runtime = {
+      failRender: vi.fn(async () => undefined),
+      getModuleRuntimeOrNull,
+      getRouteScope: () => scope,
+      getSnapshot: () => snapshot,
+      subscribe: () => () => undefined,
+    } as unknown as RouteRuntime<ModuleMetadata>;
+
+    render(
+      <RouteHost components={{}} layouts={[]} runtime={runtime}>
+        <div>child screen</div>
+      </RouteHost>,
+    );
+
+    expect(screen.getByText('child screen')).toBeInTheDocument();
+    expect(getModuleRuntimeOrNull).not.toHaveBeenCalled();
+  });
+
   it('attributes a Route presentation error to RouteRuntime', async () => {
     const error = new Error('route view failed');
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => undefined);

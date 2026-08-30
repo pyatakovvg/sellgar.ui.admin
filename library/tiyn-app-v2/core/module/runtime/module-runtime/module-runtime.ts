@@ -40,7 +40,7 @@ import { resolveRuntimeRevalidateState } from '../../../revalidate/runtime/reval
 
 export type ModuleRuntimeLoader = () => Promise<ModuleExports>;
 
-export type ModuleRuntimePhase = 'active' | 'empty' | 'failed' | 'loading' | 'pending';
+export type ModuleRuntimePhase = 'active' | 'empty' | 'failed' | 'loading' | 'pending' | 'retained';
 
 export interface ModuleRuntimeSnapshot {
   readonly error: unknown | null;
@@ -96,6 +96,10 @@ type ModuleRuntimeState<TPresentation> =
   | {
       readonly active: ActiveModuleRuntime<TPresentation>;
       readonly phase: 'active';
+    }
+  | {
+      readonly active: ActiveModuleRuntime<TPresentation>;
+      readonly phase: 'retained';
     }
   | {
       readonly active: ActiveModuleRuntime<TPresentation>;
@@ -230,6 +234,7 @@ export class ModuleRuntime<TPresentation = unknown> {
     switch (this.state.phase) {
       case 'active':
       case 'failed':
+      case 'retained':
         return this.state.active;
       case 'loading':
       case 'pending':
@@ -462,6 +467,35 @@ export class ModuleRuntime<TPresentation = unknown> {
     );
 
     return promise;
+  }
+
+  async retain(): Promise<void> {
+    if (this.state.phase === 'retained') return;
+
+    if (this.state.phase !== 'active') {
+      throw new Error('Retain допустим только для активного runtime модуля.');
+    }
+
+    const active = this.state.active;
+
+    this.interruptRevalidation();
+    await active.providerPipeline.deactivate();
+    this.state = { active, phase: 'retained' };
+    this.emit();
+  }
+
+  async focus(signal: AbortSignal): Promise<void> {
+    if (this.state.phase === 'active') return;
+
+    if (this.state.phase !== 'retained') {
+      throw new Error('Focus допустим только для retained runtime модуля.');
+    }
+
+    const active = this.state.active;
+
+    await active.providerPipeline.focus({ scope: active.scope, signal });
+    this.state = { active, phase: 'active' };
+    this.emit();
   }
 
   load(args: LoadedModuleControllerContext): Promise<ControllerLoaderData> {
@@ -991,6 +1025,7 @@ const MODULE_RUNTIME_SNAPSHOTS: Record<Exclude<ModuleRuntimePhase, 'failed'>, Mo
   empty: { error: null, phase: 'empty' },
   loading: { error: null, phase: 'loading' },
   pending: { error: null, phase: 'pending' },
+  retained: { error: null, phase: 'retained' },
 };
 
 const createModuleOwner = (definition: ModuleRuntimeDefinition): RuntimeOwner => {

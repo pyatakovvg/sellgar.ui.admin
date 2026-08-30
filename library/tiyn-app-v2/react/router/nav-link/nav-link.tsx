@@ -19,7 +19,7 @@ interface IProps {
   readonly viewTransition?: boolean;
 }
 
-export const NavLink: React.FC<IProps> = ({ end = true, viewTransition = false, ...props }) => {
+export const NavLink: React.FC<IProps> = ({ end = false, viewTransition = false, ...props }) => {
   const navigation = useNavigationState();
   const control = useNavigationControl(props.navigation, end, viewTransition);
   const href = navigation.createHref(control.target);

@@ -41,9 +41,7 @@ export const createAdminRouter = (): Router => {
           new Route({
             token: SignInRoute,
             address: segments('sign-in'),
-            canMatch: [
-              RequireAnonymousSessionPolicy.configure().onFail(Router.redirectToSaved({ replace: true })),
-            ],
+            canMatch: [RequireAnonymousSessionPolicy.configure().onFail(Router.redirectToSaved({ replace: true }))],
             load: () => import('@page/sign-in'),
           }),
         ],
@@ -71,11 +69,9 @@ export const createAdminRouter = (): Router => {
           }),
           new Route({
             address: segments('products'),
+            load: () => import('@page/products'),
+            token: ProductsRoute,
             routes: [
-              new Route({
-                token: ProductsRoute,
-                load: () => import('@page/products'),
-              }),
               new Route({
                 token: ProductCreateRoute,
                 address: segments('create'),

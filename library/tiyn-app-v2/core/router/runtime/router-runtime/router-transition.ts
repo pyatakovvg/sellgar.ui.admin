@@ -1,16 +1,17 @@
 import type { NavigationState } from '../navigation-state';
-import type { RouteRuntime } from '../route-runtime';
+import type { RouteActivationRuntime } from '../route-runtime';
+import type { RouterRuntimeActivation } from './router-runtime.ts';
 
 export interface RouterRuntimePreparedTransition<TPresentation = unknown> {
   readonly navigation: NavigationState;
 
-  commit(): Promise<void>;
+  commit(): Promise<RouterRuntimeActivation<TPresentation>>;
 
   complete(context: RouterRuntimeTransitionCompletionContext): Promise<void>;
 
   discard(): Promise<void>;
 
-  getRouteRuntimes(): readonly RouteRuntime<TPresentation>[];
+  getRouteRuntimes(): readonly RouteActivationRuntime<TPresentation>[];
 }
 
 export interface RouterRuntimeTransitionCompletionContext {
@@ -18,16 +19,16 @@ export interface RouterRuntimeTransitionCompletionContext {
 }
 
 interface PreparedRouterTransitionOptions<TPresentation> {
-  readonly commit: () => Promise<void>;
+  readonly commit: () => Promise<RouterRuntimeActivation<TPresentation>>;
   readonly complete: (context: RouterRuntimeTransitionCompletionContext) => Promise<void>;
   readonly discard: () => Promise<void>;
-  readonly getRouteRuntimes: () => readonly RouteRuntime<TPresentation>[];
+  readonly getRouteRuntimes: () => readonly RouteActivationRuntime<TPresentation>[];
   readonly navigation: NavigationState;
 }
 
 export class PreparedRouterTransition<TPresentation> implements RouterRuntimePreparedTransition<TPresentation> {
   readonly navigation: NavigationState;
-  private settlement: Promise<void> | null = null;
+  private settlement: Promise<unknown> | null = null;
   private completion: Promise<void> | null = null;
   private state: 'pending' | 'committed' | 'discarded' = 'pending';
 
@@ -35,9 +36,9 @@ export class PreparedRouterTransition<TPresentation> implements RouterRuntimePre
     this.navigation = options.navigation;
   }
 
-  commit(): Promise<void> {
+  commit(): Promise<RouterRuntimeActivation<TPresentation>> {
     if (this.state === 'committed') {
-      return this.settlement ?? Promise.resolve();
+      return this.settlement as Promise<RouterRuntimeActivation<TPresentation>>;
     }
 
     if (this.state === 'discarded') {
@@ -47,7 +48,7 @@ export class PreparedRouterTransition<TPresentation> implements RouterRuntimePre
     this.state = 'committed';
     this.settlement = this.options.commit();
 
-    return this.settlement;
+    return this.settlement as Promise<RouterRuntimeActivation<TPresentation>>;
   }
 
   complete(context: RouterRuntimeTransitionCompletionContext): Promise<void> {
@@ -62,7 +63,7 @@ export class PreparedRouterTransition<TPresentation> implements RouterRuntimePre
 
   discard(): Promise<void> {
     if (this.state === 'discarded') {
-      return this.settlement ?? Promise.resolve();
+      return (this.settlement ?? Promise.resolve()).then(() => undefined);
     }
 
     if (this.state === 'committed') {
@@ -72,10 +73,10 @@ export class PreparedRouterTransition<TPresentation> implements RouterRuntimePre
     this.state = 'discarded';
     this.settlement = this.options.discard();
 
-    return this.settlement;
+    return this.settlement.then(() => undefined);
   }
 
-  getRouteRuntimes(): readonly RouteRuntime<TPresentation>[] {
+  getRouteRuntimes(): readonly RouteActivationRuntime<TPresentation>[] {
     return this.options.getRouteRuntimes();
   }
 }

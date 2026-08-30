@@ -1,6 +1,7 @@
 export {
   areNavigationParamsEqual,
   areNavigationQueriesEqual,
+  areNavigationStatesEqual,
   matchesNavigationRoute,
   matchesNavigationState,
   resolveNavigationControlState,

@@ -42,6 +42,7 @@ class TestModuleExportResolver implements ModuleExportResolverInterface<null> {
 }
 
 class TestRouterBridge implements RouterBridgeInterface {
+  readonly runtimeRetention = 'retain' as const;
   readonly commits: NavigationState[] = [];
   context: RouterBridgeInitializeContextInterface | null = null;
 

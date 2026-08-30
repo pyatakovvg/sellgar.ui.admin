@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type { RouteRuntime } from '../../../../core/router/runtime/route-runtime';
+import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
 import type { ApplicationComponents } from '../../../application/config/application-configurator';
 import { renderLayouts } from '../../../layout/rendering/layout-renderer';
 import type { LayoutConstructor } from '../../../layout/declaration/layout';
@@ -14,8 +14,7 @@ interface IProps {
   readonly children: React.ReactNode;
   readonly components: ApplicationComponents;
   readonly layouts: readonly LayoutConstructor[];
-  readonly pending?: boolean;
-  readonly runtime: RouteRuntime<ModuleMetadata>;
+  readonly runtime: RouteActivationRuntime<ModuleMetadata>;
 }
 
 export const RouteHost: React.FC<IProps> = (props) => {
@@ -42,12 +41,8 @@ export const RouteHost: React.FC<IProps> = (props) => {
 
 const resolveRouteContent = (
   props: IProps,
-  snapshot: ReturnType<RouteRuntime<ModuleMetadata>['getSnapshot']>,
+  snapshot: ReturnType<RouteActivationRuntime<ModuleMetadata>['getSnapshot']>,
 ): React.ReactNode => {
-  if (props.pending) {
-    return props.components.fallback ?? null;
-  }
-
   if (snapshot.phase === 'forbidden') {
     return props.components.forbidden ?? null;
   }
@@ -64,7 +59,7 @@ const resolveRouteContent = (
     return props.components.fallback ?? null;
   }
 
-  const moduleRuntime = props.runtime.getModuleRuntimeOrNull();
+  const moduleRuntime = props.children === null ? props.runtime.getModuleRuntimeOrNull() : null;
 
   return (
     <>

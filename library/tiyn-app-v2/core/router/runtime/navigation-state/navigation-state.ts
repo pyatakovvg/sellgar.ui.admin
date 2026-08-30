@@ -110,6 +110,37 @@ export const areNavigationQueriesEqual = (
   );
 };
 
+export const areNavigationStatesEqual = (left: NavigationState, right: NavigationState): boolean => {
+  return areNavigationRouterStatesEqual(left.root, right.root);
+};
+
+const areNavigationRouterStatesEqual = (left: NavigationRouterState, right: NavigationRouterState): boolean => {
+  if (
+    left.router !== right.router ||
+    left.owner !== right.owner ||
+    left.path.length !== right.path.length ||
+    !areNavigationQueriesEqual(left.query, right.query)
+  ) {
+    return false;
+  }
+
+  if (
+    !left.path.every((entry, index) => {
+      const candidate = right.path[index];
+
+      return candidate?.route === entry.route && areNavigationParamsEqual(candidate.params, entry.params);
+    })
+  ) {
+    return false;
+  }
+
+  if (left.child === null || right.child === null) {
+    return left.child === right.child;
+  }
+
+  return areNavigationRouterStatesEqual(left.child, right.child);
+};
+
 const areQueryValuesEqual = (left: unknown, right: unknown): boolean => {
   if (Object.is(left, right)) return true;
 

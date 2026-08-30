@@ -89,6 +89,10 @@ export class ProviderPipeline<TProps extends object = object> {
     return this.committed;
   }
 
+  get isActive(): boolean {
+    return this.active;
+  }
+
   get hasPendingCommit(): boolean {
     return this.pendingPreparationCleanups !== undefined && this.pendingActivationCleanups !== undefined;
   }
@@ -185,7 +189,7 @@ export class ProviderPipeline<TProps extends object = object> {
     await this.initialize(context);
     this.assertActive();
 
-    if (!this.pendingPreparationCleanups && this.preparedCleanups.length === 0) {
+    if (!this.pendingPreparationCleanups && !this.committed) {
       throw new Error('ProviderPipeline нужно подготовить перед activate.');
     }
 
@@ -241,6 +245,28 @@ export class ProviderPipeline<TProps extends object = object> {
     if (this.disposed) return;
 
     await this.deactivateCommitted();
+  }
+
+  async focus(context: Pick<ProviderPipelineContext<TProps>, 'scope' | 'signal'>): Promise<void> {
+    this.assertActive();
+
+    if (!this.committed) {
+      throw new Error('Сфокусировать можно только committed ProviderPipeline.');
+    }
+
+    if (this.active) return;
+
+    await this.executeActivation(context);
+
+    const activation = this.pendingActivationCleanups;
+
+    if (!activation) {
+      throw new Error('ProviderPipeline не подготовил activation при возврате из retained.');
+    }
+
+    this.pendingActivationCleanups = undefined;
+    this.activationCleanups = activation;
+    this.active = true;
   }
 
   async revalidate(context: ProviderPipelineContext<TProps>): Promise<void> {

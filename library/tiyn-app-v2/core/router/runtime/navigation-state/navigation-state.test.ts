@@ -203,6 +203,9 @@ const createNavigation = async (oneId = 'one-1', twiseId = 'twise-2'): Promise<N
   let navigation: NavigationState | undefined;
   const navigate = createCoreNavigate({
     back: () => undefined,
+    close: (next) => {
+      navigation = next;
+    },
     execute: (next) => {
       navigation = next;
     },
@@ -222,6 +225,9 @@ const createOneNavigation = async (): Promise<NavigationState> => {
   let navigation: NavigationState | undefined;
   const navigate = createCoreNavigate({
     back: () => undefined,
+    close: (next) => {
+      navigation = next;
+    },
     execute: (next) => {
       navigation = next;
     },

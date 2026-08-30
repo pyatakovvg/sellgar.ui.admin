@@ -1,5 +1,9 @@
 export {
   RouteRuntime,
+  type RouteRuntimeActivationResult,
+} from './route-runtime.ts';
+export {
+  RouteActivationRuntime,
   type RouteRuntimeActionContext,
   type RouteRuntimeActionExecution,
   type RouteRuntimeBoundaryPhase,
@@ -9,4 +13,4 @@ export {
   type RouteRuntimePrepareContext,
   type RouteRuntimeRevalidateOptions,
   type RouteRuntimeSnapshot,
-} from './route-runtime.ts';
+} from './route-activation-runtime.ts';

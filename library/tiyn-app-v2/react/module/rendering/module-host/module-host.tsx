@@ -1,7 +1,7 @@
 import React from 'react';
 
 import type { ModuleRuntime } from '../../../../core/module/runtime/module-runtime';
-import type { RouteRuntime } from '../../../../core/router/runtime/route-runtime';
+import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
 import { ControllerRuntimeProvider } from '../../../controller/runtime/controller-runtime-context';
 import { renderLayouts } from '../../../layout/rendering/layout-renderer';
 import type { ModuleMetadata } from '../../declaration/module';
@@ -14,7 +14,7 @@ interface IProps {
   readonly exception: React.ReactNode;
   readonly fallback: React.ReactNode;
   readonly moduleRuntime: ModuleRuntime<ModuleMetadata>;
-  readonly routeRuntime: RouteRuntime<ModuleMetadata>;
+  readonly routeRuntime: RouteActivationRuntime<ModuleMetadata>;
 }
 
 export const ModuleHost: React.FC<IProps> = (props) => {

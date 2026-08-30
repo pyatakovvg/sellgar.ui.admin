@@ -37,8 +37,10 @@ import type { ApplicationNavigationSnapshot } from './application.ts';
 
 abstract class SignInRoute {}
 abstract class ProtectedRoute {}
+abstract class AlternateProtectedRoute {}
 abstract class DeepRoute {}
 abstract class InspectorRoute {}
+abstract class SessionAgnosticRoute {}
 
 abstract class TestAuthControllerInterface {
   abstract action(args: ControllerArgs<WithPayload<'authenticate' | 'unauthorized'>>): void | Promise<void>;
@@ -102,6 +104,8 @@ class TestModuleExportResolver implements ModuleExportResolverInterface<null> {
 class TestRouterBridge implements RouterBridgeInterface {
   readonly commits: NavigationState[] = [];
 
+  constructor(readonly runtimeRetention: 'release' | 'retain' = 'retain') {}
+
   back(): void {}
 
   async initialize(context: RouterBridgeInitializeContextInterface): Promise<void> {
@@ -118,6 +122,12 @@ class TestRouterBridge implements RouterBridgeInterface {
 class DirectSignInTestRouterBridge extends TestRouterBridge {
   override async initialize(context: RouterBridgeInitializeContextInterface): Promise<void> {
     await context.navigate.to(SignInRoute);
+  }
+}
+
+class SessionAgnosticTestRouterBridge extends TestRouterBridge {
+  override async initialize(context: RouterBridgeInitializeContextInterface): Promise<void> {
+    await context.navigate.to(SessionAgnosticRoute);
   }
 }
 
@@ -178,6 +188,10 @@ class TestApplication extends Application<null> {
     return this.getApplicationScope().get(RequestExecutorInterface);
   }
 
+  get runtimeEntryCount(): number {
+    return this.getRouterRuntimeEntries().length;
+  }
+
   action(payload: 'authenticate' | 'unauthorized'): Promise<unknown> {
     return this.getRouterRuntime().getActiveRouteRuntimes().at(-1)!.action(TestAuthControllerInterface, payload);
   }
@@ -228,10 +242,12 @@ describe('Application authentication lifecycle', () => {
     app.session.setAnonymous();
 
     await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, SignInRoute)).toBe(true));
+    expect(signInLoad).toHaveBeenCalledTimes(2);
 
     app.session.setAuthenticated();
 
     await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, ProtectedRoute)).toBe(true));
+    expect(protectedLoad).toHaveBeenCalledTimes(2);
     expect(bridge.commits).toHaveLength(4);
 
     await app.dispose();
@@ -260,6 +276,72 @@ describe('Application authentication lifecycle', () => {
     await app.dispose();
   });
 
+  it('starts a fresh first-available branch after explicit sign-out instead of restoring the previous session', async () => {
+    const signInLoad = vi.fn(async () => ({}));
+    const protectedLoad = vi.fn(async () => ({}));
+    const alternateLoad = vi.fn(async () => ({}));
+    const app = new TestApplication(
+      new TestRouterBridge(),
+      createExplicitSignOutRouter(signInLoad, protectedLoad, alternateLoad),
+      [AuthenticateInitializer],
+    );
+
+    app.compose();
+    await app.initialize();
+    await app.navigate.to(AlternateProtectedRoute);
+
+    expect(matchesNavigationRoute(app.navigation.navigation, AlternateProtectedRoute)).toBe(true);
+
+    app.session.setAnonymous();
+
+    await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, SignInRoute)).toBe(true));
+    expect(app.runtimeEntryCount).toBe(1);
+    expect(signInLoad).toHaveBeenCalledOnce();
+
+    app.session.setAuthenticated();
+
+    await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, ProtectedRoute)).toBe(true));
+    expect(matchesNavigationRoute(app.navigation.navigation, AlternateProtectedRoute)).toBe(false);
+    expect(app.runtimeEntryCount).toBe(1);
+    expect(protectedLoad).toHaveBeenCalledTimes(2);
+    expect(alternateLoad).toHaveBeenCalledOnce();
+
+    await app.dispose();
+  });
+
+  it.each(['retain', 'release'] as const)(
+    'restarts an otherwise reusable route when the session phase changes in %s mode',
+    async (runtimeRetention) => {
+      const load = vi.fn(async () => ({}));
+      const app = new TestApplication(
+        new SessionAgnosticTestRouterBridge(runtimeRetention),
+        new Router({
+          routes: [
+            new Route({
+              address: segments('session-agnostic'),
+              load,
+              token: SessionAgnosticRoute,
+            }),
+          ],
+        }),
+        [AuthenticateInitializer],
+      );
+
+      app.compose();
+      await app.initialize();
+
+      expect(load).toHaveBeenCalledOnce();
+
+      app.session.setAnonymous();
+
+      await vi.waitFor(() => expect(load).toHaveBeenCalledTimes(2));
+      expect(matchesNavigationRoute(app.navigation.navigation, SessionAgnosticRoute)).toBe(true);
+      expect(app.runtimeEntryCount).toBe(1);
+
+      await app.dispose();
+    },
+  );
+
   it('contains concurrent protected 401 responses and performs one anonymous-route refresh wave', async () => {
     const bridge = new TestRouterBridge();
     const app = new TestApplication(
@@ -286,12 +368,15 @@ describe('Application authentication lifecycle', () => {
   });
 
   it('restores the complete nested navigation after protected 401 and sign-in', async () => {
+    const protectedLoad = vi.fn(async () => ({}));
+    const inspectorLoad = vi.fn(async () => ({}));
     const bridge = new NestedTestRouterBridge();
     const app = new TestApplication(
       bridge,
       createNestedAuthRouter(
         vi.fn(async () => ({})),
-        vi.fn(async () => ({})),
+        protectedLoad,
+        inspectorLoad,
       ),
       [AuthenticateInitializer],
     );
@@ -307,6 +392,9 @@ describe('Application authentication lifecycle', () => {
     await app.action('authenticate');
 
     await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, InspectorRoute)).toBe(true));
+    expect(protectedLoad).toHaveBeenCalledTimes(2);
+    expect(inspectorLoad).toHaveBeenCalledTimes(2);
+    expect(app.runtimeEntryCount).toBe(1);
 
     await app.dispose();
   });
@@ -340,7 +428,7 @@ describe('Application authentication lifecycle', () => {
     expect(app.branch.pending).toBe(true);
     expect(app.branch.routes).toHaveLength(1);
     expect(getRouteDefinition(app.branch.routes[0]!.route).token).toBe(SignInRoute);
-    expect(app.branch.pendingRoute).toBe(app.branch.routes[0]);
+    expect(app.branch.pendingLocalChange).toEqual({ commonRouteCount: 0 });
     expect(app.branch.child).toBeNull();
     expect(matchesNavigationRoute(app.navigation.navigation, SignInRoute)).toBe(true);
 
@@ -387,12 +475,12 @@ describe('Application authentication lifecycle', () => {
     const frameBranch = rootBranch.child!.runtime.getBranchSnapshot();
 
     expect(rootBranch.pending).toBe(true);
-    expect(rootBranch.pendingRoute).toBeNull();
+    expect(rootBranch.pendingLocalChange).toBeNull();
     expect(rootBranch.childPending).toBe(false);
     expect(frameBranch.pending).toBe(true);
     expect(frameBranch.routes).toHaveLength(1);
     expect(getRouteDefinition(frameBranch.routes[0]!.route).token).toBe(InspectorRoute);
-    expect(frameBranch.pendingRoute).toBe(frameBranch.routes[0]);
+    expect(frameBranch.pendingLocalChange).toEqual({ commonRouteCount: 0 });
 
     nextFrame.resolve({});
     await navigation;
@@ -425,7 +513,7 @@ describe('Application authentication lifecycle', () => {
 
     const rootBranch = app.branch;
 
-    expect(rootBranch.pendingRoute).toBeNull();
+    expect(rootBranch.pendingLocalChange).toBeNull();
     expect(rootBranch.childPending).toBe(true);
     expect(rootBranch.child).not.toBeNull();
     expect(rootBranch.child!.runtime.getBranchSnapshot().routes).toHaveLength(0);
@@ -461,6 +549,43 @@ const createAuthRouter = (
         ],
         load: protectedLoad,
         token: ProtectedRoute,
+      }),
+    ],
+  });
+};
+
+const createExplicitSignOutRouter = (
+  signInLoad: () => Promise<Readonly<Record<string, unknown>>>,
+  protectedLoad: () => Promise<Readonly<Record<string, unknown>>>,
+  alternateLoad: () => Promise<Readonly<Record<string, unknown>>>,
+): Router => {
+  return new Router({
+    routes: [
+      new Route({
+        address: segments('sign-in'),
+        canMatch: [RequireAnonymousSessionPolicy.configure().onFail(Router.redirectToSaved({ replace: true }))],
+        load: signInLoad,
+        token: SignInRoute,
+      }),
+      new Route({
+        address: segments('protected'),
+        canMatch: [
+          RequireAuthenticatedSessionPolicy.configure().onFail(
+            Router.redirectTo(SignInRoute, { replace: true, saveCurrentLocation: true }),
+          ),
+        ],
+        load: protectedLoad,
+        token: ProtectedRoute,
+      }),
+      new Route({
+        address: segments('alternate'),
+        canMatch: [
+          RequireAuthenticatedSessionPolicy.configure().onFail(
+            Router.redirectTo(SignInRoute, { replace: true, saveCurrentLocation: true }),
+          ),
+        ],
+        load: alternateLoad,
+        token: AlternateProtectedRoute,
       }),
     ],
   });

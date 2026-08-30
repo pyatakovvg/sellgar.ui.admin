@@ -4,5 +4,6 @@ export type {
   SessionRuntimeInterruptionListener,
   SessionRuntimePhase,
   SessionRuntimeStateChange,
+  SessionRuntimeStateChangeCause,
   SessionRuntimeStateListener,
 } from './session-runtime-state.interface.ts';

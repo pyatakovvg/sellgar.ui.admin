@@ -6,14 +6,21 @@ import type { NavigationBlockerBoundary } from '../../../features/navigation-blo
 import type { ModuleExportResolverInterface } from '../../../module/resolution/module-export-resolver';
 import type { PolicyBoundaryDecision } from '../../../policy/contract/policy-boundary-decision';
 import type {
+  RouterBridgeHistoryEntryInterface,
   RouterBridgeInterface,
   RouterBridgeLocationInterface,
   RouterBridgeNavigationSource,
   RouterBridgeRestoreContextInterface,
 } from '../../../router/bridge/router-bridge';
 import { resolveRouterBridgeLocation } from '../../../router/runtime/router-address-resolver';
-import type { NavigationState } from '../../../router/runtime/navigation-state';
-import { RouterRuntime } from '../../../router/runtime/router-runtime';
+import { NavigationHistory } from '../../../router/runtime/navigation-history';
+import { areNavigationStatesEqual, type NavigationState } from '../../../router/runtime/navigation-state';
+import {
+  RouterRuntime,
+  type RouterRuntimeActivation,
+  type RouterRuntimeActivationPhase,
+  type RouterRuntimeActivationTree,
+} from '../../../router/runtime/router-runtime';
 import { getRouterGraph } from '../../../router/runtime/router-graph';
 import {
   createCoreNavigate,
@@ -48,7 +55,11 @@ import {
   isApplicationInitializerToken,
 } from '../../initializer/application-initializer';
 import { ApplicationInitializerGroup } from '../../initializer/application-initializer-group';
-import { SessionRuntimeState, SessionRuntimeStateInterface } from '../../session/session-runtime-state';
+import {
+  SessionRuntimeState,
+  SessionRuntimeStateInterface,
+  type SessionRuntimeStateChange,
+} from '../../session/session-runtime-state';
 import { ApplicationEventBusBindings } from '../../event/application-event-bus';
 import { ApplicationStoreBindings } from '../../store/application-store';
 import {
@@ -74,10 +85,23 @@ type ApplicationActionRedirectDecision = Extract<
   { readonly type: 'redirect' | 'redirect-to-saved-location' }
 >;
 
+interface ApplicationSessionBoundary {
+  readonly allowSaveCurrentLocation: boolean;
+  readonly revision: number;
+}
+
 export interface ApplicationNavigationSnapshot {
   readonly decision: ApplicationNavigationDecision | null;
   readonly navigation: NavigationState | undefined;
   readonly pending: NavigationState | null;
+}
+
+export interface ApplicationRouterRuntimeEntry<TPresentation> {
+  readonly activation: RouterRuntimeActivation<TPresentation>;
+  readonly key: string;
+  readonly phase: RouterRuntimeActivationPhase;
+  readonly runtime: RouterRuntime<TPresentation>;
+  readonly tree: RouterRuntimeActivationTree<TPresentation>;
 }
 
 export type ApplicationNavigationListener = () => void;
@@ -91,12 +115,14 @@ export abstract class Application<
   private readonly disposables = new DisposableRegistry();
   private readonly listeners = new Set<ApplicationLifecycleListener>();
   private readonly navigationListeners = new Set<ApplicationNavigationListener>();
+  private readonly navigationHistory = new NavigationHistory<RouterRuntimeActivation<TPresentation>>();
   private readonly scope = new ApplicationScope();
   private readonly session = new SessionRuntimeState();
 
   private initializerAbortController: AbortController | null = null;
   private initializePromise: Promise<void> | null = null;
   private detachRuntimeRefresh: (() => void) | null = null;
+  private detachSessionState: (() => void) | null = null;
   private navigationAbortController: AbortController | null = null;
   private navigationPromise: Promise<boolean> | null = null;
   private navigateService: NavigateServiceInterface | null = null;
@@ -106,6 +132,7 @@ export abstract class Application<
     pending: null,
   });
   private routerRuntime: RouterRuntime<TPresentation> | null = null;
+  private pendingSessionBoundary: ApplicationSessionBoundary | null = null;
   private savedNavigationState: NavigationState | undefined;
   private lifecycleSnapshot: ApplicationLifecycleSnapshot = {
     error: null,
@@ -159,6 +186,7 @@ export abstract class Application<
 
     try {
       this.scope.bindSession(this.session);
+      this.detachSessionState = this.session.subscribe((change) => this.captureSessionBoundary(change));
       this.scope.bindDisposables(this.disposables);
       this.scope.activate(this);
       this.configure(this.config);
@@ -166,6 +194,9 @@ export abstract class Application<
 
       this.navigateService = createCoreNavigate({
         back: () => this.routerBridge.back(),
+        close: async (navigation) => {
+          await this.closeNavigation(navigation);
+        },
         current: () => this.navigationSnapshot.navigation,
         execute: async (navigation) => {
           await this.executeNavigation(navigation);
@@ -188,6 +219,8 @@ export abstract class Application<
       }
       this.setState('composed');
     } catch (error) {
+      this.detachSessionState?.();
+      this.detachSessionState = null;
       this.detachRuntimeRefresh?.();
       this.detachRuntimeRefresh = null;
       const failure = captureRuntimeFailure(error, createApplicationRuntimeSource('compose'));
@@ -233,6 +266,8 @@ export abstract class Application<
     }
 
     this.setState('disposing');
+    this.detachSessionState?.();
+    this.detachSessionState = null;
     this.detachRuntimeRefresh?.();
     this.detachRuntimeRefresh = null;
     this.initializerAbortController?.abort();
@@ -278,6 +313,32 @@ export abstract class Application<
     return this.navigationSnapshot;
   }
 
+  protected getRouterRuntimeEntries(): readonly ApplicationRouterRuntimeEntry<TPresentation>[] {
+    const activations = new Set<RouterRuntimeActivation<TPresentation>>();
+    const entries: ApplicationRouterRuntimeEntry<TPresentation>[] = [];
+
+    for (const historyEntry of this.navigationHistory.snapshot()) {
+      const activation = historyEntry.activation;
+
+      if (activation === null || activations.has(activation)) continue;
+
+      activations.add(activation);
+      const tree = activation.getTreeSnapshot();
+
+      entries.push(
+        Object.freeze({
+          activation,
+          key: activation.id,
+          phase: activation.getSnapshot().phase,
+          runtime: tree.runtime,
+          tree,
+        }),
+      );
+    }
+
+    return Object.freeze(entries);
+  }
+
   protected getApplicationScope(): ApplicationScope {
     return this.scope;
   }
@@ -311,6 +372,8 @@ export abstract class Application<
       }
 
       await this.routerBridge.initialize({
+        back: () => this.backNavigation(),
+        cancelNavigation: () => this.cancelPendingNavigation(),
         confirm: (location, confirmationSignal) => this.confirmBridgeLocation(location, confirmationSignal),
         navigate: this.requireNavigateService(),
         restore: (location, restoreContext) => this.restoreBridgeLocation(location, restoreContext),
@@ -417,11 +480,12 @@ export abstract class Application<
     location: RouterBridgeLocationInterface,
     context: RouterBridgeRestoreContextInterface,
   ): Promise<boolean> {
-    return this.executeNavigation(
-      resolveRouterBridgeLocation(this.config.routerValue, location),
-      'external',
-      context.blockersConfirmed,
-    );
+    const entry = location.entryId ? this.navigationHistory.find(location.entryId) : null;
+    const navigation = resolveRouterBridgeLocation(this.config.routerValue, location);
+
+    return entry
+      ? this.restoreHistoryEntry(entry.id, navigation, context.blockersConfirmed)
+      : this.executeNavigation(navigation, 'external', context.blockersConfirmed);
   }
 
   private confirmBridgeLocation(location: RouterBridgeLocationInterface, signal: AbortSignal): Promise<boolean> {
@@ -432,10 +496,107 @@ export abstract class Application<
     });
   }
 
+  private cancelPendingNavigation(): boolean {
+    if (this.navigationSnapshot.pending === null || this.navigationAbortController === null) {
+      return false;
+    }
+
+    this.navigationAbortController.abort(new Error('Навигация отменена Back operation.'));
+    return true;
+  }
+
+  private async backNavigation(): Promise<boolean> {
+    if (this.cancelPendingNavigation()) return true;
+
+    const target = this.navigationHistory.previous();
+
+    if (!target) return false;
+
+    if (target.activation === null) {
+      return this.executeNavigation(target.navigation, 'external', false, target.id);
+    }
+
+    const linkedSignal = createLinkedAbortController(this.applicationAbortController.signal);
+
+    try {
+      if (!(await this.getRouterRuntime().confirmActivation(target.activation, linkedSignal.controller.signal))) {
+        return false;
+      }
+
+      await this.getRouterRuntime().focusActivation(
+        target.activation,
+        target.navigation,
+        linkedSignal.controller.signal,
+      );
+
+      const mutation = this.navigationHistory.pop(target.id);
+
+      if (!mutation) return false;
+
+      this.setNavigationSnapshot(mutation.current.navigation, null);
+      await Promise.all(mutation.released.map((released) => this.getRouterRuntime().releaseActivation(released)));
+      await this.routerBridge.commit(mutation.current.navigation, {
+        history: this.createBridgeHistoryEntry('pop', mutation.current.id),
+        signal: linkedSignal.controller.signal,
+        source: 'external',
+      });
+      return true;
+    } finally {
+      linkedSignal.dispose();
+    }
+  }
+
+  private async closeNavigation(navigation: NavigationState): Promise<void> {
+    const previous = this.navigationHistory.previous();
+    const ownerEntryId = previous && areNavigationStatesEqual(previous.navigation, navigation) ? previous.id : null;
+
+    await this.executeNavigation(navigation, 'internal', false, ownerEntryId, ownerEntryId === null);
+  }
+
+  private async restoreHistoryEntry(
+    entryId: string,
+    navigation: NavigationState,
+    blockersConfirmed: boolean,
+  ): Promise<boolean> {
+    const entry = this.navigationHistory.find(entryId);
+
+    if (!entry) return false;
+    if (this.navigationHistory.current?.id === entry.id) return true;
+
+    if (entry.activation === null) {
+      return this.executeNavigation(navigation, 'external', blockersConfirmed, entry.id);
+    }
+
+    const linkedSignal = createLinkedAbortController(this.applicationAbortController.signal);
+
+    try {
+      if (
+        !blockersConfirmed &&
+        !(await this.getRouterRuntime().confirmActivation(entry.activation, linkedSignal.controller.signal))
+      ) {
+        return false;
+      }
+
+      await this.getRouterRuntime().focusActivation(entry.activation, entry.navigation, linkedSignal.controller.signal);
+      const mutation = this.navigationHistory.pop(entry.id);
+
+      if (!mutation) return false;
+
+      this.setNavigationSnapshot(mutation.current.navigation, null);
+      await Promise.all(mutation.released.map((released) => this.getRouterRuntime().releaseActivation(released)));
+      return true;
+    } finally {
+      linkedSignal.dispose();
+    }
+  }
+
   private executeNavigation(
     navigation: NavigationState,
     source: RouterBridgeNavigationSource = 'internal',
     blockersConfirmed = false,
+    historyTargetId: string | null = null,
+    replaceCurrent = false,
+    sessionBoundary: ApplicationSessionBoundary | null = null,
   ): Promise<boolean> {
     if (
       !blockersConfirmed &&
@@ -462,7 +623,16 @@ export abstract class Application<
         return false;
       }
 
-      return await this.runNavigation(navigation, abortController.signal, 0, source, blockersConfirmed);
+      return await this.runNavigation(
+        navigation,
+        abortController.signal,
+        0,
+        source,
+        blockersConfirmed,
+        historyTargetId,
+        replaceCurrent,
+        sessionBoundary,
+      );
     })().finally(() => {
       if (this.scope.has(NavigationBlockerRuntimeInterface)) {
         this.scope.get(NavigationBlockerRuntimeInterface).complete();
@@ -509,17 +679,23 @@ export abstract class Application<
     redirectDepth: number,
     source: RouterBridgeNavigationSource,
     blockersConfirmed: boolean,
+    historyTargetId: string | null,
+    replaceCurrent: boolean,
+    sessionBoundary: ApplicationSessionBoundary | null,
   ): Promise<boolean> {
     if (redirectDepth > MAX_POLICY_REDIRECT_DEPTH) {
       throw new Error('Policy navigation превысила допустимую глубину redirect.');
     }
 
-    const result = await this.getRouterRuntime().prepare(navigation, {
+    const prepareContext = {
       app: this,
       blockersConfirmed,
       session: this.session,
       signal,
-    });
+    };
+    const result = sessionBoundary
+      ? await this.getRouterRuntime().restart(navigation, prepareContext)
+      : await this.getRouterRuntime().prepare(navigation, prepareContext);
 
     if (result.type === 'interrupted') {
       return false;
@@ -535,6 +711,9 @@ export abstract class Application<
         redirectDepth,
         source,
         blockersConfirmed,
+        historyTargetId,
+        replaceCurrent,
+        sessionBoundary,
       );
     }
 
@@ -542,15 +721,19 @@ export abstract class Application<
     let committed = false;
 
     try {
-      await this.routerBridge.commit(transition.navigation, { signal, source });
-
-      if (signal.aborted) {
-        await transition.discard();
-        return false;
-      }
-
-      await transition.commit();
+      const activation = await transition.commit();
       committed = true;
+      const history = await this.commitNavigationHistory(
+        transition.navigation,
+        activation,
+        historyTargetId,
+        replaceCurrent,
+        sessionBoundary !== null,
+      );
+
+      if (signal.aborted) return false;
+
+      await this.routerBridge.commit(transition.navigation, { history, signal, source });
       this.setNavigationSnapshot(
         transition.navigation,
         transition.navigation.boundary === null ? null : NOT_FOUND_DECISION,
@@ -570,6 +753,70 @@ export abstract class Application<
     }
   }
 
+  private async commitNavigationHistory(
+    navigation: NavigationState,
+    activation: RouterRuntimeActivation<TPresentation>,
+    historyTargetId: string | null = null,
+    replaceCurrent = false,
+    resetHistory = false,
+  ): Promise<RouterBridgeHistoryEntryInterface> {
+    const current = this.navigationHistory.current;
+    const action = resetHistory
+      ? 'reset'
+      : historyTargetId
+        ? 'pop'
+        : current === null
+          ? 'replace'
+          : current.activation === activation
+            ? 'update'
+            : replaceCurrent
+              ? 'replace'
+              : navigation.replace
+                ? 'reset'
+                : 'push';
+    const mutation = resetHistory
+      ? this.navigationHistory.reset(navigation, activation)
+      : historyTargetId
+        ? this.navigationHistory.restore(historyTargetId, navigation, activation)
+        : action === 'push'
+          ? this.navigationHistory.push(navigation, activation)
+          : action === 'reset'
+            ? this.navigationHistory.reset(navigation, activation)
+            : action === 'replace'
+              ? this.navigationHistory.replace(navigation, activation)
+              : this.navigationHistory.updateCurrent(navigation);
+
+    if (!mutation) {
+      throw new Error('Navigation history target отсутствует во время restore commit.');
+    }
+
+    const released = new Set(mutation.released);
+
+    if (this.routerBridge.runtimeRetention === 'release') {
+      for (const inactive of this.navigationHistory.releaseInactiveActivations()) {
+        released.add(inactive);
+      }
+    }
+
+    await Promise.all(
+      [...released].map((releasedActivation) => this.getRouterRuntime().releaseActivation(releasedActivation)),
+    );
+
+    return this.createBridgeHistoryEntry(action, mutation.current.id);
+  }
+
+  private createBridgeHistoryEntry(
+    action: RouterBridgeHistoryEntryInterface['action'],
+    id: string,
+  ): RouterBridgeHistoryEntryInterface {
+    const entries = this.navigationHistory.snapshot();
+    const index = entries.findIndex((entry) => entry.id === id);
+
+    if (index < 0) throw new Error('Navigation history entry отсутствует в core history.');
+
+    return Object.freeze({ action, id, index, length: entries.length });
+  }
+
   private async applyNavigationDecision(
     decision: PolicyBoundaryDecision,
     navigation: NavigationState,
@@ -577,6 +824,9 @@ export abstract class Application<
     redirectDepth: number,
     source: RouterBridgeNavigationSource,
     blockersConfirmed: boolean,
+    historyTargetId: string | null,
+    replaceCurrent: boolean,
+    sessionBoundary: ApplicationSessionBoundary | null,
   ): Promise<boolean> {
     switch (decision.type) {
       case 'continue':
@@ -584,7 +834,7 @@ export abstract class Application<
       case 'error':
         throw decision.error;
       case 'redirect': {
-        if (decision.saveCurrentLocation) {
+        if (decision.saveCurrentLocation && (sessionBoundary?.allowSaveCurrentLocation ?? true)) {
           this.savedNavigationState = navigation;
         }
 
@@ -599,7 +849,16 @@ export abstract class Application<
         );
 
         this.setPendingNavigation(target);
-        return await this.runNavigation(target, signal, redirectDepth + 1, source, blockersConfirmed);
+        return await this.runNavigation(
+          target,
+          signal,
+          redirectDepth + 1,
+          source,
+          blockersConfirmed,
+          null,
+          replaceCurrent,
+          sessionBoundary,
+        );
       }
       case 'redirect-to-saved-location': {
         const saved = this.savedNavigationState;
@@ -615,11 +874,34 @@ export abstract class Application<
             );
 
         this.setPendingNavigation(target);
-        return await this.runNavigation(target, signal, redirectDepth + 1, source, blockersConfirmed);
+        return await this.runNavigation(
+          target,
+          signal,
+          redirectDepth + 1,
+          source,
+          blockersConfirmed,
+          null,
+          replaceCurrent,
+          sessionBoundary,
+        );
       }
       case 'forbidden':
-      case 'not-found':
-        await this.routerBridge.commit(navigation, { signal, source });
+      case 'not-found': {
+        const activation = await this.getRouterRuntime().commitBoundary(
+          navigation,
+          decision.type,
+          signal,
+          sessionBoundary === null,
+        );
+        const history = await this.commitNavigationHistory(
+          navigation,
+          activation,
+          historyTargetId,
+          replaceCurrent,
+          sessionBoundary !== null,
+        );
+
+        await this.routerBridge.commit(navigation, { history, signal, source });
 
         if (signal.aborted) {
           return false;
@@ -627,6 +909,7 @@ export abstract class Application<
 
         this.setNavigationSnapshot(navigation, decision);
         return true;
+      }
     }
   }
 
@@ -668,6 +951,24 @@ export abstract class Application<
     }
   }
 
+  private captureSessionBoundary(change: SessionRuntimeStateChange): void {
+    if (this.navigationSnapshot.navigation === undefined) {
+      return;
+    }
+
+    const explicitSignOut =
+      change.cause === 'state-change' && change.previousPhase === 'authenticated' && change.phase === 'anonymous';
+
+    this.pendingSessionBoundary = Object.freeze({
+      allowSaveCurrentLocation: (this.pendingSessionBoundary?.allowSaveCurrentLocation ?? true) && !explicitSignOut,
+      revision: change.revision,
+    });
+
+    if (explicitSignOut) {
+      this.savedNavigationState = undefined;
+    }
+  }
+
   private async refreshRuntime(): Promise<void> {
     await this.navigationPromise?.catch(() => undefined);
 
@@ -678,6 +979,27 @@ export abstract class Application<
     const navigation = this.navigationSnapshot.navigation;
 
     if (!navigation) {
+      return;
+    }
+
+    const sessionBoundary = this.pendingSessionBoundary;
+
+    if (sessionBoundary !== null) {
+      this.pendingSessionBoundary = null;
+
+      await this.executeNavigation(
+        Object.freeze({
+          ...navigation,
+          initiator: null,
+          replace: true,
+          revalidation: null,
+        }),
+        'internal',
+        false,
+        null,
+        false,
+        sessionBoundary,
+      );
       return;
     }
 

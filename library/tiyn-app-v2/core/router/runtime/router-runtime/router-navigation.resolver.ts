@@ -229,7 +229,7 @@ const expandRoutePath = (
   const terminal = path[path.length - 1]!;
   const definition = getRouteDefinition(terminal.node.route);
 
-  if (definition.routes.length === 0) {
+  if (definition.load !== undefined || definition.routes.length === 0) {
     return [Object.freeze({ path, probeCanMatch, replace })];
   }
 

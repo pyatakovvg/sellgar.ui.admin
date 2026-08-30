@@ -21,6 +21,37 @@ describe('ProviderPipeline', () => {
     ApplicationLifetimeProvider.instances = 0;
     ApplicationLifetimeProvider.signals = [];
     RuntimeLifetimeProvider.instances = 0;
+    RetainedLifecycleProvider.events = [];
+  });
+
+  it('keeps one provider instance through retained and focused periods', async () => {
+    const applicationScope = new ApplicationScope();
+    const scope = new ModuleScope(applicationScope);
+    const pipeline = new ProviderPipeline(scope, [RetainedLifecycleProvider], createOwner('retained'));
+    const context = createContext(scope);
+
+    await prepareAndCommit(pipeline, context);
+    expect(pipeline.isActive).toBe(true);
+
+    await pipeline.deactivate();
+    expect(pipeline.isActive).toBe(false);
+    expect(RetainedLifecycleProvider.events).toEqual(['activate', 'activate.cleanup']);
+
+    await pipeline.focus(context);
+    expect(pipeline.isActive).toBe(true);
+    expect(RetainedLifecycleProvider.events).toEqual(['activate', 'activate.cleanup', 'activate']);
+
+    await pipeline.dispose();
+    expect(RetainedLifecycleProvider.events).toEqual([
+      'activate',
+      'activate.cleanup',
+      'activate',
+      'activate.cleanup',
+      'dispose',
+    ]);
+
+    scope.dispose();
+    await applicationScope.disposeProviders();
   });
 
   it('shares one application-lifetime instance and activates it by reference-counted leases', async () => {
@@ -262,6 +293,20 @@ class RuntimeLifetimeProvider implements ProviderInterface {
   }
 
   dispose(): void {}
+}
+
+@Provider()
+class RetainedLifecycleProvider implements ProviderInterface {
+  static events: string[] = [];
+
+  activate(): () => void {
+    RetainedLifecycleProvider.events.push('activate');
+    return () => RetainedLifecycleProvider.events.push('activate.cleanup');
+  }
+
+  dispose(): void {
+    RetainedLifecycleProvider.events.push('dispose');
+  }
 }
 
 abstract class LocalDependency {

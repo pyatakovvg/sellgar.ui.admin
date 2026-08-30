@@ -23,6 +23,6 @@ describe('NavItem', () => {
       </NavItem>,
     );
 
-    expect(useNavigationControl).toHaveBeenCalledWith(navigation, true, true);
+    expect(useNavigationControl).toHaveBeenCalledWith(navigation, false, true);
   });
 });

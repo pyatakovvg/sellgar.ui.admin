@@ -1,6 +1,5 @@
 export { NavigateServiceInterface } from './navigate-service.interface.ts';
 export type {
-  NavigateCloseOptions,
   NavigateQueryOptions,
   NavigateArguments,
   NavigateTerminalOptions,

@@ -1,6 +1,8 @@
 export type SessionRuntimePhase = 'anonymous' | 'authenticated' | 'unknown';
+export type SessionRuntimeStateChangeCause = 'expiration' | 'state-change';
 
 export interface SessionRuntimeStateChange {
+  readonly cause: SessionRuntimeStateChangeCause;
   readonly phase: SessionRuntimePhase;
   readonly previousPhase: SessionRuntimePhase;
   readonly revision: number;

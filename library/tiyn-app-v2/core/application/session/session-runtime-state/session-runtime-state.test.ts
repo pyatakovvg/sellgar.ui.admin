@@ -38,11 +38,13 @@ describe('SessionRuntimeState', () => {
 
     expect(listener).toHaveBeenCalledTimes(2);
     expect(listener).toHaveBeenNthCalledWith(1, {
+      cause: 'state-change',
       phase: 'anonymous',
       previousPhase: 'unknown',
       revision: 1,
     });
     expect(listener).toHaveBeenNthCalledWith(2, {
+      cause: 'state-change',
       phase: 'authenticated',
       previousPhase: 'anonymous',
       revision: 2,
@@ -57,7 +59,9 @@ describe('SessionRuntimeState', () => {
   it('distinguishes controlled transitions from session expiration', () => {
     const session = new SessionRuntimeState();
     const interruptionListener = vi.fn();
+    const stateListener = vi.fn();
     const unsubscribe = session.subscribeInterruption(interruptionListener);
+    session.subscribe(stateListener);
 
     session.setAuthenticated();
     session.setAnonymous();
@@ -69,6 +73,12 @@ describe('SessionRuntimeState', () => {
 
     expect(session.phase).toBe('anonymous');
     expect(interruptionListener).toHaveBeenCalledOnce();
+    expect(stateListener).toHaveBeenLastCalledWith({
+      cause: 'expiration',
+      phase: 'anonymous',
+      previousPhase: 'authenticated',
+      revision: 4,
+    });
 
     unsubscribe();
     session.setAuthenticated();

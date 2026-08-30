@@ -13,7 +13,6 @@ import { areNavigationParamsEqual, areNavigationQueriesEqual } from '../../runti
 import type { NavigationRequest, NavigationRequestBinding } from '../navigation-request';
 import { createNavigationRequestBinding, createTerminalNavigationRequest } from '../navigation-request';
 import {
-  type NavigateCloseOptions,
   type NavigateArguments,
   NavigateServiceInterface,
   type NavigateTerminalOptions,
@@ -26,6 +25,7 @@ export type NavigationExecutor = (navigation: NavigationState) => void | Promise
 
 export interface CoreNavigateOptions {
   readonly back: () => void | Promise<void>;
+  readonly close: NavigationExecutor;
   readonly current?: () => NavigationState | undefined;
   readonly execute: NavigationExecutor;
   readonly router: RouterDeclaration;
@@ -87,7 +87,7 @@ class CoreNavigate extends NavigateServiceInterface {
     await this.options.back();
   }
 
-  async close(options: NavigateCloseOptions = {}): Promise<void> {
+  async close(): Promise<void> {
     if (this.scopeRouter === null) {
       throw new Error('navigate.close() доступен только внутри вложенного Router scope.');
     }
@@ -98,7 +98,7 @@ class CoreNavigate extends NavigateServiceInterface {
       throw new Error('navigate.close() требует committed navigation state.');
     }
 
-    await this.options.execute(resolveCloseNavigation(current, this.scopeRouter, options, this.initiator));
+    await this.options.close(resolveCloseNavigation(current, this.scopeRouter, this.initiator));
   }
 
   async root(options: NavigateTerminalOptions = {}): Promise<void> {
@@ -170,7 +170,6 @@ class CoreNavigate extends NavigateServiceInterface {
 const resolveCloseNavigation = (
   current: NavigationState,
   scopeRouter: RouterDeclaration,
-  options: NavigateCloseOptions,
   initiator: NavigationInitiator | null,
 ): NavigationState => {
   const root = removeRouterScope(current.root, scopeRouter);
@@ -187,10 +186,10 @@ const resolveCloseNavigation = (
     boundary: null,
     initiator,
     pendingNestedAddress: null,
-    replace: options.replace ?? false,
+    replace: false,
     revalidation: null,
     root,
-    state: options.state,
+    state: undefined,
   });
 };
 

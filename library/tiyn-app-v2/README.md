@@ -14,6 +14,19 @@ Admin UI как первый реальный consumer.
 - `native/` → `@sellgar/app-v2/native`;
 - `fsm/` → `@sellgar/app-v2/fsm`.
 
+Native entrypoint повторяет публичные framework-понятия React facade:
+`Application`, configurator, `Module`, `Layout`, `Widget`, renderer features,
+guards/reactive bridges, `Route`, `Router`, `Shell`, navigation controls и
+controller/revalidation hooks. Оба adapter-а используют один core lifecycle и
+одинаковый bootstrap flow; различаются только renderer-specific presentation и
+router bridge. Android fixture находится в `clients/mobile`. Stack/Tabs
+projection использует core registry физических runtime entries с фазами
+`focused`, `preparing` и `retained`. Новый screen сразу показывает локальный
+fallback, возврат к retained screen сразу показывает сохранённые данные и затем
+запускает scoped revalidation тех же controller instances. Back во время
+`preparing` отменяет transition и мгновенно возвращает committed presentation.
+Query не меняет identity screen; Route path и params меняют её.
+
 Все entrypoints принадлежат одному package и разрешаются полем `exports` в
 [package.json](package.json). Renderer-зависимости объявлены optional peers и не
 становятся обязательными зависимостями core-only consumer; отдельный

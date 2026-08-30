@@ -15,6 +15,7 @@ export interface WebRouterBridgeOptions extends WebQueryParseOptions {
 }
 
 interface WebHistoryMetadata {
+  readonly entryId: string | undefined;
   readonly index: number;
   readonly revalidate: boolean;
   readonly state: unknown;
@@ -44,6 +45,8 @@ export const createWebRouterBridge = (
 };
 
 class WebRouterBridge implements RouterBridgeInterface, RouterBridgeHrefCapabilityInterface {
+  readonly runtimeRetention = 'release' as const;
+
   private readonly basePath: string;
   private readonly queryOptions: WebQueryParseOptions;
 
@@ -147,27 +150,25 @@ class WebRouterBridge implements RouterBridgeInterface, RouterBridgeHrefCapabili
       const metadata = readHistoryMetadata(browser.history.state);
 
       this.currentIndex = metadata?.index ?? this.currentIndex;
+      const resolvedUrl =
+        navigation.boundary === null && navigation.replace
+          ? createExternalResolvedUrl(navigation, this.basePath, browser.location.hash)
+          : getCurrentRelativeUrl(browser);
 
-      if (navigation.boundary === null && navigation.replace) {
-        const resolvedUrl = createExternalResolvedUrl(navigation, this.basePath, browser.location.hash);
-
-        if (resolvedUrl !== getCurrentRelativeUrl(browser)) {
-          browser.history.replaceState(
-            createHistoryState(navigation.state, this.currentIndex, navigation.revalidation !== null),
-            '',
-            resolvedUrl,
-          );
-        }
-      }
+      browser.history.replaceState(
+        createHistoryState(navigation.state, this.currentIndex, navigation.revalidation !== null, context.history.id),
+        '',
+        resolvedUrl,
+      );
 
       this.lastCommitted = createBrowserSnapshot(browser, this.currentIndex);
       return;
     }
 
     const url = createNavigationUrl(navigation, this.basePath);
-    const replace = navigation.replace || url === getCurrentRelativeUrl(browser);
+    const replace = context.history.action !== 'push';
     const index = replace ? this.currentIndex : this.currentIndex + 1;
-    const state = createHistoryState(navigation.state, index, navigation.revalidation !== null);
+    const state = createHistoryState(navigation.state, index, navigation.revalidation !== null, context.history.id);
 
     if (replace) {
       browser.history.replaceState(state, '', url);
@@ -351,6 +352,7 @@ class WebRouterBridge implements RouterBridgeInterface, RouterBridgeHrefCapabili
 
     return Object.freeze({
       address: decodeAddress(removeBasePath(browser.location.pathname, this.basePath)),
+      ...(metadata?.entryId ? { entryId: metadata.entryId } : {}),
       nested,
       query: parseWebQuery(browser.location.search, this.queryOptions),
       revalidate: metadata?.revalidate ?? true,
@@ -517,9 +519,10 @@ const createHistoryState = (
   state: unknown,
   index: number,
   revalidate: boolean,
+  entryId?: string,
 ): Readonly<Record<string, WebHistoryMetadata>> => {
   return Object.freeze({
-    [HISTORY_STATE_KEY]: Object.freeze({ index, revalidate, state }),
+    [HISTORY_STATE_KEY]: Object.freeze({ entryId, index, revalidate, state }),
   });
 };
 
@@ -535,6 +538,7 @@ const readHistoryMetadata = (state: unknown): WebHistoryMetadata | null => {
   }
 
   return {
+    entryId: typeof metadata.entryId === 'string' ? metadata.entryId : undefined,
     index: metadata.index,
     revalidate: metadata.revalidate,
     state: metadata.state,

@@ -152,10 +152,6 @@ const validateRouteOptions = (options: RouteOptions): void => {
   const routes = options.routes;
   const routing = options.routing;
 
-  if (options.load && routes) {
-    throw new Error('Route не может одновременно определять load и routes.');
-  }
-
   if (routes && routes.length === 0) {
     throw new Error('Route.routes не может быть пустым.');
   }

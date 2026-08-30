@@ -42,6 +42,8 @@ class TestModuleExportResolver implements ModuleExportResolverInterface<null> {
 }
 
 class TestRouterBridge implements RouterBridgeInterface {
+  readonly runtimeRetention = 'retain' as const;
+
   async initialize(context: RouterBridgeInitializeContextInterface): Promise<void> {
     await context.navigate.to(FirstRoute);
   }

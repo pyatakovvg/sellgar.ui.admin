@@ -1,7 +1,7 @@
 import React from 'react';
 
 import type { ApplicationNavigationDecision } from '../../../../core/application/lifecycle/application';
-import type { RouteRuntime } from '../../../../core/router/runtime/route-runtime';
+import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
 import type { ActiveChildRouterRuntime, RouterRuntime } from '../../../../core/router/runtime/router-runtime';
 import type {
   ApplicationComponents,
@@ -65,7 +65,7 @@ export const NestedRouterLayer: React.FC<IProps> = (props) => {
 
 const resolveNestedComponents = (
   props: IProps,
-  routes: readonly RouteRuntime<ModuleMetadata>[],
+  routes: readonly RouteActivationRuntime<ModuleMetadata>[],
   activeChild: ActiveChildRouterRuntime<ModuleMetadata>,
 ): ApplicationComponents | null => {
   const parent = resolveOwnerComponents(props.runtime, props.components, routes, activeChild.owner);
@@ -85,8 +85,8 @@ const resolveNestedComponents = (
 const resolveOwnerComponents = (
   runtime: RouterRuntime<ModuleMetadata>,
   inherited: ApplicationComponents,
-  routes: readonly RouteRuntime<ModuleMetadata>[],
-  owner: RouteRuntime<ModuleMetadata>,
+  routes: readonly RouteActivationRuntime<ModuleMetadata>[],
+  owner: RouteActivationRuntime<ModuleMetadata>,
 ): ApplicationComponents | null => {
   const router = getRouterPresentationDefinition(runtime.router);
   let components: ApplicationComponents = {

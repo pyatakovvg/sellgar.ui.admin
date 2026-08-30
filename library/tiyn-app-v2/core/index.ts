@@ -35,6 +35,7 @@ export type {
   SessionRuntimeInterruptionListener,
   SessionRuntimePhase,
   SessionRuntimeStateChange,
+  SessionRuntimeStateChangeCause,
   SessionRuntimeStateListener,
 } from './application/session/session-runtime-state';
 export {
@@ -245,12 +246,7 @@ export type {
   RouteQueryMutationOptions,
   RouteQueryServiceListener,
 } from './router/service/route-query-service';
-export type {
-  NavigateCloseOptions,
-  NavigateQueryOptions,
-  NavigateTerminalOptions,
-  NavigateThrough,
-} from './router/service/navigate-service';
+export type { NavigateQueryOptions, NavigateTerminalOptions, NavigateThrough } from './router/service/navigate-service';
 export type {
   NavigationRequest,
   NavigationRequestBinding,

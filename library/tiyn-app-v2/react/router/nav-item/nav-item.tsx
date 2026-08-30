@@ -14,7 +14,7 @@ interface IProps {
   readonly viewTransition?: boolean;
 }
 
-export const NavItem: React.FC<IProps> = ({ end = true, viewTransition = false, ...props }) => {
+export const NavItem: React.FC<IProps> = ({ end = false, viewTransition = false, ...props }) => {
   const control = useNavigationControl(props.navigation, end, viewTransition);
 
   return props.children({

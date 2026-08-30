@@ -26,19 +26,19 @@ export class SessionRuntimeState implements SessionRuntimeStateInterface {
       return;
     }
 
-    this.setPhase('anonymous', true);
+    this.setPhase('anonymous', 'expiration', true);
   }
 
   setAnonymous(): void {
-    this.setPhase('anonymous');
+    this.setPhase('anonymous', 'state-change');
   }
 
   setAuthenticated(): void {
-    this.setPhase('authenticated');
+    this.setPhase('authenticated', 'state-change');
   }
 
   setUnknown(): void {
-    this.setPhase('unknown');
+    this.setPhase('unknown', 'state-change');
   }
 
   subscribe(listener: SessionRuntimeStateListener): () => void {
@@ -57,7 +57,7 @@ export class SessionRuntimeState implements SessionRuntimeStateInterface {
     };
   }
 
-  private setPhase(phase: SessionRuntimePhase, interrupt = false): void {
+  private setPhase(phase: SessionRuntimePhase, cause: SessionRuntimeStateChange['cause'], interrupt = false): void {
     if (this.value === phase) {
       return;
     }
@@ -72,6 +72,7 @@ export class SessionRuntimeState implements SessionRuntimeStateInterface {
     }
 
     this.emit({
+      cause,
       phase,
       previousPhase,
       revision: this.currentRevision,

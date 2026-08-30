@@ -1,7 +1,12 @@
 export {
   RouterRuntime,
+  RouterRuntimeActivation,
   type ActiveChildRouterRuntime,
   type RouterRuntimeBranchSnapshot,
+  type RouterRuntimeActivationChild,
+  type RouterRuntimeActivationPhase,
+  type RouterRuntimeActivationSnapshot,
+  type RouterRuntimeActivationTree,
   type RouterRuntimePhase,
   type RouterRuntimeExecutionContext,
   type RouterRuntimePrepareContext,

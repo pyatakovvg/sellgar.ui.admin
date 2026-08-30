@@ -8,6 +8,7 @@ import type {
   RouterBridgeCommitContextInterface,
   RouterBridgeInitializeContextInterface,
   RouterBridgeInterface,
+  RouterBridgeRuntimeRetention,
 } from '../../../router/bridge/router-bridge';
 import { param, segments } from '../../../router/declaration/address';
 import { getRouteDefinition, Route } from '../../../router/declaration/route';
@@ -16,7 +17,7 @@ import type { NavigationState } from '../../../router/runtime/navigation-state';
 import { RoutePolicyInterface } from '../../../router/runtime/route-policy';
 import type { RouteRuntimeContextInterface } from '../../../router/runtime/route-runtime-context';
 import type { RouteRuntime } from '../../../router/runtime/route-runtime';
-import { NavigateServiceInterface } from '../../../router/service/navigate-service';
+import { createScopedNavigate, NavigateServiceInterface } from '../../../router/service/navigate-service';
 import { Provider, ProviderInterface } from '../../../runtime/provider/provider';
 import { ApplicationConfig } from '../../config/application-config';
 import type { ApplicationConfiguratorInterface } from '../../config/application-configurator';
@@ -43,6 +44,8 @@ abstract class RevalidationParentRoute {}
 abstract class RevalidationLeafRoute {}
 abstract class QueryModuleRoute {}
 abstract class QueryFrameRoute {}
+abstract class ParentScreenRoute {}
+abstract class ChildScreenRoute {}
 
 class TestModule {}
 
@@ -74,11 +77,23 @@ class TestModuleExportResolver implements ModuleExportResolverInterface<null> {
 type InitialNavigation = (navigate: NavigateServiceInterface) => Promise<void>;
 
 class TestRouterBridge implements RouterBridgeInterface {
-  constructor(private readonly initialNavigation: InitialNavigation) {}
+  readonly runtimeRetention: RouterBridgeRuntimeRetention;
+  private context: RouterBridgeInitializeContextInterface | null = null;
+  lastBackResult: boolean | null = null;
 
-  back(): void {}
+  constructor(
+    private readonly initialNavigation: InitialNavigation,
+    runtimeRetention: RouterBridgeRuntimeRetention,
+  ) {
+    this.runtimeRetention = runtimeRetention;
+  }
+
+  async back(): Promise<void> {
+    this.lastBackResult = (await this.context?.back()) ?? false;
+  }
 
   async initialize(context: RouterBridgeInitializeContextInterface): Promise<void> {
+    this.context = context;
     await this.initialNavigation(context.navigate);
   }
 
@@ -88,11 +103,17 @@ class TestRouterBridge implements RouterBridgeInterface {
 }
 
 class TestApplication extends Application<null> {
+  readonly bridge: TestRouterBridge;
+
   constructor(
     private readonly router: Router,
     initialNavigation: InitialNavigation,
+    runtimeRetention: RouterBridgeRuntimeRetention,
   ) {
-    super(new TestRouterBridge(initialNavigation), new ApplicationConfig(), new TestModuleExportResolver());
+    const bridge = new TestRouterBridge(initialNavigation, runtimeRetention);
+
+    super(bridge, new ApplicationConfig(), new TestModuleExportResolver());
+    this.bridge = bridge;
   }
 
   get navigate(): NavigateServiceInterface {
@@ -109,6 +130,10 @@ class TestApplication extends Application<null> {
 
   get routerPhase(): string {
     return this.getRouterRuntime().getSnapshot().phase;
+  }
+
+  get runtimeEntries() {
+    return this.getRouterRuntimeEntries();
   }
 
   protected configure(app: ApplicationConfiguratorInterface): void {
@@ -139,7 +164,31 @@ describe('Application routing lifecycle', () => {
     await app.dispose();
   });
 
-  it('reuses a common owner branch between siblings and disposes only the replaced suffix', async () => {
+  it('allows a screen Route to own child screen Routes without an artificial index token', async () => {
+    const router = new Router({
+      routes: [
+        new Route({
+          address: segments('parent'),
+          load: loadTestModule,
+          routes: [createModuleRoute(ChildScreenRoute, 'child')],
+          token: ParentScreenRoute,
+        }),
+      ],
+    });
+    const app = await createApplication(router, (navigate) => navigate.to(ParentScreenRoute));
+    const parentRuntime = app.activeRoutes[0]!;
+
+    expect(app.activeRoutes).toEqual([parentRuntime]);
+
+    await app.navigate.through(ParentScreenRoute).to(ChildScreenRoute);
+
+    expect(app.activeRoutes[0]).toBe(parentRuntime);
+    expect(app.activeRoutes).toHaveLength(2);
+
+    await app.dispose();
+  });
+
+  it('retains a replaced sibling and restores it on Back without creating another runtime', async () => {
     const app = await createApplication(createBranchRouter(), (navigate) =>
       navigate.through(WorkspaceRoute, { params: { workspaceId: 'workspace-1' } }).to(FirstRoute),
     );
@@ -150,19 +199,82 @@ describe('Application routing lifecycle', () => {
     const [reusedWorkspaceRuntime, secondRuntime] = app.activeRoutes;
 
     expect(reusedWorkspaceRuntime).toBe(workspaceRuntime);
-    expect(firstRuntime!.getSnapshot().phase).toBe('disposed');
+    expect(firstRuntime!.getSnapshot().phase).toBe('retained');
     expect(secondRuntime!.getSnapshot().phase).toBe('active');
 
-    await app.navigate.to(OtherRoute);
+    await app.navigate.back();
 
-    expect(workspaceRuntime!.getSnapshot().phase).toBe('disposed');
+    expect(app.activeRoutes).toEqual([workspaceRuntime, firstRuntime]);
+    expect(firstRuntime!.getSnapshot().phase).toBe('active');
     expect(secondRuntime!.getSnapshot().phase).toBe('disposed');
-    expect(app.activeRoutes).toHaveLength(1);
 
     await app.dispose();
   });
 
-  it('replaces an owner branch when its route params change', async () => {
+  it('restarts a released ModuleRuntime on Back when the renderer does not retain runtimes', async () => {
+    const firstLoad = vi.fn(loadTestModule);
+    const secondLoad = vi.fn(loadTestModule);
+    const router = new Router({
+      routes: [
+        new Route({ address: segments('first'), load: firstLoad, token: FirstRoute }),
+        new Route({ address: segments('second'), load: secondLoad, token: SecondRoute }),
+      ],
+    });
+    const app = await createApplication(router, (navigate) => navigate.to(FirstRoute), 'release');
+    const firstRuntime = app.activeRoutes[0]!;
+
+    await app.navigate.to(SecondRoute);
+    const secondRuntime = app.activeRoutes[0]!;
+
+    expect(firstRuntime.getSnapshot().phase).toBe('disposed');
+
+    await app.navigate.back();
+
+    expect(app.activeRoutes[0]).not.toBe(firstRuntime);
+    expect(app.activeRoutes[0]!.getSnapshot().phase).toBe('active');
+    expect(secondRuntime.getSnapshot().phase).toBe('disposed');
+    expect(firstLoad).toHaveBeenCalledTimes(2);
+    expect(secondLoad).toHaveBeenCalledOnce();
+
+    await app.dispose();
+  });
+
+  it('keeps the active owner ModuleRuntime while a released frame is opened and closed', async () => {
+    const moduleLoad = vi.fn(loadTestModule);
+    const frameLoad = vi.fn(loadTestModule);
+    const frameRouter = new Router({
+      routes: [new Route({ address: segments('frame'), load: frameLoad, token: QueryFrameRoute })],
+    });
+    const router = new Router({
+      routes: [
+        new Route({
+          address: segments('module'),
+          load: moduleLoad,
+          routing: [frameRouter],
+          token: QueryModuleRoute,
+        }),
+      ],
+    });
+    const app = await createApplication(router, (navigate) => navigate.to(QueryModuleRoute), 'release');
+    const moduleRuntime = app.activeRoutes[0]!;
+
+    await app.navigate.through(QueryModuleRoute).to(QueryFrameRoute);
+    const frameRuntime = app.activeRoutes[1]!;
+
+    expect(app.activeRoutes[0]).toBe(moduleRuntime);
+
+    await app.navigate.back();
+
+    expect(app.activeRoutes).toEqual([moduleRuntime]);
+    expect(moduleRuntime.getSnapshot().phase).toBe('active');
+    expect(frameRuntime.getSnapshot().phase).toBe('disposed');
+    expect(moduleLoad).toHaveBeenCalledOnce();
+    expect(frameLoad).toHaveBeenCalledOnce();
+
+    await app.dispose();
+  });
+
+  it('keeps parameterized activations under one Route identity and restores the previous params on Back', async () => {
     const app = await createApplication(createBranchRouter(), (navigate) =>
       navigate.through(WorkspaceRoute, { params: { workspaceId: 'workspace-1' } }).to(FirstRoute),
     );
@@ -170,10 +282,216 @@ describe('Application routing lifecycle', () => {
 
     await app.navigate.through(WorkspaceRoute, { params: { workspaceId: 'workspace-2' } }).to(SecondRoute);
 
-    expect(app.activeRoutes[0]).not.toBe(workspaceRuntime);
+    const nextWorkspaceRuntime = app.activeRoutes[0]!;
+
+    expect(nextWorkspaceRuntime).not.toBe(workspaceRuntime);
+    expect(workspaceRuntime!.getSnapshot().phase).toBe('retained');
+    expect(firstRuntime!.getSnapshot().phase).toBe('retained');
+    expect(nextWorkspaceRuntime.getParams()).toEqual({ workspaceId: 'workspace-2' });
+
+    await app.navigate.back();
+
+    expect(app.activeRoutes).toEqual([workspaceRuntime, firstRuntime]);
+    expect(workspaceRuntime!.getSnapshot().phase).toBe('active');
+    expect(nextWorkspaceRuntime.getSnapshot().phase).toBe('disposed');
+
+    await app.dispose();
+  });
+
+  it('reuses a retained activation on forward navigation and keeps chronological Back history', async () => {
+    const firstLoad = vi.fn(loadTestModule);
+    const secondLoad = vi.fn(loadTestModule);
+    const router = new Router({
+      routes: [
+        new Route({ address: segments('first'), load: firstLoad, token: FirstRoute }),
+        new Route({ address: segments('second'), load: secondLoad, token: SecondRoute }),
+      ],
+    });
+    const app = await createApplication(router, (navigate) => navigate.to(FirstRoute));
+    const firstRuntime = app.activeRoutes[0]!;
+
+    await app.navigate.to(SecondRoute);
+    const secondRuntime = app.activeRoutes[0]!;
+    await app.navigate.to(FirstRoute);
+
+    expect(app.activeRoutes).toEqual([firstRuntime]);
+    expect(firstLoad).toHaveBeenCalledOnce();
+    expect(secondLoad).toHaveBeenCalledOnce();
+    expect(app.runtimeEntries.map(({ key, phase }) => ({ key, phase }))).toEqual([
+      { key: 'activation:1', phase: 'focused' },
+      { key: 'activation:2', phase: 'retained' },
+    ]);
+
+    await app.navigate.back();
+
+    expect(app.activeRoutes).toEqual([secondRuntime]);
+    expect(firstRuntime.getSnapshot().phase).toBe('retained');
+    expect(app.runtimeEntries.map(({ key, phase }) => ({ key, phase }))).toEqual([
+      { key: 'activation:1', phase: 'retained' },
+      { key: 'activation:2', phase: 'focused' },
+    ]);
+
+    await app.navigate.back();
+
+    expect(app.activeRoutes).toEqual([firstRuntime]);
+    expect(firstRuntime.getSnapshot().phase).toBe('active');
+    expect(secondRuntime.getSnapshot().phase).toBe('disposed');
+    expect(firstLoad).toHaveBeenCalledOnce();
+    expect(secondLoad).toHaveBeenCalledOnce();
+    expect(app.runtimeEntries.map(({ key, phase }) => ({ key, phase }))).toEqual([
+      { key: 'activation:1', phase: 'focused' },
+    ]);
+
+    await app.dispose();
+  });
+
+  it('retains and restores a nested Router activation without reloading its owner or screen', async () => {
+    const moduleLoad = vi.fn(loadTestModule);
+    const frameLoad = vi.fn(loadTestModule);
+    const frameRouter = new Router({
+      routes: [new Route({ address: segments('frame'), load: frameLoad, token: QueryFrameRoute })],
+    });
+    const router = new Router({
+      routes: [
+        new Route({
+          address: segments('module'),
+          load: moduleLoad,
+          routing: [frameRouter],
+          token: QueryModuleRoute,
+        }),
+        createModuleRoute(OtherRoute, 'other'),
+      ],
+    });
+    const app = await createApplication(router, (navigate) => navigate.to(QueryModuleRoute));
+    const moduleRuntime = app.activeRoutes[0]!;
+
+    await app.navigate.through(QueryModuleRoute).to(QueryFrameRoute);
+    const frameRuntime = app.activeRoutes[1]!;
+    await app.navigate.to(OtherRoute);
+
+    expect(moduleRuntime.getSnapshot().phase).toBe('retained');
+    expect(frameRuntime.getSnapshot().phase).toBe('retained');
+
+    await app.navigate.back();
+
+    expect(app.activeRoutes).toEqual([moduleRuntime, frameRuntime]);
+    expect(moduleRuntime.getSnapshot().phase).toBe('active');
+    expect(frameRuntime.getSnapshot().phase).toBe('active');
+    expect(moduleLoad).toHaveBeenCalledOnce();
+    expect(frameLoad).toHaveBeenCalledOnce();
+
+    await app.navigate.back();
+
+    expect(app.activeRoutes).toEqual([moduleRuntime]);
+    expect(frameRuntime.getSnapshot().phase).toBe('disposed');
+
+    await app.dispose();
+  });
+
+  it('closes an opened nested Router by removing its history entry and restoring its owner', async () => {
+    const moduleLoad = vi.fn(loadTestModule);
+    const frameLoad = vi.fn(loadTestModule);
+    const frameRouter = new Router({
+      routes: [new Route({ address: segments('frame'), load: frameLoad, token: QueryFrameRoute })],
+    });
+    const router = new Router({
+      routes: [
+        new Route({
+          address: segments('module'),
+          load: moduleLoad,
+          routing: [frameRouter],
+          token: QueryModuleRoute,
+        }),
+      ],
+    });
+    const app = await createApplication(router, (navigate) => navigate.to(QueryModuleRoute));
+    const moduleRuntime = app.activeRoutes[0]!;
+
+    await app.navigate.through(QueryModuleRoute).to(QueryFrameRoute);
+    const frameRuntime = app.activeRoutes[1]!;
+    const frameNavigate = createScopedNavigate(app.navigate, frameRouter);
+
+    await frameNavigate.close();
+
+    expect(app.bridge.lastBackResult).toBeNull();
+    expect(app.activeRoutes).toEqual([moduleRuntime]);
+    expect(app.runtimeEntries).toHaveLength(1);
+    expect(moduleRuntime.getSnapshot().phase).toBe('active');
+    expect(frameRuntime.getSnapshot().phase).toBe('disposed');
+    expect(moduleLoad).toHaveBeenCalledOnce();
+    expect(frameLoad).toHaveBeenCalledOnce();
+
+    await app.dispose();
+  });
+
+  it('closes a directly opened nested Router by replacing only its current history entry', async () => {
+    const moduleLoad = vi.fn(loadTestModule);
+    const frameLoad = vi.fn(loadTestModule);
+    const frameRouter = new Router({
+      routes: [new Route({ address: segments('frame'), load: frameLoad, token: QueryFrameRoute })],
+    });
+    const router = new Router({
+      routes: [
+        new Route({
+          address: segments('module'),
+          load: moduleLoad,
+          routing: [frameRouter],
+          token: QueryModuleRoute,
+        }),
+      ],
+    });
+    const app = await createApplication(router, (navigate) => navigate.through(QueryModuleRoute).to(QueryFrameRoute));
+    const [moduleRuntime, frameRuntime] = app.activeRoutes;
+    const frameNavigate = createScopedNavigate(app.navigate, frameRouter);
+
+    await frameNavigate.close();
+
+    expect(app.bridge.lastBackResult).toBeNull();
+    expect(app.activeRoutes).toEqual([moduleRuntime]);
+    expect(app.runtimeEntries).toHaveLength(1);
+    expect(moduleRuntime!.getSnapshot().phase).toBe('active');
+    expect(frameRuntime!.getSnapshot().phase).toBe('disposed');
+    expect(moduleLoad).toHaveBeenCalledOnce();
+    expect(frameLoad).toHaveBeenCalledOnce();
+
+    await app.dispose();
+  });
+
+  it('clears inaccessible retained history when a different activation replaces the branch', async () => {
+    const app = await createApplication(createBranchRouter(), (navigate) =>
+      navigate.through(WorkspaceRoute, { params: { workspaceId: 'workspace-1' } }).to(FirstRoute),
+    );
+    const [workspaceRuntime, firstRuntime] = app.activeRoutes;
+
+    await app.navigate.through(WorkspaceRoute, { params: { workspaceId: 'workspace-1' } }).to(SecondRoute);
+    const secondRuntime = app.activeRoutes[1]!;
+    await app.navigate.to(OtherRoute, { replace: true });
+
     expect(workspaceRuntime!.getSnapshot().phase).toBe('disposed');
     expect(firstRuntime!.getSnapshot().phase).toBe('disposed');
-    expect(app.activeRoutes[0]!.getParams()).toEqual({ workspaceId: 'workspace-2' });
+    expect(secondRuntime.getSnapshot().phase).toBe('disposed');
+    expect(getRouteDefinition(app.activeRoutes[0]!.route).token).toBe(OtherRoute);
+
+    const current = app.activeRoutes[0]!;
+    await app.navigate.back();
+
+    expect(app.activeRoutes).toEqual([current]);
+
+    await app.dispose();
+  });
+
+  it('does not add Back entries for repeated activation or query-only navigation', async () => {
+    const app = await createApplication(createScopedQueryRouter(), (navigate) =>
+      navigate.through(QueryModuleRoute).to(QueryFrameRoute),
+    );
+    const routes = app.activeRoutes;
+
+    await app.navigate.through(QueryModuleRoute).to(QueryFrameRoute);
+    await app.navigate.query({ page: 2 });
+    await app.navigate.back();
+
+    expect(app.bridge.lastBackResult).toBe(false);
+    expect(app.activeRoutes).toEqual(routes);
 
     await app.dispose();
   });
@@ -370,8 +688,12 @@ describe('Application routing lifecycle', () => {
   });
 });
 
-const createApplication = async (router: Router, initialNavigation: InitialNavigation): Promise<TestApplication> => {
-  const app = new TestApplication(router, initialNavigation);
+const createApplication = async (
+  router: Router,
+  initialNavigation: InitialNavigation,
+  runtimeRetention: RouterBridgeRuntimeRetention = 'retain',
+): Promise<TestApplication> => {
+  const app = new TestApplication(router, initialNavigation, runtimeRetention);
 
   app.compose();
   await app.initialize();

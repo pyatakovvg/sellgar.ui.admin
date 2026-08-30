@@ -7,11 +7,6 @@ export interface NavigateTerminalOptions {
   readonly state?: unknown;
 }
 
-export interface NavigateCloseOptions {
-  readonly replace?: boolean;
-  readonly state?: unknown;
-}
-
 export interface NavigateQueryOptions {
   readonly merge?: boolean;
   readonly replace?: boolean;
@@ -48,7 +43,7 @@ export interface NavigateThrough {
 export abstract class NavigateServiceInterface implements NavigateThrough {
   abstract back(): Promise<void>;
 
-  abstract close(options?: NavigateCloseOptions): Promise<void>;
+  abstract close(): Promise<void>;
 
   abstract root(options?: NavigateTerminalOptions): Promise<void>;
 

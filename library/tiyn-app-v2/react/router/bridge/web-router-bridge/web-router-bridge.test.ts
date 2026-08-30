@@ -23,6 +23,10 @@ const secondRoute = new Route({ address: segments('second'), load: async () => (
 const router = new Router({ routes: [firstRoute, secondRoute] });
 
 describe('WebRouterBridge', () => {
+  it('selects release mode for web ModuleRuntime lifecycle', () => {
+    expect(createWebRouterBridge().runtimeRetention).toBe('release');
+  });
+
   beforeEach(() => {
     window.history.replaceState(null, '', '/first');
   });
@@ -48,6 +52,8 @@ describe('WebRouterBridge', () => {
     const bridge = createWebRouterBridge();
 
     await bridge.initialize({
+      back: vi.fn().mockResolvedValue(false),
+      cancelNavigation: vi.fn().mockReturnValue(false),
       confirm: vi.fn().mockResolvedValue(true),
       navigate: {} as NavigateServiceInterface,
       restore,
@@ -91,6 +97,9 @@ describe('WebRouterBridge', () => {
     let target: NavigationState | undefined;
     const navigate = createCoreNavigate({
       back: () => undefined,
+      close: (navigation) => {
+        target = navigation;
+      },
       execute: (navigation) => {
         target = navigation;
       },
@@ -111,6 +120,8 @@ describe('WebRouterBridge', () => {
     const abortController = new AbortController();
 
     await bridge.initialize({
+      back: vi.fn().mockResolvedValue(false),
+      cancelNavigation: vi.fn().mockReturnValue(false),
       confirm: vi.fn().mockResolvedValue(true),
       navigate: {} as NavigateServiceInterface,
       restore: vi.fn().mockResolvedValue(true),
@@ -122,7 +133,11 @@ describe('WebRouterBridge', () => {
     const pushState = vi.spyOn(window.history, 'pushState');
     const replaceState = vi.spyOn(window.history, 'replaceState');
 
-    bridge.commit(navigation(firstRoute), { signal: abortController.signal, source: 'internal' });
+    bridge.commit(navigation(firstRoute), {
+      history: historyEntry('replace', 'navigation:1', 0, 1),
+      signal: abortController.signal,
+      source: 'internal',
+    });
 
     expect(pushState).not.toHaveBeenCalled();
     expect(replaceState).toHaveBeenCalledOnce();
@@ -137,6 +152,8 @@ describe('WebRouterBridge', () => {
     const abortController = new AbortController();
 
     await bridge.initialize({
+      back: vi.fn().mockResolvedValue(false),
+      cancelNavigation: vi.fn().mockReturnValue(false),
       confirm: vi.fn().mockResolvedValue(true),
       navigate: {} as NavigateServiceInterface,
       restore,
@@ -144,7 +161,11 @@ describe('WebRouterBridge', () => {
       shouldBlockUnload: () => false,
       signal: abortController.signal,
     });
-    bridge.commit(navigation(secondRoute), { signal: abortController.signal, source: 'internal' });
+    bridge.commit(navigation(secondRoute), {
+      history: historyEntry('push', 'navigation:2', 1, 2),
+      signal: abortController.signal,
+      source: 'internal',
+    });
     restore.mockResolvedValue(false);
 
     await bridge.back();
@@ -168,6 +189,8 @@ describe('WebRouterBridge', () => {
     const abortController = new AbortController();
 
     await bridge.initialize({
+      back: vi.fn().mockResolvedValue(false),
+      cancelNavigation: vi.fn().mockReturnValue(false),
       confirm,
       navigate: {} as NavigateServiceInterface,
       restore,
@@ -198,6 +221,8 @@ describe('WebRouterBridge', () => {
     const abortController = new AbortController();
 
     await bridge.initialize({
+      back: vi.fn().mockResolvedValue(false),
+      cancelNavigation: vi.fn().mockReturnValue(false),
       confirm: vi.fn().mockResolvedValue(true),
       navigate: {} as NavigateServiceInterface,
       restore,
@@ -229,6 +254,8 @@ describe('WebRouterBridge', () => {
     const abortController = new AbortController();
 
     await bridge.initialize({
+      back: vi.fn().mockResolvedValue(false),
+      cancelNavigation: vi.fn().mockReturnValue(false),
       confirm: vi.fn().mockResolvedValue(true),
       navigate: {} as NavigateServiceInterface,
       restore: vi.fn().mockResolvedValue(true),
@@ -322,3 +349,6 @@ const navigation = (route: Route): NavigationState => {
     state: null,
   });
 };
+
+const historyEntry = (action: 'push' | 'replace', id: string, index: number, length: number) =>
+  Object.freeze({ action, id, index, length });

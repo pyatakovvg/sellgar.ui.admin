@@ -4,7 +4,9 @@
   "scripts": {
     "update": "yarn upgrade-interactive",
     "audit": "yarn npm audit -A -R --environment production --severity moderate",
+    "android:mobile": "yarn workspace @client/mobile android",
     "dev:admin_ui": "yarn workspace @client/admin start",
+    "dev:mobile": "yarn workspace @client/mobile start",
     "build:admin_ui": "yarn workspaces foreach --from '@client/admin' -R -t run build",
     "test": "vitest run --cache=false",
     "test:ui": "vitest --ui",
