@@ -9,27 +9,18 @@ import {
 
 import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
 import type { ModuleMetadata } from '../../declaration/module';
-import { ModuleRefreshGesture } from './module-refresh-gesture.ts';
-
 interface ModuleRefreshPresentationProps {
   readonly children: React.ReactNode;
   readonly runtime: RouteActivationRuntime<ModuleMetadata>;
 }
 
 export const ModuleRefreshPresentation: React.FC<ModuleRefreshPresentationProps> = (props) => {
-  const gesture = React.useRef(new ModuleRefreshGesture()).current;
-  const refreshEnabledRef = React.useRef(true);
   const [refreshEnabled, setRefreshEnabled] = React.useState(true);
   const [refreshing, setRefreshing] = React.useState(false);
-  const updateRefreshEnabled = React.useCallback((enabled: boolean) => {
-    if (refreshEnabledRef.current === enabled) return;
-
-    refreshEnabledRef.current = enabled;
-    setRefreshEnabled(enabled);
+  const updateRefreshEnabled = React.useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setRefreshEnabled(event.nativeEvent.contentOffset.y <= 0);
   }, []);
   const handleRefresh = React.useCallback(async () => {
-    if (!gesture.canRefresh()) return;
-
     setRefreshing(true);
 
     try {
@@ -37,36 +28,17 @@ export const ModuleRefreshPresentation: React.FC<ModuleRefreshPresentationProps>
     } finally {
       setRefreshing(false);
     }
-  }, [gesture, props.runtime]);
-  const handleScroll = React.useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      updateRefreshEnabled(gesture.scroll(event.nativeEvent.contentOffset.y));
-    },
-    [gesture, updateRefreshEnabled],
-  );
-  const handleScrollBeginDrag = React.useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      updateRefreshEnabled(gesture.begin(event.nativeEvent.contentOffset.y));
-    },
-    [gesture, updateRefreshEnabled],
-  );
-  const handleScrollEndDrag = React.useCallback(
-    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      updateRefreshEnabled(gesture.end(event.nativeEvent.contentOffset.y));
-    },
-    [gesture, updateRefreshEnabled],
-  );
+  }, [props.runtime]);
 
   return (
     <ScrollView
       contentContainerStyle={styles.content}
-      onScroll={handleScroll}
-      onScrollBeginDrag={handleScrollBeginDrag}
-      onScrollEndDrag={handleScrollEndDrag}
+      onMomentumScrollEnd={updateRefreshEnabled}
+      onScrollBeginDrag={updateRefreshEnabled}
+      onScrollEndDrag={updateRefreshEnabled}
       refreshControl={
         <RefreshControl enabled={refreshEnabled} onRefresh={() => void handleRefresh()} refreshing={refreshing} />
       }
-      scrollEventThrottle={16}
       style={styles.root}
     >
       {props.children}
