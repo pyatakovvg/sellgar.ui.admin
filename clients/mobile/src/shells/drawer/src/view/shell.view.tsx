@@ -1,25 +1,15 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { ShellScrollView, type ShellContextInterface, useShell } from '@sellgar/app-v2/native';
+import { ShellScrollView, type ShellContextInterface, useShell, useSafeAreaInsets } from '@sellgar/app-v2/native';
 
 export const ShellView: React.FC<ShellContextInterface> = (props) => {
-  const shell = useShell();
+  const { top } = useSafeAreaInsets();
 
   return (
-    <View style={styles.surface}>
+    <View style={[styles.surface, { marginTop: top + 24 }]}>
       <View style={styles.header}>
-        <View style={styles.headerSide} />
         <View style={styles.grabber} />
-        <Pressable
-          accessibilityLabel="Close frame"
-          accessibilityRole="button"
-          hitSlop={12}
-          onPress={shell.close}
-          style={({ pressed }) => [styles.close, pressed ? styles.pressed : null]}
-        >
-          <Text style={styles.closeText}>×</Text>
-        </Pressable>
       </View>
       <ShellScrollView contentContainerStyle={styles.content}>{props.children}</ShellScrollView>
     </View>
@@ -28,37 +18,21 @@ export const ShellView: React.FC<ShellContextInterface> = (props) => {
 
 const styles = StyleSheet.create({
   content: {
-    paddingBottom: 24,
-  },
-  close: {
-    alignItems: 'center',
-    height: 36,
-    justifyContent: 'center',
-    width: 36,
-  },
-  closeText: {
-    color: '#d7d9e2',
-    fontSize: 28,
-    lineHeight: 30,
+    paddingBottom: 0,
   },
   grabber: {
     backgroundColor: '#666b7a',
     borderRadius: 2,
     height: 4,
     width: 40,
+    marginHorizontal: 'auto',
   },
   header: {
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    minHeight: 52,
+    minHeight: 24,
     paddingHorizontal: 12,
-  },
-  headerSide: {
-    width: 36,
-  },
-  pressed: {
-    opacity: 0.6,
   },
   surface: {
     backgroundColor: '#171a23',

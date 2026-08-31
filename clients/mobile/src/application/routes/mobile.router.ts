@@ -1,4 +1,11 @@
-import { BrandCreateRoute, BrandsRoute, ProductModifyRoute, ProductsRoute, SignInRoute } from '@library/route-tokens';
+import {
+  BrandCreateRoute,
+  BrandRoute,
+  BrandsRoute,
+  ProductModifyRoute,
+  ProductsRoute,
+  SignInRoute,
+} from '@library/route-tokens';
 import { param, segments } from '@sellgar/app-v2';
 import { Route, RouteAnimation, Router } from '@sellgar/app-v2/native';
 
@@ -53,9 +60,16 @@ const createAuthenticatedBranch = (): Route => {
       }),
       new Route({
         address: segments('brands'),
-        animation: RouteAnimation.SlideFromRight,
         token: BrandsRoute,
         load: () => import('../../pages/brands/src'),
+        routes: [
+          new Route({
+            token: BrandRoute,
+            address: segments(param('uuid')),
+            animation: RouteAnimation.SlideFromRight,
+            load: () => import('../../pages/brand/src'),
+          }),
+        ],
         routing: [
           new Router({
             routes: [

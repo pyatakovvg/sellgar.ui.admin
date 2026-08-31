@@ -23,7 +23,9 @@ export const ModuleView: React.FC = () => {
       <Text style={styles.probe}>
         controller #{runtime.instance}, loader #{runtime.loads}, {runtime.duration} ms
       </Text>
-      <NavItem navigation={(navigation) => navigation.to(ProductModifyRoute, { params: { uuid: 'native-84' } })}>
+      <NavItem
+        navigation={(navigation) => navigation.to(ProductModifyRoute, { params: { uuid: 'native-84' }, replace: true })}
+      >
         {({ execute, isPending }) => (
           <Pressable
             accessibilityLabel="Open product native-84"

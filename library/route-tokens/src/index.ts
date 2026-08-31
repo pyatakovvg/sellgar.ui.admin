@@ -5,6 +5,7 @@ export { ShopsRoute } from './screen/shops.route-token.ts';
 export { ProductsRoute } from './screen/products.route-token.ts';
 export { ProductCreateRoute, ProductModifyRoute } from './screen/product-modify.route-token.ts';
 export { StoreRoute } from './screen/store.route-token.ts';
+export { BrandRoute } from './screen/brand.route-token.ts';
 export { BrandsRoute } from './screen/brands.route-token.ts';
 export { CategoriesRoute } from './screen/categories.route-token.ts';
 export { UnitsRoute } from './screen/units.route-token.ts';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { BrandCreateRoute, ProductsRoute } from '@library/route-tokens';
+import { BrandCreateRoute, BrandRoute, ProductsRoute } from '@library/route-tokens';
 import { useLoaderData, useNavigate } from '@sellgar/app-v2/native';
 
 import { BrandsControllerInterface } from '../classes/controller/brands/brands-controller.interface.ts';
@@ -33,6 +33,14 @@ export const ModuleView: React.FC = () => {
         style={({ pressed }) => [styles.button, pressed ? styles.pressed : null]}
       >
         <Text style={styles.buttonText}>Open products tab</Text>
+      </Pressable>
+      <Pressable
+        accessibilityLabel="Open brand #45"
+        accessibilityRole="button"
+        onPress={() => void navigate.to(BrandRoute, { params: { uuid: '45' } })}
+        style={({ pressed }) => [styles.button, pressed ? styles.pressed : null]}
+      >
+        <Text style={styles.buttonText}>Open brand #45</Text>
       </Pressable>
     </View>
   );

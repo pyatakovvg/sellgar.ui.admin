@@ -6,7 +6,7 @@ import { Layout, type LayoutViewProps, useSafeAreaInsets } from '@sellgar/app-v2
 const LayoutView: React.FC<LayoutViewProps> = (props) => {
   const { top } = useSafeAreaInsets();
 
-  return <View style={[styles.root, { padding: top }]}>{props.children}</View>;
+  return <View style={[styles.root, { paddingTop: top }]}>{props.children}</View>;
 };
 
 @Layout({ view: LayoutView })
