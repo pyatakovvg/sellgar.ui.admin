@@ -70,7 +70,7 @@ export const ModuleView: React.FC = () => {
 const styles = StyleSheet.create({
   button: { alignItems: 'center', backgroundColor: '#9d91ff', borderRadius: 14, height: 52, justifyContent: 'center' },
   buttonText: { color: '#11131a', fontSize: 16, fontWeight: '700' },
-  content: { flex: 1, gap: 16, justifyContent: 'center', padding: 24 },
+  content: { flex: 1, gap: 16, justifyContent: 'center', padding: 24, backgroundColor: '#11131a' },
   copy: { color: '#a9adba', fontSize: 16, lineHeight: 23 },
   eyebrow: { color: '#9d91ff', fontSize: 13, fontWeight: '700', letterSpacing: 0.6 },
   pressed: { opacity: 0.78 },

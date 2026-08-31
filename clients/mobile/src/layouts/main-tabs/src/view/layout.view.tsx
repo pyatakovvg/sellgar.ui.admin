@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { BrandsRoute, ProductsRoute } from '@library/route-tokens';
 import type { NavigationRequestFactory } from '@sellgar/app-v2';
-import { TabItem, type LayoutViewProps, WidgetHost } from '@sellgar/app-v2/native';
+import { TabItem, type LayoutViewProps, useSafeAreaInsets, WidgetHost } from '@sellgar/app-v2/native';
 
 import { SignOutWidget } from '../../../../widgets/sign-out/src';
 
@@ -26,12 +26,19 @@ interface NavigationTabProps {
 }
 
 const NavigationTab: React.FC<NavigationTabProps> = (props) => {
+  const safeAreaInsets = useSafeAreaInsets();
+
   return (
     <TabItem navigation={props.navigation}>
       {({ isActive, isPending, tab }) => (
         <Pressable
           {...tab}
-          style={({ pressed }) => [styles.tab, isActive && styles.tabActive, pressed && styles.pressed]}
+          style={({ pressed }) => [
+            styles.tab,
+            { paddingBottom: safeAreaInsets.bottom },
+            isActive && styles.tabActive,
+            pressed && styles.pressed,
+          ]}
         >
           <Text style={[styles.tabLabel, isActive && styles.tabLabelActive]}>{isPending ? '…' : props.caption}</Text>
         </Pressable>

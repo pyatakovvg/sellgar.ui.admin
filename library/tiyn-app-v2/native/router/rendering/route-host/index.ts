@@ -1,1 +1,1 @@
-export { RouteHost } from './route-host.tsx';
+export { RouteHost, RouteModuleHost } from './route-host.tsx';

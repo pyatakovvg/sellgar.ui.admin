@@ -12,6 +12,7 @@ import { UseBindings } from '@sellgar/app-v2';
 
 import { BaseLayout } from '../layouts/base';
 import { Status } from './components/status';
+import { Fallback } from './components/frame/fallback';
 import { MobileBindings } from './bindings';
 import { ResolveSessionInitializer } from './initializers';
 import { createMobileRouter } from './routes';
@@ -54,7 +55,7 @@ export class MobileApplication extends Application {
     app.initializers([ResolveSessionInitializer]);
     app.routing({
       exception: <Status title="Nested route failed" tone="error" />,
-      fallback: <Status title="Loading nested route" loading />,
+      fallback: <Fallback />,
       forbidden: <Status title="Nested route forbidden" tone="error" />,
       notFound: <Status title="Nested route not found" tone="error" />,
       shell: DrawerShell,

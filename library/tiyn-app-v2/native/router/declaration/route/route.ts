@@ -13,10 +13,20 @@ import { getLayoutMetadata, type LayoutConstructor } from '../../../layout/decla
 type NativeRouteModuleExports = Readonly<Record<string, unknown>>;
 type NativeRouteModuleLoader = () => Promise<NativeRouteModuleExports>;
 
+export const RouteAnimation = Object.freeze({
+  Fade: 'fade',
+  SlideFromBottom: 'slide-from-bottom',
+  SlideFromLeft: 'slide-from-left',
+  SlideFromRight: 'slide-from-right',
+} as const);
+
+export type RouteAnimation = (typeof RouteAnimation)[keyof typeof RouteAnimation];
+
 export type RouteOptions<
   TToken extends RouteToken | undefined = RouteToken | undefined,
   TAddress extends RouteAddress | undefined = RouteAddress | undefined,
 > = CoreRouteOptions<TToken, TAddress> & {
+  readonly animation?: RouteAnimation;
   readonly exception?: React.ReactNode;
   readonly fallback?: React.ReactNode;
   readonly forbidden?: React.ReactNode;
@@ -26,6 +36,7 @@ export type RouteOptions<
 };
 
 export interface RoutePresentationDefinition {
+  readonly animation: RouteAnimation | undefined;
   readonly exception: React.ReactNode | undefined;
   readonly fallback: React.ReactNode | undefined;
   readonly forbidden: React.ReactNode | undefined;
@@ -50,6 +61,7 @@ export class Route<
       ],
     });
     routePresentationDefinitions.set(this, {
+      animation: options.animation,
       exception: options.exception,
       fallback: options.fallback,
       forbidden: options.forbidden,
@@ -60,6 +72,7 @@ export class Route<
 }
 
 const EMPTY_ROUTE_PRESENTATION = Object.freeze<RoutePresentationDefinition>({
+  animation: undefined,
   exception: undefined,
   fallback: undefined,
   forbidden: undefined,

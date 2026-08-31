@@ -98,6 +98,36 @@ describe('NativeRouterBridge', () => {
     await vi.waitFor(() => expect(restore).toHaveBeenCalledWith(next, { blockersConfirmed: false }));
   });
 
+  it('exposes Back transition while core restores the previous entry', async () => {
+    const bridge = createNativeRouterBridge({ transport: new TestTransport() });
+    const back = vi.fn(async () => {
+      expect(bridge.getSnapshot().backInProgress).toBe(true);
+      return true;
+    });
+
+    await bridge.initialize(context({ back }));
+    await bridge.back();
+
+    expect(back).toHaveBeenCalledOnce();
+    expect(bridge.getSnapshot().backInProgress).toBe(false);
+  });
+
+  it('cancels pending forward navigation without starting a Back transition', async () => {
+    const bridge = createNativeRouterBridge({ transport: new TestTransport() });
+    const back = vi.fn(async () => true);
+
+    await bridge.initialize(
+      context({
+        back,
+        cancelPendingNavigation: () => true,
+      }),
+    );
+    await bridge.back();
+
+    expect(back).not.toHaveBeenCalled();
+    expect(bridge.getSnapshot().backInProgress).toBe(false);
+  });
+
   it('rolls back a rejected physical traversal to the committed transport snapshot', async () => {
     const transport = new TestTransport();
     const bridge = createNativeRouterBridge({ transport });
@@ -138,12 +168,14 @@ class TestTransport implements NativeRouterTransportInterface {
 
 const context = (
   options: {
+    readonly back?: () => Promise<boolean>;
+    readonly cancelPendingNavigation?: () => boolean;
     readonly navigateRoot?: () => Promise<void>;
     readonly restore?: RouterBridgeInitializeContextInterface['restore'];
   } = {},
 ): RouterBridgeInitializeContextInterface => ({
-  back: async () => false,
-  cancelNavigation: () => false,
+  back: options.back ?? (async () => false),
+  cancelNavigation: options.cancelPendingNavigation ?? (() => false),
   confirm: async () => true,
   navigate: {
     root: options.navigateRoot ?? (async () => undefined),

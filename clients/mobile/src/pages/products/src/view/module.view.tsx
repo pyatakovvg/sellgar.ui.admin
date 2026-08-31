@@ -41,7 +41,7 @@ export const ModuleView: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  content: { flex: 1, gap: 16, justifyContent: 'center', padding: 24, paddingBottom: 48 },
+  content: { flex: 1, gap: 16, justifyContent: 'center', padding: 24, paddingBottom: 48, backgroundColor: '#11131a' },
   copy: { color: '#a9adba', fontSize: 16, lineHeight: 23 },
   eyebrow: { color: '#9d91ff', fontSize: 13, fontWeight: '700', letterSpacing: 0.6 },
   probe: { color: '#6fd6b3', fontSize: 14, fontWeight: '700' },

@@ -1,11 +1,12 @@
 import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 
-import { useSubmit } from '@sellgar/app-v2/native';
+import { useSafeAreaInsets, useSubmit } from '@sellgar/app-v2/native';
 
 import { SignOutControllerInterface } from '../classes/controller/sign-out-controller.interface.ts';
 
 export const WidgetView: React.FC = () => {
+  const safeAreaInsets = useSafeAreaInsets();
   const submit = useSubmit(SignOutControllerInterface);
 
   return (
@@ -14,7 +15,7 @@ export const WidgetView: React.FC = () => {
       accessibilityRole="button"
       disabled={submit.inProcess}
       onPress={() => void submit()}
-      style={({ pressed }) => [styles.root, pressed ? styles.pressed : null]}
+      style={({ pressed }) => [styles.root, { paddingBottom: safeAreaInsets.bottom }, pressed ? styles.pressed : null]}
     >
       {submit.inProcess ? <ActivityIndicator color="#f7f7fb" /> : <Text style={styles.label}>Exit</Text>}
     </Pressable>

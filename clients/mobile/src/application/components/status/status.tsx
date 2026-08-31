@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#11131a',
     flex: 1,
     gap: 16,
+    padding: 20,
     justifyContent: 'center',
   },
   statusText: { color: '#f5f6fb', fontSize: 18, fontWeight: '600' },

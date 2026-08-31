@@ -52,20 +52,27 @@ const resolveRouteContent = (
 
   if (snapshot.phase !== 'active' && snapshot.phase !== 'retained') return props.components.fallback ?? null;
 
-  const moduleRuntime = props.children === null ? props.runtime.getModuleRuntimeOrNull() : null;
+  return props.children;
+};
+
+interface RouteModuleHostProps {
+  readonly components: ApplicationComponents;
+  readonly presentation: ModulePresentationMode;
+  readonly runtime: RouteActivationRuntime<ModuleMetadata>;
+}
+
+export const RouteModuleHost: React.FC<RouteModuleHostProps> = (props) => {
+  const moduleRuntime = props.runtime.getModuleRuntimeOrNull();
+
+  if (!moduleRuntime) return null;
 
   return (
-    <>
-      {moduleRuntime ? (
-        <ModuleHost
-          exception={props.components.exception}
-          fallback={props.components.fallback}
-          moduleRuntime={moduleRuntime}
-          presentation={props.presentation}
-          routeRuntime={props.runtime}
-        />
-      ) : null}
-      {props.children}
-    </>
+    <ModuleHost
+      exception={props.components.exception}
+      fallback={props.components.fallback}
+      moduleRuntime={moduleRuntime}
+      presentation={props.presentation}
+      routeRuntime={props.runtime}
+    />
   );
 };

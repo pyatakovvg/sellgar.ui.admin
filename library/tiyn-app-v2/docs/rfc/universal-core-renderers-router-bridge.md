@@ -311,6 +311,11 @@ owner scope + widget token + (runtimeKey ?? default key)
 - DOM-порядок слоёв является framework invariant. CSS `z-index` не используется
   для исправления межслойной модальности; локальный presentation не может
   перенести себя на другой уровень.
+- Native adapter сохраняет ту же application-level композицию и тот же порядок
+  `application -> frame -> modal -> notification` через собственный
+  `OverlayHost`. В отличие от web ему не требуется DOM portal, однако frame
+  остаётся sibling основной content-проекции и не может стать дочерним узлом
+  application/Router/Route Layout либо screen transition.
 
 Форма конфигурации остаётся одинаковой для renderer adapters:
 
@@ -567,6 +572,16 @@ app.routing({
   activation id, `focused | retained` phase и immutable Router/Route tree
   snapshot. Projection не разрешает renderer менять history, focus либо
   lifecycle и не добавляется в публичный Router API.
+- Renderer читает activation projection заново при каждом наблюдаемом событии
+  RouterRuntime, а не хранит полученный ранее массив как presentation state.
+  Это сохраняет атомарность core history mutation для UI: если commit уже
+  заменил history и затем освобождает прежнюю activation, промежуточный runtime
+  emit не может повторно отрисовать старый Route scope.
+- Во время commit новой activation предыдущая entry может уже перейти в
+  `retained`, а новая ещё не стать `focused`. Пока history projection не пуста,
+  native host сохраняет последний выбранный retained screen смонтированным.
+  Временное отсутствие `focused` не заменяет screen на fallback и не создаёт
+  новый mount/enter animation после завершения вложенного Router.
 - Проверенная базовая React Native projection использует один
   `NativeNavigationHost` как presentation surface приложения. Он отображает
   готовые core activations и вправе поддерживать собственные physical stack,
@@ -578,11 +593,33 @@ app.routing({
   policy branches одного core Router: anonymous branch работает без tab bar,
   authenticated branch подключает основной Layout, который визуально выводит
   tab bar.
+- `NativeNavigationHost` не создаёт полный Router/Layout tree для каждой
+  retained activation и не вычисляет единый плоский общий префикс history.
+  Он строит рекурсивную проекцию activation paths по identity
+  `RouteActivationRuntime`: каждый Router и Route boundary вместе со своими
+  Layouts монтируется один раз на собственном уровне, а его content outlet
+  содержит retained presentation terminal Module и дочерних Route-узлов.
+  Поэтому Route с одновременными `load`, `layouts` и `routes` сохраняет один
+  runtime/layout boundary: её Module является terminal presentation этого
+  outlet, а дочерние Routes — соседними углублениями того же outlet. Наличие
+  несвязанной retained-ветки не меняет nesting layouts другой ветки и не
+  дублирует tab bar.
+- Pending forward navigation использует тот же content outlet. Layouts
+  неизменившейся Route-ancestry остаются смонтированными, а fallback появляется
+  после `commonRouteCount` и закрывает только заменяемую content-часть. Если
+  меняется сама structural policy-ветка, общий префикс равен нулю и fallback
+  закрывает всю Router presentation. После commit fallback удаляется и только
+  готовый screen начинает `Route.animation`. Retained focus и Back не создают
+  fallback.
 - Визуальный tab bar принадлежит renderer Layout, а не core Router declaration.
-  Layout собирает его из `TabItem`, использующего ту же tokenized navigation
-  factory и core active/pending state, что `NavItem`/`NavLink`. Поэтому подписи,
-  иконки, порядок и наличие item являются presentation приложения; core не
-  получает `tab`, `screen`, `icon` или другие React Native metadata.
+  Layout собирает его из `TabItem`, использующего tokenized navigation factory
+  и core navigation state. Active вычисляется относительно route target, а
+  pending — относительно terminal route и params независимо от initiator:
+  переход к `BrandsRoute` из Module, другого link либо самого tab одинаково
+  переводит Brands tab в pending до commit. Переход к именованному дочернему
+  Route не считается pending корневого tab. Поэтому подписи, иконки, порядок и
+  наличие item являются presentation приложения; core не получает `tab`,
+  `screen`, `icon` или другие React Native metadata.
 - Успешный переход вперёд проходит общий navigation pipeline и добавляет позицию
   в хронологическую core Back-history. История не зависит от инициатора: одинаково
   обрабатываются tab, link, navigation item, imperative navigation и platform
@@ -614,6 +651,25 @@ app.routing({
   Back не показывает fallback/splash и не запускает loaders либо revalidation
   предыдущего screen. В `release` Back является новой подготовкой target и
   использует обычный route fallback до commit.
+- Native `Route` принимает необязательное renderer-specific свойство
+  `animation`. При отсутствии свойства screen появляется и удаляется без
+  анимации. Значение принадлежит только Route, на котором объявлено: дочерние
+  `Route.routes`, соседние Routes и вся Router-ветка его не наследуют. При
+  переходе вперёд fallback остаётся видимым до готовности target; после commit
+  native host анимирует готовый screen. Повторный переход вперёд к уже готовой
+  retained activation не запускает fallback/loaders и начинает ту же анимацию
+  сразу. Back удаляет верхний screen с обратной анимацией и открывает готовый
+  предыдущий screen. Animation является только native presentation metadata:
+  она не меняет core history, lifecycle, pending, query или revalidation и не
+  применяется к `Route.routing`/`@Shell()`.
+- Native transition располагается в outlet родительского Route непосредственно
+  вокруг presentation конкретного дочернего Route. Поэтому animation metadata
+  читается из runtime только этого узла: родительские Layouts находятся снаружи
+  его transition, а дочерние Routes разрешают собственную animation независимо.
+  Renderer запускает enter animation только при mount нового focused screen или
+  при `retained -> focused` этого screen. `push` вложенного Router, появление
+  frame fallback и commit его Module не переигрывают animation неизменившегося
+  owner screen.
 - Route, разрешённый `Router.firstAvailable()`, является корневым anchor активной
   policy-ветки и нижней точкой её Back-history. На этом Route первый root Back не
   закрывает и не сворачивает приложение, а только взводит ожидание выхода;
@@ -625,11 +681,24 @@ app.routing({
   Native navigator представляет committed logical state, но не становится
   источником policy, params, pending, history либо runtime lifecycle.
 - React Native projection для дочернего Router из `Route.routing` является
-  Drawer/overlay поверх owner screen, а не Tabs. Открытый Drawer входит в
+  Drawer/overlay отдельного frame presentation-layer поверх всей собранной
+  цепочки application и Route Layouts, а не их content outlet и не Tabs.
+  Frame не находится внутри screen stack, не наследует и не использует
+  `Route.animation`. Его default presentation принадлежит `@Shell()`: после
+  измерения собственной высоты frame появляется снизу вверх вместе с backdrop,
+  а dismiss уводит его обратно вниз. Открытый Drawer входит в
   history snapshot как presentation вложенной Route: переход вперёд оставляет
   его activation retained, а Back восстанавливает Drawer открытым без fallback
   и loaders. Это не требует новых core Router classes, platform flags в
   `new Router()` или изменения application business logic.
+- Native `ApplicationHost` создаёт `SafeAreaProvider` только как источник
+  измерений и не оборачивает приложение в `SafeAreaView`, не добавляет padding
+  либо margin автоматически. Native facade экспортирует
+  `useSafeAreaInsets()`, возвращающий `{ top, right, bottom, left }`. Конкретный
+  Layout, View или component сам выбирает необходимые стороны и место их
+  применения. Поэтому safe-area может находиться внутри интерактивного элемента
+  (например, внутри нижнего tab item), сохраняя его фон и hit area до физической
+  границы экрана, а не становиться внешней полосой вокруг presentation.
 - В React Native жест pull-to-refresh является стандартной presentation-
   механикой ordinary screen `@Module()`. Его распознавание и индикатор принадлежат
   native Module host, а не Module view и не прикладному reusable wrapper.
@@ -2016,6 +2085,16 @@ new Route({
   проверяется стабильная identity screen при изменении query и различная
   identity для разных Route params, включая route, разрешённый из `root()` через
   default/index/policies.
+- Native Route presentation tests проверяют отсутствие animation по умолчанию,
+  локальность свойства без наследования, запуск после forward commit и обратный
+  transition при Back как проекцию готовых core activations.
+- Native projection tests проверяют рекурсивное объединение retained activation
+  по identity runtime, один экземпляр Layout на каждом общем Route-уровне,
+  Route с одновременными `load + routes`, независимые parameterized runtimes,
+  точную принадлежность animation конкретному Route и fallback после
+  неизменившегося nested layout prefix. Scenario smoke отдельно проверяет
+  отсутствие дублированного tab bar во время animation и видимый fallback
+  внутри стабильной content-area.
 - Abort целевой подготовки без повреждения текущей ветки.
 - Scoped params без merge и независимый query каждого Router scope.
 - Web bridge contract для `/module?a=1#frame?b=2`, включая валидный `?` после

@@ -22,6 +22,8 @@ export { useSubmit, type ControllerSubmit } from './controller/hook/use-submit';
 
 export { useRevalidate, type RevalidateHandler } from './revalidate/hook/use-revalidate';
 
+export { useSafeAreaInsets, type SafeAreaInsets } from './safe-area/hook/use-safe-area-insets';
+
 export { useGuard } from './guard/hook/use-guard';
 export { Guarded, type GuardedProps } from './guard/rendering/guarded';
 
@@ -98,7 +100,7 @@ export type {
   NativeRouterTransportInterface,
   NativeRouterTransportListener,
 } from './router/transport/native-router-transport';
-export { Route } from './router/declaration/route';
+export { Route, RouteAnimation } from './router/declaration/route';
 export type { RouteOptions } from './router/declaration/route';
 export { Router } from './router/declaration/router';
 export type { RouterOptions } from './router/declaration/router';

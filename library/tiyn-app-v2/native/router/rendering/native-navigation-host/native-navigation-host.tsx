@@ -1,39 +1,43 @@
 import React from 'react';
-import { BackHandler, StyleSheet, ToastAndroid, View } from 'react-native';
+import { BackHandler, ToastAndroid } from 'react-native';
 
 import type {
   ApplicationNavigationDecision,
   ApplicationRouterRuntimeEntry,
 } from '../../../../core/application/lifecycle/application';
 import type { RouterRuntime } from '../../../../core/router/runtime/router-runtime';
-import type {
-  ApplicationComponents,
-  ResolvedApplicationRouting,
-} from '../../../application/config/application-configurator';
+import type { ApplicationComponents } from '../../../application/config/application-configurator';
 import type { ModuleMetadata } from '../../../module/declaration/module';
 import type { NativeNavigationDriver, NativeRouterBridge } from '../../bridge/native-router-bridge';
-import { NestedRouterLayer } from '../nested-router-layer';
-import { RouterHost } from '../router-host';
+import { RouterPresentationHost } from '../router-host';
+import { NativeRouteProjectionHost } from './native-route-projection-host.tsx';
+import { resolveNativePendingRouteProjection } from './native-route-projection.ts';
 import { resolveRootBack } from './native-root-back';
 
 interface NativeNavigationHostProps {
   readonly bridge: NativeRouterBridge;
   readonly components: ApplicationComponents;
   readonly decision: ApplicationNavigationDecision | null;
-  readonly routing: ResolvedApplicationRouting | null;
+  readonly getRuntimeEntries: () => readonly ApplicationRouterRuntimeEntry<ModuleMetadata>[];
   readonly runtime: RouterRuntime<ModuleMetadata>;
-  readonly runtimeEntries: readonly ApplicationRouterRuntimeEntry<ModuleMetadata>[];
 }
 
 export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props) => {
   const rootBackPressedAt = React.useRef<number | null>(null);
-  const focusedEntry = props.runtimeEntries.find((entry) => entry.phase === 'focused') ?? null;
+  const transport = React.useSyncExternalStore(
+    props.bridge.subscribe,
+    props.bridge.getSnapshot,
+    props.bridge.getSnapshot,
+  );
   React.useSyncExternalStore(
     React.useCallback((listener) => props.runtime.subscribe(listener), [props.runtime]),
     React.useCallback(() => props.runtime.getSnapshot(), [props.runtime]),
     React.useCallback(() => props.runtime.getSnapshot(), [props.runtime]),
   );
-  const pending = props.runtime.getBranchSnapshot().pending;
+  const runtimeEntries = props.getRuntimeEntries();
+  const focusedEntry = runtimeEntries.find((entry) => entry.phase === 'focused') ?? null;
+  const branch = props.runtime.getBranchSnapshot();
+  const pending = resolveNativePendingRouteProjection(branch);
 
   React.useEffect(() => {
     rootBackPressedAt.current = null;
@@ -67,54 +71,20 @@ export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props)
   }, [props.bridge]);
 
   return (
-    <View style={styles.root}>
-      {props.runtimeEntries.map((entry) => {
-        const focused = entry.phase === 'focused';
-
-        return (
-          <View
-            accessibilityElementsHidden={!focused}
-            importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-            key={entry.key}
-            pointerEvents={focused ? 'auto' : 'none'}
-            style={[StyleSheet.absoluteFill, !focused && styles.retained]}
-          >
-            <RouterHost
-              components={props.components}
-              decision={focused ? props.decision : null}
-              presentation="screen"
-              runtime={entry.runtime}
-              tree={entry.tree}
-            />
-            <NestedRouterLayer
-              components={props.components}
-              decision={focused ? props.decision : null}
-              routing={props.routing}
-              runtime={entry.runtime}
-              tree={entry.tree}
-            />
-          </View>
-        );
-      })}
-
-      {pending ? (
-        <View pointerEvents="auto" style={[StyleSheet.absoluteFill, styles.preparing]}>
-          <RouterHost components={props.components} presentation="screen" runtime={props.runtime} />
-          <NestedRouterLayer components={props.components} routing={props.routing} runtime={props.runtime} />
-        </View>
-      ) : null}
-    </View>
+    <RouterPresentationHost components={props.components} decision={props.decision} runtime={props.runtime}>
+      {({ components }) =>
+        runtimeEntries.length > 0 || pending ? (
+          <NativeRouteProjectionHost
+            backInProgress={transport.backInProgress}
+            components={components}
+            entries={runtimeEntries}
+            forward={transport.action === 'push'}
+            pending={pending}
+          />
+        ) : (
+          (components.fallback ?? null)
+        )
+      }
+    </RouterPresentationHost>
   );
 };
-
-const styles = StyleSheet.create({
-  preparing: {
-    zIndex: 1,
-  },
-  retained: {
-    display: 'none',
-  },
-  root: {
-    flex: 1,
-  },
-});

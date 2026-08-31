@@ -1,6 +1,6 @@
 import { BrandCreateRoute, BrandsRoute, ProductModifyRoute, ProductsRoute, SignInRoute } from '@library/route-tokens';
 import { param, segments } from '@sellgar/app-v2';
-import { Route, Router } from '@sellgar/app-v2/native';
+import { Route, RouteAnimation, Router } from '@sellgar/app-v2/native';
 
 import { MainTabsLayout } from '../../layouts/main-tabs/src';
 import { RequireAnonymousSessionPolicy, RequireAuthenticatedSessionPolicy } from '../policies';
@@ -26,16 +26,6 @@ const createAnonymousBranch = (): Route => {
 };
 
 const createAuthenticatedBranch = (): Route => {
-  const brandsDrawer = new Router({
-    routes: [
-      new Route({
-        address: segments('create'),
-        token: BrandCreateRoute,
-        load: () => import('../../pages/brand-create/src'),
-      }),
-    ],
-  });
-
   return new Route({
     canMatch: [
       RequireAuthenticatedSessionPolicy.configure().onFail(
@@ -55,6 +45,7 @@ const createAuthenticatedBranch = (): Route => {
         routes: [
           new Route({
             address: segments(param('uuid')),
+            animation: RouteAnimation.SlideFromRight,
             token: ProductModifyRoute,
             load: () => import('../../pages/product-detail/src'),
           }),
@@ -62,9 +53,20 @@ const createAuthenticatedBranch = (): Route => {
       }),
       new Route({
         address: segments('brands'),
+        animation: RouteAnimation.SlideFromRight,
         token: BrandsRoute,
         load: () => import('../../pages/brands/src'),
-        routing: [brandsDrawer],
+        routing: [
+          new Router({
+            routes: [
+              new Route({
+                address: segments('create'),
+                token: BrandCreateRoute,
+                load: () => import('../../pages/brand-create/src'),
+              }),
+            ],
+          }),
+        ],
       }),
     ],
   });

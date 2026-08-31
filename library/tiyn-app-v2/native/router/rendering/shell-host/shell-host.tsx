@@ -31,6 +31,7 @@ interface ShellHostProps {
 
 const DISMISS_DURATION = 180;
 const HORIZONTAL_TOLERANCE = 24;
+const PRESENT_DURATION = 220;
 const VERTICAL_ACTIVATION_DISTANCE = 8;
 
 export const ShellHost: React.FC<ShellHostProps> = (props) => {
@@ -38,6 +39,7 @@ export const ShellHost: React.FC<ShellHostProps> = (props) => {
   const requestDismiss = useShellDismissRequest(dismiss);
   const translationY = useSharedValue(0);
   const frameHeight = useSharedValue(1);
+  const frameMeasured = useSharedValue(0);
   const scrollBounds = useSharedValue<ShellScrollBounds | null>(null);
   const scrollOffset = useSharedValue(0);
   const initialTouchX = useSharedValue(0);
@@ -114,9 +116,10 @@ export const ShellHost: React.FC<ShellHostProps> = (props) => {
     },
   });
   const backdropStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(translationY.value, [0, frameHeight.value], [1, 0], Extrapolation.CLAMP),
+    opacity: frameMeasured.value * interpolate(translationY.value, [0, frameHeight.value], [1, 0], Extrapolation.CLAMP),
   }));
   const frameStyle = useAnimatedStyle(() => ({
+    opacity: frameMeasured.value,
     transform: [{ translateY: translationY.value }],
   }));
   const context: ShellContextInterface = React.useMemo(() => ({ children: props.children }), [props.children]);
@@ -126,9 +129,17 @@ export const ShellHost: React.FC<ShellHostProps> = (props) => {
   );
   const handleFrameLayout = React.useCallback(
     (event: LayoutChangeEvent) => {
-      frameHeight.value = Math.max(event.nativeEvent.layout.height, 1);
+      const height = Math.max(event.nativeEvent.layout.height, 1);
+
+      frameHeight.value = height;
+
+      if (frameMeasured.value > 0) return;
+
+      translationY.value = height;
+      frameMeasured.value = 1;
+      translationY.value = withTiming(0, { duration: PRESENT_DURATION });
     },
-    [frameHeight],
+    [frameHeight, frameMeasured, translationY],
   );
 
   return (

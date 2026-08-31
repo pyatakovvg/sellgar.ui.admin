@@ -1,7 +1,7 @@
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import type {
   ApplicationLifecycleListener,
@@ -21,6 +21,7 @@ import { renderLayouts } from '../../../layout/rendering/layout-renderer';
 import type { LayoutConstructor } from '../../../layout/declaration/layout';
 import type { ModuleMetadata } from '../../../module/declaration/module';
 import type { NativeRouterBridge } from '../../../router/bridge/native-router-bridge';
+import { NestedRouterLayer } from '../../../router/rendering/nested-router-layer';
 import { NativeNavigationHost } from '../../../router/rendering/native-navigation-host';
 import { NavigationStateProvider } from '../../../router/runtime/navigation-state-context';
 import { ExceptionProvider } from '../../../runtime/exception/exception-context';
@@ -28,6 +29,7 @@ import { RuntimeErrorBoundary } from '../../../runtime/exception/runtime-error-b
 import { RuntimeScopeProvider } from '../../../runtime/scope/runtime-scope-context';
 import type { ResolvedApplicationRouting } from '../../config/application-configurator';
 import { ApplicationComponentsProvider } from '../application-components-context';
+import { OverlayHost } from '../overlay-host';
 import { PresentationLayer } from '../presentation-layer';
 
 export interface ApplicationViewSource {
@@ -66,6 +68,7 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
 
   let content: React.ReactNode;
   let applicationFeatures: React.ReactNode = null;
+  let framePresentation: React.ReactNode = null;
   let modalFeatures: React.ReactNode = null;
   let notificationFeatures: React.ReactNode = null;
 
@@ -78,19 +81,31 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
   } else if (lifecycle.phase !== 'ready') {
     content = props.source.components.splash ?? null;
   } else {
-    content = navigation.navigation
-      ? renderLayouts(
-          props.source.layouts,
-          <NativeNavigationHost
-            bridge={props.source.routerBridge}
-            components={props.source.components}
-            decision={navigation.decision}
-            routing={props.source.routing}
-            runtime={props.source.getRouterRuntime()}
-            runtimeEntries={props.source.getRouterRuntimeEntries()}
-          />,
-        )
-      : (props.source.components.fallback ?? null);
+    if (navigation.navigation) {
+      const runtime = props.source.getRouterRuntime();
+
+      content = renderLayouts(
+        props.source.layouts,
+        <NativeNavigationHost
+          bridge={props.source.routerBridge}
+          components={props.source.components}
+          decision={navigation.decision}
+          getRuntimeEntries={props.source.getRouterRuntimeEntries}
+          runtime={runtime}
+        />,
+      );
+      framePresentation = (
+        <NestedRouterLayer
+          components={props.source.components}
+          decision={navigation.decision}
+          routing={props.source.routing}
+          runtime={runtime}
+        />
+      );
+    } else {
+      content = props.source.components.fallback ?? null;
+    }
+
     applicationFeatures = renderApplicationFeatures(props.source.features, PresentationLayer.Application);
     modalFeatures = renderApplicationFeatures(props.source.features, PresentationLayer.Modal);
     notificationFeatures = renderApplicationFeatures(props.source.features, PresentationLayer.Notification);
@@ -100,22 +115,20 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
     <RuntimeScopeProvider scope={props.source.scope}>
       <NavigationStateProvider snapshot={navigation}>
         <ApplicationComponentsProvider components={props.source.components}>
-          <RuntimeErrorBoundary
-            exception={props.source.components.failed ?? props.source.components.exception}
-            onError={(error) => void props.source.failRender(error)}
-            resetKeys={[props.source]}
-          >
-            <GestureHandlerRootView style={styles.root}>
-              <SafeAreaProvider>
-                <SafeAreaView style={styles.root}>
+          <GestureHandlerRootView style={styles.root}>
+            <SafeAreaProvider style={styles.root}>
+              <RuntimeErrorBoundary
+                exception={props.source.components.failed ?? props.source.components.exception}
+                onError={(error) => void props.source.failRender(error)}
+                resetKeys={[props.source]}
+              >
+                <OverlayHost frame={framePresentation} modal={modalFeatures} notification={notificationFeatures}>
                   {content}
                   {applicationFeatures}
-                  {modalFeatures}
-                  {notificationFeatures}
-                </SafeAreaView>
-              </SafeAreaProvider>
-            </GestureHandlerRootView>
-          </RuntimeErrorBoundary>
+                </OverlayHost>
+              </RuntimeErrorBoundary>
+            </SafeAreaProvider>
+          </GestureHandlerRootView>
         </ApplicationComponentsProvider>
       </NavigationStateProvider>
     </RuntimeScopeProvider>

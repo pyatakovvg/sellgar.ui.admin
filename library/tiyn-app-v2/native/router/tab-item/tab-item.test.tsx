@@ -16,6 +16,7 @@ describe('TabItem', () => {
       execute,
       isActive: true,
       isPending: false,
+      isRoutePending: false,
       target: {} as never,
     });
 
@@ -36,5 +37,29 @@ describe('TabItem', () => {
 
     state?.tab.onPress();
     expect(execute).toHaveBeenCalledOnce();
+  });
+
+  it('publishes pending state when the tab route is targeted by another navigation control', () => {
+    vi.mocked(useNavigationControl).mockReturnValue({
+      execute: vi.fn(async () => undefined),
+      isActive: false,
+      isPending: false,
+      isRoutePending: true,
+      target: {} as never,
+    });
+
+    let state: Parameters<Parameters<typeof TabItem>[0]['children']>[0] | undefined;
+
+    render(
+      <TabItem navigation={() => ({}) as never}>
+        {(value) => {
+          state = value;
+          return null;
+        }}
+      </TabItem>,
+    );
+
+    expect(state?.isPending).toBe(true);
+    expect(state?.tab.accessibilityState.busy).toBe(true);
   });
 });

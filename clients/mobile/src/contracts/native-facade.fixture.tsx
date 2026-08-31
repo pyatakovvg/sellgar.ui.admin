@@ -12,6 +12,7 @@ import {
   NotificationFeature,
   NotificationPresentation,
   Route,
+  RouteAnimation,
   Router,
   Shell,
   ShellScrollView,
@@ -59,6 +60,7 @@ const userRequest = UserRequestFeature.configure({
 const router = new Router({
   routes: [
     new Route({
+      animation: RouteAnimation.Fade,
       load: async () => ({ FixtureModule }),
       token: FixtureRoute,
     }),

@@ -1,5 +1,6 @@
 import type {
   RouterBridgeCommitContextInterface,
+  RouterBridgeHistoryAction,
   RouterBridgeHistoryEntryInterface,
   RouterBridgeInitializeContextInterface,
   RouterBridgeInterface,
@@ -24,13 +25,20 @@ export interface NativeNavigationEntry {
 }
 
 export interface NativeNavigationSnapshot {
+  readonly action: RouterBridgeHistoryAction | null;
+  readonly backInProgress: boolean;
   readonly entries: readonly NativeNavigationEntry[];
   readonly index: number;
 }
 
 type NativeNavigationListener = () => void;
 
-const EMPTY_SNAPSHOT: NativeNavigationSnapshot = Object.freeze({ entries: Object.freeze([]), index: -1 });
+const EMPTY_SNAPSHOT: NativeNavigationSnapshot = Object.freeze({
+  action: null,
+  backInProgress: false,
+  entries: Object.freeze([]),
+  index: -1,
+});
 
 export class NativeRouterBridge implements RouterBridgeInterface {
   readonly runtimeRetention = 'retain' as const;
@@ -77,9 +85,19 @@ export class NativeRouterBridge implements RouterBridgeInterface {
   }
 
   async back(): Promise<void> {
-    const handled = await this.requireContext().back();
+    const context = this.requireContext();
 
-    if (!handled) await this.driver?.rootBack();
+    if (context.cancelNavigation()) return;
+
+    this.setBackInProgress(true);
+
+    try {
+      const handled = await context.back();
+
+      if (!handled) await this.driver?.rootBack();
+    } finally {
+      this.setBackInProgress(false);
+    }
   }
 
   cancelPendingNavigation(): boolean {
@@ -157,6 +175,12 @@ export class NativeRouterBridge implements RouterBridgeInterface {
     for (const listener of this.listeners) listener();
   }
 
+  private setBackInProgress(backInProgress: boolean): void {
+    if (this.snapshot.backInProgress === backInProgress) return;
+
+    this.setSnapshot(Object.freeze({ ...this.snapshot, backInProgress }));
+  }
+
   private requireContext(): RouterBridgeInitializeContextInterface {
     if (!this.context) {
       throw new Error('Native router bridge ещё не инициализирован.');
@@ -219,14 +243,24 @@ const projectCommit = (
     throw new Error('Core history commit нельзя спроецировать в native transport history.');
   }
 
-  return Object.freeze({ entries: Object.freeze(entries), index: history.index });
+  return Object.freeze({
+    action: history.action,
+    backInProgress: snapshot.backInProgress,
+    entries: Object.freeze(entries),
+    index: history.index,
+  });
 };
 
 const projectTraversal = (snapshot: NativeNavigationSnapshot, entryId: string): NativeNavigationSnapshot | null => {
   const index = snapshot.entries.findIndex((entry) => entry.id === entryId);
 
   if (index < 0 || index === snapshot.index) return null;
-  return Object.freeze({ entries: Object.freeze(snapshot.entries.slice(0, index + 1)), index });
+  return Object.freeze({
+    action: 'pop',
+    backInProgress: snapshot.backInProgress,
+    entries: Object.freeze(snapshot.entries.slice(0, index + 1)),
+    index,
+  });
 };
 
 const createNativeNavigationEntry = (id: string, navigation: NavigationState): NativeNavigationEntry => {
