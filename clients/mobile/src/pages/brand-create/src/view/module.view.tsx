@@ -8,12 +8,28 @@ import { BrandCreateControllerInterface } from '../classes/controller/brand-crea
 export const ModuleView: React.FC = () => {
   const navigate = useNavigate();
   const data = useLoaderData(BrandCreateControllerInterface);
+  const [showOverflow, setShowOverflow] = React.useState(false);
 
   return (
     <View style={styles.content}>
       <Text style={styles.eyebrow}>Nested Router drawer</Text>
       <Text style={styles.title}>Create brand</Text>
       <Text style={styles.copy}>Prepared in {data.duration} ms. The Brands screen remains the owner underneath.</Text>
+      <Pressable
+        accessibilityLabel={showOverflow ? 'Hide overflow content' : 'Show overflow content'}
+        accessibilityRole="button"
+        onPress={() => setShowOverflow((value) => !value)}
+        style={({ pressed }) => [styles.button, pressed ? styles.pressed : null]}
+      >
+        <Text style={styles.buttonText}>{showOverflow ? 'Hide overflow content' : 'Show overflow content'}</Text>
+      </Pressable>
+      {showOverflow
+        ? Array.from({ length: 18 }, (_, index) => (
+            <Text key={index} style={styles.row}>
+              Scrollable frame content row {index + 1}
+            </Text>
+          ))
+        : null}
       <Pressable
         accessibilityLabel="Close brand drawer"
         accessibilityRole="button"
@@ -35,9 +51,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: { color: '#11131a', fontSize: 16, fontWeight: '700' },
-  content: { flex: 1, gap: 16, justifyContent: 'center', padding: 24 },
+  content: { gap: 16, padding: 24 },
   copy: { color: '#a9adba', fontSize: 16, lineHeight: 23 },
   eyebrow: { color: '#9d91ff', fontSize: 13, fontWeight: '700', letterSpacing: 0.6 },
   pressed: { opacity: 0.78 },
+  row: {
+    backgroundColor: '#222631',
+    borderRadius: 12,
+    color: '#d7d9e2',
+    fontSize: 15,
+    padding: 16,
+  },
   title: { color: '#f7f7fb', fontSize: 30, fontWeight: '800' },
 });

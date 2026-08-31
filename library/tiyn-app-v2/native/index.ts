@@ -103,7 +103,14 @@ export type { RouteOptions } from './router/declaration/route';
 export { Router } from './router/declaration/router';
 export type { RouterOptions } from './router/declaration/router';
 export { Shell, ShellInterface } from './router/declaration/shell';
-export type { ShellConstructor, ShellContextInterface, ShellMetadata } from './router/declaration/shell';
+export type {
+  ShellConstructor,
+  ShellContextInterface,
+  ShellController,
+  ShellMetadata,
+} from './router/declaration/shell';
+export { useShell } from './router/hook/use-shell';
+export { ShellScrollView, type ShellScrollViewProps } from './router/rendering/shell-scroll-view';
 export { useLocation, type LocationHandler } from './router/hook/use-location';
 export { useQuery } from './router/hook/use-query';
 export { useNavigate } from './router/hook/use-navigate';

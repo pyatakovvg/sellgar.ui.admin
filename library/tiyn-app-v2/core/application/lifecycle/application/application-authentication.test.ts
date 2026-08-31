@@ -38,8 +38,15 @@ import type { ApplicationNavigationSnapshot } from './application.ts';
 abstract class SignInRoute {}
 abstract class ProtectedRoute {}
 abstract class AlternateProtectedRoute {}
-abstract class DeepRoute {}
-abstract class InspectorRoute {}
+abstract class NestedProtectedRoute {
+  abstract readonly id: string;
+}
+abstract class DeepRoute {
+  abstract readonly id: string;
+}
+abstract class InspectorRoute {
+  abstract readonly id: string;
+}
 abstract class SessionAgnosticRoute {}
 
 abstract class TestAuthControllerInterface {
@@ -180,7 +187,7 @@ class TestApplication extends Application<null> {
     return this.getApplicationScope().get(NavigateServiceInterface);
   }
 
-  get session(): SessionRuntimeStateInterface {
+  get sessionState(): SessionRuntimeStateInterface {
     return this.getApplicationScope().get(SessionRuntimeStateInterface);
   }
 
@@ -212,7 +219,7 @@ describe('Application authentication lifecycle', () => {
     app.compose();
     await app.initialize();
 
-    expect(app.session.phase).toBe('authenticated');
+    expect(app.sessionState.phase).toBe('authenticated');
     expect(matchesNavigationRoute(app.navigation.navigation, ProtectedRoute)).toBe(true);
     expect(signInLoad).not.toHaveBeenCalled();
     expect(protectedLoad).toHaveBeenCalledOnce();
@@ -234,17 +241,17 @@ describe('Application authentication lifecycle', () => {
     expect(signInLoad).toHaveBeenCalledOnce();
     expect(protectedLoad).not.toHaveBeenCalled();
 
-    app.session.setAuthenticated();
+    app.sessionState.setAuthenticated();
 
     await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, ProtectedRoute)).toBe(true));
     expect(protectedLoad).toHaveBeenCalledOnce();
 
-    app.session.setAnonymous();
+    app.sessionState.setAnonymous();
 
     await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, SignInRoute)).toBe(true));
     expect(signInLoad).toHaveBeenCalledTimes(2);
 
-    app.session.setAuthenticated();
+    app.sessionState.setAuthenticated();
 
     await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, ProtectedRoute)).toBe(true));
     expect(protectedLoad).toHaveBeenCalledTimes(2);
@@ -270,7 +277,7 @@ describe('Application authentication lifecycle', () => {
 
     await app.action('authenticate');
 
-    expect(app.session.phase).toBe('authenticated');
+    expect(app.sessionState.phase).toBe('authenticated');
     expect(matchesNavigationRoute(app.navigation.navigation, ProtectedRoute)).toBe(true);
 
     await app.dispose();
@@ -292,13 +299,13 @@ describe('Application authentication lifecycle', () => {
 
     expect(matchesNavigationRoute(app.navigation.navigation, AlternateProtectedRoute)).toBe(true);
 
-    app.session.setAnonymous();
+    app.sessionState.setAnonymous();
 
     await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, SignInRoute)).toBe(true));
     expect(app.runtimeEntryCount).toBe(1);
     expect(signInLoad).toHaveBeenCalledOnce();
 
-    app.session.setAuthenticated();
+    app.sessionState.setAuthenticated();
 
     await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, ProtectedRoute)).toBe(true));
     expect(matchesNavigationRoute(app.navigation.navigation, AlternateProtectedRoute)).toBe(false);
@@ -332,7 +339,7 @@ describe('Application authentication lifecycle', () => {
 
       expect(load).toHaveBeenCalledOnce();
 
-      app.session.setAnonymous();
+      app.sessionState.setAnonymous();
 
       await vi.waitFor(() => expect(load).toHaveBeenCalledTimes(2));
       expect(matchesNavigationRoute(app.navigation.navigation, SessionAgnosticRoute)).toBe(true);
@@ -360,7 +367,7 @@ describe('Application authentication lifecycle', () => {
     void app.requests.run(() => Promise.reject(unauthorized));
     void app.requests.run(() => Promise.reject(unauthorized));
 
-    await vi.waitFor(() => expect(app.session.phase).toBe('anonymous'));
+    await vi.waitFor(() => expect(app.sessionState.phase).toBe('anonymous'));
     await vi.waitFor(() => expect(matchesNavigationRoute(app.navigation.navigation, SignInRoute)).toBe(true));
     expect(bridge.commits).toHaveLength(2);
 
@@ -631,7 +638,7 @@ const createNestedAuthRouter = (
                 ],
               }),
             ],
-            token: ProtectedRoute,
+            token: NestedProtectedRoute,
           }),
         ],
       }),

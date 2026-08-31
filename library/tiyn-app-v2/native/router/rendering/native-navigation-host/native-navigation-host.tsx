@@ -77,7 +77,7 @@ export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props)
             importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
             key={entry.key}
             pointerEvents={focused ? 'auto' : 'none'}
-            style={[styles.activation, !focused && styles.retained]}
+            style={[StyleSheet.absoluteFill, !focused && styles.retained]}
           >
             <RouterHost
               components={props.components}
@@ -98,7 +98,7 @@ export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props)
       })}
 
       {pending ? (
-        <View pointerEvents="auto" style={[styles.activation, styles.preparing]}>
+        <View pointerEvents="auto" style={[StyleSheet.absoluteFill, styles.preparing]}>
           <RouterHost components={props.components} presentation="screen" runtime={props.runtime} />
           <NestedRouterLayer components={props.components} routing={props.routing} runtime={props.runtime} />
         </View>
@@ -108,9 +108,6 @@ export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props)
 };
 
 const styles = StyleSheet.create({
-  activation: {
-    ...StyleSheet.absoluteFillObject,
-  },
   preparing: {
     zIndex: 1,
   },

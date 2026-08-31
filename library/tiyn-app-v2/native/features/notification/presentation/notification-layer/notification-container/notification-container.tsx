@@ -19,7 +19,7 @@ export const NotificationContainer: React.FC<IProps> = (props) => {
   const groupedNotifications = groupNotifications(props.notifications);
 
   return (
-    <View pointerEvents="box-none" style={styles.wrapper}>
+    <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
       {NOTIFICATION_PLACEMENTS.map((placement) => {
         const notifications = groupedNotifications[placement];
 
@@ -69,9 +69,6 @@ const styles = StyleSheet.create({
   },
   top: {
     top: 24,
-  },
-  wrapper: {
-    ...StyleSheet.absoluteFillObject,
   },
 });
 

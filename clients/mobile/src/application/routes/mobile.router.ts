@@ -45,7 +45,7 @@ const createAuthenticatedBranch = (): Route => {
         }),
       ),
     ],
-    defaultTo: ProductsRoute,
+    defaultTo: Router.firstAvailable(),
     layouts: [MainTabsLayout],
     routes: [
       new Route({

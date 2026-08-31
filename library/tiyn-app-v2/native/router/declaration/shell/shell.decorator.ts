@@ -8,6 +8,10 @@ export interface ShellContextInterface {
   readonly children: React.ReactNode;
 }
 
+export interface ShellController {
+  close(): void;
+}
+
 export interface ShellMetadata {
   readonly view: RenderableView<ShellContextInterface>;
 }

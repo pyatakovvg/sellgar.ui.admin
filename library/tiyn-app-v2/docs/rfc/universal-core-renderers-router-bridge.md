@@ -653,27 +653,46 @@ app.routing({
   и не реагирует на параллельную либо последующую operation другого инициатора.
 
 - Module внутри Drawer/frame не получает pull-to-refresh от native Module host.
-  Вертикальный жест этой presentation принадлежит `@Shell`: renderer двигает
-  frame вслед за пальцем и после завершения commit-анимации вызывает scoped
-  `close()`; при отмене возвращает frame на место. Core удаляет текущую nested
-  entry и её runtime, восстанавливая owner entry, либо заменяет только текущую
-  entry при direct link. Операция не вызывает `back()` и поэтому не может
-  перейти в root-back/exit flow. Непрерывный gesture progress является renderer state и не
-  публикуется в core, а Shell view не владеет распознаванием жеста, порогами,
-  анимацией или navigation lifecycle.
+  Высота frame определяется его presentation content, пока тот помещается в
+  доступную safe-area. При превышении доступной высоты frame упирается в
+  maximum height, а выбранная Shell view внутренняя область становится
+  scrollable. Вертикальный жест этой presentation принадлежит `@Shell`:
+  renderer двигает frame вслед за пальцем и после завершения commit-анимации
+  вызывает scoped `close()`; при отмене возвращает frame на место. Core удаляет
+  текущую nested entry и её runtime, восстанавливая owner entry, либо заменяет
+  только текущую entry при direct link. Операция не вызывает `back()` и поэтому
+  не может перейти в root-back/exit flow. Непрерывный gesture progress является
+  renderer state и не публикуется в core.
+
+  Scroll и dismiss образуют один coordinated gesture contract. Пока внутренний
+  scroll offset больше нуля, свайп вниз принадлежит scrollable content. После
+  достижения верхней границы продолжение того же свайпа может активировать
+  interactive dismiss без скачка frame. Если content уже находится сверху либо
+  не требует scroll, свайп вниз сразу принадлежит shell. Свайп вверх не
+  активирует dismiss. Gesture detector занимает весь shell layer, включая
+  backdrop: свайп вниз можно начать в любой точке экрана. Ограничение по scroll
+  offset применяется только к жесту, начатому внутри `ShellScrollView`; жест вне
+  scrollable области сразу управляет shell. Scroll и shell не изменяют
+  presentation одновременно.
 
   ```tsx
   @Shell({ view: DrawerView })
   export class DrawerShell extends ShellInterface {}
   ```
 
-  Native `ShellView` получает только `children` и описывает статический chrome.
-  Backdrop, interactive pan, displacement, dismiss/cancel animation и scoped
-  `close()` реализует единый native Shell host. Dismiss запускается ровно один
-  раз; после core commit nested host целиком размонтируется вместе с backdrop,
-  gesture layer и Shell view. Прикладной shell
-  не создаёт собственный gesture state и не вызывает navigation по окончании
-  жеста.
+  Native `ShellView` получает `children` и описывает пользовательский chrome.
+  Она выбирает место внутреннего scrollable content через framework primitive
+  `ShellScrollView`, а через `useShell()` может запросить явный scoped `close()`,
+  например из собственного header. Эти API не передают view пороги, gesture
+  state, animation callbacks или navigation runtime. Backdrop, измерение и
+  ограничение frame, scroll/dismiss arbitration, interactive pan,
+  displacement, dismiss/cancel animation и фактический scoped `close()`
+  реализует единый native Shell host. Backdrop только затемняет owner screen и
+  блокирует взаимодействие с ним; tap по backdrop не закрывает frame. Dismiss
+  запускается ровно один раз; после core commit nested host целиком
+  размонтируется вместе с backdrop, gesture layer и Shell view. Прикладной
+  shell не создаёт собственный gesture state и не вызывает navigation по
+  окончании жеста.
 
 - В режиме `retain`, пока history entry ссылается на activation, core сохраняет её подготовленное
   Route/Module состояние, controller и provider instances. Несколько history
