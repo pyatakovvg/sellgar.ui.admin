@@ -767,13 +767,11 @@ export abstract class Application<
         ? 'pop'
         : current === null
           ? 'replace'
-          : current.activation === activation
-            ? 'update'
-            : replaceCurrent
-              ? 'replace'
-              : navigation.replace
-                ? 'reset'
-                : 'push';
+          : replaceCurrent || navigation.replace
+            ? 'replace'
+            : current.activation === activation
+              ? 'update'
+              : 'push';
     const mutation = resetHistory
       ? this.navigationHistory.reset(navigation, activation)
       : historyTargetId

@@ -46,6 +46,10 @@ abstract class QueryModuleRoute {}
 abstract class QueryFrameRoute {}
 abstract class ParentScreenRoute {}
 abstract class ChildScreenRoute {}
+abstract class ProductsRoute {}
+abstract class ProductRoute {
+  abstract readonly productId: string;
+}
 
 class TestModule {}
 
@@ -457,7 +461,7 @@ describe('Application routing lifecycle', () => {
     await app.dispose();
   });
 
-  it('clears inaccessible retained history when a different activation replaces the branch', async () => {
+  it('replaces only the current history entry when navigation targets a different activation', async () => {
     const app = await createApplication(createBranchRouter(), (navigate) =>
       navigate.through(WorkspaceRoute, { params: { workspaceId: 'workspace-1' } }).to(FirstRoute),
     );
@@ -467,15 +471,89 @@ describe('Application routing lifecycle', () => {
     const secondRuntime = app.activeRoutes[1]!;
     await app.navigate.to(OtherRoute, { replace: true });
 
-    expect(workspaceRuntime!.getSnapshot().phase).toBe('disposed');
-    expect(firstRuntime!.getSnapshot().phase).toBe('disposed');
+    expect(workspaceRuntime!.getSnapshot().phase).toBe('retained');
+    expect(firstRuntime!.getSnapshot().phase).toBe('retained');
     expect(secondRuntime.getSnapshot().phase).toBe('disposed');
     expect(getRouteDefinition(app.activeRoutes[0]!.route).token).toBe(OtherRoute);
 
-    const current = app.activeRoutes[0]!;
+    const otherRuntime = app.activeRoutes[0]!;
     await app.navigate.back();
 
-    expect(app.activeRoutes).toEqual([current]);
+    expect(app.activeRoutes).toEqual([workspaceRuntime, firstRuntime]);
+    expect(workspaceRuntime!.getSnapshot().phase).toBe('active');
+    expect(firstRuntime!.getSnapshot().phase).toBe('active');
+    expect(otherRuntime.getSnapshot().phase).toBe('disposed');
+
+    await app.dispose();
+  });
+
+  it('restores the previous screen after replacing a parameterized screen activation', async () => {
+    const router = new Router({
+      routes: [
+        createModuleRoute(ProductsRoute, 'products'),
+        new Route({
+          address: segments('products', param('productId')),
+          load: loadTestModule,
+          token: ProductRoute,
+        }),
+      ],
+    });
+    const app = await createApplication(router, (navigate) => navigate.to(ProductsRoute));
+    const productsRuntime = app.activeRoutes[0]!;
+
+    await app.navigate.to(ProductRoute, { params: { productId: 'product-45' } });
+    const product45Runtime = app.activeRoutes[0]!;
+    await app.navigate.to(ProductRoute, {
+      params: { productId: 'product-84' },
+      replace: true,
+    });
+    const product84Runtime = app.activeRoutes[0]!;
+
+    expect(productsRuntime.getSnapshot().phase).toBe('retained');
+    expect(product45Runtime.getSnapshot().phase).toBe('disposed');
+    expect(product84Runtime.getParams()).toEqual({ productId: 'product-84' });
+
+    await app.navigate.back();
+
+    expect(app.activeRoutes).toEqual([productsRuntime]);
+    expect(productsRuntime.getSnapshot().phase).toBe('active');
+    expect(product84Runtime.getSnapshot().phase).toBe('disposed');
+
+    await app.dispose();
+  });
+
+  it('restarts the previous screen after replace when the renderer releases inactive runtimes', async () => {
+    const productsLoad = vi.fn(loadTestModule);
+    const productLoad = vi.fn(loadTestModule);
+    const router = new Router({
+      routes: [
+        new Route({ address: segments('products'), load: productsLoad, token: ProductsRoute }),
+        new Route({
+          address: segments('products', param('productId')),
+          load: productLoad,
+          token: ProductRoute,
+        }),
+      ],
+    });
+    const app = await createApplication(router, (navigate) => navigate.to(ProductsRoute), 'release');
+    const initialProductsRuntime = app.activeRoutes[0]!;
+
+    await app.navigate.to(ProductRoute, { params: { productId: 'product-45' } });
+    await app.navigate.to(ProductRoute, {
+      params: { productId: 'product-84' },
+      replace: true,
+    });
+    const product84Runtime = app.activeRoutes[0]!;
+
+    expect(initialProductsRuntime.getSnapshot().phase).toBe('disposed');
+
+    await app.navigate.back();
+
+    expect(getRouteDefinition(app.activeRoutes[0]!.route).token).toBe(ProductsRoute);
+    expect(app.activeRoutes[0]).not.toBe(initialProductsRuntime);
+    expect(product84Runtime.getSnapshot().phase).toBe('disposed');
+    expect(productsLoad).toHaveBeenCalledTimes(2);
+    expect(productLoad).toHaveBeenCalledTimes(2);
 
     await app.dispose();
   });

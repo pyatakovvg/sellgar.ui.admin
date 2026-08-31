@@ -796,10 +796,12 @@ app.routing({
   изменение остаётся navigation/revalidation того же screen. Новые params
   подготавливают новую activation тем же Route runtime; ранее подготовленная
   activation остаётся retained, пока на неё ссылается history.
-- `replace`/session branch transition очищает не только retained registry core,
-  но и соответствующую physical navigator history. Недоступная предыдущая
-  policy-ветка не остаётся Back target; на корне новой ветки действует обычное
-  root Back поведение renderer.
+- Обычный `navigate.to(..., { replace: true })` заменяет только текущую logical
+  history entry и соответствующую physical navigator entry. Более ранняя
+  доступная entry остаётся Back target. Полностью очищает retained registry core
+  и physical navigator history только session branch transition: недоступная
+  предыдущая policy-ветка не остаётся Back target, а на корне новой ветки
+  действует обычное root Back поведение renderer.
 - Изменение `SessionRuntimeState.phase` после первой committed navigation является
   session boundary и запускает fresh transition независимо от совпадения Route и
   params. Core не фокусирует retained activation и не переиспользует текущий
