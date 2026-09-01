@@ -44,7 +44,7 @@ export const presentScreen = (
   assertPresentation(presentation);
 
   if (state.phase === 'empty') {
-    if (presentation.animation === undefined) {
+    if (presentation.transition === undefined) {
       return stableState(presentation, state.currentSlot, state.transitionId + 1);
     }
 
@@ -56,7 +56,7 @@ export const presentScreen = (
       return stableState(refreshPresentation(state.current, presentation), state.currentSlot, state.transitionId);
     }
 
-    if (presentation.animation === undefined) {
+    if (presentation.transition === undefined) {
       return stableState(presentation, oppositeSlot(state.currentSlot), state.transitionId + 1);
     }
 
@@ -76,7 +76,7 @@ export const presentScreen = (
     return stableState(refreshPresentation(state.current, presentation), state.currentSlot, state.transitionId + 1);
   }
 
-  if (presentation.animation === undefined) {
+  if (presentation.transition === undefined) {
     return stableState(presentation, oppositeSlot(state.currentSlot), state.transitionId + 1);
   }
 
@@ -151,7 +151,7 @@ const transitionState = (
 const refreshPresentation = (current: ScreenPresentation, next: ScreenPresentation): ScreenPresentation => {
   return Object.freeze({
     ...next,
-    animation: current.animation,
+    transition: current.transition,
   });
 };
 

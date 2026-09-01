@@ -90,6 +90,11 @@ interface ApplicationSessionBoundary {
   readonly revision: number;
 }
 
+interface ApplicationNavigationHistoryCommit<TPresentation> {
+  readonly history: RouterBridgeHistoryEntryInterface;
+  readonly released: readonly RouterRuntimeActivation<TPresentation>[];
+}
+
 export interface ApplicationNavigationSnapshot {
   readonly decision: ApplicationNavigationDecision | null;
   readonly navigation: NavigationState | undefined;
@@ -565,12 +570,15 @@ export abstract class Application<
       if (!mutation) return false;
 
       this.setNavigationSnapshot(mutation.current.navigation, null);
-      await Promise.all(mutation.released.map((released) => this.getRouterRuntime().releaseActivation(released)));
-      await this.routerBridge.commit(mutation.current.navigation, {
-        history: this.createBridgeHistoryEntry('pop', mutation.current.id),
-        signal: linkedSignal.controller.signal,
-        source: 'external',
-      });
+      try {
+        await this.routerBridge.commit(mutation.current.navigation, {
+          history: this.createBridgeHistoryEntry('pop', mutation.current.id),
+          signal: linkedSignal.controller.signal,
+          source: 'external',
+        });
+      } finally {
+        await this.releaseRouterActivations(mutation.released);
+      }
       return true;
     } finally {
       linkedSignal.dispose();
@@ -614,7 +622,15 @@ export abstract class Application<
       if (!mutation) return false;
 
       this.setNavigationSnapshot(mutation.current.navigation, null);
-      await Promise.all(mutation.released.map((released) => this.getRouterRuntime().releaseActivation(released)));
+      try {
+        await this.routerBridge.commit(mutation.current.navigation, {
+          history: this.createBridgeHistoryEntry('pop', mutation.current.id),
+          signal: linkedSignal.controller.signal,
+          source: 'external',
+        });
+      } finally {
+        await this.releaseRouterActivations(mutation.released);
+      }
       return true;
     } finally {
       linkedSignal.dispose();
@@ -754,7 +770,7 @@ export abstract class Application<
     try {
       const activation = await transition.commit();
       committed = true;
-      const history = await this.commitNavigationHistory(
+      const historyCommit = this.commitNavigationHistory(
         transition.navigation,
         activation,
         historyTargetId,
@@ -762,9 +778,17 @@ export abstract class Application<
         sessionBoundary !== null,
       );
 
-      if (signal.aborted) return false;
+      try {
+        if (signal.aborted) return false;
 
-      await this.routerBridge.commit(transition.navigation, { history, signal, source });
+        await this.routerBridge.commit(transition.navigation, {
+          history: historyCommit.history,
+          signal,
+          source,
+        });
+      } finally {
+        await this.releaseRouterActivations(historyCommit.released);
+      }
       this.setNavigationSnapshot(
         transition.navigation,
         transition.navigation.boundary === null ? null : NOT_FOUND_DECISION,
@@ -784,13 +808,13 @@ export abstract class Application<
     }
   }
 
-  private async commitNavigationHistory(
+  private commitNavigationHistory(
     navigation: NavigationState,
     activation: RouterRuntimeActivation<TPresentation>,
     historyTargetId: string | null = null,
     replaceCurrent = false,
     resetHistory = false,
-  ): Promise<RouterBridgeHistoryEntryInterface> {
+  ): ApplicationNavigationHistoryCommit<TPresentation> {
     const current = this.navigationHistory.current;
     const action = resetHistory
       ? 'reset'
@@ -827,11 +851,16 @@ export abstract class Application<
       }
     }
 
-    await Promise.all(
-      [...released].map((releasedActivation) => this.getRouterRuntime().releaseActivation(releasedActivation)),
-    );
+    return Object.freeze({
+      history: this.createBridgeHistoryEntry(action, mutation.current.id),
+      released: Object.freeze([...released]),
+    });
+  }
 
-    return this.createBridgeHistoryEntry(action, mutation.current.id);
+  private async releaseRouterActivations(
+    activations: readonly RouterRuntimeActivation<TPresentation>[],
+  ): Promise<void> {
+    await Promise.all(activations.map((activation) => this.getRouterRuntime().releaseActivation(activation)));
   }
 
   private createBridgeHistoryEntry(
@@ -922,7 +951,7 @@ export abstract class Application<
           signal,
           sessionBoundary === null,
         );
-        const history = await this.commitNavigationHistory(
+        const historyCommit = this.commitNavigationHistory(
           navigation,
           activation,
           historyTargetId,
@@ -930,7 +959,15 @@ export abstract class Application<
           sessionBoundary !== null,
         );
 
-        await this.routerBridge.commit(navigation, { history, signal, source });
+        try {
+          await this.routerBridge.commit(navigation, {
+            history: historyCommit.history,
+            signal,
+            source,
+          });
+        } finally {
+          await this.releaseRouterActivations(historyCommit.released);
+        }
 
         if (signal.aborted) {
           return false;

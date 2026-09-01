@@ -114,9 +114,9 @@ const createPresentation = (
   const key = `screen-${sequence}`;
 
   return Object.freeze({
-    animation,
     content: createScreenContent(sample, key, 0),
     key,
+    transition: animation ? Object.freeze({ animation, operation: 'present' }) : undefined,
   });
 };
 

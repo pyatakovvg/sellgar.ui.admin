@@ -11,6 +11,7 @@ import Animated, {
 
 import { ScreenAnimation } from '../../declaration/screen-animation';
 import type { ScreenPresentation } from '../../declaration/screen-presentation';
+import type { ScreenTransitionOperation } from '../../declaration/screen-transition';
 import {
   completeScreenTransition,
   createScreenMachine,
@@ -22,13 +23,17 @@ import {
 } from '../../runtime/screen-machine';
 
 export interface ScreenRendererProps {
+  readonly onPresentationComplete?: () => void;
   readonly presentation: ScreenPresentation | null;
   readonly style?: StyleProp<ViewStyle>;
 }
 
-const TRANSITION_DURATION = 250;
+const TRANSITION_DURATION: Readonly<Record<ScreenTransitionOperation, number>> = Object.freeze({
+  dismiss: 200,
+  present: 240,
+});
 
-export const ScreenRenderer: React.FC<ScreenRendererProps> = ({ presentation, style }) => {
+export const ScreenRenderer: React.FC<ScreenRendererProps> = ({ onPresentationComplete, presentation, style }) => {
   const [state, setState] = React.useState<ScreenMachineState>(createScreenMachine);
   const progress = useSharedValue(1);
 
@@ -49,14 +54,21 @@ export const ScreenRenderer: React.FC<ScreenRendererProps> = ({ presentation, st
     }
 
     const transitionId = state.transitionId;
+    const duration = TRANSITION_DURATION[state.incoming.transition!.operation];
 
     progress.value = 0;
-    progress.value = withTiming(1, { duration: TRANSITION_DURATION }, (finished) => {
+    progress.value = withTiming(1, { duration }, (finished) => {
       if (finished) runOnJS(finishTransition)(transitionId);
     });
 
     return () => cancelAnimation(progress);
   }, [finishTransition, progress, state.phase, state.transitionId]);
+
+  React.useEffect(() => {
+    if (state.phase === 'stable' && presentation !== null && state.current.key === presentation.key) {
+      onPresentationComplete?.();
+    }
+  }, [onPresentationComplete, presentation?.key, state.current?.key, state.phase]);
 
   return (
     <View pointerEvents={state.phase === 'transitioning' ? 'none' : 'auto'} style={[styles.host, style]}>
@@ -76,7 +88,7 @@ const ScreenSlotView: React.FC<ScreenSlotViewProps> = ({ progress, slot, state }
   const dimensions = useWindowDimensions();
   const presentation = resolveScreenSlotPresentation(state, slot);
   const role = resolveScreenSlotRole(state, slot);
-  const animation = state.phase === 'transitioning' ? state.incoming.animation : undefined;
+  const animation = state.phase === 'transitioning' ? state.incoming.transition?.animation : undefined;
   const animatedStyle = useAnimatedStyle(() => {
     const value = progress.value;
 

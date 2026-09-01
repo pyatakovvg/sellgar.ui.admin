@@ -296,6 +296,7 @@ interface PendingRouterTransition<TPresentation> {
   readonly disposeLinkedSignal: () => void;
   readonly navigation: NavigationState;
   readonly plan: RouterTransitionPlan<TPresentation>;
+  readonly revision: number;
   readonly transition: PreparedRouterTransition<TPresentation>;
 }
 
@@ -318,6 +319,8 @@ export class RouterRuntime<TPresentation = unknown> {
   private disposePromise: Promise<void> | null = null;
   private focusedActivation: RouterRuntimeActivation<TPresentation> | null = null;
   private pendingBranchPlan: RouterTransitionPlan<TPresentation> | null = null;
+  private pendingNavigation: NavigationState | null = null;
+  private pendingNavigationRevision = 0;
   private pendingTransition: PendingRouterTransition<TPresentation> | null = null;
   private prepareAbortController: AbortController | null = null;
   private prepareRevision = 0;
@@ -383,6 +386,10 @@ export class RouterRuntime<TPresentation = unknown> {
 
   getCommittedNavigation(): NavigationState | undefined {
     return this.committedNavigation;
+  }
+
+  getPendingNavigation(): NavigationState | null {
+    return this.pendingNavigation;
   }
 
   getFocusedActivation(): RouterRuntimeActivation<TPresentation> | null {
@@ -1038,6 +1045,7 @@ export class RouterRuntime<TPresentation = unknown> {
     }
 
     await pendingTransition?.transition.discard();
+    this.setPendingNavigation(null, revision);
 
     if (this.isInterrupted(revision, context.signal)) {
       return createInterruptedResult(context.signal.reason);
@@ -1062,6 +1070,7 @@ export class RouterRuntime<TPresentation = unknown> {
           context,
           abortController,
           linkedSignal.dispose,
+          revision,
         );
 
         if (retained !== null) return retained;
@@ -1085,6 +1094,7 @@ export class RouterRuntime<TPresentation = unknown> {
       }
 
       linkedSignal.dispose();
+      this.clearPendingNavigation(revision);
       this.restoreCommittedSnapshot();
 
       return {
@@ -1096,10 +1106,12 @@ export class RouterRuntime<TPresentation = unknown> {
       linkedSignal.dispose();
 
       if (this.isInterrupted(revision, context.signal)) {
+        this.clearPendingNavigation(revision);
         this.restoreCommittedSnapshot();
         return createInterruptedResult(context.signal.reason ?? error);
       }
 
+      this.clearPendingNavigation(revision);
       this.setSnapshot({ error, phase: this.committedBranch ? 'active' : 'idle' });
       await this.reportActivationFailure(error);
       throw error;
@@ -1116,6 +1128,7 @@ export class RouterRuntime<TPresentation = unknown> {
     context: RouterRuntimePrepareContext,
     abortController: AbortController,
     disposeLinkedSignal: () => void,
+    revision: number,
   ): Promise<RouterRuntimePrepareResult<TPresentation> | null> {
     const root = activation.getRootNode();
 
@@ -1127,6 +1140,7 @@ export class RouterRuntime<TPresentation = unknown> {
       context.blockersConfirmed || (await this.confirmActivation(activation, abortController.signal));
 
     if (!navigationConfirmed) {
+      this.clearPendingNavigation(revision, candidate.navigation);
       disposeLinkedSignal();
       return createInterruptedResult(new Error('Навигация отменена blocker-решением.'));
     }
@@ -1136,18 +1150,22 @@ export class RouterRuntime<TPresentation = unknown> {
 
       if (decision.type !== 'continue') {
         disposeLinkedSignal();
-        return this.applyPolicyDecision(decision, candidate.navigation);
+        return this.applyPolicyDecision(decision, candidate.navigation, revision);
       }
     }
+
+    this.setPendingNavigation(candidate.navigation, revision);
 
     const transition = new PreparedRouterTransition<TPresentation>({
       commit: async () => {
         await this.focusActivation(activation, candidate.navigation, abortController.signal);
+        this.clearPendingNavigation(revision, candidate.navigation);
         disposeLinkedSignal();
         return activation;
       },
       complete: async () => undefined,
       discard: async () => {
+        this.clearPendingNavigation(revision, candidate.navigation);
         disposeLinkedSignal();
       },
       getRouteRuntimes: () => activation.getRouteRuntimes(),
@@ -1239,6 +1257,7 @@ export class RouterRuntime<TPresentation = unknown> {
 
       if (!navigationConfirmed) {
         await this.discardPlan(plan);
+        this.clearPendingNavigation(revision, candidate.navigation);
         disposeLinkedSignal();
         this.restoreCommittedSnapshot();
         return createInterruptedResult(new Error('Навигация отменена blocker-решением.'));
@@ -1281,7 +1300,7 @@ export class RouterRuntime<TPresentation = unknown> {
       }
 
       throwIfAborted(abortController.signal);
-      this.publishPendingBranch(plan);
+      this.publishPendingBranch(plan, candidate.navigation, revision);
       const providerFailure = await this.preparePlans(
         createPlanPreparations(collectPlanPath(plan)),
         abortController.signal,
@@ -1289,6 +1308,7 @@ export class RouterRuntime<TPresentation = unknown> {
 
       if (this.isInterrupted(revision, abortController.signal)) {
         await this.discardPlan(plan);
+        this.clearPendingNavigation(revision, candidate.navigation);
         disposeLinkedSignal();
         this.restoreCommittedSnapshot();
         return createInterruptedResult(abortController.signal.reason);
@@ -1301,6 +1321,7 @@ export class RouterRuntime<TPresentation = unknown> {
         disposeLinkedSignal,
         providerFailure,
         allowActivationReuse,
+        revision,
       );
     } catch (error) {
       const interrupted = this.isInterrupted(revision, abortController.signal);
@@ -1310,6 +1331,7 @@ export class RouterRuntime<TPresentation = unknown> {
       await this.discardPlan(plan);
 
       if (interrupted) {
+        this.clearPendingNavigation(revision, candidate.navigation);
         this.restoreCommittedSnapshot();
         return createInterruptedResult(interruptionReason ?? error);
       }
@@ -1371,7 +1393,7 @@ export class RouterRuntime<TPresentation = unknown> {
     if (terminalResult.decision.type === 'redirect' || terminalResult.decision.type === 'redirect-to-saved-location') {
       await this.discardPlan(plan);
       disposeLinkedSignal();
-      return this.applyPolicyDecision(terminalResult.decision, navigation);
+      return this.applyPolicyDecision(terminalResult.decision, navigation, revision);
     }
 
     if (terminalResult.decision.type === 'continue') {
@@ -1400,11 +1422,12 @@ export class RouterRuntime<TPresentation = unknown> {
       boundary.kind === 'route'
         ? createPreparationsBeforeRouteBoundary(plans, boundary)
         : createPlanPreparations(plans.slice(0, boundaryIndex));
-    this.publishPendingBranch(plan);
+    this.publishPendingBranch(plan, navigation, revision);
     const providerFailure = await this.preparePlans(preparations, abortController.signal);
 
     if (this.isInterrupted(revision, abortController.signal)) {
       await this.discardPlan(plan);
+      this.clearPendingNavigation(revision, navigation);
       disposeLinkedSignal();
       this.restoreCommittedSnapshot();
       return createInterruptedResult(abortController.signal.reason);
@@ -1425,6 +1448,7 @@ export class RouterRuntime<TPresentation = unknown> {
       disposeLinkedSignal,
       providerFailure ?? boundary,
       allowActivationReuse,
+      revision,
     );
   }
 
@@ -1549,6 +1573,7 @@ export class RouterRuntime<TPresentation = unknown> {
     disposeLinkedSignal: () => void,
     boundary: RuntimeBoundaryTransition<TPresentation> | null,
     allowActivationReuse: boolean,
+    revision: number,
   ): RouterRuntimePrepareResult<TPresentation> {
     const previousNavigation = this.committedNavigation;
     let pending!: PendingRouterTransition<TPresentation>;
@@ -1580,6 +1605,7 @@ export class RouterRuntime<TPresentation = unknown> {
       disposeLinkedSignal,
       navigation,
       plan,
+      revision,
       transition,
     };
     this.pendingTransition = pending;
@@ -1786,6 +1812,7 @@ export class RouterRuntime<TPresentation = unknown> {
       this.prepareAbortController = null;
     }
 
+    this.clearPendingNavigation(pending.revision, pending.navigation);
     pending.disposeLinkedSignal();
   }
 
@@ -1991,7 +2018,9 @@ export class RouterRuntime<TPresentation = unknown> {
   private applyPolicyDecision(
     decision: PolicyBoundaryDecision,
     navigation: NavigationState,
+    revision: number,
   ): RouterRuntimePrepareResult<TPresentation> {
+    this.clearPendingNavigation(revision, navigation);
     this.restoreCommittedSnapshot();
 
     if (decision.type === 'error') {
@@ -2241,6 +2270,8 @@ export class RouterRuntime<TPresentation = unknown> {
     this.committedBoundary = null;
     this.committedBranch = null;
     this.committedNavigation = undefined;
+    this.pendingNavigation = null;
+    this.pendingNavigationRevision = 0;
     this.refreshBoundary = null;
     this.snapshot = { error: null, phase: 'disposed' };
     this.emit();
@@ -2441,7 +2472,35 @@ export class RouterRuntime<TPresentation = unknown> {
     this.setSnapshot(this.committedBoundary ?? { error: null, phase: this.committedBranch ? 'active' : 'idle' });
   }
 
-  private publishPendingBranch(plan: RouterTransitionPlan<TPresentation>): void {
+  private clearPendingNavigation(revision: number, navigation?: NavigationState): void {
+    if (
+      this.pendingNavigationRevision === revision &&
+      (navigation === undefined || this.pendingNavigation === navigation)
+    ) {
+      this.setPendingNavigation(null, revision);
+    }
+  }
+
+  private setPendingNavigation(navigation: NavigationState | null, revision: number): void {
+    if (revision !== this.prepareRevision) {
+      return;
+    }
+
+    if (this.pendingNavigation === navigation && this.pendingNavigationRevision === revision) {
+      return;
+    }
+
+    this.pendingNavigation = navigation;
+    this.pendingNavigationRevision = navigation === null ? 0 : revision;
+    this.emitBranchChange();
+  }
+
+  private publishPendingBranch(
+    plan: RouterTransitionPlan<TPresentation>,
+    navigation: NavigationState,
+    revision: number,
+  ): void {
+    this.setPendingNavigation(navigation, revision);
     const plans = collectPlanPath(plan);
 
     for (const pendingPlan of plans) {

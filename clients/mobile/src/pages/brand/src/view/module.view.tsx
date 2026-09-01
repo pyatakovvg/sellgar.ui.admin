@@ -1,7 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { BrandsRoute } from '@library/route-tokens';
 import { useLoaderData, useNavigate } from '@sellgar/app-v2/native';
 
 import { BrandControllerInterface } from '../classes/controller/brand/brand-controller.interface.ts';
@@ -21,7 +20,7 @@ export const ModuleView: React.FC = () => {
       <Pressable
         accessibilityLabel="Back"
         accessibilityRole="button"
-        onPress={() => void navigate.to(BrandsRoute)}
+        onPress={() => void navigate.back()}
         style={({ pressed }) => [styles.button, pressed ? styles.pressed : null]}
       >
         <Text style={styles.buttonText}>Back</Text>

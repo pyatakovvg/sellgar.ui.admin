@@ -33,6 +33,12 @@ export interface NativeNavigationSnapshot {
 
 type NativeNavigationListener = () => void;
 
+interface NativePresentationCompletion {
+  readonly promise: Promise<void>;
+  readonly resolve: () => void;
+  readonly revision: number;
+}
+
 const EMPTY_SNAPSHOT: NativeNavigationSnapshot = Object.freeze({
   action: null,
   backInProgress: false,
@@ -46,6 +52,8 @@ export class NativeRouterBridge implements RouterBridgeInterface {
   private context: RouterBridgeInitializeContextInterface | null = null;
   private driver: NativeNavigationDriver | null = null;
   private readonly listeners = new Set<NativeNavigationListener>();
+  private pendingPresentation: NativePresentationCompletion | null = null;
+  private presentationRevision = 0;
   private snapshot = EMPTY_SNAPSHOT;
   private readonly transport: NativeRouterTransportInterface;
   private unsubscribeTransport: (() => void) | null = null;
@@ -81,7 +89,11 @@ export class NativeRouterBridge implements RouterBridgeInterface {
 
   async commit(navigation: NavigationState, context: RouterBridgeCommitContextInterface): Promise<void> {
     if (context.signal.aborted) return;
+
+    const completion = this.createPresentationCompletion(context.signal);
+
     this.setSnapshot(projectCommit(this.snapshot, navigation, context.history));
+    await completion?.promise;
   }
 
   async back(): Promise<void> {
@@ -111,6 +123,16 @@ export class NativeRouterBridge implements RouterBridgeInterface {
   getSnapshot = (): NativeNavigationSnapshot => {
     return this.snapshot;
   };
+
+  getPresentationRevision(): number {
+    return this.presentationRevision;
+  }
+
+  completePresentation(revision: number): void {
+    if (this.pendingPresentation?.revision === revision) {
+      this.pendingPresentation.resolve();
+    }
+  }
 
   async restore(location: RouterBridgeLocationInterface, blockersConfirmed = false): Promise<boolean> {
     const previous = this.snapshot;
@@ -151,6 +173,8 @@ export class NativeRouterBridge implements RouterBridgeInterface {
   }
 
   dispose(): void {
+    this.pendingPresentation?.resolve();
+    this.pendingPresentation = null;
     this.unsubscribeTransport?.();
     this.unsubscribeTransport = null;
     this.context?.signal.removeEventListener('abort', this.handleInitializationAbort);
@@ -173,6 +197,39 @@ export class NativeRouterBridge implements RouterBridgeInterface {
 
     this.snapshot = snapshot;
     for (const listener of this.listeners) listener();
+  }
+
+  private createPresentationCompletion(signal: AbortSignal): NativePresentationCompletion | null {
+    this.pendingPresentation?.resolve();
+    this.pendingPresentation = null;
+    this.presentationRevision += 1;
+
+    if (!this.driver || signal.aborted) return null;
+
+    const revision = this.presentationRevision;
+    let settled = false;
+    let resolvePromise!: () => void;
+    const promise = new Promise<void>((resolve) => {
+      resolvePromise = resolve;
+    });
+    const complete = (): void => {
+      if (settled) return;
+
+      settled = true;
+      signal.removeEventListener('abort', complete);
+
+      if (this.pendingPresentation?.revision === revision) {
+        this.pendingPresentation = null;
+      }
+
+      resolvePromise();
+    };
+    const completion = Object.freeze({ promise, resolve: complete, revision });
+
+    this.pendingPresentation = completion;
+    signal.addEventListener('abort', complete, { once: true });
+
+    return completion;
   }
 
   private setBackInProgress(backInProgress: boolean): void {

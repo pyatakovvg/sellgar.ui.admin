@@ -104,6 +104,7 @@ export { Route } from './router/declaration/route';
 export type { RouteOptions } from './router/declaration/route';
 export { ScreenAnimation } from './screen/declaration/screen-animation';
 export type { ScreenPresentation } from './screen/declaration/screen-presentation';
+export type { ScreenTransition, ScreenTransitionOperation } from './screen/declaration/screen-transition';
 export { ScreenRenderer } from './screen/rendering/screen-renderer';
 export type { ScreenRendererProps } from './screen/rendering/screen-renderer';
 export { Router } from './router/declaration/router';

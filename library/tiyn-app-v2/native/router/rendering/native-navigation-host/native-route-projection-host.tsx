@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import type { ApplicationRouterHistoryEntry } from '../../../../core/application/lifecycle/application';
 import { getRouteDefinition } from '../../../../core/router/declaration/route';
@@ -7,15 +7,17 @@ import type { NavigationRouteEntry, NavigationState } from '../../../../core/rou
 import type { RouterRuntimeActivationTree } from '../../../../core/router/runtime/router-runtime';
 import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
 import type { ApplicationComponents } from '../../../application/config/application-configurator';
-import { renderLayouts } from '../../../layout/rendering/layout-renderer';
 import type { ModuleMetadata } from '../../../module/declaration/module';
 import { ScreenAnimation } from '../../../screen/declaration/screen-animation';
 import type { ScreenPresentation } from '../../../screen/declaration/screen-presentation';
+import type { ScreenTransitionOperation } from '../../../screen/declaration/screen-transition';
 import { ScreenRenderer } from '../../../screen/rendering/screen-renderer';
 import { getRoutePresentationDefinition } from '../../declaration/route';
+import { RouteHost, RouteModuleHost } from '../route-host';
 import {
   type NativePendingRouteProjection,
   resolveNativePendingRouteProjection,
+  resolveNativeRouteChangeDepth,
   resolveNativeRouteIndexPresentationKey,
   resolveNativeRoutePresentationKey,
 } from './native-route-projection.ts';
@@ -23,7 +25,9 @@ import {
 interface NativeRouteProjectionHostProps {
   readonly components: ApplicationComponents;
   readonly current: NavigationState | undefined;
+  readonly dismissing: boolean;
   readonly entries: readonly ApplicationRouterHistoryEntry<ModuleMetadata>[];
+  readonly onPresentationComplete: () => void;
   readonly pending: NavigationState | null;
 }
 
@@ -31,14 +35,35 @@ export const NativeRouteProjectionHost: React.FC<NativeRouteProjectionHostProps>
   const focusedEntry = props.entries.at(-1) ?? null;
   const current = focusedEntry?.activation.navigation ?? props.current;
   const currentPath = current?.root.path ?? EMPTY_PATH;
-  const pending = resolveNativePendingRouteProjection(current, props.pending);
-  const focusedTree = focusedEntry?.tree ?? null;
   const previousPath = React.useRef(currentPath);
-  const leavingPath = pending ? currentPath : previousPath.current;
+  const presentationDepth = React.useRef<number | null>(null);
 
   React.useLayoutEffect(() => {
     previousPath.current = currentPath;
   }, [currentPath]);
+
+  if (props.pending && props.pending.root.path.length === 0) {
+    return props.components.fallback ?? null;
+  }
+
+  const pending = resolveNativePendingRouteProjection(current, props.pending);
+  const focusedTree = focusedEntry?.tree ?? null;
+  const sourcePath = pending ? currentPath : previousPath.current;
+  const targetPath = pending?.path ?? currentPath;
+  const transitionDepth = pending?.changeDepth ?? resolveNativeRouteChangeDepth(sourcePath, targetPath);
+  const transition =
+    transitionDepth === null
+      ? null
+      : Object.freeze({
+          ...resolveTransition(sourcePath, targetPath, props.dismissing),
+          depth: transitionDepth,
+        });
+
+  if (transitionDepth !== null) {
+    presentationDepth.current = transitionDepth;
+  } else if (presentationDepth.current === null && currentPath.length > 0) {
+    presentationDepth.current = currentPath.length - 1;
+  }
 
   if (focusedTree === null && pending === null) {
     return props.components.fallback ?? null;
@@ -47,10 +72,12 @@ export const NativeRouteProjectionHost: React.FC<NativeRouteProjectionHostProps>
   return (
     <NativeRouteOutletHost
       components={props.components}
+      completionDepth={presentationDepth.current}
       currentPath={currentPath}
       depth={0}
-      leavingPath={leavingPath}
+      onPresentationComplete={props.onPresentationComplete}
       pending={pending}
+      transition={transition}
       tree={focusedTree}
     />
   );
@@ -63,12 +90,20 @@ interface NativeRouteOwner {
 
 interface NativeRouteOutletHostProps {
   readonly components: ApplicationComponents;
+  readonly completionDepth: number | null;
   readonly currentPath: readonly NavigationRouteEntry[];
   readonly depth: number;
-  readonly leavingPath: readonly NavigationRouteEntry[];
+  readonly onPresentationComplete: () => void;
   readonly owner?: NativeRouteOwner;
   readonly pending: NativePendingRouteProjection | null;
+  readonly transition: NativeScreenTransition | null;
   readonly tree: RouterRuntimeActivationTree<ModuleMetadata> | null;
+}
+
+interface NativeScreenTransition {
+  readonly animation: ScreenAnimation | undefined;
+  readonly depth: number;
+  readonly operation: ScreenTransitionOperation;
 }
 
 const NativeRouteOutletHost: React.FC<NativeRouteOutletHostProps> = (props) => {
@@ -77,11 +112,13 @@ const NativeRouteOutletHost: React.FC<NativeRouteOutletHostProps> = (props) => {
     ? createPendingTarget(props.components, pendingAtOutlet, props.depth, props.owner)
     : createCommittedTarget(props);
   const previousKey = React.useRef<string | null>(null);
-  const animation =
-    target && target.presentation.key !== previousKey.current
-      ? resolveTargetAnimation(target.route, props.leavingPath, props.depth)
+  const transition =
+    target && props.transition?.depth === props.depth && target.presentation.key !== previousKey.current
+      ? props.transition.animation
+        ? Object.freeze({ animation: props.transition.animation, operation: props.transition.operation })
+        : undefined
       : undefined;
-  const presentation = target ? Object.freeze({ ...target.presentation, animation }) : null;
+  const presentation = target ? Object.freeze({ ...target.presentation, transition }) : null;
 
   React.useLayoutEffect(() => {
     previousKey.current = target?.presentation.key ?? null;
@@ -89,14 +126,16 @@ const NativeRouteOutletHost: React.FC<NativeRouteOutletHostProps> = (props) => {
 
   return (
     <View style={styles.outlet}>
-      <ScreenRenderer presentation={presentation} />
+      <ScreenRenderer
+        onPresentationComplete={props.completionDepth === props.depth ? props.onPresentationComplete : undefined}
+        presentation={presentation}
+      />
     </View>
   );
 };
 
 interface NativeScreenTarget {
   readonly presentation: ScreenPresentation;
-  readonly route: NavigationRouteEntry['route'] | null;
 }
 
 const createCommittedTarget = (props: NativeRouteOutletHostProps): NativeScreenTarget | null => {
@@ -111,39 +150,31 @@ const createCommittedTarget = (props: NativeRouteOutletHostProps): NativeScreenT
 
     return Object.freeze({
       presentation: Object.freeze({
-        animation: undefined,
         content: (
           <NativeRouteScreen
             components={props.components}
+            completionDepth={props.completionDepth}
             currentPath={props.currentPath}
             depth={props.depth}
             entry={entry}
-            leavingPath={props.leavingPath}
+            onPresentationComplete={props.onPresentationComplete}
             pending={props.pending}
             runtime={runtime}
+            transition={props.transition}
             tree={tree}
           />
         ),
         key: resolveNativeRoutePresentationKey(entry, props.depth),
       }),
-      route: entry.route,
     });
   }
 
   if (!entry && !runtime && props.owner) {
     return Object.freeze({
       presentation: Object.freeze({
-        animation: undefined,
-        content: (
-          <NativeRoutePlaceholder
-            entry={props.owner.entry}
-            identity={resolveNativeRouteIndexPresentationKey(props.owner.entry, props.depth)}
-            runtime={props.owner.runtime}
-          />
-        ),
+        content: <RouteModuleHost components={props.components} presentation="screen" runtime={props.owner.runtime} />,
         key: resolveNativeRouteIndexPresentationKey(props.owner.entry, props.depth),
       }),
-      route: null,
     });
   }
 
@@ -154,12 +185,14 @@ const createCommittedTarget = (props: NativeRouteOutletHostProps): NativeScreenT
 
 interface NativeRouteScreenProps {
   readonly components: ApplicationComponents;
+  readonly completionDepth: number | null;
   readonly currentPath: readonly NavigationRouteEntry[];
   readonly depth: number;
   readonly entry: NavigationRouteEntry;
-  readonly leavingPath: readonly NavigationRouteEntry[];
+  readonly onPresentationComplete: () => void;
   readonly pending: NativePendingRouteProjection | null;
   readonly runtime: RouteActivationRuntime<ModuleMetadata>;
+  readonly transition: NativeScreenTransition | null;
   readonly tree: RouterRuntimeActivationTree<ModuleMetadata>;
 }
 
@@ -171,22 +204,24 @@ const NativeRouteScreen: React.FC<NativeRouteScreenProps> = (props) => {
     route.routes.length > 0 ? (
       <NativeRouteOutletHost
         components={components}
+        completionDepth={props.completionDepth}
         currentPath={props.currentPath}
         depth={props.depth + 1}
-        leavingPath={props.leavingPath}
+        onPresentationComplete={props.onPresentationComplete}
         owner={{ entry: props.entry, runtime: props.runtime }}
         pending={props.pending}
+        transition={props.transition}
         tree={props.tree}
       />
     ) : (
-      <NativeRoutePlaceholder
-        entry={props.entry}
-        identity={resolveNativeRoutePresentationKey(props.entry, props.depth)}
-        runtime={props.runtime}
-      />
+      <RouteModuleHost components={components} presentation="screen" runtime={props.runtime} />
     );
 
-  return <>{renderLayouts(definition.layouts, content)}</>;
+  return (
+    <RouteHost components={components} layouts={definition.layouts} presentation="screen" runtime={props.runtime}>
+      {content}
+    </RouteHost>
+  );
 };
 
 const createPendingTarget = (
@@ -206,49 +241,18 @@ const createPendingTarget = (
 
     return Object.freeze({
       presentation: Object.freeze({
-        animation: undefined,
-        content: <NativeRoutePlaceholder entry={owner.entry} identity={key} runtime={owner.runtime} />,
+        content: <RouteModuleHost components={components} presentation="screen" runtime={owner.runtime} />,
         key,
       }),
-      route: null,
     });
   }
 
-  const definition = getRoutePresentationDefinition(entry.route);
-
   return Object.freeze({
     presentation: Object.freeze({
-      animation: definition.animation,
-      content: <NativePendingRouteScreen components={components} depth={depth} pending={pending} />,
+      content: components.fallback ?? null,
       key: resolveNativeRoutePresentationKey(entry, depth),
     }),
-    route: entry.route,
   });
-};
-
-const NativePendingRouteScreen: React.FC<{
-  readonly components: ApplicationComponents;
-  readonly depth: number;
-  readonly pending: NativePendingRouteProjection;
-}> = (props) => {
-  const entry = props.pending.path[props.depth];
-
-  if (!entry) return props.components.fallback ?? null;
-
-  const definition = getRoutePresentationDefinition(entry.route);
-  const components = inheritRouteComponents(props.components, definition);
-  const child = props.pending.path[props.depth + 1]
-    ? createPendingTarget(components, props.pending, props.depth + 1).presentation
-    : null;
-  const content = child ? (
-    <View style={styles.outlet}>
-      <ScreenRenderer presentation={child} />
-    </View>
-  ) : (
-    (components.fallback ?? null)
-  );
-
-  return <>{renderLayouts(definition.layouts, content)}</>;
 };
 
 const inheritRouteComponents = (
@@ -264,23 +268,34 @@ const inheritRouteComponents = (
   });
 };
 
-const resolveTargetAnimation = (
-  target: NavigationRouteEntry['route'] | null,
-  leavingPath: readonly NavigationRouteEntry[],
-  depth: number,
-): ScreenAnimation | undefined => {
-  const entering = target ? getRoutePresentationDefinition(target).animation : undefined;
-
-  if (entering) return entering;
-
-  for (let index = leavingPath.length - 1; index >= depth; index -= 1) {
-    const leaving = getRoutePresentationDefinition(leavingPath[index]!.route).animation;
-    const reversed = reverseScreenAnimation(leaving);
-
-    if (reversed) return reversed;
+const resolveTransition = (
+  sourcePath: readonly NavigationRouteEntry[],
+  targetPath: readonly NavigationRouteEntry[],
+  dismissing: boolean,
+): Omit<NativeScreenTransition, 'depth'> => {
+  if (dismissing) {
+    return Object.freeze({
+      animation: reverseScreenAnimation(resolveTerminalAnimation(sourcePath)),
+      operation: 'dismiss',
+    });
   }
 
-  return undefined;
+  const entering = resolveTerminalAnimation(targetPath);
+
+  if (entering) {
+    return Object.freeze({ animation: entering, operation: 'present' });
+  }
+
+  return Object.freeze({
+    animation: reverseScreenAnimation(resolveTerminalAnimation(sourcePath)),
+    operation: 'dismiss',
+  });
+};
+
+const resolveTerminalAnimation = (path: readonly NavigationRouteEntry[]): ScreenAnimation | undefined => {
+  const terminal = path.at(-1);
+
+  return terminal ? getRoutePresentationDefinition(terminal.route).animation : undefined;
 };
 
 const reverseScreenAnimation = (animation: ScreenAnimation | undefined): ScreenAnimation | undefined => {
@@ -296,61 +311,10 @@ const reverseScreenAnimation = (animation: ScreenAnimation | undefined): ScreenA
   }
 };
 
-const NativeRoutePlaceholder: React.FC<{
-  readonly entry: NavigationRouteEntry;
-  readonly identity: string;
-  readonly runtime: RouteActivationRuntime<ModuleMetadata>;
-}> = ({ entry, identity, runtime }) => {
-  const route = getRouteDefinition(runtime.route);
-  const title = resolveRouteTitle(route.token);
-
-  return (
-    <View accessibilityLabel={`Native screen ${title}`} style={styles.placeholder}>
-      <Text style={styles.eyebrow}>ROUTER → SCREEN</Text>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.details}>{JSON.stringify(entry.params)}</Text>
-      <Text style={styles.identity}>{identity}</Text>
-    </View>
-  );
-};
-
-const resolveRouteTitle = (token: ReturnType<typeof getRouteDefinition>['token']): string => {
-  if (typeof token === 'function' && token.name) return token.name;
-  return 'AnonymousRoute';
-};
-
 const EMPTY_PATH: readonly NavigationRouteEntry[] = Object.freeze([]);
 
 const styles = StyleSheet.create({
-  details: {
-    color: '#a9afbf',
-    fontSize: 14,
-    marginTop: 12,
-  },
-  eyebrow: {
-    color: '#7f75ff',
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 1.4,
-  },
-  identity: {
-    color: '#62697a',
-    fontSize: 11,
-    marginTop: 18,
-  },
   outlet: {
     flex: 1,
-  },
-  placeholder: {
-    backgroundColor: '#0f1117',
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 28,
-  },
-  title: {
-    color: '#f4f5f8',
-    fontSize: 28,
-    fontWeight: '700',
-    marginTop: 8,
   },
 });

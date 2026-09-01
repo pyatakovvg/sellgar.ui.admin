@@ -26,7 +26,11 @@ interface NativeNavigationHostProps {
 
 export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props) => {
   const rootBackPressedAt = React.useRef<number | null>(null);
-  React.useSyncExternalStore(props.bridge.subscribe, props.bridge.getSnapshot, props.bridge.getSnapshot);
+  const navigation = React.useSyncExternalStore(
+    props.bridge.subscribe,
+    props.bridge.getSnapshot,
+    props.bridge.getSnapshot,
+  );
   React.useSyncExternalStore(
     React.useCallback((listener) => props.runtime.subscribe(listener), [props.runtime]),
     React.useCallback(() => props.runtime.getSnapshot(), [props.runtime]),
@@ -34,6 +38,11 @@ export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props)
   );
   const historyEntries = props.getHistoryEntries();
   const focusedEntry = historyEntries.at(-1) ?? null;
+  const pending = props.runtime.getPendingNavigation() ?? props.pending;
+  const presentationRevision = props.bridge.getPresentationRevision();
+  const completePresentation = React.useCallback(() => {
+    props.bridge.completePresentation(presentationRevision);
+  }, [presentationRevision, props.bridge]);
 
   React.useEffect(() => {
     rootBackPressedAt.current = null;
@@ -72,8 +81,10 @@ export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props)
         <NativeRouteProjectionHost
           components={components}
           current={props.current}
+          dismissing={pending ? navigation.backInProgress : navigation.action === 'pop'}
           entries={historyEntries}
-          pending={props.pending}
+          onPresentationComplete={completePresentation}
+          pending={pending}
         />
       )}
     </RouterPresentationHost>

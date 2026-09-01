@@ -15,16 +15,27 @@ export const resolveNativePendingRouteProjection = (
 
   const path = pending.root.path;
   const currentPath = current?.root.path ?? [];
-  const commonRouteCount = resolveCommonRouteCount(currentPath, path);
+  const changeDepth = resolveNativeRouteChangeDepth(currentPath, path);
 
-  if (commonRouteCount === currentPath.length && commonRouteCount === path.length) {
+  if (changeDepth === null) return null;
+
+  return Object.freeze({
+    changeDepth,
+    path,
+  });
+};
+
+export const resolveNativeRouteChangeDepth = (
+  current: readonly NavigationRouteEntry[],
+  target: readonly NavigationRouteEntry[],
+): number | null => {
+  const commonRouteCount = resolveCommonRouteCount(current, target);
+
+  if (commonRouteCount === current.length && commonRouteCount === target.length) {
     return null;
   }
 
-  return Object.freeze({
-    changeDepth: commonRouteCount,
-    path,
-  });
+  return commonRouteCount;
 };
 
 export const resolveNativeRoutePresentationKey = (entry: NavigationRouteEntry, depth: number): string => {
