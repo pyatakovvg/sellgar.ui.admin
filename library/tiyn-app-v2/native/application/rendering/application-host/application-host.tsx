@@ -11,7 +11,7 @@ import type { ApplicationFeatureInterface } from '../../../../core/application/f
 import type {
   ApplicationNavigationListener,
   ApplicationNavigationSnapshot,
-  ApplicationRouterRuntimeEntry,
+  ApplicationRouterHistoryEntry,
 } from '../../../../core/application/lifecycle/application';
 import type { RouterRuntime } from '../../../../core/router/runtime/router-runtime';
 import type { RuntimeScope } from '../../../../core/runtime/scope/base/runtime-scope';
@@ -39,7 +39,7 @@ export interface ApplicationViewSource {
   readonly getLifecycle: () => ApplicationLifecycleSnapshot;
   readonly getNavigation: () => ApplicationNavigationSnapshot;
   readonly getRouterRuntime: () => RouterRuntime<ModuleMetadata>;
-  readonly getRouterRuntimeEntries: () => readonly ApplicationRouterRuntimeEntry<ModuleMetadata>[];
+  readonly getRouterHistoryEntries: () => readonly ApplicationRouterHistoryEntry<ModuleMetadata>[];
   readonly layouts: readonly LayoutConstructor[];
   readonly routing: ResolvedApplicationRouting | null;
   readonly routerBridge: NativeRouterBridge;
@@ -81,7 +81,7 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
   } else if (lifecycle.phase !== 'ready') {
     content = props.source.components.splash ?? null;
   } else {
-    if (navigation.navigation) {
+    if (navigation.navigation || navigation.pending) {
       const runtime = props.source.getRouterRuntime();
 
       content = renderLayouts(
@@ -89,8 +89,10 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
         <NativeNavigationHost
           bridge={props.source.routerBridge}
           components={props.source.components}
+          current={navigation.navigation}
           decision={navigation.decision}
-          getRuntimeEntries={props.source.getRouterRuntimeEntries}
+          getHistoryEntries={props.source.getRouterHistoryEntries}
+          pending={navigation.pending}
           runtime={runtime}
         />,
       );

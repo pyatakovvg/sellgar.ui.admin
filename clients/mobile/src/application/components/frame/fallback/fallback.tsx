@@ -13,6 +13,7 @@ export const Fallback: React.FC = (props) => {
 const styles = StyleSheet.create({
   status: {
     alignItems: 'center',
+    backgroundColor: '#11131a',
     flex: 1,
     gap: 16,
     padding: 20,

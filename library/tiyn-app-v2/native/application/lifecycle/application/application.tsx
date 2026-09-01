@@ -3,7 +3,7 @@ import type React from 'react';
 import type { ApplicationLifecycleListener } from '../../../../core/application/lifecycle/application-lifecycle';
 import { Application as CoreApplication } from '../../../../core/application/lifecycle/application';
 import type { ApplicationNavigationListener } from '../../../../core/application/lifecycle/application';
-import type { ApplicationRouterRuntimeEntry } from '../../../../core/application/lifecycle/application';
+import type { ApplicationRouterHistoryEntry } from '../../../../core/application/lifecycle/application';
 import { NativeModuleExportResolver } from '../../../module/resolution/module-export-resolver';
 import type { ModuleMetadata } from '../../../module/declaration/module';
 import type { NativeRouterBridge } from '../../../router/bridge/native-router-bridge';
@@ -42,8 +42,8 @@ export abstract class Application extends CoreApplication<ModuleMetadata, Applic
       routing: this.nativeConfig.routingValue,
       routerBridge: this.nativeRouterBridge,
       getRouterRuntime: () => this.getRouterRuntime(),
-      getRouterRuntimeEntries: (): readonly ApplicationRouterRuntimeEntry<ModuleMetadata>[] =>
-        this.getRouterRuntimeEntries(),
+      getRouterHistoryEntries: (): readonly ApplicationRouterHistoryEntry<ModuleMetadata>[] =>
+        this.getRouterHistoryEntries(),
       scope: this.getApplicationScope(),
       subscribeLifecycle: (listener: ApplicationLifecycleListener) => this.subscribe(listener),
       subscribeNavigation: (listener: ApplicationNavigationListener) => this.subscribeNavigation(listener),

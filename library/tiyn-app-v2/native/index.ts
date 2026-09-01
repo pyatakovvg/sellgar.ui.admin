@@ -100,8 +100,12 @@ export type {
   NativeRouterTransportInterface,
   NativeRouterTransportListener,
 } from './router/transport/native-router-transport';
-export { Route, RouteAnimation } from './router/declaration/route';
+export { Route } from './router/declaration/route';
 export type { RouteOptions } from './router/declaration/route';
+export { ScreenAnimation } from './screen/declaration/screen-animation';
+export type { ScreenPresentation } from './screen/declaration/screen-presentation';
+export { ScreenRenderer } from './screen/rendering/screen-renderer';
+export type { ScreenRendererProps } from './screen/rendering/screen-renderer';
 export { Router } from './router/declaration/router';
 export type { RouterOptions } from './router/declaration/router';
 export { Shell, ShellInterface } from './router/declaration/shell';

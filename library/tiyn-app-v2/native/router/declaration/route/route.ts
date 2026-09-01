@@ -9,24 +9,16 @@ import {
 } from '../../../../core/router/declaration/route';
 import type { RouteToken } from '../../../../core/router/declaration/route-token';
 import { getLayoutMetadata, type LayoutConstructor } from '../../../layout/declaration/layout';
+import type { ScreenAnimation } from '../../../screen/declaration/screen-animation';
 
 type NativeRouteModuleExports = Readonly<Record<string, unknown>>;
 type NativeRouteModuleLoader = () => Promise<NativeRouteModuleExports>;
-
-export const RouteAnimation = Object.freeze({
-  Fade: 'fade',
-  SlideFromBottom: 'slide-from-bottom',
-  SlideFromLeft: 'slide-from-left',
-  SlideFromRight: 'slide-from-right',
-} as const);
-
-export type RouteAnimation = (typeof RouteAnimation)[keyof typeof RouteAnimation];
 
 export type RouteOptions<
   TToken extends RouteToken | undefined = RouteToken | undefined,
   TAddress extends RouteAddress | undefined = RouteAddress | undefined,
 > = CoreRouteOptions<TToken, TAddress> & {
-  readonly animation?: RouteAnimation;
+  readonly animation?: ScreenAnimation;
   readonly exception?: React.ReactNode;
   readonly fallback?: React.ReactNode;
   readonly forbidden?: React.ReactNode;
@@ -36,7 +28,7 @@ export type RouteOptions<
 };
 
 export interface RoutePresentationDefinition {
-  readonly animation: RouteAnimation | undefined;
+  readonly animation: ScreenAnimation | undefined;
   readonly exception: React.ReactNode | undefined;
   readonly fallback: React.ReactNode | undefined;
   readonly forbidden: React.ReactNode | undefined;

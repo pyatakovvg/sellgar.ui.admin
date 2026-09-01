@@ -7,7 +7,7 @@ import {
   SignInRoute,
 } from '@library/route-tokens';
 import { param, segments } from '@sellgar/app-v2';
-import { Route, RouteAnimation, Router } from '@sellgar/app-v2/native';
+import { Route, Router, ScreenAnimation } from '@sellgar/app-v2/native';
 
 import { MainTabsLayout } from '../../layouts/main-tabs/src';
 import { RequireAnonymousSessionPolicy, RequireAuthenticatedSessionPolicy } from '../policies';
@@ -52,7 +52,7 @@ const createAuthenticatedBranch = (): Route => {
         routes: [
           new Route({
             address: segments(param('uuid')),
-            animation: RouteAnimation.SlideFromRight,
+            animation: ScreenAnimation.SlideFromRight,
             token: ProductModifyRoute,
             load: () => import('../../pages/product-detail/src'),
           }),
@@ -66,7 +66,7 @@ const createAuthenticatedBranch = (): Route => {
           new Route({
             token: BrandRoute,
             address: segments(param('uuid')),
-            animation: RouteAnimation.SlideFromRight,
+            animation: ScreenAnimation.SlideFromRight,
             load: () => import('../../pages/brand/src'),
           }),
         ],

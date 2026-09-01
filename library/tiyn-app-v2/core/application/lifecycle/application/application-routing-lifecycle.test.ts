@@ -140,6 +140,10 @@ class TestApplication extends Application<null> {
     return this.getRouterRuntimeEntries();
   }
 
+  get historyEntries() {
+    return this.getRouterHistoryEntries();
+  }
+
   protected configure(app: ApplicationConfiguratorInterface): void {
     app.router(this.router);
   }
@@ -325,6 +329,13 @@ describe('Application routing lifecycle', () => {
       { key: 'activation:1', phase: 'focused' },
       { key: 'activation:2', phase: 'retained' },
     ]);
+    expect(app.historyEntries.map(({ activation, key, phase }) => ({ activation: activation.id, key, phase }))).toEqual(
+      [
+        { activation: 'activation:1', key: 'navigation:1', phase: 'retained' },
+        { activation: 'activation:2', key: 'navigation:2', phase: 'retained' },
+        { activation: 'activation:1', key: 'navigation:3', phase: 'focused' },
+      ],
+    );
 
     await app.navigate.back();
 
@@ -334,6 +345,12 @@ describe('Application routing lifecycle', () => {
       { key: 'activation:1', phase: 'retained' },
       { key: 'activation:2', phase: 'focused' },
     ]);
+    expect(app.historyEntries.map(({ activation, key, phase }) => ({ activation: activation.id, key, phase }))).toEqual(
+      [
+        { activation: 'activation:1', key: 'navigation:1', phase: 'retained' },
+        { activation: 'activation:2', key: 'navigation:2', phase: 'focused' },
+      ],
+    );
 
     await app.navigate.back();
 

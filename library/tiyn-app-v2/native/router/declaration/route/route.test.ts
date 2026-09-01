@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { getRoutePresentationDefinition, Route, RouteAnimation } from './route.ts';
+import { ScreenAnimation } from '../../../screen/declaration/screen-animation';
+import { getRoutePresentationDefinition, Route } from './route.ts';
 
 describe('Native Route presentation', () => {
   it('does not animate a Route by default', () => {
@@ -12,11 +13,11 @@ describe('Native Route presentation', () => {
   it('keeps animation local to the configured Route', () => {
     const child = new Route({ load: async () => ({}) });
     const route = new Route({
-      animation: RouteAnimation.SlideFromRight,
+      animation: ScreenAnimation.SlideFromRight,
       routes: [child],
     });
 
-    expect(getRoutePresentationDefinition(route).animation).toBe(RouteAnimation.SlideFromRight);
+    expect(getRoutePresentationDefinition(route).animation).toBe(ScreenAnimation.SlideFromRight);
     expect(getRoutePresentationDefinition(child).animation).toBeUndefined();
   });
 });

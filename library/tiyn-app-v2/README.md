@@ -19,9 +19,10 @@ Native entrypoint повторяет публичные framework-понятия
 guards/reactive bridges, `Route`, `Router`, `Shell`, navigation controls и
 controller/revalidation hooks. Оба adapter-а используют один core lifecycle и
 одинаковый bootstrap flow; различаются только renderer-specific presentation и
-router bridge. Android fixture находится в `clients/mobile`. Stack/Tabs
-projection использует core registry физических runtime entries с фазами
-`focused`, `preparing` и `retained`. Новый screen сразу показывает локальный
+router bridge. Android fixture находится в `clients/mobile`. Native stack
+projection использует хронологические core history entries и общие activation
+runtimes, а физические переходы выполняет закрытый адаптер React Navigation
+Native Stack. Новый screen сразу показывает локальный
 fallback, возврат к retained screen сразу показывает сохранённые данные и затем
 запускает scoped revalidation тех же controller instances. Back во время
 `preparing` отменяет transition и мгновенно возвращает committed presentation.

@@ -1,83 +1,126 @@
-import type { ApplicationRouterRuntimeEntry } from '../../../../core/application/lifecycle/application';
+import type { ApplicationRouterHistoryEntry } from '../../../../core/application/lifecycle/application';
+import type { RouteDeclaration } from '../../../../core/router/declaration/route';
+import { areNavigationParamsEqual } from '../../../../core/router/runtime/navigation-state';
+import type { NavigationRouteEntry, NavigationState } from '../../../../core/router/runtime/navigation-state';
 import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
-import type { RouterRuntimeBranchSnapshot } from '../../../../core/router/runtime/router-runtime';
 import type { ModuleMetadata } from '../../../module/declaration/module';
 
+export interface NativeRouteHistoryGroup {
+  readonly entries: readonly ApplicationRouterHistoryEntry<ModuleMetadata>[];
+  readonly id: string;
+  readonly runtime: RouteActivationRuntime<ModuleMetadata> | null;
+}
+
 export interface NativePendingRouteProjection {
-  readonly commonRouteCount: number;
-  readonly routes: readonly RouteActivationRuntime<ModuleMetadata>[];
+  readonly changeDepth: number;
+  readonly path: readonly NavigationRouteEntry[];
 }
 
-export interface NativeRouteProjectionNode {
-  readonly children: readonly NativeRouteProjectionNode[];
-  readonly entryKeys: readonly string[];
-  readonly runtime: RouteActivationRuntime<ModuleMetadata>;
-  readonly terminalEntryKeys: readonly string[];
-}
-
-interface MutableNativeRouteProjectionNode {
-  readonly children: MutableNativeRouteProjectionNode[];
-  readonly entryKeys: string[];
-  readonly runtime: RouteActivationRuntime<ModuleMetadata>;
-  readonly terminalEntryKeys: string[];
-}
-
-export const createNativeRouteProjection = (
-  entries: readonly ApplicationRouterRuntimeEntry<ModuleMetadata>[],
-): readonly NativeRouteProjectionNode[] => {
-  const roots: MutableNativeRouteProjectionNode[] = [];
+/**
+ * Projects the flat chronological core history into one stable Route.routes
+ * outlet. Consecutive entries that stay inside the same Route activation share
+ * one parent screen; leaving and returning creates another physical position.
+ */
+export const groupNativeRouteHistory = (
+  entries: readonly ApplicationRouterHistoryEntry<ModuleMetadata>[],
+  depth: number,
+): readonly NativeRouteHistoryGroup[] => {
+  const groups: MutableNativeRouteHistoryGroup[] = [];
 
   for (const entry of entries) {
-    let siblings = roots;
-    let node: MutableNativeRouteProjectionNode | null = null;
+    const runtime = entry.tree.routes[depth] ?? null;
+    const id = resolveNativeRoutePresentationKey(runtime?.route ?? null, depth);
+    const existingIndex = groups.findIndex((group) => group.id === id);
+    const existing = existingIndex < 0 ? null : groups[existingIndex]!;
 
-    for (const runtime of entry.tree.routes) {
-      node = findOrCreateNode(siblings, runtime);
-      node.entryKeys.push(entry.key);
-      siblings = node.children;
+    if (existing) {
+      existing.entries.push(entry);
+
+      if (existingIndex !== groups.length - 1) {
+        groups.splice(existingIndex, 1);
+        groups.push(existing);
+      }
+
+      continue;
     }
 
-    node?.terminalEntryKeys.push(entry.key);
+    groups.push({
+      entries: [entry],
+      id,
+      runtime,
+    });
   }
 
-  return Object.freeze(roots.map(freezeNode));
+  return Object.freeze(
+    groups.map((group) =>
+      Object.freeze({
+        entries: Object.freeze(group.entries),
+        id: group.id,
+        runtime: group.runtime,
+      }),
+    ),
+  );
 };
 
 export const resolveNativePendingRouteProjection = (
-  branch: RouterRuntimeBranchSnapshot<ModuleMetadata>,
+  current: NavigationState | undefined,
+  pending: NavigationState | null,
 ): NativePendingRouteProjection | null => {
-  if (!branch.pendingLocalChange) return null;
+  if (!pending || pending.revalidation !== null) return null;
+
+  const path = pending.root.path;
+  const currentPath = current?.root.path ?? [];
+  const commonRouteCount = resolveCommonRouteCount(currentPath, path);
+
+  if (commonRouteCount === currentPath.length && commonRouteCount === path.length) {
+    return null;
+  }
 
   return Object.freeze({
-    commonRouteCount: branch.pendingLocalChange.commonRouteCount,
-    routes: branch.routes,
+    changeDepth: commonRouteCount,
+    path,
   });
 };
 
-const findOrCreateNode = (
-  siblings: MutableNativeRouteProjectionNode[],
-  runtime: RouteActivationRuntime<ModuleMetadata>,
-): MutableNativeRouteProjectionNode => {
-  const current = siblings.find((node) => node.runtime === runtime);
+export const resolveNativeRoutePresentationKey = (route: RouteDeclaration | null, depth: number): string => {
+  if (route === null) return `native-route-index:${depth}`;
+
+  const current = routePresentationKeys.get(route);
 
   if (current) return current;
 
-  const node: MutableNativeRouteProjectionNode = {
-    children: [],
-    entryKeys: [],
-    runtime,
-    terminalEntryKeys: [],
-  };
+  const key = `native-route:${++routePresentationSequence}`;
 
-  siblings.push(node);
-  return node;
+  routePresentationKeys.set(route, key);
+  return key;
 };
 
-const freezeNode = (node: MutableNativeRouteProjectionNode): NativeRouteProjectionNode => {
-  return Object.freeze({
-    children: Object.freeze(node.children.map(freezeNode)),
-    entryKeys: Object.freeze([...node.entryKeys]),
-    runtime: node.runtime,
-    terminalEntryKeys: Object.freeze([...node.terminalEntryKeys]),
-  });
+const resolveCommonRouteCount = (
+  current: readonly NavigationRouteEntry[],
+  pending: readonly NavigationRouteEntry[],
+): number => {
+  const length = Math.min(current.length, pending.length);
+
+  for (let index = 0; index < length; index += 1) {
+    const currentEntry = current[index]!;
+    const pendingEntry = pending[index]!;
+
+    if (
+      currentEntry.route !== pendingEntry.route ||
+      !areNavigationParamsEqual(currentEntry.params, pendingEntry.params)
+    ) {
+      return index;
+    }
+  }
+
+  return length;
 };
+
+interface MutableNativeRouteHistoryGroup {
+  readonly entries: ApplicationRouterHistoryEntry<ModuleMetadata>[];
+  readonly id: string;
+  readonly runtime: RouteActivationRuntime<ModuleMetadata> | null;
+}
+
+const routePresentationKeys = new WeakMap<RouteDeclaration, string>();
+let routePresentationSequence = 0;

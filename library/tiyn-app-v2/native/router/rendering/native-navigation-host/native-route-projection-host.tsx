@@ -1,262 +1,228 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-import type { ApplicationRouterRuntimeEntry } from '../../../../core/application/lifecycle/application';
+import type { ApplicationRouterHistoryEntry } from '../../../../core/application/lifecycle/application';
+import type { RouteDeclaration } from '../../../../core/router/declaration/route';
+import { getRouteDefinition } from '../../../../core/router/declaration/route';
+import type { NavigationState } from '../../../../core/router/runtime/navigation-state';
 import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
 import type { ApplicationComponents } from '../../../application/config/application-configurator';
+import { renderLayouts } from '../../../layout/rendering/layout-renderer';
 import type { ModuleMetadata } from '../../../module/declaration/module';
+import type { ScreenPresentation } from '../../../screen/declaration/screen-presentation';
+import { ScreenRenderer } from '../../../screen/rendering/screen-renderer';
 import { getRoutePresentationDefinition } from '../../declaration/route';
-import { RouteModuleHost } from '../route-host';
-import { RoutePathHost } from '../router-host';
-import { ScreenTransition } from '../screen-transition';
 import {
-  createNativeRouteProjection,
+  groupNativeRouteHistory,
   type NativePendingRouteProjection,
-  type NativeRouteProjectionNode,
+  resolveNativePendingRouteProjection,
+  resolveNativeRoutePresentationKey,
 } from './native-route-projection.ts';
-import { resolveNativeScreenOrder } from './native-screen-order.ts';
 
 interface NativeRouteProjectionHostProps {
-  readonly backInProgress: boolean;
   readonly components: ApplicationComponents;
-  readonly entries: readonly ApplicationRouterRuntimeEntry<ModuleMetadata>[];
-  readonly forward: boolean;
-  readonly pending: NativePendingRouteProjection | null;
+  readonly current: NavigationState | undefined;
+  readonly entries: readonly ApplicationRouterHistoryEntry<ModuleMetadata>[];
+  readonly pending: NavigationState | null;
 }
 
 export const NativeRouteProjectionHost: React.FC<NativeRouteProjectionHostProps> = (props) => {
-  const nodes = React.useMemo(() => createNativeRouteProjection(props.entries), [props.entries]);
-  const focusedEntryKey = props.entries.find((entry) => entry.phase === 'focused')?.key;
+  const pending = resolveNativePendingRouteProjection(props.current, props.pending);
 
-  return (
-    <NativeRouteOutletHost
-      backInProgress={props.backInProgress}
-      components={props.components}
-      depth={0}
-      forward={props.forward}
-      nodes={nodes}
-      pending={props.pending}
-      selectedEntryKey={focusedEntryKey}
-      transitionsEnabled
-    />
-  );
+  if (props.entries.length === 0 && pending === null) {
+    return props.components.fallback ?? null;
+  }
+
+  return <NativeRouteOutletHost components={props.components} depth={0} entries={props.entries} pending={pending} />;
 };
 
-interface NativeRouteNodeHostProps extends NativeRouteProjectionContext {
-  readonly node: NativeRouteProjectionNode;
-}
-
-const NativeRouteNodeHost: React.FC<NativeRouteNodeHostProps> = (props) => {
-  const pending = props.pending?.routes[props.depth] === props.node.runtime ? props.pending : null;
-
-  return (
-    <RoutePathHost
-      components={props.components}
-      outlet={(components) => (
-        <NativeRouteOutletHost
-          {...props}
-          components={components}
-          depth={props.depth + 1}
-          nodes={props.node.children}
-          ownerRuntime={props.node.runtime}
-          pending={pending}
-          terminalEntryKeys={props.node.terminalEntryKeys}
-        />
-      )}
-      presentation="screen"
-      routes={[props.node.runtime]}
-    />
-  );
-};
-
-interface NativeRouteProjectionContext {
-  readonly backInProgress: boolean;
+interface NativeRouteOutletHostProps {
   readonly components: ApplicationComponents;
   readonly depth: number;
-  readonly forward: boolean;
-  readonly pending: NativePendingRouteProjection | null;
-  readonly selectedEntryKey: string | undefined;
-  readonly transitionsEnabled: boolean;
-}
-
-interface NativeRouteOutletHostProps extends NativeRouteProjectionContext {
-  readonly nodes: readonly NativeRouteProjectionNode[];
+  readonly entries: readonly ApplicationRouterHistoryEntry<ModuleMetadata>[];
   readonly ownerRuntime?: RouteActivationRuntime<ModuleMetadata>;
-  readonly terminalEntryKeys?: readonly string[];
+  readonly pending: NativePendingRouteProjection | null;
 }
-
-type NativeRouteOutletItem =
-  | {
-      readonly entryKeys: readonly string[];
-      readonly id: string;
-      readonly kind: 'module';
-      readonly runtime: RouteActivationRuntime<ModuleMetadata>;
-    }
-  | {
-      readonly entryKeys: readonly string[];
-      readonly id: string;
-      readonly kind: 'route';
-      readonly node: NativeRouteProjectionNode;
-    };
 
 const NativeRouteOutletHost: React.FC<NativeRouteOutletHostProps> = (props) => {
-  const items = createOutletItems(props.ownerRuntime, props.terminalEntryKeys, props.nodes);
-  const itemEntryKeys = React.useRef(new Map<string, string>());
-  const selectedItem = resolveSelectedItem(items, props.selectedEntryKey);
-  const selectedItemId = useRetainedSelectedItem(items, selectedItem?.id);
-  const order = React.useRef<readonly string[]>([]);
+  const groups = groupNativeRouteHistory(props.entries, props.depth);
+  const pendingAtOutlet = props.pending?.changeDepth === props.depth ? props.pending : null;
+  const pendingRoute = pendingAtOutlet?.path[props.depth]?.route ?? null;
+  const pendingKey = pendingAtOutlet ? resolveNativeRoutePresentationKey(pendingRoute, props.depth) : null;
+  const screens: ScreenPresentation[] = groups.flatMap((group) => {
+    if (group.id === pendingKey) return [];
 
-  order.current = resolveNativeScreenOrder(
-    order.current,
-    items.map((item) => item.id),
-    selectedItemId,
-  );
+    if (group.runtime === null) {
+      if (!props.ownerRuntime) {
+        throw new Error('Root native outlet не может содержать index presentation без Route owner.');
+      }
 
-  if (items.length === 0 && !isPendingAtOutlet(props.pending, props.depth)) return null;
+      return [
+        Object.freeze({
+          animation: undefined,
+          content: <NativeRoutePlaceholder id={group.id} runtime={props.ownerRuntime} />,
+          key: group.id,
+        }),
+      ];
+    }
+
+    const presentation = getRoutePresentationDefinition(group.runtime.route);
+    const pending = props.pending?.path[props.depth]?.route === group.runtime.route ? props.pending : null;
+
+    return [
+      Object.freeze({
+        animation: presentation.animation,
+        content: (
+          <NativeRouteScreen
+            components={props.components}
+            depth={props.depth + 1}
+            entries={group.entries}
+            id={group.id}
+            pending={pending}
+            runtime={group.runtime}
+          />
+        ),
+        key: group.id,
+      }),
+    ];
+  });
+
+  if (pendingAtOutlet) {
+    screens.push(createPendingScreen(props.components, pendingAtOutlet, props.depth));
+  }
 
   return (
     <View style={styles.outlet}>
-      {items.map((item) => {
-        const focused = item.id === selectedItemId;
-        const entryKey = resolveItemEntryKey(itemEntryKeys.current, item, props.selectedEntryKey);
-        const animation =
-          item.kind === 'route' && props.transitionsEnabled
-            ? getRoutePresentationDefinition(item.node.runtime.route).animation
-            : undefined;
-
-        return (
-          <ScreenTransition
-            accessibilityElementsHidden={!focused}
-            animation={animation}
-            backInProgress={props.backInProgress}
-            focused={focused}
-            forward={props.forward}
-            importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-            key={item.id}
-            order={order.current.indexOf(item.id)}
-            pointerEvents={focused ? 'auto' : 'none'}
-            topOrder={items.length}
-          >
-            {item.kind === 'module' ? (
-              <RouteModuleHost components={props.components} presentation="screen" runtime={item.runtime} />
-            ) : (
-              <NativeRouteNodeHost
-                {...props}
-                node={item.node}
-                selectedEntryKey={entryKey}
-                transitionsEnabled={props.transitionsEnabled && focused}
-              />
-            )}
-          </ScreenTransition>
-        );
-      })}
-
-      {isPendingAtOutlet(props.pending, props.depth) ? (
-        <View pointerEvents="auto" style={[StyleSheet.absoluteFill, styles.pending]}>
-          {props.components.fallback ?? null}
-        </View>
-      ) : null}
+      <ScreenRenderer screens={screens} />
     </View>
   );
 };
 
-const createOutletItems = (
-  ownerRuntime: RouteActivationRuntime<ModuleMetadata> | undefined,
-  terminalEntryKeys: readonly string[] | undefined,
-  nodes: readonly NativeRouteProjectionNode[],
-): readonly NativeRouteOutletItem[] => {
-  const items: NativeRouteOutletItem[] = [];
+interface NativeRouteScreenProps {
+  readonly components: ApplicationComponents;
+  readonly depth: number;
+  readonly entries: readonly ApplicationRouterHistoryEntry<ModuleMetadata>[];
+  readonly id: string;
+  readonly pending: NativePendingRouteProjection | null;
+  readonly runtime: RouteActivationRuntime<ModuleMetadata>;
+}
 
-  if (ownerRuntime && terminalEntryKeys && terminalEntryKeys.length > 0) {
-    items.push({
-      entryKeys: terminalEntryKeys,
-      id: `${getRouteRuntimeKey(ownerRuntime)}:module`,
-      kind: 'module',
-      runtime: ownerRuntime,
+const NativeRouteScreen: React.FC<NativeRouteScreenProps> = (props) => {
+  const route = getRouteDefinition(props.runtime.route);
+  const presentation = getRoutePresentationDefinition(props.runtime.route);
+  const content =
+    route.routes.length > 0 ? (
+      <NativeRouteOutletHost
+        components={props.components}
+        depth={props.depth}
+        entries={props.entries}
+        ownerRuntime={props.runtime}
+        pending={props.pending}
+      />
+    ) : (
+      <NativeRoutePlaceholder id={props.id} runtime={props.runtime} />
+    );
+
+  return <>{renderLayouts(presentation.layouts, content)}</>;
+};
+
+const createPendingScreen = (
+  components: ApplicationComponents,
+  pending: NativePendingRouteProjection,
+  depth: number,
+): ScreenPresentation => {
+  const route = pending.path[depth]?.route ?? null;
+  const key = resolveNativeRoutePresentationKey(route, depth);
+
+  if (route === null) {
+    return Object.freeze({
+      animation: undefined,
+      content: components.fallback ?? null,
+      key,
     });
   }
 
-  for (const node of nodes) {
-    items.push({
-      entryKeys: node.entryKeys,
-      id: `${getRouteRuntimeKey(node.runtime)}:route`,
-      kind: 'route',
-      node,
-    });
-  }
+  const presentation = getRoutePresentationDefinition(route);
 
-  return items;
+  return Object.freeze({
+    animation: presentation.animation,
+    content: <NativePendingRouteScreen components={components} depth={depth + 1} pending={pending} route={route} />,
+    key,
+  });
 };
 
-const resolveSelectedItem = (
-  items: readonly NativeRouteOutletItem[],
-  selectedEntryKey: string | undefined,
-): NativeRouteOutletItem | undefined => {
-  if (!selectedEntryKey) return undefined;
-  return items.find((item) => item.entryKeys.includes(selectedEntryKey));
+const NativePendingRouteScreen: React.FC<{
+  readonly components: ApplicationComponents;
+  readonly depth: number;
+  readonly pending: NativePendingRouteProjection;
+  readonly route: RouteDeclaration;
+}> = (props) => {
+  const route = getRouteDefinition(props.route);
+  const content =
+    route.routes.length > 0 ? (
+      <View style={styles.outlet}>
+        <ScreenRenderer screens={[createPendingScreen(props.components, props.pending, props.depth)]} />
+      </View>
+    ) : (
+      (props.components.fallback ?? null)
+    );
+
+  return <>{renderLayouts(getRoutePresentationDefinition(props.route).layouts, content)}</>;
 };
 
-const useRetainedSelectedItem = (
-  items: readonly NativeRouteOutletItem[],
-  selectedItemId: string | undefined,
-): string | null => {
-  const selected = React.useRef<string | null>(null);
-  const available = new Set(items.map((item) => item.id));
+const NativeRoutePlaceholder: React.FC<{
+  readonly id: string;
+  readonly runtime: RouteActivationRuntime<ModuleMetadata>;
+}> = ({ id, runtime }) => {
+  const route = getRouteDefinition(runtime.route);
+  const title = resolveRouteTitle(route.token);
+  const params = runtime.getParams();
 
-  if (selectedItemId) {
-    selected.current = selectedItemId;
-  } else if (selected.current === null || !available.has(selected.current)) {
-    selected.current = items.at(-1)?.id ?? null;
-  }
-
-  return selected.current;
+  return (
+    <View accessibilityLabel={`Native screen ${title}`} style={styles.placeholder}>
+      <Text style={styles.eyebrow}>ROUTER MECHANICS</Text>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.details}>{JSON.stringify(params)}</Text>
+      <Text style={styles.identity}>{id}</Text>
+    </View>
+  );
 };
 
-const resolveItemEntryKey = (
-  selections: Map<string, string>,
-  item: NativeRouteOutletItem,
-  selectedEntryKey: string | undefined,
-): string => {
-  if (selectedEntryKey && item.entryKeys.includes(selectedEntryKey)) {
-    selections.set(item.id, selectedEntryKey);
-    return selectedEntryKey;
-  }
-
-  const retained = selections.get(item.id);
-
-  if (retained && item.entryKeys.includes(retained)) return retained;
-
-  const entryKey = item.entryKeys.at(-1);
-
-  if (!entryKey) throw new Error('Native route presentation не связана ни с одной core activation.');
-
-  selections.set(item.id, entryKey);
-  return entryKey;
-};
-
-const isPendingAtOutlet = (pending: NativePendingRouteProjection | null, depth: number): boolean => {
-  return pending?.commonRouteCount === depth;
-};
-
-const routeRuntimeKeys = new WeakMap<RouteActivationRuntime<ModuleMetadata>, string>();
-let routeRuntimeKey = 0;
-
-const getRouteRuntimeKey = (runtime: RouteActivationRuntime<ModuleMetadata>): string => {
-  const current = routeRuntimeKeys.get(runtime);
-
-  if (current) return current;
-
-  const key = `native-route-presentation-${++routeRuntimeKey}`;
-
-  routeRuntimeKeys.set(runtime, key);
-  return key;
+const resolveRouteTitle = (token: ReturnType<typeof getRouteDefinition>['token']): string => {
+  if (typeof token === 'function' && token.name) return token.name;
+  return 'AnonymousRoute';
 };
 
 const styles = StyleSheet.create({
+  details: {
+    color: '#a9afbf',
+    fontSize: 14,
+    marginTop: 12,
+  },
+  eyebrow: {
+    color: '#7f75ff',
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1.4,
+  },
+  identity: {
+    color: '#62697a',
+    fontSize: 11,
+    marginTop: 18,
+  },
   outlet: {
     flex: 1,
   },
-  pending: {
-    zIndex: 1,
+  placeholder: {
+    backgroundColor: '#0f1117',
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 28,
+  },
+  title: {
+    color: '#f4f5f8',
+    fontSize: 28,
+    fontWeight: '700',
+    marginTop: 8,
   },
 });

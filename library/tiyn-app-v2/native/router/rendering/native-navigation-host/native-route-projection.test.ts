@@ -1,121 +1,154 @@
 import { describe, expect, it } from 'vitest';
 
-import type { ApplicationRouterRuntimeEntry } from '../../../../core/application/lifecycle/application';
+import type { ApplicationRouterHistoryEntry } from '../../../../core/application/lifecycle/application';
 import { Route } from '../../../../core/router/declaration/route';
+import type { NavigationState } from '../../../../core/router/runtime/navigation-state';
 import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
 import type { ModuleMetadata } from '../../../module/declaration/module';
-import type { RouterRuntimeBranchSnapshot } from '../../../../core/router/runtime/router-runtime';
-import { createNativeRouteProjection, resolveNativePendingRouteProjection } from './native-route-projection.ts';
+import { groupNativeRouteHistory, resolveNativePendingRouteProjection } from './native-route-projection.ts';
 
-describe('createNativeRouteProjection', () => {
-  it('projects retained activations as one recursive route tree', () => {
-    const authenticated = createRouteRuntime();
-    const products = createRouteRuntime();
-    const product = createRouteRuntime();
-    const brands = createRouteRuntime();
-    const projection = createNativeRouteProjection([
-      createEntry('products', [authenticated, products]),
-      createEntry('product', [authenticated, products, product]),
-      createEntry('brands', [authenticated, brands]),
-    ]);
+describe('groupNativeRouteHistory', () => {
+  it('keeps one stable parent screen while navigation goes deeper inside its Route branch', () => {
+    const authenticated = createRouteRuntime('authenticated');
+    const products = createRouteRuntime('products');
+    const product = createRouteRuntime('product');
+    const entries = [
+      createEntry('navigation:1', [authenticated, products]),
+      createEntry('navigation:2', [authenticated, products, product]),
+    ];
 
-    expect(projection).toHaveLength(1);
-    expect(projection[0]).toMatchObject({
-      entryKeys: ['products', 'product', 'brands'],
-      runtime: authenticated,
-      terminalEntryKeys: [],
-    });
-    expect(projection[0]!.children).toHaveLength(2);
-    expect(projection[0]!.children[0]).toMatchObject({
-      entryKeys: ['products', 'product'],
-      runtime: products,
-      terminalEntryKeys: ['products'],
-    });
-    expect(projection[0]!.children[0]!.children[0]).toMatchObject({
-      entryKeys: ['product'],
-      runtime: product,
-      terminalEntryKeys: ['product'],
-    });
-    expect(projection[0]!.children[1]).toMatchObject({
-      entryKeys: ['brands'],
-      runtime: brands,
-      terminalEntryKeys: ['brands'],
-    });
+    const root = groupNativeRouteHistory(entries, 0);
+    const authenticatedOutlet = groupNativeRouteHistory(root[0]!.entries, 1);
+
+    expect(root).toHaveLength(1);
+    expect(root[0]!.runtime).toBe(authenticated);
+    expect(authenticatedOutlet).toHaveLength(1);
+    expect(authenticatedOutlet[0]!.runtime).toBe(products);
+    expect(authenticatedOutlet[0]!.entries).toEqual(entries);
   });
 
-  it('shares a Route with load and children instead of treating load as a layout boundary', () => {
-    const childRoute = new Route({ load: async () => ({}) });
-    const parent = createRouteRuntime(new Route({ load: async () => ({}), routes: [childRoute] }));
-    const child = createRouteRuntime(childRoute);
-    const projection = createNativeRouteProjection([
-      createEntry('parent', [parent]),
-      createEntry('child', [parent, child]),
-    ]);
+  it('focuses an already created physical screen when history returns to its Route', () => {
+    const authenticated = createRouteRuntime('authenticated');
+    const products = createRouteRuntime('products');
+    const brands = createRouteRuntime('brands');
+    const entries = [
+      createEntry('navigation:1', [authenticated, products]),
+      createEntry('navigation:2', [authenticated, brands]),
+      createEntry('navigation:3', [authenticated, products]),
+    ];
 
-    expect(projection).toHaveLength(1);
-    expect(projection[0]).toMatchObject({
-      entryKeys: ['parent', 'child'],
-      runtime: parent,
-      terminalEntryKeys: ['parent'],
+    const groups = groupNativeRouteHistory(entries, 1);
+
+    expect(groups.map((group) => group.runtime)).toEqual([brands, products]);
+    expect([...new Set(groups.map((group) => group.id))]).toHaveLength(2);
+    expect(groups[1]!.entries).toEqual([entries[0], entries[2]]);
+  });
+
+  it('keeps a physical identity for an update of the same Route runtime', () => {
+    const products = createRouteRuntime('products');
+
+    const before = groupNativeRouteHistory([createEntry('navigation:1', [products])], 0);
+    const after = groupNativeRouteHistory([createEntry('navigation:1', [products])], 0);
+
+    expect(after[0]!.id).toBe(before[0]!.id);
+  });
+
+  it('changes physical identity when replace selects another Route runtime under the same history entry', () => {
+    const products = createRouteRuntime('products');
+    const brands = createRouteRuntime('brands');
+
+    const before = groupNativeRouteHistory([createEntry('navigation:1', [products])], 0);
+    const after = groupNativeRouteHistory([createEntry('navigation:1', [brands])], 0);
+
+    expect(before[0]!.id).not.toBe(after[0]!.id);
+  });
+
+  it('projects the owner Module and its child Routes into the same stable child outlet', () => {
+    const authenticated = createRouteRuntime('authenticated');
+    const products = createRouteRuntime('products');
+    const product = createRouteRuntime('product');
+    const entries = [
+      createEntry('navigation:1', [authenticated, products]),
+      createEntry('navigation:2', [authenticated, products, product]),
+      createEntry('navigation:3', [authenticated, products]),
+    ];
+
+    const groups = groupNativeRouteHistory(entries, 2);
+
+    expect(groups.map((group) => group.runtime)).toEqual([product, null]);
+    expect(groups[1]!.entries).toEqual([entries[0], entries[2]]);
+  });
+
+  it('publishes a route change as pending screen work but ignores revalidation', () => {
+    const products = new Route({ load: async () => ({}) });
+    const brands = new Route({ load: async () => ({}) });
+    const current = createNavigation([{ params: {}, route: products }]);
+    const target = createNavigation([{ params: {}, route: brands }]);
+
+    expect(resolveNativePendingRouteProjection(current, target)).toEqual({
+      changeDepth: 0,
+      path: target.root.path,
     });
-    expect(projection[0]!.children).toHaveLength(1);
-    expect(projection[0]!.children[0]).toMatchObject({
-      entryKeys: ['child'],
-      runtime: child,
-      terminalEntryKeys: ['child'],
-    });
+    expect(
+      resolveNativePendingRouteProjection(current, {
+        ...target,
+        revalidation: { kind: 'branch' },
+      }),
+    ).toBeNull();
   });
 
-  it('keeps parameterized runtimes as separate retained presentations', () => {
-    const branch = createRouteRuntime();
-    const productOne = createRouteRuntime();
-    const productTwo = createRouteRuntime();
-    const projection = createNativeRouteProjection([
-      createEntry('product-1', [branch, productOne]),
-      createEntry('product-2', [branch, productTwo]),
-    ]);
+  it('keeps the current screen for equal params and prepares it again when route params change', () => {
+    const product = new Route({ load: async () => ({}) });
+    const current = createNavigation([{ params: { uuid: 'native-45' }, route: product }]);
 
-    expect(projection[0]!.children.map((node) => node.runtime)).toEqual([productOne, productTwo]);
-  });
-
-  it('does not project nested Router preparation as a screen fallback', () => {
-    const branch = {
-      childPending: true,
-      pending: true,
-      pendingLocalChange: null,
-      routes: [createRouteRuntime()],
-    } as unknown as RouterRuntimeBranchSnapshot<ModuleMetadata>;
-
-    expect(resolveNativePendingRouteProjection(branch)).toBeNull();
-  });
-
-  it('projects a local Route change at its unchanged ancestry outlet', () => {
-    const routes = [createRouteRuntime(), createRouteRuntime()];
-    const branch = {
-      childPending: false,
-      pending: true,
-      pendingLocalChange: { commonRouteCount: 1 },
-      routes,
-    } as unknown as RouterRuntimeBranchSnapshot<ModuleMetadata>;
-
-    expect(resolveNativePendingRouteProjection(branch)).toEqual({ commonRouteCount: 1, routes });
+    expect(
+      resolveNativePendingRouteProjection(
+        current,
+        createNavigation([{ params: { uuid: 'native-45' }, route: product }]),
+      ),
+    ).toBeNull();
+    expect(
+      resolveNativePendingRouteProjection(
+        current,
+        createNavigation([{ params: { uuid: 'native-84' }, route: product }]),
+      ),
+    ).toMatchObject({ changeDepth: 0 });
   });
 });
 
-const createRouteRuntime = (
-  route: Route = new Route({ load: async () => ({}) }),
-): RouteActivationRuntime<ModuleMetadata> => {
+const createRouteRuntime = (runtimeId: string): RouteActivationRuntime<ModuleMetadata> => {
   return {
-    route,
+    route: new Route({ load: async () => ({}) }),
+    runtimeId,
   } as unknown as RouteActivationRuntime<ModuleMetadata>;
 };
 
 const createEntry = (
   key: string,
   routes: readonly RouteActivationRuntime<ModuleMetadata>[],
-): ApplicationRouterRuntimeEntry<ModuleMetadata> => {
+): ApplicationRouterHistoryEntry<ModuleMetadata> => {
   return {
     key,
     tree: { routes },
-  } as unknown as ApplicationRouterRuntimeEntry<ModuleMetadata>;
+  } as unknown as ApplicationRouterHistoryEntry<ModuleMetadata>;
+};
+
+const createNavigation = (
+  path: readonly { readonly params: Readonly<Record<string, unknown>>; readonly route: Route }[],
+): NavigationState => {
+  return {
+    boundary: null,
+    initiator: null,
+    pendingNestedAddress: null,
+    replace: false,
+    revalidation: null,
+    root: {
+      child: null,
+      owner: null,
+      path: path.map((entry) => ({ ...entry, token: undefined })),
+      query: {},
+      router: {} as NavigationState['root']['router'],
+    },
+    state: undefined,
+  };
 };

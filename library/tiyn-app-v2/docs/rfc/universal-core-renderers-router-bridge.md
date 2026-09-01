@@ -3,7 +3,7 @@
 - Статус документа: target
 - Статус RFC: accepted
 - Статус реализации: in-progress
-- Последнее согласование: 2026-08-30
+- Последнее согласование: 2026-09-01
 
 ## Назначение
 
@@ -49,6 +49,16 @@ activations locations: возврат к ним не запускает loaders 
 lifecycle. React web выбирает `release`, React Native — `retain`. Native
 дополнительно задаёт двойной Back для выхода с корня policy-ветки; это platform
 presentation общей core history.
+
+Согласованная 2026-09-01 React Native screen presentation также является
+semantic delta. Новый physical screen создаётся по опубликованной core pending-
+активации до завершения её асинхронной подготовки. Fallback, готовый Module и
+boundary outcome являются последовательными состояниями content одного screen,
+а не отдельными слоями поверх предыдущего screen. Native transition начинается
+с появлением этого screen и не перезапускается после завершения loader. Core
+по-прежнему владеет candidate runtime, commit, history и lifecycle; renderer
+владеет только physical presentation и связывает её с authoritative core
+projection.
 
 Миграция v2 не сохраняет backward compatibility как отдельное требование.
 Старые имена и aliases удаляются вместе с переводом consumers; наличие временного
@@ -567,50 +577,72 @@ app.routing({
   активные core outlets. Внутри Router по-прежнему focused ровно одна Route-
   ветка. Ранее посещённые ветки сохраняет core activation registry; platform
   navigation state лишь проецирует его snapshot.
-- Core Application предоставляет renderer adapter read-only projection
-  уникальных activation, на которые ссылается текущая history: стабильный
-  activation id, `focused | retained` phase и immutable Router/Route tree
-  snapshot. Projection не разрешает renderer менять history, focus либо
-  lifecycle и не добавляется в публичный Router API.
-- Renderer читает activation projection заново при каждом наблюдаемом событии
-  RouterRuntime, а не хранит полученный ранее массив как presentation state.
+- Core Application предоставляет renderer adapter read-only проекции registry
+  уникальных activation, хронологических history entries и текущей pending-
+  операции. Activation projection имеет стабильный id, единственную lifecycle-
+  phase и immutable Router/Route runtime tree. History entry имеет собственный
+  стабильный id, navigation snapshot, позицию/current-признак и optional ссылку
+  на activation: в `release` неактивная entry не удерживает runtime. Несколько
+  entries могут ссылаться на одну activation, но не присваивают ей разные phases.
+  Pending projection имеет стабильную operation identity, target navigation и
+  candidate runtime tree, опубликованный core до ожидания его асинхронной
+  подготовки; она не является history entry и исчезает при commit либо discard.
+  Замена pending projection на committed history snapshot атомарна и содержит
+  явную correlation с завершённой operation, чтобы renderer не угадывал её по
+  времени events или сходству Route params.
+  Ни одна projection не разрешает renderer менять history, focus или lifecycle
+  и не добавляется в публичный Router API.
+- Renderer читает core projections заново при каждом наблюдаемом событии
+  Application/RouterRuntime, а не хранит полученный ранее массив как logical
+  navigation state.
   Это сохраняет атомарность core history mutation для UI: если commit уже
   заменил history и затем освобождает прежнюю activation, промежуточный runtime
   emit не может повторно отрисовать старый Route scope.
-- Во время commit новой activation предыдущая entry может уже перейти в
-  `retained`, а новая ещё не стать `focused`. Пока history projection не пуста,
-  native host сохраняет последний выбранный retained screen смонтированным.
-  Временное отсутствие `focused` не заменяет screen на fallback и не создаёт
-  новый mount/enter animation после завершения вложенного Router.
-- Проверенная базовая React Native projection использует один
-  `NativeNavigationHost` как presentation surface приложения. Он отображает
-  готовые core activations и вправе поддерживать собственные physical stack,
-  tab graph, retained views и gesture state, необходимые React Native. Такая
-  модель является проекцией authoritative core snapshot, не создаёт вторую
-  logical history и при расхождении синхронизируется с core. Наличие activation
-  не означает, что Route обязана отображаться в tab bar. Anonymous и
+- Native host выбирает текущую presentation по последней core history entry, а
+  не выводит её из transient phase общей activation. Поэтому повторная ссылка
+  history на уже focused activation не создаёт неоднозначность между двумя
+  физическими позициями и не требует renderer-local угадывания focus.
+- Для ещё не committed target native host создаёт pending physical presentation
+  по operation identity. До commit она не считается core history entry и не
+  меняет focus committed activation. Успешный commit связывает ту же physical
+  presentation с созданной либо заменённой history entry без remount; discard
+  удаляет её и оставляет предыдущую committed presentation. Renderer не создаёт
+  для candidate второй Module/controller/provider runtime: screen отображает
+  именно runtime, подготовкой которого владеет core.
+- React Native projection разделена на adapter и независимый screen renderer.
+  `NativeNavigationHost` является adapter A -> B: читает authoritative core
+  projections, рекурсивно строит outlet-ы и передаёт каждому из них единственную
+  желаемую `ScreenPresentation | null`. Блок B является независимым автоматом
+  физического отображения и не подключает `NavigationContainer`, `StackRouter`,
+  navigator actions или собственную navigation state. Он знает только identity,
+  content и готовую визуальную animation presentation; Back, token, history
+  action, Route и причина смены presentation ему неизвестны.
+  Наличие activation не означает, что Route обязана отображаться в tab bar.
+  Anonymous и
   authenticated structural Route-ветки остаются обычными взаимоисключающими
   policy branches одного core Router: anonymous branch работает без tab bar,
   authenticated branch подключает основной Layout, который визуально выводит
   tab bar.
-- `NativeNavigationHost` не создаёт полный Router/Layout tree для каждой
-  retained activation и не вычисляет единый плоский общий префикс history.
-  Он строит рекурсивную проекцию activation paths по identity
-  `RouteActivationRuntime`: каждый Router и Route boundary вместе со своими
-  Layouts монтируется один раз на собственном уровне, а его content outlet
-  содержит retained presentation terminal Module и дочерних Route-узлов.
-  Поэтому Route с одновременными `load`, `layouts` и `routes` сохраняет один
-  runtime/layout boundary: её Module является terminal presentation этого
-  outlet, а дочерние Routes — соседними углублениями того же outlet. Наличие
-  несвязанной retained-ветки не меняет nesting layouts другой ветки и не
-  дублирует tab bar.
-- Pending forward navigation использует тот же content outlet. Layouts
-  неизменившейся Route-ancestry остаются смонтированными, а fallback появляется
-  после `commonRouteCount` и закрывает только заменяемую content-часть. Если
-  меняется сама structural policy-ветка, общий префикс равен нулю и fallback
-  закрывает всю Router presentation. После commit fallback удаляется и только
-  готовый screen начинает `Route.animation`. Retained focus и Back не создают
-  fallback.
+- `NativeNavigationHost` рекурсивно оставляет общую Route/Layout ancestry вне
+  ближайшего screen renderer. В первом различающемся outlet adapter разрешает
+  identity желаемой presentation из authoritative core projection и передаёт
+  renderer готовый content. Логические history positions и retained activations
+  остаются в core и не материализуются внутри блока B как параллельный массив
+  физических экранов. Повторный выбор той же presentation identity обновляет её
+  content без remount и animation; новая identity создаёт новый физический
+  screen. Последовательные history entries, различающиеся только дочерним
+  `Route.routing`, схлопываются для основной screen projection, поскольку frame
+  отображается отдельным shell layer. Поэтому общий tab/layout не дублируется,
+  а открытие или закрытие frame не создаёт обычный screen transition.
+- Pending forward navigation создаёт target screen в первом изменившемся content
+  outlet. Layouts неизменившейся Route-ancestry остаются смонтированными вне
+  physical transition и не дублируются. Первым содержимым target screen является
+  разрешённый для его boundary fallback. Когда candidate runtime готов либо
+  завершился boundary outcome, тот же screen без remount и второй navigation-
+  операции заменяет fallback на Module, exception, forbidden или notFound.
+  Если меняется structural policy-ветка и общей ancestry нет, pending screen
+  представляет всю новую Router presentation. Retained focus и Back к готовой
+  retained activation не создают fallback.
 - Визуальный tab bar принадлежит renderer Layout, а не core Router declaration.
   Layout собирает его из `TabItem`, использующего tokenized navigation factory
   и core navigation state. Active вычисляется относительно route target, а
@@ -654,22 +686,41 @@ app.routing({
 - Native `Route` принимает необязательное renderer-specific свойство
   `animation`. При отсутствии свойства screen появляется и удаляется без
   анимации. Значение принадлежит только Route, на котором объявлено: дочерние
-  `Route.routes`, соседние Routes и вся Router-ветка его не наследуют. При
-  переходе вперёд fallback остаётся видимым до готовности target; после commit
-  native host анимирует готовый screen. Повторный переход вперёд к уже готовой
-  retained activation не запускает fallback/loaders и начинает ту же анимацию
-  сразу. Back удаляет верхний screen с обратной анимацией и открывает готовый
-  предыдущий screen. Animation является только native presentation metadata:
-  она не меняет core history, lifecycle, pending, query или revalidation и не
-  применяется к `Route.routing`/`@Shell()`.
-- Native transition располагается в outlet родительского Route непосредственно
-  вокруг presentation конкретного дочернего Route. Поэтому animation metadata
-  читается из runtime только этого узла: родительские Layouts находятся снаружи
-  его transition, а дочерние Routes разрешают собственную animation независимо.
-  Renderer запускает enter animation только при mount нового focused screen или
-  при `retained -> focused` этого screen. `push` вложенного Router, появление
-  frame fallback и commit его Module не переигрывают animation неизменившегося
-  owner screen.
+  `Route.routes`, соседние Routes и вся Router-ветка его не наследуют. Animation
+  описывает визуальное появление и исчезновение физического screen. Входящий
+  screen использует metadata своего terminal Route, а покидаемый — обратное
+  направление собственной metadata. Предыдущий и новый screen
+  остаются прикреплёнными на всё время transition; прежний screen удаляется
+  только после её завершения. Блок B реализован двумя физически неподвижными
+  слотами: в стабильном состоянии заполнен один слот, во время transition —
+  текущий и входящий. Слоты никогда не переставляются в native view hierarchy и
+  после завершения меняются ролями. Новая presentation во время незавершённой
+  animation отменяет прежнюю физическую операцию, фиксирует её target как текущий,
+  немедленно переиспользует освободившийся слот и запускает только одну новую
+  animation. Устаревший completion игнорируется по operation identity. Поэтому
+  renderer всегда стремится к последнему желаемому визуальному состоянию без
+  очереди экранов, конкурирующих transition и пустого промежуточного кадра.
+  Правило не зависит от инициатора навигации и одинаково применяется к
+  tokenized navigation, tab/link/navigation item, imperative navigation,
+  `replace` и Back. При подготовке нового target native transition начинается с
+  физического появления target screen, а fallback является его первым content-
+  состоянием и движется вместе с ним. Готовность candidate заменяет content
+  внутри уже показанного screen и не создаёт второй transition, mount или
+  navigator action. Retained target не запускает fallback/loaders и начинает
+  transition сразу с сохранённым content. Повторная активация уже focused target,
+  query и revalidation не меняют выбранный screen и поэтому не запускают
+  animation. Animation остаётся только native presentation metadata: она не
+  меняет core history, lifecycle или pending и не применяется к
+  `Route.routing`/`@Shell()`.
+- Native transition располагается в первом outlet после общей Route/Layout
+  ancestry, в котором фактически меняется выбранный screen. Metadata берётся из
+  terminal Route конкретной history activation, но не наследуется Route-узлами:
+  renderer лишь проецирует её на границу расхождения source и target. Поэтому
+  общие родительские Layouts остаются смонтированными и не анимируются, а
+  исходящий глубокий screen сохраняет собственную обратную animation даже при
+  переходе в соседнюю tab/Route-ветку. Неизменившиеся вложенные outlets не
+  переигрывают animation. `push` вложенного Router, появление frame fallback и
+  commit его Module также не меняют selection ordinary screen outlet.
 - Route, разрешённый `Router.firstAvailable()`, является корневым anchor активной
   policy-ветки и нижней точкой её Back-history. На этом Route первый root Back не
   закрывает и не сворачивает приложение, а только взводит ожидание выхода;
@@ -677,8 +728,8 @@ app.routing({
   приложение. Истечение интервала сбрасывает ожидание. Core определяет logical
   root и состояние history, а native adapter владеет таймером и platform-командой
   сворачивания.
-- `Route.routes` первичной Route образуют её внутренний native Stack flow.
-  Native navigator представляет committed logical state, но не становится
+- `Route.routes` первичной Route образуют её внутренний screen outlet.
+  `ScreenRenderer` представляет переданную желаемую presentation, но не становится
   источником policy, params, pending, history либо runtime lifecycle.
 - React Native projection для дочернего Router из `Route.routing` является
   Drawer/overlay отдельного frame presentation-layer поверх всей собранной
@@ -786,11 +837,13 @@ app.routing({
   revalidation state и подчиняются общему operation/revision coordinator.
 - До commit ещё не посещённая цель не становится history activation: core
   публикует pending branch transition, а committed activation остаётся
-  `focused`. Renderer показывает fallback на boundary этой pending-ветки, не
-  создавая фиктивную history entry и не оставляя предыдущий screen безмолвно
-  замершим. После успешного commit core создаёт activation и фиксирует history
-  mutation атомарно. Back во время подготовки отменяет transaction, немедленно
-  возвращает committed presentation и не запускает отдельную revalidation.
+  `focused`. Native renderer создаёт для candidate временную physical
+  presentation и показывает fallback внутри её boundary, не создавая фиктивную
+  core history entry. После успешного commit core создаёт activation и фиксирует
+  history mutation атомарно, а renderer сохраняет уже показанный screen и только
+  связывает его с committed entry. Back во время подготовки отменяет transaction,
+  удаляет pending screen обратным physical transition и открывает уже
+  смонтированную committed presentation без fallback, loader или revalidation.
 - Identity activation определяется Route path и params после разрешения
   default/index/policy branch. Query и transient state в identity не входят: их
   изменение остаётся navigation/revalidation того же screen. Новые params
@@ -1145,23 +1198,22 @@ request -> resolve -> blockers -> policies -> prepare -> commit | abort
   `runtimeRetention: 'retain' | 'release'`. Core, а не bridge, реализует обе
   lifecycle-ветки, освобождение runtime, fresh activation при Back и retained
   focus. React web bridge выбирает `release`, React Native bridge — `retain`.
-- Bridge и renderer владеют физическим transport и его локальной моделью,
-  внешними событиями, кодированием и platform presentation. Web может хранить
-  Browser History, а native adapter — physical stack, tabs, retained views,
-  gestures и animation state.
+- Bridge владеет физическим transport, внешними событиями и кодированием.
+  Renderer владеет только platform presentation: native screen hierarchy,
+  retained views, gestures и animation state. Web bridge может хранить Browser
+  History; native screen renderer не создаёт параллельную navigation history.
 - Commit core передаёт bridge готовые history action, entry id и logical
   location. Bridge не выводит их из URL, tab state или собственного stack.
 - Внешний transport event передаёт core location и известный entry id; core
   восстанавливает retained activation в `retain` либо подготавливает новую в
   `release`.
-- Физическая history renderer/bridge является производной проекцией и не
-  становится вторым источником logical navigation state. Renderer вправе
-  выполнять собственные `push`/`pop`/`replace`, кеширование и optimistic
-  presentation, но logical transition считается состоявшимся только после core
-  commit. При расхождении renderer восстанавливает physical state из
-  authoritative core snapshot. Bridge не определяет activation identity и не
-  управляет lifecycle отдельных runtime: он выбирает только общий retention mode
-  при создании Application.
+- Физическое состояние renderer является производной проекцией и не становится
+  вторым источником logical navigation state. Adapter заново разрешает желаемую
+  presentation из authoritative core state, а screen renderer только отображает
+  её. Он не выполняет logical navigation commands, не кеширует
+  Router history и не восстанавливает её самостоятельно. Bridge не определяет
+  activation identity и не управляет lifecycle отдельных runtime: он выбирает
+  только общий retention mode при создании Application.
 - Direct link и Back/Forward проходят тот же pipeline, что программный вызов.
 
 #### Navigation blocker
@@ -1581,6 +1633,14 @@ await navigate.query({ tab: 'history' }, { revalidate: false });
 - После разрешения module declaration локальные `Module.fallback` и
   `Module.exception` имеют приоритет внутри Module до завершения подготовки его
   runtime.
+- В React Native fallback и resolved boundary outcome принадлежат content
+  конкретной physical presentation candidate activation. Переход
+  `fallback -> view | exception | forbidden | notFound` не меняет identity
+  screen и не является navigation transition. Ошибка подготовки не возвращает
+  пользователя без объяснения на предыдущий screen: target presentation
+  отображает разрешённый exception/boundary outcome. Если outcome committed,
+  она становится обычной history entry; если operation остаётся pending, Back
+  отменяет её и открывает предыдущую committed presentation.
 - `forbidden` и `notFound` принадлежат только Application, Router и Route;
   Module их не объявляет.
 - Ошибка renderer compatibility возникает после import и до выполнения
@@ -2086,21 +2146,33 @@ new Route({
   пределах интервала сворачивает его, а истечение интервала требует новой пары
   нажатий.
 - React Native scenario tests различают новый `preparing` target с локальным
-  fallback, retained target с немедленно сохранённой presentation и отмену
-  незавершённого перехода через Back без revalidation committed entry. Отдельно
-  проверяется стабильная identity screen при изменении query и различная
+  fallback внутри target screen, retained target с немедленно сохранённой
+  presentation и отмену незавершённого перехода через Back без revalidation
+  committed entry. Target physical presentation должна появиться до завершения
+  loader, сохранить identity и mount при замене fallback на готовый Module либо
+  boundary outcome и не отправить вторую navigator action после core commit.
+  Отдельно проверяется стабильная identity screen при изменении query и различная
   identity для разных Route params, включая route, разрешённый из `root()` через
   default/index/policies.
 - Native Route presentation tests проверяют отсутствие animation по умолчанию,
-  локальность свойства без наследования, запуск после forward commit и обратный
-  transition при Back как проекцию готовых core activations.
-- Native projection tests проверяют рекурсивное объединение retained activation
-  по identity runtime, один экземпляр Layout на каждом общем Route-уровне,
-  Route с одновременными `load + routes`, независимые parameterized runtimes,
-  точную принадлежность animation конкретному Route и fallback после
-  неизменившегося nested layout prefix. Scenario smoke отдельно проверяет
-  отсутствие дублированного tab bar во время animation и видимый fallback
-  внутри стабильной content-area.
+  локальность свойства без наследования, один общий transition progress пары,
+  владение preset входящим Route для `push`/`replace` и покидаемым Route для
+  Back/`pop`, переход глубокого Route в соседнюю tab/Route-ветку, прерывание
+  быстрыми последовательными навигациями без пустого кадра, начало enter-
+  transition с fallback target screen, отсутствие повторного transition при
+  готовности Module и отсутствие transition у неизменившихся layout/outlet
+  уровней.
+- Native projection tests проверяют отдельную identity history entry и core
+  activation, отсутствие переупорядочивания buried screens, один экземпляр
+  Layout на общей Route-ancestry, Route с одновременными `load + routes`,
+  независимые parameterized runtimes, точную принадлежность animation
+  конкретному Route и pending screen после неизменившегося nested layout prefix.
+  Scenario smoke отдельно проверяет отсутствие дублированного tab bar во время
+  animation, видимый непрозрачный fallback внутри target screen и отсутствие
+  промежуточного blank/black кадра при произвольной скорости последовательных
+  переходов. Navigator test harness обязан исполнять stack state, focus,
+  transition start/end и unmount на pop; mock, который только рендерит children
+  `Screen`, не является достаточным доказательством этих сценариев.
 - Abort целевой подготовки без повреждения текущей ветки.
 - Scoped params без merge и независимый query каждого Router scope.
 - Web bridge contract для `/module?a=1#frame?b=2`, включая валидный `?` после

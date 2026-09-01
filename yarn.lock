@@ -5242,6 +5242,7 @@ __metadata:
     react-native-gesture-handler: "npm:3.2.1"
     react-native-reanimated: "npm:4.6.0"
     react-native-safe-area-context: "npm:5.8.1"
+    react-native-screens: "npm:4.26.2"
     react-native-worklets: "npm:0.12.1"
     reflect-metadata: "npm:0.2.2"
     typescript: "npm:6.0.3"
@@ -5255,6 +5256,7 @@ __metadata:
     react-native-gesture-handler: ^3.2.0
     react-native-reanimated: ~4.6.0
     react-native-safe-area-context: ^5.8.0
+    react-native-screens: ^4.26.0
     react-native-worklets: ~0.12.0
   peerDependenciesMeta:
     "@floating-ui/react":
@@ -5274,6 +5276,8 @@ __metadata:
     react-native-reanimated:
       optional: true
     react-native-safe-area-context:
+      optional: true
+    react-native-screens:
       optional: true
     react-native-worklets:
       optional: true
@@ -12727,6 +12731,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-freeze@npm:^1.0.0":
+  version: 1.0.4
+  resolution: "react-freeze@npm:1.0.4"
+  peerDependencies:
+    react: ">=17.0.0"
+  checksum: 10/1dc433319341ec3dca84513c4197ef4f4c8232604d35f83546a8abfb41d9591f934b66aaaa4dc3dc8b1b65f488705a2a48ae6c1d9792660119a9cdedeab4ca8f
+  languageName: node
+  linkType: hard
+
 "react-hook-form@npm:7.84.0":
   version: 7.84.0
   resolution: "react-hook-form@npm:7.84.0"
@@ -12801,6 +12814,19 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10/2ea47449420a1d89354648bc0cec7e93d9dc7fc577321781126d4f274a13d8dc94a09be78454f3720d54f90511d4ff9e8412bb81e2aed71f135a80bbf9ed0e63
+  languageName: node
+  linkType: hard
+
+"react-native-screens@npm:4.26.2":
+  version: 4.26.2
+  resolution: "react-native-screens@npm:4.26.2"
+  dependencies:
+    react-freeze: "npm:^1.0.0"
+    warn-once: "npm:^0.1.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/9d171ca538ba511ea30a7e7f47088d408f9bb565b7bfeedbb5443ffe430ac0c48f805fb2b89b7b16e61c9b81480a01049864ecd2651f77e3d0d0b1f5d6ce54f1
   languageName: node
   linkType: hard
 
@@ -15495,6 +15521,13 @@ __metadata:
   dependencies:
     makeerror: "npm:1.0.12"
   checksum: 10/ad7a257ea1e662e57ef2e018f97b3c02a7240ad5093c392186ce0bcf1f1a60bbadd520d073b9beb921ed99f64f065efb63dfc8eec689a80e569f93c1c5d5e16c
+  languageName: node
+  linkType: hard
+
+"warn-once@npm:^0.1.0":
+  version: 0.1.1
+  resolution: "warn-once@npm:0.1.1"
+  checksum: 10/e6a5a1f5a8dba7744399743d3cfb571db4c3947897875d4962a7c5b1bf2195ab4518c838cb4cea652e71729f21bba2e98dc75686f5fccde0fabbd894e2ed0c0d
   languageName: node
   linkType: hard
 

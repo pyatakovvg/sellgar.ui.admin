@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { ApplicationRouterRuntimeEntry } from '../../../../core/application/lifecycle/application';
+import type { ApplicationRouterHistoryEntry } from '../../../../core/application/lifecycle/application';
 import type { RouterRuntime } from '../../../../core/router/runtime/router-runtime';
 import type { ModuleMetadata } from '../../../module/declaration/module';
 import type { NativeRouterBridge } from '../../bridge/native-router-bridge';
@@ -29,11 +29,45 @@ vi.mock('./native-route-projection-host.tsx', () => ({
   NativeRouteProjectionHost: ({
     entries,
   }: {
-    readonly entries: readonly ApplicationRouterRuntimeEntry<ModuleMetadata>[];
+    readonly entries: readonly ApplicationRouterHistoryEntry<ModuleMetadata>[];
   }) => <div>{entries.map((entry) => entry.key).join(',')}</div>,
 }));
 
 describe('NativeNavigationHost', () => {
+  it('reads current core history again when the native bridge commits retained focus', () => {
+    let bridgeListener: (() => void) | undefined;
+    let bridgeSnapshot = { ...TRANSPORT_SNAPSHOT };
+    let entries = [createEntry('activation:1')];
+    const runtime = createRuntime();
+    const bridge = {
+      back: vi.fn(async () => undefined),
+      getSnapshot: () => bridgeSnapshot,
+      registerDriver: () => () => undefined,
+      subscribe: (listener: () => void) => {
+        bridgeListener = listener;
+        return () => undefined;
+      },
+    } as unknown as NativeRouterBridge;
+
+    render(
+      <NativeNavigationHost
+        bridge={bridge}
+        components={{}}
+        current={undefined}
+        decision={null}
+        getHistoryEntries={() => entries}
+        pending={null}
+        runtime={runtime}
+      />,
+    );
+
+    entries = [createEntry('activation:1', 'retained'), createEntry('activation:2')];
+    bridgeSnapshot = { ...TRANSPORT_SNAPSHOT, index: 1 };
+    act(() => bridgeListener?.());
+
+    expect(screen.getByText('activation:1,activation:2')).toBeInTheDocument();
+  });
+
   it('reads current core history again when RouterRuntime emits', () => {
     let runtimeListener: (() => void) | undefined;
     let runtimeSnapshot = Object.freeze({ error: null, phase: 'active' as const });
@@ -63,8 +97,10 @@ describe('NativeNavigationHost', () => {
       <NativeNavigationHost
         bridge={bridge}
         components={{}}
+        current={undefined}
         decision={null}
-        getRuntimeEntries={() => entries}
+        getHistoryEntries={() => entries}
+        pending={null}
         runtime={runtime}
       />,
     );
@@ -113,8 +149,10 @@ describe('NativeNavigationHost', () => {
       <NativeNavigationHost
         bridge={bridge}
         components={{ fallback: <div>fallback</div> }}
+        current={undefined}
         decision={null}
-        getRuntimeEntries={() => entries}
+        getHistoryEntries={() => entries}
+        pending={null}
         runtime={runtime}
       />,
     );
@@ -134,6 +172,22 @@ describe('NativeNavigationHost', () => {
   });
 });
 
+const createRuntime = (): RouterRuntime<ModuleMetadata> => {
+  const snapshot = Object.freeze({ error: null, phase: 'active' as const });
+
+  return {
+    getBranchSnapshot: () => ({
+      child: null,
+      childPending: false,
+      pending: false,
+      pendingLocalChange: null,
+      routes: [],
+    }),
+    getSnapshot: () => snapshot,
+    subscribe: () => () => undefined,
+  } as unknown as RouterRuntime<ModuleMetadata>;
+};
+
 const TRANSPORT_SNAPSHOT = Object.freeze({
   action: null,
   backInProgress: false,
@@ -145,10 +199,10 @@ const TRANSPORT_SNAPSHOT = Object.freeze({
 const createEntry = (
   key: string,
   phase: 'focused' | 'retained' = 'focused',
-): ApplicationRouterRuntimeEntry<ModuleMetadata> => {
+): ApplicationRouterHistoryEntry<ModuleMetadata> => {
   return {
     key,
     phase,
     tree: { routes: [] },
-  } as unknown as ApplicationRouterRuntimeEntry<ModuleMetadata>;
+  } as unknown as ApplicationRouterHistoryEntry<ModuleMetadata>;
 };

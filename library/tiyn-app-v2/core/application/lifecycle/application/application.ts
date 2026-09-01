@@ -104,6 +104,14 @@ export interface ApplicationRouterRuntimeEntry<TPresentation> {
   readonly tree: RouterRuntimeActivationTree<TPresentation>;
 }
 
+export interface ApplicationRouterHistoryEntry<TPresentation> {
+  readonly activation: RouterRuntimeActivation<TPresentation>;
+  readonly key: string;
+  readonly phase: Extract<RouterRuntimeActivationPhase, 'focused' | 'retained'>;
+  readonly runtime: RouterRuntime<TPresentation>;
+  readonly tree: RouterRuntimeActivationTree<TPresentation>;
+}
+
 export type ApplicationNavigationListener = () => void;
 
 @UseBindings(ApplicationEventBusBindings, ApplicationStoreBindings)
@@ -337,6 +345,29 @@ export abstract class Application<
     }
 
     return Object.freeze(entries);
+  }
+
+  protected getRouterHistoryEntries(): readonly ApplicationRouterHistoryEntry<TPresentation>[] {
+    const history = this.navigationHistory.snapshot();
+    const current = history.at(-1);
+
+    return Object.freeze(
+      history.flatMap((entry) => {
+        if (entry.activation === null) return [];
+
+        const tree = entry.activation.getTreeSnapshot();
+
+        return [
+          Object.freeze({
+            activation: entry.activation,
+            key: entry.id,
+            phase: entry === current ? ('focused' as const) : ('retained' as const),
+            runtime: tree.runtime,
+            tree,
+          }),
+        ];
+      }),
+    );
   }
 
   protected getApplicationScope(): ApplicationScope {
