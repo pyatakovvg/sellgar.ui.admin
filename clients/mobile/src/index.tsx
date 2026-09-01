@@ -1,3 +1,3 @@
 import 'reflect-metadata';
 
-import './screen-renderer-playground';
+import './bootstrap.tsx';

@@ -1,72 +1,17 @@
-import type { ApplicationRouterHistoryEntry } from '../../../../core/application/lifecycle/application';
 import type { RouteDeclaration } from '../../../../core/router/declaration/route';
 import { areNavigationParamsEqual } from '../../../../core/router/runtime/navigation-state';
 import type { NavigationRouteEntry, NavigationState } from '../../../../core/router/runtime/navigation-state';
-import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
-import type { ModuleMetadata } from '../../../module/declaration/module';
-
-export interface NativeRouteHistoryGroup {
-  readonly entries: readonly ApplicationRouterHistoryEntry<ModuleMetadata>[];
-  readonly id: string;
-  readonly runtime: RouteActivationRuntime<ModuleMetadata> | null;
-}
 
 export interface NativePendingRouteProjection {
   readonly changeDepth: number;
   readonly path: readonly NavigationRouteEntry[];
 }
 
-/**
- * Projects the flat chronological core history into one stable Route.routes
- * outlet. Consecutive entries that stay inside the same Route activation share
- * one parent screen; leaving and returning creates another physical position.
- */
-export const groupNativeRouteHistory = (
-  entries: readonly ApplicationRouterHistoryEntry<ModuleMetadata>[],
-  depth: number,
-): readonly NativeRouteHistoryGroup[] => {
-  const groups: MutableNativeRouteHistoryGroup[] = [];
-
-  for (const entry of entries) {
-    const runtime = entry.tree.routes[depth] ?? null;
-    const id = resolveNativeRoutePresentationKey(runtime?.route ?? null, depth);
-    const existingIndex = groups.findIndex((group) => group.id === id);
-    const existing = existingIndex < 0 ? null : groups[existingIndex]!;
-
-    if (existing) {
-      existing.entries.push(entry);
-
-      if (existingIndex !== groups.length - 1) {
-        groups.splice(existingIndex, 1);
-        groups.push(existing);
-      }
-
-      continue;
-    }
-
-    groups.push({
-      entries: [entry],
-      id,
-      runtime,
-    });
-  }
-
-  return Object.freeze(
-    groups.map((group) =>
-      Object.freeze({
-        entries: Object.freeze(group.entries),
-        id: group.id,
-        runtime: group.runtime,
-      }),
-    ),
-  );
-};
-
 export const resolveNativePendingRouteProjection = (
   current: NavigationState | undefined,
   pending: NavigationState | null,
 ): NativePendingRouteProjection | null => {
-  if (!pending || pending.revalidation !== null) return null;
+  if (!pending) return null;
 
   const path = pending.root.path;
   const currentPath = current?.root.path ?? [];
@@ -82,17 +27,12 @@ export const resolveNativePendingRouteProjection = (
   });
 };
 
-export const resolveNativeRoutePresentationKey = (route: RouteDeclaration | null, depth: number): string => {
-  if (route === null) return `native-route-index:${depth}`;
+export const resolveNativeRoutePresentationKey = (entry: NavigationRouteEntry, depth: number): string => {
+  return `native-route:${depth}:${resolveRouteIdentity(entry.route)}:${serializeParams(entry.params)}`;
+};
 
-  const current = routePresentationKeys.get(route);
-
-  if (current) return current;
-
-  const key = `native-route:${++routePresentationSequence}`;
-
-  routePresentationKeys.set(route, key);
-  return key;
+export const resolveNativeRouteIndexPresentationKey = (owner: NavigationRouteEntry, depth: number): string => {
+  return `${resolveNativeRoutePresentationKey(owner, depth - 1)}:index`;
 };
 
 const resolveCommonRouteCount = (
@@ -116,11 +56,41 @@ const resolveCommonRouteCount = (
   return length;
 };
 
-interface MutableNativeRouteHistoryGroup {
-  readonly entries: ApplicationRouterHistoryEntry<ModuleMetadata>[];
-  readonly id: string;
-  readonly runtime: RouteActivationRuntime<ModuleMetadata> | null;
-}
+const resolveRouteIdentity = (route: RouteDeclaration): number => {
+  const current = routeIdentities.get(route);
 
-const routePresentationKeys = new WeakMap<RouteDeclaration, string>();
-let routePresentationSequence = 0;
+  if (current !== undefined) return current;
+
+  const identity = ++routeIdentitySequence;
+
+  routeIdentities.set(route, identity);
+  return identity;
+};
+
+const serializeParams = (params: Readonly<Record<string, unknown>>): string => {
+  return Object.keys(params)
+    .sort()
+    .map((key) => `${encodeURIComponent(key)}=${encodeParamValue(params[key])}`)
+    .join('&');
+};
+
+const encodeParamValue = (value: unknown): string => {
+  switch (typeof value) {
+    case 'string':
+      return `string:${encodeURIComponent(value)}`;
+    case 'number':
+      return `number:${String(value)}`;
+    case 'bigint':
+      return `bigint:${String(value)}`;
+    case 'boolean':
+      return `boolean:${String(value)}`;
+    case 'undefined':
+      return 'undefined';
+    default:
+      if (value === null) return 'null';
+      throw new Error('Path param native screen должен быть сериализуемым примитивом.');
+  }
+};
+
+const routeIdentities = new WeakMap<RouteDeclaration, number>();
+let routeIdentitySequence = 0;

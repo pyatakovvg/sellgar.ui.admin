@@ -578,20 +578,18 @@ app.routing({
   ветка. Ранее посещённые ветки сохраняет core activation registry; platform
   navigation state лишь проецирует его snapshot.
 - Core Application предоставляет renderer adapter read-only проекции registry
-  уникальных activation, хронологических history entries и текущей pending-
-  операции. Activation projection имеет стабильный id, единственную lifecycle-
-  phase и immutable Router/Route runtime tree. History entry имеет собственный
-  стабильный id, navigation snapshot, позицию/current-признак и optional ссылку
-  на activation: в `release` неактивная entry не удерживает runtime. Несколько
-  entries могут ссылаться на одну activation, но не присваивают ей разные phases.
-  Pending projection имеет стабильную operation identity, target navigation и
-  candidate runtime tree, опубликованный core до ожидания его асинхронной
-  подготовки; она не является history entry и исчезает при commit либо discard.
-  Замена pending projection на committed history snapshot атомарна и содержит
-  явную correlation с завершённой operation, чтобы renderer не угадывал её по
-  времени events или сходству Route params.
-  Ни одна projection не разрешает renderer менять history, focus или lifecycle
-  и не добавляется в публичный Router API.
+  уникальных activation, хронологических history entries и target navigation
+  текущей pending-операции. Activation projection имеет стабильный id,
+  единственную lifecycle-phase и immutable Router/Route runtime tree. History
+  entry имеет собственный стабильный id и ссылку на activation, содержащую
+  согласованные navigation snapshot и runtime tree; в `release` неактивная entry
+  не удерживает runtime. Несколько entries могут ссылаться на одну activation,
+  но не присваивают ей разные phases. Pending navigation публикуется до ожидания
+  асинхронной подготовки, не является history entry и исчезает при commit либо
+  discard. Renderer не смешивает отдельно наблюдаемый Application navigation
+  snapshot с runtime tree другой ревизии: committed path и tree всегда читаются
+  из одной focused history entry. Ни одна projection не разрешает renderer
+  менять history, focus или lifecycle и не добавляется в публичный Router API.
 - Renderer читает core projections заново при каждом наблюдаемом событии
   Application/RouterRuntime, а не хранит полученный ранее массив как logical
   navigation state.
@@ -603,9 +601,11 @@ app.routing({
   history на уже focused activation не создаёт неоднозначность между двумя
   физическими позициями и не требует renderer-local угадывания focus.
 - Для ещё не committed target native host создаёт pending physical presentation
-  по operation identity. До commit она не считается core history entry и не
-  меняет focus committed activation. Успешный commit связывает ту же physical
-  presentation с созданной либо заменённой history entry без remount; discard
+  с deterministic identity из outlet depth, Route declaration и path params.
+  Query в identity не входит. До commit presentation не считается core history
+  entry и не меняет focus committed activation. Успешный commit публикует в
+  focused history entry тот же Route и params, поэтому та же physical
+  presentation заменяет fallback на committed content без remount; discard
   удаляет её и оставляет предыдущую committed presentation. Renderer не создаёт
   для candidate второй Module/controller/provider runtime: screen отображает
   именно runtime, подготовкой которого владеет core.
