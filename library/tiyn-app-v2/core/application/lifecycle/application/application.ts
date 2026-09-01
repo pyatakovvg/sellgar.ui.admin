@@ -648,7 +648,7 @@ export abstract class Application<
     if (
       !blockersConfirmed &&
       this.scope.has(NavigationBlockerRuntimeInterface) &&
-      this.scope.get(NavigationBlockerRuntimeInterface).getSnapshot()?.inProcess
+      this.scope.get(NavigationBlockerRuntimeInterface).hasAcceptedDecision()
     ) {
       return Promise.resolve(false);
     }
@@ -779,13 +779,21 @@ export abstract class Application<
       );
 
       try {
-        if (signal.aborted) return false;
+        let bridgeCommit: Promise<void> | void;
 
-        await this.routerBridge.commit(transition.navigation, {
-          history: historyCommit.history,
-          signal,
-          source,
-        });
+        try {
+          if (signal.aborted) return false;
+
+          bridgeCommit = this.routerBridge.commit(transition.navigation, {
+            history: historyCommit.history,
+            signal,
+            source,
+          });
+        } finally {
+          transition.publish();
+        }
+
+        await bridgeCommit;
       } finally {
         await this.releaseRouterActivations(historyCommit.released);
       }

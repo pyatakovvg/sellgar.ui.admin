@@ -17,7 +17,7 @@ const LocalNavigationBlocker: React.FC<NavigationBlockerViewProps> = (props) => 
   <Dialog
     actions={[
       { label: 'Keep editing', onPress: props.stay },
-      { label: 'Discard', onPress: props.leave, processing: props.inProcess, tone: 'destructive' },
+      { label: 'Discard', onPress: props.leave, tone: 'destructive' },
     ]}
     description="This presentation belongs to the Products screen registration."
     onRequestClose={props.stay}

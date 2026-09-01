@@ -149,7 +149,8 @@ describe('NavigationBlocker Application pipeline', () => {
     await app.navigate.to(SecondRoute);
 
     expect(bridge.commits).toHaveLength(1);
-    expect(app.blockerRuntime.getSnapshot()?.inProcess).toBe(true);
+    expect(app.blockerRuntime.getSnapshot()).toBeNull();
+    expect(app.blockerRuntime.hasAcceptedDecision()).toBe(true);
 
     await expect(bridge.context!.restore(location, { blockersConfirmed: true })).resolves.toBe(true);
     expect(bridge.commits).toHaveLength(2);

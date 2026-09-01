@@ -413,6 +413,11 @@ app.features([
   вызывает выбранный callback каждой registration, фактически участвовавшей в
   блокировке перехода, до разрешения pending decision. Ошибка callback не
   отменяет уже выбранное пользователем решение.
+- После `leave()` или `stay()` pending decision немедленно исчезает из публичной
+  проекции, поэтому presentation закрывается сразу и не остаётся поверх
+  fallback либо следующего screen до окончания navigation operation. Core
+  внутренне удерживает принятое решение до завершения этой операции, но не
+  публикует renderer-у отдельный `inProcess` для blocker presentation.
 - Browser pre-commit/history bridge и нативный `beforeunload` confirmation
   принадлежат web bridge. Native adapter связывает то же core pending decision
   со своим navigator и renderer presentation без browser-specific механики.
@@ -595,8 +600,11 @@ app.routing({
   fallback и не создаёт фиктивный physical screen. После resolve и успешных
   `canMatch`/`canActivate` `RouterRuntime` одновременно публикует canonical
   candidate navigation и его pending runtime branch. Это происходит до ожидания
-  providers/loaders; commit, discard, interruption и новая revision атомарно
-  очищают обе pending-проекции.
+  providers/loaders. Успешный transition сначала фиксирует runtime и core
+  history, затем синхронно передаёт committed projection bridge и только после
+  этого снимает pending projection. Поэтому один logical screen не исчезает
+  между fallback и content и не получает повторную present-анимацию. Discard,
+  interruption и новая revision также согласованно очищают обе pending-проекции.
 - Renderer читает core projections заново при каждом наблюдаемом событии
   Application/RouterRuntime, а не хранит полученный ранее массив как logical
   navigation state.
@@ -1256,8 +1264,11 @@ request -> resolve -> blockers -> policies -> prepare -> commit | abort
   а не как особенность React Router.
 - После resolve core знает current и target runtime graph и проверяет только
   registrations тех Route boundaries, которые операция действительно покидает.
-  Query-only update и открытие вложенной Route над остающейся активной
-  родительской Route не считаются уходом с родительской boundary.
+  Query-only update не считается уходом с Route boundary. Если переход к
+  дочерней `Route.routes` заменяет terminal Module родительской Route новым
+  screen, родительская boundary считается покидаемой, даже когда её runtime
+  остаётся общей ancestry нового route path. Открытие `Route.routing` как frame
+  поверх остающегося owner screen родительскую boundary не покидает.
 - Несколько условий одной boundary объединяются через `OR`. Scoped `allow()`
   разрешает ровно один переход, инициированный владельцем, и не обходит
   blockers других покидаемых boundaries.

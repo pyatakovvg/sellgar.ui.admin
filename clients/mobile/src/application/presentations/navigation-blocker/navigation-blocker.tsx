@@ -8,7 +8,7 @@ export const NavigationBlocker: React.FC<NavigationBlockerViewProps> = (props) =
   <Dialog
     actions={[
       { label: 'Stay', onPress: props.stay },
-      { label: 'Leave', onPress: props.leave, processing: props.inProcess, tone: 'destructive' },
+      { label: 'Leave', onPress: props.leave, tone: 'destructive' },
     ]}
     description="Unsaved changes will be lost."
     onRequestClose={props.stay}

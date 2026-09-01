@@ -20,7 +20,6 @@ interface NativeNavigationHostProps {
   readonly current: NavigationState | undefined;
   readonly decision: ApplicationNavigationDecision | null;
   readonly getHistoryEntries: () => readonly ApplicationRouterHistoryEntry<ModuleMetadata>[];
-  readonly pending: NavigationState | null;
   readonly runtime: RouterRuntime<ModuleMetadata>;
 }
 
@@ -38,7 +37,7 @@ export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props)
   );
   const historyEntries = props.getHistoryEntries();
   const focusedEntry = historyEntries.at(-1) ?? null;
-  const pending = props.runtime.getPendingNavigation() ?? props.pending;
+  const pending = props.runtime.getPendingNavigation();
   const presentationRevision = props.bridge.getPresentationRevision();
   const completePresentation = React.useCallback(() => {
     props.bridge.completePresentation(presentationRevision);

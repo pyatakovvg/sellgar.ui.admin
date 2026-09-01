@@ -41,6 +41,8 @@ describe('NativeNavigationHost', () => {
     const runtime = createRuntime();
     const bridge = {
       back: vi.fn(async () => undefined),
+      completePresentation: vi.fn(),
+      getPresentationRevision: () => 0,
       getSnapshot: () => bridgeSnapshot,
       registerDriver: () => () => undefined,
       subscribe: (listener: () => void) => {
@@ -56,7 +58,6 @@ describe('NativeNavigationHost', () => {
         current={undefined}
         decision={null}
         getHistoryEntries={() => entries}
-        pending={null}
         runtime={runtime}
       />,
     );
@@ -80,6 +81,7 @@ describe('NativeNavigationHost', () => {
         pendingLocalChange: null,
         routes: [],
       }),
+      getPendingNavigation: () => null,
       getSnapshot: () => runtimeSnapshot,
       subscribe: (listener: () => void) => {
         runtimeListener = listener;
@@ -88,6 +90,8 @@ describe('NativeNavigationHost', () => {
     } as unknown as RouterRuntime<ModuleMetadata>;
     const bridge = {
       back: vi.fn(async () => undefined),
+      completePresentation: vi.fn(),
+      getPresentationRevision: () => 0,
       getSnapshot: () => TRANSPORT_SNAPSHOT,
       registerDriver: () => () => undefined,
       subscribe: () => () => undefined,
@@ -100,7 +104,6 @@ describe('NativeNavigationHost', () => {
         current={undefined}
         decision={null}
         getHistoryEntries={() => entries}
-        pending={null}
         runtime={runtime}
       />,
     );
@@ -132,6 +135,7 @@ describe('NativeNavigationHost', () => {
         pendingLocalChange: null,
         routes: [],
       }),
+      getPendingNavigation: () => null,
       getSnapshot: () => runtimeSnapshot,
       subscribe: (listener: () => void) => {
         runtimeListener = listener;
@@ -140,6 +144,8 @@ describe('NativeNavigationHost', () => {
     } as unknown as RouterRuntime<ModuleMetadata>;
     const bridge = {
       back: vi.fn(async () => undefined),
+      completePresentation: vi.fn(),
+      getPresentationRevision: () => 0,
       getSnapshot: () => TRANSPORT_SNAPSHOT,
       registerDriver: () => () => undefined,
       subscribe: () => () => undefined,
@@ -152,7 +158,6 @@ describe('NativeNavigationHost', () => {
         current={undefined}
         decision={null}
         getHistoryEntries={() => entries}
-        pending={null}
         runtime={runtime}
       />,
     );
@@ -183,6 +188,7 @@ const createRuntime = (): RouterRuntime<ModuleMetadata> => {
       pendingLocalChange: null,
       routes: [],
     }),
+    getPendingNavigation: () => null,
     getSnapshot: () => snapshot,
     subscribe: () => () => undefined,
   } as unknown as RouterRuntime<ModuleMetadata>;

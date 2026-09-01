@@ -52,7 +52,7 @@ describe('NavigationBlockerRuntime', () => {
     await expect(nextConfirmation).resolves.toBe(false);
   });
 
-  it('keeps the decision visible as in-process after leave until transition completion', async () => {
+  it('hides the decision after leave while retaining its acceptance until transition completion', async () => {
     const runtime = new NavigationBlockerRuntime();
     const boundary = createNavigationBlockerBoundary();
 
@@ -62,16 +62,14 @@ describe('NavigationBlockerRuntime', () => {
     runtime.leave();
 
     await expect(confirmation).resolves.toBe(true);
-    expect(runtime.getSnapshot()).toEqual(
-      expect.objectContaining({
-        inProcess: true,
-      }),
-    );
+    expect(runtime.getSnapshot()).toBeNull();
+    expect(runtime.hasAcceptedDecision()).toBe(true);
 
     await expect(runtime.confirm([boundary], new AbortController().signal)).resolves.toBe(false);
     runtime.complete();
 
     expect(runtime.getSnapshot()).toBeNull();
+    expect(runtime.hasAcceptedDecision()).toBe(false);
   });
 
   it('cancels a pending decision when its navigation signal is aborted', async () => {

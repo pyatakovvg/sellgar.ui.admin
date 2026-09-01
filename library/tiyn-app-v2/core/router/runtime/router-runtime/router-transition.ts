@@ -12,6 +12,8 @@ export interface RouterRuntimePreparedTransition<TPresentation = unknown> {
   discard(): Promise<void>;
 
   getRouteRuntimes(): readonly RouteActivationRuntime<TPresentation>[];
+
+  publish(): void;
 }
 
 export interface RouterRuntimeTransitionCompletionContext {
@@ -24,12 +26,14 @@ interface PreparedRouterTransitionOptions<TPresentation> {
   readonly discard: () => Promise<void>;
   readonly getRouteRuntimes: () => readonly RouteActivationRuntime<TPresentation>[];
   readonly navigation: NavigationState;
+  readonly publish: () => void;
 }
 
 export class PreparedRouterTransition<TPresentation> implements RouterRuntimePreparedTransition<TPresentation> {
   readonly navigation: NavigationState;
   private settlement: Promise<unknown> | null = null;
   private completion: Promise<void> | null = null;
+  private published = false;
   private state: 'pending' | 'committed' | 'discarded' = 'pending';
 
   constructor(private readonly options: PreparedRouterTransitionOptions<TPresentation>) {
@@ -56,6 +60,10 @@ export class PreparedRouterTransition<TPresentation> implements RouterRuntimePre
       return Promise.reject(new Error('Завершить можно только зафиксированный router transition.'));
     }
 
+    if (!this.published) {
+      return Promise.reject(new Error('Завершить можно только опубликованный router transition.'));
+    }
+
     this.completion ??= (this.settlement ?? Promise.resolve()).then(() => this.options.complete(context));
 
     return this.completion;
@@ -78,5 +86,16 @@ export class PreparedRouterTransition<TPresentation> implements RouterRuntimePre
 
   getRouteRuntimes(): readonly RouteActivationRuntime<TPresentation>[] {
     return this.options.getRouteRuntimes();
+  }
+
+  publish(): void {
+    if (this.state !== 'committed') {
+      throw new Error('Опубликовать можно только зафиксированный router transition.');
+    }
+
+    if (this.published) return;
+
+    this.published = true;
+    this.options.publish();
   }
 }

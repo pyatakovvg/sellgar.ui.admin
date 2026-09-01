@@ -35,6 +35,7 @@ export class NavigationBlockerRuntime extends NavigationBlockerRuntimeInterface 
   private readonly listeners = new Set<NavigationBlockerRuntimeListener>();
   private readonly registrations = new Map<NavigationBlockerRegistrationIdentity, BlockerRegistration>();
 
+  private acceptedDecision = false;
   private pendingDecision: PendingDecision | null = null;
   private removeDecisionAbortListener: (() => void) | null = null;
   private revision = 0;
@@ -58,7 +59,7 @@ export class NavigationBlockerRuntime extends NavigationBlockerRuntimeInterface 
   }
 
   confirm(leavingBoundaries: readonly NavigationBlockerBoundary[], signal: AbortSignal): Promise<boolean> {
-    if (this.snapshot?.inProcess) {
+    if (this.acceptedDecision) {
       return Promise.resolve(false);
     }
 
@@ -89,7 +90,6 @@ export class NavigationBlockerRuntime extends NavigationBlockerRuntimeInterface 
         resolve,
       };
       this.snapshot = Object.freeze({
-        inProcess: false,
         registrationIdentities: Object.freeze(identities),
       });
       this.emit();
@@ -100,20 +100,23 @@ export class NavigationBlockerRuntime extends NavigationBlockerRuntimeInterface 
     return this.snapshot;
   }
 
+  hasAcceptedDecision(): boolean {
+    return this.acceptedDecision;
+  }
+
   leave(): void {
-    if (!this.pendingDecision || !this.snapshot || this.snapshot.inProcess) {
+    if (!this.pendingDecision || !this.snapshot) {
       return;
     }
 
     const decision = this.pendingDecision;
+    const identities = this.snapshot.registrationIdentities;
 
     this.pendingDecision = null;
-    this.snapshot = Object.freeze({
-      inProcess: true,
-      registrationIdentities: this.snapshot.registrationIdentities,
-    });
+    this.acceptedDecision = true;
+    this.snapshot = null;
     this.emit();
-    const handlers = this.resolveDecisionHandlers(this.snapshot.registrationIdentities, 'onLeave');
+    const handlers = this.resolveDecisionHandlers(identities, 'onLeave');
 
     try {
       invokeDecisionHandlers(handlers);
@@ -150,7 +153,7 @@ export class NavigationBlockerRuntime extends NavigationBlockerRuntimeInterface 
   }
 
   stay(): void {
-    if (!this.pendingDecision || !this.snapshot || this.snapshot.inProcess) {
+    if (!this.pendingDecision || !this.snapshot) {
       return;
     }
 
@@ -175,7 +178,7 @@ export class NavigationBlockerRuntime extends NavigationBlockerRuntimeInterface 
   }
 
   private clearDecision(): void {
-    if (!this.pendingDecision && !this.snapshot) {
+    if (!this.pendingDecision && !this.snapshot && !this.acceptedDecision) {
       return;
     }
 
@@ -183,6 +186,7 @@ export class NavigationBlockerRuntime extends NavigationBlockerRuntimeInterface 
     this.pendingDecision = null;
     this.removeDecisionAbortListener?.();
     this.removeDecisionAbortListener = null;
+    this.acceptedDecision = false;
     this.snapshot = null;
     this.emit();
   }

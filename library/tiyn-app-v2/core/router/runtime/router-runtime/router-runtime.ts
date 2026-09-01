@@ -443,11 +443,10 @@ export class RouterRuntime<TPresentation = unknown> {
 
     if (!confirm) return Promise.resolve(true);
 
-    const targetRuntimes = new Set(activation.getRouteRuntimes());
-    const leavingBoundaries = (this.focusedActivation?.getRouteRuntimes() ?? [])
-      .filter((runtime) => !targetRuntimes.has(runtime))
-      .reverse()
-      .map((runtime) => runtime.getNavigationBlockerBoundary());
+    const leavingBoundaries = collectActivationNavigationBlockerBoundaries(
+      this.focusedActivation?.getRootNode() ?? null,
+      activation.getRootNode(),
+    );
 
     return leavingBoundaries.length === 0 ? Promise.resolve(true) : confirm(Object.freeze(leavingBoundaries), signal);
   }
@@ -1155,21 +1154,27 @@ export class RouterRuntime<TPresentation = unknown> {
     }
 
     this.setPendingNavigation(candidate.navigation, revision);
+    let released = false;
+    const release = (): void => {
+      if (released) return;
+
+      released = true;
+      this.clearPendingNavigation(revision, candidate.navigation);
+      disposeLinkedSignal();
+    };
 
     const transition = new PreparedRouterTransition<TPresentation>({
       commit: async () => {
         await this.focusActivation(activation, candidate.navigation, abortController.signal);
-        this.clearPendingNavigation(revision, candidate.navigation);
-        disposeLinkedSignal();
         return activation;
       },
       complete: async () => undefined,
       discard: async () => {
-        this.clearPendingNavigation(revision, candidate.navigation);
-        disposeLinkedSignal();
+        release();
       },
       getRouteRuntimes: () => activation.getRouteRuntimes(),
       navigation: candidate.navigation,
+      publish: release,
     });
 
     return { transition, type: 'ready' };
@@ -1459,11 +1464,7 @@ export class RouterRuntime<TPresentation = unknown> {
       return Promise.resolve(true);
     }
 
-    const nextRuntimes = new Set(collectPlanRouteRuntimes(plan));
-    const leavingBoundaries = collectBranchRouteRuntimes(plan.previousBranch)
-      .filter((runtime) => !nextRuntimes.has(runtime))
-      .reverse()
-      .map((runtime) => runtime.getNavigationBlockerBoundary());
+    const leavingBoundaries = collectPlanNavigationBlockerBoundaries(plan);
 
     return leavingBoundaries.length === 0 ? Promise.resolve(true) : confirm(Object.freeze(leavingBoundaries), signal);
   }
@@ -1596,6 +1597,7 @@ export class RouterRuntime<TPresentation = unknown> {
       discard: () => this.discardPreparedTransition(pending),
       getRouteRuntimes: () => Object.freeze(collectPlanRouteRuntimes(plan)),
       navigation,
+      publish: () => this.releasePendingTransition(pending),
     });
 
     pending = {
@@ -1656,7 +1658,6 @@ export class RouterRuntime<TPresentation = unknown> {
       pending.abortController.signal,
       pending.allowActivationReuse,
     );
-    this.releasePendingTransition(pending);
 
     if (pending.boundary) {
       await this.disposeBoundaryReplacedBranch(pending.plan, pending.boundary);
@@ -2824,6 +2825,71 @@ const collectBranchRouteRuntimes = <TPresentation>(
     ...branch.routes.map((entry) => entry.runtime),
     ...(branch.child ? branch.child.runtime.getActiveRouteRuntimes() : []),
   ];
+};
+
+const collectPlanNavigationBlockerBoundaries = <TPresentation>(
+  plan: RouterTransitionPlan<TPresentation>,
+): readonly NavigationBlockerBoundary[] => {
+  const boundaries: NavigationBlockerBoundary[] = [];
+  const nextRuntimes = new Set(collectPlanRouteRuntimes(plan));
+
+  for (const current of [...collectPlanPath(plan)].reverse()) {
+    const previousTerminal = current.previousBranch?.routes.at(-1)?.runtime ?? null;
+    const nextTerminal = current.nextRoutes.at(-1)?.runtime ?? null;
+
+    if (previousTerminal && previousTerminal !== nextTerminal) {
+      appendNavigationBlockerBoundary(boundaries, previousTerminal.getNavigationBlockerBoundary());
+    }
+  }
+
+  for (const runtime of collectBranchRouteRuntimes(plan.previousBranch).reverse()) {
+    if (!nextRuntimes.has(runtime)) {
+      appendNavigationBlockerBoundary(boundaries, runtime.getNavigationBlockerBoundary());
+    }
+  }
+
+  return Object.freeze(boundaries);
+};
+
+const collectActivationNavigationBlockerBoundaries = <TPresentation>(
+  previous: RouterRuntimeActivationNode<TPresentation> | null,
+  next: RouterRuntimeActivationNode<TPresentation>,
+): readonly NavigationBlockerBoundary[] => {
+  if (!previous) return Object.freeze([]);
+
+  const boundaries: NavigationBlockerBoundary[] = [];
+  const nextRuntimes = new Set(collectActivationRouteRuntimes(next));
+  const nextNodes = new Map(collectActivationNodes(next).map((node) => [node.runtime, node]));
+
+  for (const current of collectActivationNodes(previous).reverse()) {
+    const previousTerminal = current.branch?.routes.at(-1)?.runtime ?? null;
+    const nextTerminal = nextNodes.get(current.runtime)?.branch?.routes.at(-1)?.runtime ?? null;
+
+    if (previousTerminal && previousTerminal !== nextTerminal) {
+      appendNavigationBlockerBoundary(boundaries, previousTerminal.getNavigationBlockerBoundary());
+    }
+  }
+
+  for (const runtime of collectActivationRouteRuntimes(previous).reverse()) {
+    if (!nextRuntimes.has(runtime)) {
+      appendNavigationBlockerBoundary(boundaries, runtime.getNavigationBlockerBoundary());
+    }
+  }
+
+  return Object.freeze(boundaries);
+};
+
+const collectActivationNodes = <TPresentation>(
+  root: RouterRuntimeActivationNode<TPresentation>,
+): RouterRuntimeActivationNode<TPresentation>[] => {
+  return [root, ...(root.child ? collectActivationNodes(root.child) : [])];
+};
+
+const appendNavigationBlockerBoundary = (
+  boundaries: NavigationBlockerBoundary[],
+  boundary: NavigationBlockerBoundary,
+): void => {
+  if (!boundaries.includes(boundary)) boundaries.push(boundary);
 };
 
 const createPolicyContext = (

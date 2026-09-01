@@ -92,7 +92,6 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
           current={navigation.navigation}
           decision={navigation.decision}
           getHistoryEntries={props.source.getRouterHistoryEntries}
-          pending={navigation.pending}
           runtime={runtime}
         />,
       );
