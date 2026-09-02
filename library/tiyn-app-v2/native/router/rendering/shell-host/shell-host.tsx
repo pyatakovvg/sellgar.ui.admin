@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, type LayoutChangeEvent } from 'react-native';
+import { Keyboard, StyleSheet, View, type LayoutChangeEvent } from 'react-native';
 import { GestureDetector, GestureStateManager, usePanGesture } from 'react-native-gesture-handler';
+import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import Animated, {
   cancelAnimation,
   Extrapolation,
@@ -27,6 +28,9 @@ interface ShellHostProps {
   readonly children: React.ReactNode;
   readonly dismiss: () => void | Promise<void>;
   readonly metadata: ShellMetadata;
+  readonly onPresentationComplete: () => void;
+  readonly phase: 'dismissing' | 'presenting' | 'visible';
+  readonly presentationRevision: number | null;
 }
 
 const DISMISS_DURATION = 180;
@@ -35,11 +39,14 @@ const PRESENT_DURATION = 220;
 const VERTICAL_ACTIVATION_DISTANCE = 8;
 
 export const ShellHost: React.FC<ShellHostProps> = (props) => {
+  const { height: keyboardHeight } = useReanimatedKeyboardAnimation();
   const { dismiss } = props;
   const requestDismiss = useShellDismissRequest(dismiss);
   const translationY = useSharedValue(0);
   const frameHeight = useSharedValue(1);
   const frameMeasured = useSharedValue(0);
+  const interactiveDismissStarted = useSharedValue(false);
+  const reportedPresentationRevision = React.useRef<number | null>(null);
   const scrollBounds = useSharedValue<ShellScrollBounds | null>(null);
   const scrollOffset = useSharedValue(0);
   const initialTouchX = useSharedValue(0);
@@ -47,12 +54,68 @@ export const ShellHost: React.FC<ShellHostProps> = (props) => {
   const activationTranslationY = useSharedValue(0);
   const gestureActivated = useSharedValue(false);
   const touchStartedInScrollable = useSharedValue(false);
+  const touchStartedWithKeyboard = useSharedValue(false);
+  const keyboardDismissRequested = useSharedValue(false);
+  const completePresentation = React.useCallback(() => {
+    if (
+      props.presentationRevision === null ||
+      reportedPresentationRevision.current === props.presentationRevision
+    ) {
+      return;
+    }
+
+    reportedPresentationRevision.current = props.presentationRevision;
+    props.onPresentationComplete();
+  }, [props.onPresentationComplete, props.presentationRevision]);
+  const animateInteractiveDismiss = React.useCallback(() => {
+    'worklet';
+
+    if (interactiveDismissStarted.value) return;
+
+    interactiveDismissStarted.value = true;
+    cancelAnimation(translationY);
+    translationY.value = withTiming(frameHeight.value, { duration: DISMISS_DURATION }, (finished) => {
+      if (finished) scheduleOnRN(requestDismiss);
+    });
+  }, [frameHeight, interactiveDismissStarted, requestDismiss, translationY]);
+  const animatePresentationDismiss = React.useCallback(() => {
+    cancelAnimation(translationY);
+
+    if (translationY.value >= frameHeight.value - 0.5) {
+      completePresentation();
+      return;
+    }
+
+    translationY.value = withTiming(frameHeight.value, { duration: DISMISS_DURATION }, (finished) => {
+      if (finished) scheduleOnRN(completePresentation);
+    });
+  }, [completePresentation, frameHeight, translationY]);
+  const ensurePresentationVisible = React.useCallback(() => {
+    cancelAnimation(translationY);
+
+    if (frameMeasured.value > 0 && translationY.value <= 0.5) {
+      completePresentation();
+      return;
+    }
+
+    translationY.value = withTiming(0, { duration: PRESENT_DURATION }, (finished) => {
+      if (finished) scheduleOnRN(completePresentation);
+    });
+  }, [completePresentation, frameMeasured, translationY]);
+
+  React.useEffect(() => {
+    if (props.phase === 'dismissing') animatePresentationDismiss();
+    if (props.phase === 'presenting') ensurePresentationVisible();
+  }, [animatePresentationDismiss, ensurePresentationVisible, props.phase, props.presentationRevision]);
 
   const gesture = usePanGesture({
     manualActivation: true,
     onBegin: () => {
+      if (interactiveDismissStarted.value) return;
+
       cancelAnimation(translationY);
       gestureActivated.value = false;
+      keyboardDismissRequested.value = false;
     },
     onTouchesDown: (event) => {
       const touch = event.allTouches[0];
@@ -62,11 +125,27 @@ export const ShellHost: React.FC<ShellHostProps> = (props) => {
       initialTouchX.value = touch.absoluteX;
       initialTouchY.value = touch.absoluteY;
       touchStartedInScrollable.value = isTouchWithinShellScrollBounds(touch.absoluteY, scrollBounds.value);
+      touchStartedWithKeyboard.value = keyboardHeight.value !== 0;
     },
     onTouchesMove: (event) => {
       const touch = event.allTouches[0];
 
       if (!touch) return;
+
+      if (interactiveDismissStarted.value) {
+        GestureStateManager.fail(event.handlerTag);
+        return;
+      }
+
+      if (touchStartedWithKeyboard.value) {
+        if (!keyboardDismissRequested.value) {
+          keyboardDismissRequested.value = true;
+          scheduleOnRN(dismissKeyboard);
+        }
+
+        GestureStateManager.fail(event.handlerTag);
+        return;
+      }
 
       const intent = resolveShellPanIntent({
         deltaX: touch.absoluteX - initialTouchX.value,
@@ -103,16 +182,18 @@ export const ShellHost: React.FC<ShellHostProps> = (props) => {
         return;
       }
 
-      translationY.value = withTiming(frameHeight.value, { duration: DISMISS_DURATION }, (finished) => {
-        if (finished) scheduleOnRN(requestDismiss);
-      });
+      animateInteractiveDismiss();
     },
     onFinalize: () => {
+      if (interactiveDismissStarted.value) return;
+
       if (!gestureActivated.value && translationY.value > 0) {
         translationY.value = createReturnAnimation();
       }
 
       gestureActivated.value = false;
+      keyboardDismissRequested.value = false;
+      touchStartedWithKeyboard.value = false;
     },
   });
   const backdropStyle = useAnimatedStyle(() => ({
@@ -137,9 +218,11 @@ export const ShellHost: React.FC<ShellHostProps> = (props) => {
 
       translationY.value = height;
       frameMeasured.value = 1;
-      translationY.value = withTiming(0, { duration: PRESENT_DURATION });
+      translationY.value = withTiming(0, { duration: PRESENT_DURATION }, (finished) => {
+        if (finished && props.phase === 'presenting') scheduleOnRN(completePresentation);
+      });
     },
-    [frameHeight, frameMeasured, translationY],
+    [completePresentation, frameHeight, frameMeasured, props.phase, translationY],
   );
 
   return (
@@ -180,3 +263,5 @@ const createReturnAnimation = (velocity = 0) => {
     velocity,
   });
 };
+
+const dismissKeyboard = () => Keyboard.dismiss();

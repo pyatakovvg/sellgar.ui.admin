@@ -1,26 +1,50 @@
 import React from 'react';
-import {
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
-} from 'react-native';
+import { RefreshControl, StyleSheet, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 
 import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
+import { KeyboardScrollView } from '../../../keyboard/rendering/keyboard-scroll-view';
+import { useKeyboardRuntime } from '../../../keyboard/runtime/keyboard-runtime-context';
 import type { ModuleMetadata } from '../../declaration/module';
+
 interface ModuleRefreshPresentationProps {
   readonly children: React.ReactNode;
   readonly runtime: RouteActivationRuntime<ModuleMetadata>;
 }
 
 export const ModuleRefreshPresentation: React.FC<ModuleRefreshPresentationProps> = (props) => {
-  const [refreshEnabled, setRefreshEnabled] = React.useState(true);
+  const keyboard = useKeyboardRuntime();
+  const keyboardDragActive = React.useRef(false);
+  const [refreshAtTop, setRefreshAtTop] = React.useState(true);
+  const [draggingWithKeyboard, setDraggingWithKeyboard] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
-  const updateRefreshEnabled = React.useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    setRefreshEnabled(event.nativeEvent.contentOffset.y <= 0);
+  const updateRefreshAtTop = React.useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setRefreshAtTop(event.nativeEvent.contentOffset.y <= 0);
   }, []);
+  const handleScrollBeginDrag = React.useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      keyboardDragActive.current = keyboard.visible;
+      setDraggingWithKeyboard(keyboard.visible);
+      updateRefreshAtTop(event);
+    },
+    [keyboard.visible, updateRefreshAtTop],
+  );
+  const handleScrollEnd = React.useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      updateRefreshAtTop(event);
+
+      if (!keyboardDragActive.current) return;
+
+      keyboardDragActive.current = false;
+      setDraggingWithKeyboard(false);
+    },
+    [updateRefreshAtTop],
+  );
   const handleRefresh = React.useCallback(async () => {
+    if (keyboard.visible || keyboardDragActive.current) {
+      keyboard.dismiss();
+      return;
+    }
+
     setRefreshing(true);
 
     try {
@@ -28,21 +52,22 @@ export const ModuleRefreshPresentation: React.FC<ModuleRefreshPresentationProps>
     } finally {
       setRefreshing(false);
     }
-  }, [props.runtime]);
+  }, [keyboard, props.runtime]);
+  const refreshEnabled = refreshAtTop && !keyboard.visible && !draggingWithKeyboard;
 
   return (
-    <ScrollView
+    <KeyboardScrollView
       contentContainerStyle={styles.content}
-      onMomentumScrollEnd={updateRefreshEnabled}
-      onScrollBeginDrag={updateRefreshEnabled}
-      onScrollEndDrag={updateRefreshEnabled}
+      onMomentumScrollEnd={handleScrollEnd}
+      onScrollBeginDrag={handleScrollBeginDrag}
+      onScrollEndDrag={handleScrollEnd}
       refreshControl={
         <RefreshControl enabled={refreshEnabled} onRefresh={() => void handleRefresh()} refreshing={refreshing} />
       }
       style={styles.root}
     >
       {props.children}
-    </ScrollView>
+    </KeyboardScrollView>
   );
 };
 

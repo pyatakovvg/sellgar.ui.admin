@@ -23,6 +23,8 @@ import {
   WidgetHost,
   UserRequestFeature,
   UserRequestPresentation,
+  KeyboardScrollView,
+  KeyboardSurface,
 } from '@sellgar/app-v2/native';
 
 class FixtureRoute {}
@@ -42,6 +44,12 @@ class FixtureWidget extends WidgetDefinition<FixtureWidgetProps> {}
 
 const FixtureShellView: React.FC<ShellContextInterface> = (props) => (
   <ShellScrollView>{props.children}</ShellScrollView>
+);
+
+const FixtureKeyboardSurface: React.FC<React.PropsWithChildren> = (props) => (
+  <KeyboardSurface>
+    <KeyboardScrollView>{props.children}</KeyboardScrollView>
+  </KeyboardSurface>
 );
 
 @Shell({ view: FixtureShellView })
@@ -81,4 +89,5 @@ class FixtureApplication extends Application {
 const fixtureView = <WidgetHost props={{ value: 'fixture' }} token={FixtureWidget} />;
 
 void FixtureApplication;
+void FixtureKeyboardSurface;
 void fixtureView;

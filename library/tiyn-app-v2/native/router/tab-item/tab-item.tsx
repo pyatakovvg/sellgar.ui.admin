@@ -24,7 +24,7 @@ export interface TabItemProps {
 
 export const TabItem: React.FC<TabItemProps> = ({ end = false, ...props }) => {
   const control = useNavigationControl(props.navigation, end);
-  const isPending = control.isRoutePending;
+  const isPending = control.isPending || (!control.isActive && control.isRoutePending);
   const tab = React.useMemo(
     () => ({
       accessibilityRole: 'tab' as const,

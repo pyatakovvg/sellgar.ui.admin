@@ -14,6 +14,9 @@ import { resolveNestedShell } from './nested-shell.ts';
 interface IProps {
   readonly children: React.ReactNode;
   readonly exception: React.ReactNode;
+  readonly onPresentationComplete: () => void;
+  readonly phase: 'dismissing' | 'presenting' | 'visible';
+  readonly presentationRevision: number | null;
   readonly routing: ResolvedApplicationRouting | null;
   readonly runtime: RouterRuntime<ModuleMetadata>;
 }
@@ -34,7 +37,13 @@ export const NestedRouterHost: React.FC<IProps> = (props) => {
       resetKeys={[props.runtime]}
     >
       <RuntimeScopeProvider scope={scope}>
-        <ShellHost dismiss={dismiss} metadata={shell}>
+        <ShellHost
+          dismiss={dismiss}
+          metadata={shell}
+          onPresentationComplete={props.onPresentationComplete}
+          phase={props.phase}
+          presentationRevision={props.presentationRevision}
+        >
           {props.children}
         </ShellHost>
       </RuntimeScopeProvider>

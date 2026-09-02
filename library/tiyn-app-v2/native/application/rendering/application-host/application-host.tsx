@@ -23,6 +23,7 @@ import type { ModuleMetadata } from '../../../module/declaration/module';
 import type { NativeRouterBridge } from '../../../router/bridge/native-router-bridge';
 import { NestedRouterLayer } from '../../../router/rendering/nested-router-layer';
 import { NativeNavigationHost } from '../../../router/rendering/native-navigation-host';
+import { useNativePresentationCycle } from '../../../router/rendering/presentation-cycle';
 import { NavigationStateProvider } from '../../../router/runtime/navigation-state-context';
 import { ExceptionProvider } from '../../../runtime/exception/exception-context';
 import { RuntimeErrorBoundary } from '../../../runtime/exception/runtime-error-boundary';
@@ -31,6 +32,7 @@ import type { ResolvedApplicationRouting } from '../../config/application-config
 import { ApplicationComponentsProvider } from '../application-components-context';
 import { OverlayHost } from '../overlay-host';
 import { PresentationLayer } from '../presentation-layer';
+import { KeyboardRuntimeProvider } from '../../../keyboard/runtime/keyboard-runtime-context';
 
 export interface ApplicationViewSource {
   readonly components: ApplicationComponents;
@@ -63,6 +65,11 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
     props.source.getNavigation,
     props.source.getNavigation,
   );
+  const presentation = useNativePresentationCycle(
+    props.source.routerBridge,
+    navigation.navigation,
+    navigation.pending,
+  );
 
   if (lifecycle.phase === 'disposing' || lifecycle.phase === 'disposed') return null;
 
@@ -83,6 +90,10 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
   } else {
     if (navigation.navigation || navigation.pending) {
       const runtime = props.source.getRouterRuntime();
+      const retainedFrameTree =
+        presentation.frame && navigation.navigation
+          ? runtime.findActivation(navigation.navigation)?.getTreeSnapshot()
+          : undefined;
 
       content = renderLayouts(
         props.source.layouts,
@@ -92,6 +103,7 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
           current={navigation.navigation}
           decision={navigation.decision}
           getHistoryEntries={props.source.getRouterHistoryEntries}
+          onPresentationComplete={presentation.completeScreen}
           runtime={runtime}
         />,
       );
@@ -99,8 +111,12 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
         <NestedRouterLayer
           components={props.source.components}
           decision={navigation.decision}
+          depth={0}
+          onPresentationComplete={presentation.completeFrame}
+          retainedTree={retainedFrameTree}
           routing={props.source.routing}
           runtime={runtime}
+          transition={presentation.frame}
         />
       );
     } else {
@@ -118,16 +134,18 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
         <ApplicationComponentsProvider components={props.source.components}>
           <GestureHandlerRootView style={styles.root}>
             <SafeAreaProvider style={styles.root}>
-              <RuntimeErrorBoundary
-                exception={props.source.components.failed ?? props.source.components.exception}
-                onError={(error) => void props.source.failRender(error)}
-                resetKeys={[props.source]}
-              >
-                <OverlayHost frame={framePresentation} modal={modalFeatures} notification={notificationFeatures}>
-                  {content}
-                  {applicationFeatures}
-                </OverlayHost>
-              </RuntimeErrorBoundary>
+              <KeyboardRuntimeProvider>
+                <RuntimeErrorBoundary
+                  exception={props.source.components.failed ?? props.source.components.exception}
+                  onError={(error) => void props.source.failRender(error)}
+                  resetKeys={[props.source]}
+                >
+                  <OverlayHost frame={framePresentation} modal={modalFeatures} notification={notificationFeatures}>
+                    {content}
+                    {applicationFeatures}
+                  </OverlayHost>
+                </RuntimeErrorBoundary>
+              </KeyboardRuntimeProvider>
             </SafeAreaProvider>
           </GestureHandlerRootView>
         </ApplicationComponentsProvider>

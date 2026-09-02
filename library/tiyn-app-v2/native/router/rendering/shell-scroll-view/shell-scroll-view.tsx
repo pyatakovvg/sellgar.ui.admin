@@ -7,17 +7,39 @@ import {
   type ScrollViewProps,
 } from 'react-native';
 import { ScrollView as GestureScrollView } from 'react-native-gesture-handler';
+import {
+  KeyboardAwareScrollView,
+  type KeyboardAwareScrollViewProps,
+  type KeyboardAwareScrollViewRef,
+} from 'react-native-keyboard-controller';
 
+import { resolveKeyboardScrollProps } from '../../../keyboard/scroll/keyboard-scroll-props';
 import { useShellRuntime } from '../../runtime/shell-runtime-context';
 
 export type ShellScrollViewProps = ScrollViewProps;
 
+const KeyboardGestureScrollView = React.forwardRef<
+  React.ComponentRef<typeof GestureScrollView>,
+  React.ComponentProps<typeof GestureScrollView>
+>((props, ref) => {
+  const runtime = useShellRuntime();
+
+  return <GestureScrollView {...props} ref={ref} simultaneousWith={runtime.dismissGesture} />;
+});
+
+// KeyboardAwareScrollView officially supports Gesture Handler's ScrollView,
+// but their public component types diverge under RN 0.86/Reanimated 4.
+const ShellKeyboardScrollViewComponent = KeyboardGestureScrollView as NonNullable<
+  KeyboardAwareScrollViewProps['ScrollViewComponent']
+>;
+
 export const ShellScrollView = React.forwardRef<React.ComponentRef<typeof ReactNativeScrollView>, ShellScrollViewProps>(
   (props, ref) => {
     const runtime = useShellRuntime();
-    const scrollRef = React.useRef<React.ComponentRef<typeof ReactNativeScrollView> | null>(null);
+    const keyboardScrollProps = resolveKeyboardScrollProps(props);
+    const scrollRef = React.useRef<KeyboardAwareScrollViewRef | null>(null);
     const setScrollRef = React.useCallback(
-      (value: React.ComponentRef<typeof ReactNativeScrollView> | null) => {
+      (value: KeyboardAwareScrollViewRef | null) => {
         scrollRef.current = value;
 
         if (typeof ref === 'function') ref(value);
@@ -50,16 +72,20 @@ export const ShellScrollView = React.forwardRef<React.ComponentRef<typeof ReactN
     }, [runtime.scrollBounds, runtime.scrollOffset]);
 
     return (
-      <GestureScrollView
+      <KeyboardAwareScrollView
         {...props}
+        {...keyboardScrollProps}
         bounces={props.bounces ?? false}
+        bottomOffset={16}
+        disableScrollOnKeyboardHide
+        mode="layout"
         nestedScrollEnabled={props.nestedScrollEnabled ?? true}
         onLayout={handleLayout}
         onScroll={handleScroll}
         overScrollMode={props.overScrollMode ?? 'never'}
         ref={setScrollRef}
         scrollEventThrottle={props.scrollEventThrottle ?? 16}
-        simultaneousWith={runtime.dismissGesture}
+        ScrollViewComponent={ShellKeyboardScrollViewComponent}
         style={[styles.root, props.style]}
       />
     );

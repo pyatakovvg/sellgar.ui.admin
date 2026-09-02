@@ -3,7 +3,7 @@
 - Статус документа: target
 - Статус RFC: accepted
 - Статус реализации: in-progress
-- Последнее согласование: 2026-09-01
+- Последнее согласование: 2026-09-02
 
 ## Назначение
 
@@ -815,6 +815,40 @@ app.routing({
   прокрутке и не может перейти в pull-to-refresh после достижения `offset=0`.
   Revalidation разрешается только новым жестом, начатым уже на верхней границе.
 
+- Работа с экранной клавиатурой является ответственностью React Native adapter,
+  а не core, Module/controller либо прикладной формы. Framework не хранит
+  значение полей, не связывается с `react-hook-form` и не добавляет собственную
+  focus-навигацию: `TextInput`, IME и submit сохраняют нативную platform-
+  семантику. Adapter только предоставляет keyboard-aware presentation для
+  scrollable Module и Shell content и разрешает конфликты с framework-жестами.
+- Каждый независимый native presentation surface получает собственную keyboard
+  integration boundary. Основной screen/frame surface создаётся application
+  host. React Native `Modal` создаёт отдельное native window/surface, поэтому
+  пользовательская modal presentation оборачивает своё содержимое публичным
+  `KeyboardSurface`; это не заменяет `Modal`, не переносит его под application
+  Layout и не ослабляет modality. Notification, не содержащая input, такой
+  boundary автоматически не получает.
+- Ordinary Module presentation и `ShellScrollView` автоматически сохраняют
+  сфокусированный `TextInput` и caret видимыми над клавиатурой средствами
+  поддерживаемого keyboard-aware scroll primitive. Ручные измерения координат,
+  `setTimeout` для focus/scroll и прикладные keyboard spacers в Module views не
+  являются framework contract. Tap по доступному form control обрабатывается с
+  первого нажатия; keyboard dismiss следует нативному режиму платформы
+  (`interactive` на iOS, `on-drag` на Android).
+- Для пользовательской presentation, создающей отдельную scrollable surface
+  (включая Prompt в React Native `Modal`), native adapter предоставляет
+  `KeyboardScrollView`. `KeyboardSurface` подключает keyboard runtime к native
+  surface, но намеренно не создаёт прокрутку автоматически: это исключает
+  вложенные scroll containers и оставляет владельцу presentation контроль над
+  структурой содержимого.
+- Жест, начавшийся при видимой клавиатуре, не может в ходе того же touch sequence
+  превратиться в pull-to-refresh или dismiss frame. В Module он только завершает
+  нативное взаимодействие с клавиатурой; revalidation разрешается следующим
+  жестом, начатым после её скрытия на верхней границе. В Shell первый свайп вниз
+  скрывает клавиатуру и сохраняет frame; только следующий самостоятельный свайп
+  может участвовать в scroll/dismiss contract. Это правило действует для всей
+  shell gesture surface, а не только для координат `ShellScrollView`.
+
 - Module внутри Drawer/frame не получает pull-to-refresh от native Module host.
   Высота frame определяется его presentation content, пока тот помещается в
   доступную safe-area. При превышении доступной высоты frame упирается в
@@ -826,6 +860,23 @@ app.routing({
   только текущую entry при direct link. Операция не вызывает `back()` и поэтому
   не может перейти в root-back/exit flow. Непрерывный gesture progress является
   renderer state и не публикуется в core.
+
+  Frame presentation владеет собственным автоматом `presenting | visible |
+  dismissing | hidden`. Источник logical close ему неизвестен: scoped
+  `navigate.close()` из controller/view, `useShell().close()`, platform Back и
+  завершённый dismiss-жест приводят к одному целевому состоянию `hidden`.
+  После core commit native adapter удерживает уже показанный nested runtime в
+  presentation-slot до завершения exit animation frame и backdrop; только после
+  этого renderer bridge завершает presentation-cycle, а core штатно освобождает
+  activation. Поэтому navigation API не запускает animation, не ожидает таймер и
+  не содержит отдельных путей для кнопки, Back или жеста.
+
+  Один bridge commit имеет единый presentation-cycle. Если одновременно меняются
+  основной screen и frame layer, commit завершается после готовности обоих
+  независимых presentation owners. Замена shell на том же уровне выполняется как
+  `dismiss old -> present new`; вложенный shell завершает только transition своего
+  уровня. Настройка animation обычного Route не наследуется Frame и не протекает
+  в дочерние Router. Frame всегда использует собственную shell presentation.
 
   Scroll и dismiss образуют один coordinated gesture contract. Пока внутренний
   scroll offset больше нуля, свайп вниз принадлежит scrollable content. После
@@ -850,7 +901,9 @@ app.routing({
   state, animation callbacks или navigation runtime. Backdrop, измерение и
   ограничение frame, scroll/dismiss arbitration, interactive pan,
   displacement, dismiss/cancel animation и фактический scoped `close()`
-  реализует единый native Shell host. Backdrop только затемняет owner screen и
+  реализует единый native Shell host. `useShell().close()` только запрашивает ту
+  же scoped `navigate.close()` и не управляет физической анимацией. Backdrop
+  только затемняет owner screen и
   блокирует взаимодействие с ним; tap по backdrop не закрывает frame. Dismiss
   запускается ровно один раз; после core commit nested host целиком
   размонтируется вместе с backdrop, gesture layer и Shell view. Прикладной
@@ -2179,6 +2232,15 @@ new Route({
   текущие данные остаются видимыми, success заменяет их, recoverable error
   остаётся в revalidation state, а late completion не применяет устаревший
   результат.
+- React Native keyboard scenarios проверяются на физическом устройстве:
+  keyboard-aware Module и `ShellScrollView` оставляют нижний focused input
+  видимым; первый tap по видимому action не теряется; drag, начатый при открытой
+  клавиатуре, не запускает pull-to-refresh и не закрывает frame; следующий новый
+  drag соответственно может ревалидировать Module либо закрыть frame. Prompt в
+  React Native `Modal` получает autofocus после `onShow`, остаётся над Layout,
+  блокирует underlying interaction и использует отдельные `KeyboardSurface` и
+  `KeyboardScrollView`; focused input и actions остаются достижимыми при открытой
+  клавиатуре.
 - React Native navigation-history tests проверяют одинаковую семантику истории
   для tab, link, navigation item и imperative navigation, в том числе возврат
   `Products -> Brands -> Categories -> Back -> Brands -> Back -> Products`.

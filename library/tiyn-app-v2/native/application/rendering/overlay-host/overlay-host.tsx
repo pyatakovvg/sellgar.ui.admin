@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { KeyboardSurface } from '../../../keyboard/rendering/keyboard-surface';
+
 interface OverlayHostProps {
   readonly children: React.ReactNode;
   readonly frame: React.ReactNode;
@@ -10,8 +12,10 @@ interface OverlayHostProps {
 export const OverlayHost: React.FC<OverlayHostProps> = (props) => {
   return (
     <>
-      {props.children}
-      {props.frame}
+      <KeyboardSurface>
+        {props.children}
+        {props.frame}
+      </KeyboardSurface>
       {props.modal}
       {props.notification}
     </>

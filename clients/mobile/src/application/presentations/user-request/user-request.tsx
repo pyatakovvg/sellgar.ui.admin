@@ -31,6 +31,7 @@ export const ConfirmUserRequest: React.FC<UserRequestConfirmViewProps> = ({ appl
 );
 
 export const PromptUserRequest: React.FC<UserRequestPromptViewProps> = ({ apply, cancel, request }) => {
+  const [shown, setShown] = React.useState(false);
   const [value, setValue] = React.useState(request.payload.defaultValue ?? '');
 
   return (
@@ -41,16 +42,19 @@ export const PromptUserRequest: React.FC<UserRequestPromptViewProps> = ({ apply,
       ]}
       description={request.payload.description}
       onRequestClose={cancel}
+      onShow={() => setShown(true)}
       title={request.payload.title}
     >
-      <TextInput
-        autoFocus
-        onChangeText={setValue}
-        placeholder={request.payload.placeholder}
-        placeholderTextColor="#747987"
-        style={styles.input}
-        value={value}
-      />
+      {shown ? (
+        <TextInput
+          autoFocus
+          onChangeText={setValue}
+          placeholder={request.payload.placeholder}
+          placeholderTextColor="#747987"
+          style={styles.input}
+          value={value}
+        />
+      ) : null}
     </Dialog>
   );
 };

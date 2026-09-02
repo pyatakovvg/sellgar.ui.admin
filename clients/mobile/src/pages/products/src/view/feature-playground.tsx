@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import {
   NavigationBlockerPresentation,
@@ -33,6 +33,8 @@ export const FeaturePlayground: React.FC = () => {
   const [blockNavigation, setBlockNavigation] = React.useState(false);
   const [localPresentation, setLocalPresentation] = React.useState(false);
   const [requestResult, setRequestResult] = React.useState('none');
+  const [keyboardInput, setKeyboardInput] = React.useState('');
+  const [keyboardResult, setKeyboardResult] = React.useState('none');
 
   useBlocker(blockNavigation, localPresentation ? { presentation: localBlockerPresentation } : undefined);
 
@@ -103,6 +105,18 @@ export const FeaturePlayground: React.FC = () => {
         selected={localPresentation}
       />
       <Text style={styles.hint}>Enable the blocker, then use a tab, link, frame, or Android Back.</Text>
+      <Text style={styles.heading}>Keyboard and screen scroll</Text>
+      <Text style={styles.hint}>Type a value and tap the action once.</Text>
+      <TextInput
+        accessibilityLabel="Keyboard test value"
+        onChangeText={setKeyboardInput}
+        placeholder="Keyboard test value"
+        placeholderTextColor="#777d8e"
+        style={styles.input}
+        value={keyboardInput}
+      />
+      <Action label="Apply keyboard value" onPress={() => setKeyboardResult(keyboardInput || 'empty')} />
+      <Text style={styles.result}>keyboard result: {keyboardResult}</Text>
     </View>
   );
 };
@@ -117,6 +131,16 @@ const styles = StyleSheet.create({
     color: '#a9adba',
     fontSize: 13,
     lineHeight: 19,
+  },
+  input: {
+    backgroundColor: '#171a22',
+    borderColor: '#4b5265',
+    borderRadius: 12,
+    borderWidth: 1,
+    color: '#f7f7fb',
+    fontSize: 16,
+    minHeight: 52,
+    paddingHorizontal: 16,
   },
   result: {
     color: '#6fd6b3',

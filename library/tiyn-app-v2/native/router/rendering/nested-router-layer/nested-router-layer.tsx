@@ -5,6 +5,7 @@ import type { RouteActivationRuntime } from '../../../../core/router/runtime/rou
 import type {
   ActiveChildRouterRuntime,
   RouterRuntime,
+  RouterRuntimeActivationChild,
   RouterRuntimeActivationTree,
 } from '../../../../core/router/runtime/router-runtime';
 import type {
@@ -16,12 +17,17 @@ import { getRoutePresentationDefinition } from '../../declaration/route';
 import { getRouterPresentationDefinition } from '../../declaration/router';
 import { NestedRouterHost } from '../router-host/nested-router-host';
 import { RouterHost } from '../router-host';
+import type { NativeFrameTransition } from '../presentation-cycle';
 
 interface IProps {
   readonly components: ApplicationComponents;
   readonly decision?: ApplicationNavigationDecision | null;
+  readonly depth: number;
+  readonly onPresentationComplete: () => void;
+  readonly retainedTree?: RouterRuntimeActivationTree<ModuleMetadata>;
   readonly routing: ResolvedApplicationRouting | null;
   readonly runtime: RouterRuntime<ModuleMetadata>;
+  readonly transition: NativeFrameTransition | null;
   readonly tree?: RouterRuntimeActivationTree<ModuleMetadata>;
 }
 
@@ -33,55 +39,245 @@ export const NestedRouterLayer: React.FC<IProps> = (props) => {
   );
   const resolvedSnapshot = props.tree?.snapshot ?? snapshot;
 
-  if (
+  const unavailable =
     props.decision?.type === 'forbidden' ||
     props.decision?.type === 'not-found' ||
     resolvedSnapshot.phase === 'forbidden' ||
     resolvedSnapshot.phase === 'not-found' ||
-    resolvedSnapshot.phase === 'failed'
-  ) {
-    return null;
-  }
+    resolvedSnapshot.phase === 'failed';
 
   const branch = props.tree
     ? { child: props.tree.child, routes: props.tree.routes }
     : props.runtime.getBranchSnapshot();
-  const activeChild = branch.child;
+  const activeChild = unavailable ? null : branch.child;
+  const target = activeChild
+    ? createNestedRouterTarget(
+        props,
+        branch.routes,
+        activeChild,
+        'childPending' in branch ? branch.childPending : false,
+      )
+    : null;
+  const retainedChild = props.retainedTree?.child ?? null;
+  const retainedTarget = retainedChild
+    ? createNestedRouterTarget(props, props.retainedTree?.routes ?? [], retainedChild, false)
+    : null;
 
-  if (!activeChild) {
-    return null;
-  }
+  return (
+    <FramePresentation
+      depth={props.depth}
+      onPresentationComplete={props.onPresentationComplete}
+      retainedTarget={retainedTarget}
+      target={target}
+      transition={props.transition}
+    />
+  );
+};
 
-  const components = resolveNestedComponents(props, branch.routes, activeChild.owner);
+interface NestedRouterTarget {
+  readonly childPending: boolean;
+  readonly components: ApplicationComponents;
+  readonly routing: ResolvedApplicationRouting | null;
+  readonly runtime: RouterRuntime<ModuleMetadata>;
+  readonly tree: RouterRuntimeActivationTree<ModuleMetadata> | undefined;
+}
 
-  if (!components) {
-    return null;
-  }
+interface FramePresentationProps {
+  readonly depth: number;
+  readonly onPresentationComplete: () => void;
+  readonly retainedTarget: NestedRouterTarget | null;
+  readonly target: NestedRouterTarget | null;
+  readonly transition: NativeFrameTransition | null;
+}
+
+interface FramePresentationState {
+  readonly completedRevision: number | null;
+  readonly next: NestedRouterTarget | null;
+  readonly phase: 'dismissing' | 'presenting' | 'visible';
+  readonly revision: number | null;
+  readonly target: NestedRouterTarget | null;
+}
+
+const FramePresentation: React.FC<FramePresentationProps> = (props) => {
+  const localTransition = props.transition?.depth === props.depth ? props.transition : null;
+  const [state, setState] = React.useState<FramePresentationState>(() => ({
+    completedRevision: null,
+    next: null,
+    phase: localTransition?.operation === 'present' ? 'presenting' : 'visible',
+    revision: localTransition?.revision ?? null,
+    target:
+      localTransition?.operation === 'dismiss' || localTransition?.operation === 'replace'
+        ? props.retainedTarget
+        : props.target,
+  }));
+
+  React.useLayoutEffect(() => {
+    setState((current) =>
+      reconcileFramePresentation(current, props.target, props.retainedTarget, localTransition),
+    );
+  }, [localTransition, props.retainedTarget, props.target]);
+  const reportedRevision = React.useRef<number | null>(null);
+
+  React.useLayoutEffect(() => {
+    if (state.completedRevision === null || reportedRevision.current === state.completedRevision) return;
+
+    reportedRevision.current = state.completedRevision;
+    props.onPresentationComplete();
+  }, [props.onPresentationComplete, state.completedRevision]);
+
+  const handlePresentationComplete = React.useCallback(() => {
+    setState((current) => {
+      if (current.phase === 'dismissing' && current.next) {
+        return {
+          completedRevision: null,
+          next: null,
+          phase: 'presenting',
+          revision: current.revision,
+          target: current.next,
+        };
+      }
+
+      return {
+        ...current,
+        completedRevision: current.revision,
+        next: null,
+        phase: 'visible',
+        target: current.phase === 'dismissing' ? null : current.target,
+      };
+    });
+  }, []);
+
+  if (!state.target) return null;
 
   return (
     <NestedRouterHost
-      exception={components.exception}
-      routing={props.routing}
-      runtime={'tree' in activeChild ? activeChild.tree.runtime : activeChild.runtime}
+      key={resolveRuntimePresentationKey(state.target.runtime)}
+      exception={state.target.components.exception}
+      onPresentationComplete={handlePresentationComplete}
+      phase={state.phase}
+      presentationRevision={state.revision}
+      routing={state.target.routing}
+      runtime={state.target.runtime}
     >
       <RouterHost
-        components={components}
-        pending={'childPending' in branch ? branch.childPending : false}
+        components={state.target.components}
+        pending={state.target.childPending}
         presentation="frame"
-        runtime={'tree' in activeChild ? activeChild.tree.runtime : activeChild.runtime}
-        tree={'tree' in activeChild ? activeChild.tree : undefined}
+        runtime={state.target.runtime}
+        tree={state.target.tree}
       />
-      {'childPending' in branch && branch.childPending ? null : (
+      {state.target.childPending ? null : (
         <NestedRouterLayer
-          components={components}
-          routing={props.routing}
-          runtime={'tree' in activeChild ? activeChild.tree.runtime : activeChild.runtime}
-          tree={'tree' in activeChild ? activeChild.tree : undefined}
+          components={state.target.components}
+          depth={props.depth + 1}
+          onPresentationComplete={props.onPresentationComplete}
+          retainedTree={props.retainedTarget?.tree}
+          routing={state.target.routing}
+          runtime={state.target.runtime}
+          transition={props.transition}
+          tree={state.target.tree}
         />
       )}
     </NestedRouterHost>
   );
 };
+
+const reconcileFramePresentation = (
+  current: FramePresentationState,
+  target: NestedRouterTarget | null,
+  retainedTarget: NestedRouterTarget | null,
+  transition: NativeFrameTransition | null,
+): FramePresentationState => {
+  if (!transition) {
+    if (current.phase !== 'visible') return current;
+    if (!current.target) return target ? { ...current, target } : current;
+    if (current.target.runtime !== target?.runtime) return current;
+
+    return current.target === target ? current : { ...current, target };
+  }
+
+  if (transition.revision === current.revision) {
+    if (current.phase !== 'visible' || current.target?.runtime !== target?.runtime) return current;
+
+    return current.target === target ? current : { ...current, target };
+  }
+
+  switch (transition.operation) {
+    case 'dismiss':
+      return {
+        completedRevision: null,
+        next: null,
+        phase: 'dismissing',
+        revision: transition.revision,
+        target: current.target ?? retainedTarget,
+      };
+    case 'present':
+      return {
+        completedRevision: null,
+        next: null,
+        phase: 'presenting',
+        revision: transition.revision,
+        target,
+      };
+    case 'replace':
+      return current.target
+        ? {
+            completedRevision: null,
+            next: target,
+            phase: 'dismissing',
+            revision: transition.revision,
+            target: current.target,
+          }
+        : retainedTarget
+          ? {
+              completedRevision: null,
+              next: target,
+              phase: 'dismissing',
+              revision: transition.revision,
+              target: retainedTarget,
+            }
+          : {
+              completedRevision: null,
+              next: null,
+              phase: 'presenting',
+              revision: transition.revision,
+              target,
+            };
+  }
+};
+
+const createNestedRouterTarget = (
+  props: IProps,
+  routes: readonly RouteActivationRuntime<ModuleMetadata>[],
+  activeChild: ActiveChildRouterRuntime<ModuleMetadata> | RouterRuntimeActivationChild<ModuleMetadata>,
+  childPending: boolean,
+): NestedRouterTarget | null => {
+  const components = resolveNestedComponents(props, routes, activeChild.owner);
+
+  if (!components) return null;
+
+  return Object.freeze({
+    childPending,
+    components,
+    routing: props.routing,
+    runtime: 'tree' in activeChild ? activeChild.tree.runtime : activeChild.runtime,
+    tree: 'tree' in activeChild ? activeChild.tree : undefined,
+  });
+};
+
+const resolveRuntimePresentationKey = (runtime: RouterRuntime<ModuleMetadata>): number => {
+  const current = runtimePresentationKeys.get(runtime);
+
+  if (current !== undefined) return current;
+
+  const key = ++runtimePresentationSequence;
+
+  runtimePresentationKeys.set(runtime, key);
+  return key;
+};
+
+const runtimePresentationKeys = new WeakMap<RouterRuntime<ModuleMetadata>, number>();
+let runtimePresentationSequence = 0;
 
 const resolveNestedComponents = (
   props: IProps,

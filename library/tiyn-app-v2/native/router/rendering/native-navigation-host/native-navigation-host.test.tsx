@@ -58,6 +58,7 @@ describe('NativeNavigationHost', () => {
         current={undefined}
         decision={null}
         getHistoryEntries={() => entries}
+        onPresentationComplete={() => undefined}
         runtime={runtime}
       />,
     );
@@ -104,6 +105,7 @@ describe('NativeNavigationHost', () => {
         current={undefined}
         decision={null}
         getHistoryEntries={() => entries}
+        onPresentationComplete={() => undefined}
         runtime={runtime}
       />,
     );
@@ -158,6 +160,7 @@ describe('NativeNavigationHost', () => {
         current={undefined}
         decision={null}
         getHistoryEntries={() => entries}
+        onPresentationComplete={() => undefined}
         runtime={runtime}
       />,
     );

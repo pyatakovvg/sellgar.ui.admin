@@ -34,6 +34,7 @@ export interface NativeNavigationSnapshot {
 type NativeNavigationListener = () => void;
 
 interface NativePresentationCompletion {
+  readonly navigation: NavigationState;
   readonly promise: Promise<void>;
   readonly resolve: () => void;
   readonly revision: number;
@@ -53,6 +54,7 @@ export class NativeRouterBridge implements RouterBridgeInterface {
   private driver: NativeNavigationDriver | null = null;
   private readonly listeners = new Set<NativeNavigationListener>();
   private pendingPresentation: NativePresentationCompletion | null = null;
+  private presentedNavigation: NavigationState | undefined;
   private presentationRevision = 0;
   private snapshot = EMPTY_SNAPSHOT;
   private readonly transport: NativeRouterTransportInterface;
@@ -90,10 +92,16 @@ export class NativeRouterBridge implements RouterBridgeInterface {
   async commit(navigation: NavigationState, context: RouterBridgeCommitContextInterface): Promise<void> {
     if (context.signal.aborted) return;
 
-    const completion = this.createPresentationCompletion(context.signal);
+    const completion = this.createPresentationCompletion(navigation, context.signal);
 
     this.setSnapshot(projectCommit(this.snapshot, navigation, context.history));
-    await completion?.promise;
+
+    if (!completion) {
+      this.presentedNavigation = navigation;
+      return;
+    }
+
+    await completion.promise;
   }
 
   async back(): Promise<void> {
@@ -124,12 +132,17 @@ export class NativeRouterBridge implements RouterBridgeInterface {
     return this.snapshot;
   };
 
-  getPresentationRevision(): number {
-    return this.presentationRevision;
+  getPendingPresentationRevision(): number | null {
+    return this.pendingPresentation?.revision ?? null;
+  }
+
+  getPresentedNavigation(): NavigationState | undefined {
+    return this.presentedNavigation;
   }
 
   completePresentation(revision: number): void {
     if (this.pendingPresentation?.revision === revision) {
+      this.presentedNavigation = this.pendingPresentation.navigation;
       this.pendingPresentation.resolve();
     }
   }
@@ -181,6 +194,7 @@ export class NativeRouterBridge implements RouterBridgeInterface {
     this.context = null;
     this.driver = null;
     this.listeners.clear();
+    this.presentedNavigation = undefined;
     this.snapshot = EMPTY_SNAPSHOT;
   }
 
@@ -199,7 +213,10 @@ export class NativeRouterBridge implements RouterBridgeInterface {
     for (const listener of this.listeners) listener();
   }
 
-  private createPresentationCompletion(signal: AbortSignal): NativePresentationCompletion | null {
+  private createPresentationCompletion(
+    navigation: NavigationState,
+    signal: AbortSignal,
+  ): NativePresentationCompletion | null {
     this.pendingPresentation?.resolve();
     this.pendingPresentation = null;
     this.presentationRevision += 1;
@@ -224,7 +241,7 @@ export class NativeRouterBridge implements RouterBridgeInterface {
 
       resolvePromise();
     };
-    const completion = Object.freeze({ promise, resolve: complete, revision });
+    const completion = Object.freeze({ navigation, promise, resolve: complete, revision });
 
     this.pendingPresentation = completion;
     signal.addEventListener('abort', complete, { once: true });

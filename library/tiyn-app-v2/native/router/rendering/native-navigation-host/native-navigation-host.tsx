@@ -20,6 +20,7 @@ interface NativeNavigationHostProps {
   readonly current: NavigationState | undefined;
   readonly decision: ApplicationNavigationDecision | null;
   readonly getHistoryEntries: () => readonly ApplicationRouterHistoryEntry<ModuleMetadata>[];
+  readonly onPresentationComplete: () => void;
   readonly runtime: RouterRuntime<ModuleMetadata>;
 }
 
@@ -38,10 +39,6 @@ export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props)
   const historyEntries = props.getHistoryEntries();
   const focusedEntry = historyEntries.at(-1) ?? null;
   const pending = props.runtime.getPendingNavigation();
-  const presentationRevision = props.bridge.getPresentationRevision();
-  const completePresentation = React.useCallback(() => {
-    props.bridge.completePresentation(presentationRevision);
-  }, [presentationRevision, props.bridge]);
 
   React.useEffect(() => {
     rootBackPressedAt.current = null;
@@ -82,7 +79,7 @@ export const NativeNavigationHost: React.FC<NativeNavigationHostProps> = (props)
           current={props.current}
           dismissing={pending ? navigation.backInProgress : navigation.action === 'pop'}
           entries={historyEntries}
-          onPresentationComplete={completePresentation}
+          onPresentationComplete={props.onPresentationComplete}
           pending={pending}
         />
       )}

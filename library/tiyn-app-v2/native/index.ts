@@ -23,6 +23,12 @@ export { useSubmit, type ControllerSubmit } from './controller/hook/use-submit';
 export { useRevalidate, type RevalidateHandler } from './revalidate/hook/use-revalidate';
 
 export { useSafeAreaInsets, type SafeAreaInsets } from './safe-area/hook/use-safe-area-insets';
+export { KeyboardSurface } from './keyboard/rendering/keyboard-surface';
+export {
+  KeyboardScrollView,
+  type KeyboardScrollViewProps,
+  type KeyboardScrollViewRef,
+} from './keyboard/rendering/keyboard-scroll-view';
 
 export { useGuard } from './guard/hook/use-guard';
 export { Guarded, type GuardedProps } from './guard/rendering/guarded';
