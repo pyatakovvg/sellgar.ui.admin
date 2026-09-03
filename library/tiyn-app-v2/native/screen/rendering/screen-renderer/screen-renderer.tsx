@@ -21,6 +21,7 @@ import {
   type ScreenMachineState,
   type ScreenSlot,
 } from '../../runtime/screen-machine';
+import { ScreenActivityProvider, useScreenActive } from '../../runtime/screen-activity-context';
 
 export interface ScreenRendererProps {
   readonly onPresentationComplete?: () => void;
@@ -85,6 +86,7 @@ interface ScreenSlotViewProps {
 }
 
 const ScreenSlotView: React.FC<ScreenSlotViewProps> = ({ progress, slot, state }) => {
+  const presentationActive = useScreenActive();
   const dimensions = useWindowDimensions();
   const presentation = resolveScreenSlotPresentation(state, slot);
   const role = resolveScreenSlotRole(state, slot);
@@ -158,6 +160,7 @@ const ScreenSlotView: React.FC<ScreenSlotViewProps> = ({ progress, slot, state }
   }, [animation, dimensions.height, dimensions.width, role]);
   const visible = role !== 'empty';
   const interactive = state.phase === 'stable' && role === 'current';
+  const active = presentationActive && interactive;
 
   return (
     <Animated.View
@@ -167,7 +170,9 @@ const ScreenSlotView: React.FC<ScreenSlotViewProps> = ({ progress, slot, state }
       pointerEvents={interactive ? 'auto' : 'none'}
       style={[styles.slot, animatedStyle]}
     >
-      {visible && presentation ? <React.Fragment key={presentation.key}>{presentation.content}</React.Fragment> : null}
+      <ScreenActivityProvider active={active}>
+        {visible && presentation ? <React.Fragment key={presentation.key}>{presentation.content}</React.Fragment> : null}
+      </ScreenActivityProvider>
     </Animated.View>
   );
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 
 import type { ApplicationNavigationDecision } from '../../../../core/application/lifecycle/application';
 import type { RouteActivationRuntime } from '../../../../core/router/runtime/route-runtime';
@@ -13,6 +14,9 @@ import type {
   ResolvedApplicationRouting,
 } from '../../../application/config/application-configurator';
 import type { ModuleMetadata } from '../../../module/declaration/module';
+import type { ScreenPresentation } from '../../../screen/declaration/screen-presentation';
+import { ScreenLayerHost } from '../../../screen/rendering/screen-compositor';
+import { ScreenRenderer } from '../../../screen/rendering/screen-renderer';
 import { getRoutePresentationDefinition } from '../../declaration/route';
 import { getRouterPresentationDefinition } from '../../declaration/router';
 import { NestedRouterHost } from '../router-host/nested-router-host';
@@ -146,39 +150,63 @@ const FramePresentation: React.FC<FramePresentationProps> = (props) => {
       };
     });
   }, []);
+  const presentation = React.useMemo<ScreenPresentation | null>(() => {
+    const target = state.target;
 
-  if (!state.target) return null;
+    if (!target) return null;
+
+    return Object.freeze({
+      content: (
+        <NestedRouterHost
+          exception={target.components.exception}
+          onPresentationComplete={handlePresentationComplete}
+          phase={state.phase}
+          presentationRevision={state.revision}
+          routing={target.routing}
+          runtime={target.runtime}
+        >
+          <RouterHost
+            components={target.components}
+            pending={target.childPending}
+            presentation="frame"
+            runtime={target.runtime}
+            tree={target.tree}
+          />
+          {target.childPending ? null : (
+            <NestedRouterLayer
+              components={target.components}
+              depth={props.depth + 1}
+              onPresentationComplete={props.onPresentationComplete}
+              retainedTree={props.retainedTarget?.tree}
+              routing={target.routing}
+              runtime={target.runtime}
+              transition={props.transition}
+              tree={target.tree}
+            />
+          )}
+        </NestedRouterHost>
+      ),
+      key: `frame-${resolveRuntimePresentationKey(target.runtime)}`,
+    });
+  }, [
+    handlePresentationComplete,
+    props.depth,
+    props.onPresentationComplete,
+    props.retainedTarget?.tree,
+    props.transition,
+    state.phase,
+    state.revision,
+    state.target,
+  ]);
+
+  if (!presentation) return null;
 
   return (
-    <NestedRouterHost
-      key={resolveRuntimePresentationKey(state.target.runtime)}
-      exception={state.target.components.exception}
-      onPresentationComplete={handlePresentationComplete}
-      phase={state.phase}
-      presentationRevision={state.revision}
-      routing={state.target.routing}
-      runtime={state.target.runtime}
-    >
-      <RouterHost
-        components={state.target.components}
-        pending={state.target.childPending}
-        presentation="frame"
-        runtime={state.target.runtime}
-        tree={state.target.tree}
-      />
-      {state.target.childPending ? null : (
-        <NestedRouterLayer
-          components={state.target.components}
-          depth={props.depth + 1}
-          onPresentationComplete={props.onPresentationComplete}
-          retainedTree={props.retainedTarget?.tree}
-          routing={state.target.routing}
-          runtime={state.target.runtime}
-          transition={props.transition}
-          tree={state.target.tree}
-        />
-      )}
-    </NestedRouterHost>
+    <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
+      <ScreenLayerHost depth={props.depth} kind="frame">
+        <ScreenRenderer presentation={presentation} style={StyleSheet.absoluteFill} />
+      </ScreenLayerHost>
+    </View>
   );
 };
 

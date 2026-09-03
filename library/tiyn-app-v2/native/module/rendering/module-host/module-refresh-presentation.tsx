@@ -58,6 +58,7 @@ export const ModuleRefreshPresentation: React.FC<ModuleRefreshPresentationProps>
   return (
     <KeyboardScrollView
       contentContainerStyle={styles.content}
+      mode="insets"
       onMomentumScrollEnd={handleScrollEnd}
       onScrollBeginDrag={handleScrollBeginDrag}
       onScrollEndDrag={handleScrollEnd}

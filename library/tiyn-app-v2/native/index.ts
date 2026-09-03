@@ -29,6 +29,7 @@ export {
   type KeyboardScrollViewProps,
   type KeyboardScrollViewRef,
 } from './keyboard/rendering/keyboard-scroll-view';
+export { useScreenAutoFocus } from './keyboard/hook/use-screen-auto-focus';
 
 export { useGuard } from './guard/hook/use-guard';
 export { Guarded, type GuardedProps } from './guard/rendering/guarded';
@@ -113,6 +114,7 @@ export type { ScreenPresentation } from './screen/declaration/screen-presentatio
 export type { ScreenTransition, ScreenTransitionOperation } from './screen/declaration/screen-transition';
 export { ScreenRenderer } from './screen/rendering/screen-renderer';
 export type { ScreenRendererProps } from './screen/rendering/screen-renderer';
+export { useScreenActive } from './screen/runtime/screen-activity-context';
 export { Router } from './router/declaration/router';
 export type { RouterOptions } from './router/declaration/router';
 export { Shell, ShellInterface } from './router/declaration/shell';

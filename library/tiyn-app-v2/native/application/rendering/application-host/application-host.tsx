@@ -32,7 +32,6 @@ import type { ResolvedApplicationRouting } from '../../config/application-config
 import { ApplicationComponentsProvider } from '../application-components-context';
 import { OverlayHost } from '../overlay-host';
 import { PresentationLayer } from '../presentation-layer';
-import { KeyboardRuntimeProvider } from '../../../keyboard/runtime/keyboard-runtime-context';
 
 export interface ApplicationViewSource {
   readonly components: ApplicationComponents;
@@ -134,18 +133,16 @@ export const ApplicationHost: React.FC<IProps> = (props) => {
         <ApplicationComponentsProvider components={props.source.components}>
           <GestureHandlerRootView style={styles.root}>
             <SafeAreaProvider style={styles.root}>
-              <KeyboardRuntimeProvider>
-                <RuntimeErrorBoundary
-                  exception={props.source.components.failed ?? props.source.components.exception}
-                  onError={(error) => void props.source.failRender(error)}
-                  resetKeys={[props.source]}
-                >
-                  <OverlayHost frame={framePresentation} modal={modalFeatures} notification={notificationFeatures}>
-                    {content}
-                    {applicationFeatures}
-                  </OverlayHost>
-                </RuntimeErrorBoundary>
-              </KeyboardRuntimeProvider>
+              <RuntimeErrorBoundary
+                exception={props.source.components.failed ?? props.source.components.exception}
+                onError={(error) => void props.source.failRender(error)}
+                resetKeys={[props.source]}
+              >
+                <OverlayHost frame={framePresentation} modal={modalFeatures} notification={notificationFeatures}>
+                  {content}
+                  {applicationFeatures}
+                </OverlayHost>
+              </RuntimeErrorBoundary>
             </SafeAreaProvider>
           </GestureHandlerRootView>
         </ApplicationComponentsProvider>

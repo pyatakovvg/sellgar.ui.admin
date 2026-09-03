@@ -6,14 +6,14 @@ import type {
   UserRequestConfirmViewProps,
   UserRequestPromptViewProps,
 } from '@sellgar/app-v2/native';
+import { useScreenAutoFocus } from '@sellgar/app-v2/native';
 
 import { Dialog } from '../../../shared/ui/dialog';
 
-export const AlertUserRequest: React.FC<UserRequestAlertViewProps> = ({ apply, cancel, request }) => (
+export const AlertUserRequest: React.FC<UserRequestAlertViewProps> = ({ apply, request }) => (
   <Dialog
     actions={[{ label: request.payload.applyText ?? 'OK', onPress: apply, tone: 'primary' }]}
     description={request.payload.description}
-    onRequestClose={cancel}
     title={request.payload.title}
   />
 );
@@ -25,14 +25,15 @@ export const ConfirmUserRequest: React.FC<UserRequestConfirmViewProps> = ({ appl
       { label: request.payload.applyText ?? 'Confirm', onPress: apply, tone: 'primary' },
     ]}
     description={request.payload.description}
-    onRequestClose={cancel}
     title={request.payload.title}
   />
 );
 
 export const PromptUserRequest: React.FC<UserRequestPromptViewProps> = ({ apply, cancel, request }) => {
-  const [shown, setShown] = React.useState(false);
+  const input = React.useRef<TextInput>(null);
   const [value, setValue] = React.useState(request.payload.defaultValue ?? '');
+
+  useScreenAutoFocus(input);
 
   return (
     <Dialog
@@ -41,20 +42,16 @@ export const PromptUserRequest: React.FC<UserRequestPromptViewProps> = ({ apply,
         { label: request.payload.applyText ?? 'Apply', onPress: () => apply(value), tone: 'primary' },
       ]}
       description={request.payload.description}
-      onRequestClose={cancel}
-      onShow={() => setShown(true)}
       title={request.payload.title}
     >
-      {shown ? (
-        <TextInput
-          autoFocus
-          onChangeText={setValue}
-          placeholder={request.payload.placeholder}
-          placeholderTextColor="#747987"
-          style={styles.input}
-          value={value}
-        />
-      ) : null}
+      <TextInput
+        onChangeText={setValue}
+        placeholder={request.payload.placeholder}
+        placeholderTextColor="#747987"
+        ref={input}
+        style={styles.input}
+        value={value}
+      />
     </Dialog>
   );
 };

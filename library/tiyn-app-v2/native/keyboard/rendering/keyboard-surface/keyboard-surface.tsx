@@ -3,7 +3,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 export const KeyboardSurface: React.FC<React.PropsWithChildren> = (props) => {
   return (
-    <KeyboardProvider preload={false} preserveEdgeToEdge>
+    <KeyboardProvider preload preserveEdgeToEdge>
       {props.children}
     </KeyboardProvider>
   );

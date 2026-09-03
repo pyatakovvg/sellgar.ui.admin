@@ -1,7 +1,7 @@
 import React from 'react';
 import { Keyboard, StyleSheet, View, type LayoutChangeEvent } from 'react-native';
 import { GestureDetector, GestureStateManager, usePanGesture } from 'react-native-gesture-handler';
-import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
+import { KeyboardAvoidingView, useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import Animated, {
   cancelAnimation,
   Extrapolation,
@@ -137,16 +137,6 @@ export const ShellHost: React.FC<ShellHostProps> = (props) => {
         return;
       }
 
-      if (touchStartedWithKeyboard.value) {
-        if (!keyboardDismissRequested.value) {
-          keyboardDismissRequested.value = true;
-          scheduleOnRN(dismissKeyboard);
-        }
-
-        GestureStateManager.fail(event.handlerTag);
-        return;
-      }
-
       const intent = resolveShellPanIntent({
         deltaX: touch.absoluteX - initialTouchX.value,
         deltaY: touch.absoluteY - initialTouchY.value,
@@ -154,6 +144,16 @@ export const ShellHost: React.FC<ShellHostProps> = (props) => {
         scrollOffset: touchStartedInScrollable.value ? scrollOffset.value : 0,
         verticalActivationDistance: VERTICAL_ACTIVATION_DISTANCE,
       });
+
+      if (touchStartedWithKeyboard.value) {
+        if (intent === 'activate' && !keyboardDismissRequested.value) {
+          keyboardDismissRequested.value = true;
+          scheduleOnRN(dismissKeyboard);
+        }
+
+        if (intent !== 'wait') GestureStateManager.fail(event.handlerTag);
+        return;
+      }
 
       if (intent === 'activate') GestureStateManager.activate(event.handlerTag);
       if (intent === 'fail') GestureStateManager.fail(event.handlerTag);
@@ -229,9 +229,16 @@ export const ShellHost: React.FC<ShellHostProps> = (props) => {
     <GestureDetector gesture={gesture}>
       <View accessibilityViewIsModal style={[StyleSheet.absoluteFill, styles.overlay]}>
         <Animated.View style={[StyleSheet.absoluteFill, styles.backdrop, backdropStyle]} />
-        <Animated.View onLayout={handleFrameLayout} style={[styles.frame, frameStyle]}>
-          <ShellRuntimeProvider value={runtime}>{renderView(props.metadata.view, context)}</ShellRuntimeProvider>
-        </Animated.View>
+        <KeyboardAvoidingView
+          automaticOffset
+          behavior="padding"
+          pointerEvents="box-none"
+          style={[StyleSheet.absoluteFill, styles.framePosition]}
+        >
+          <Animated.View onLayout={handleFrameLayout} style={[styles.frame, frameStyle]}>
+            <ShellRuntimeProvider value={runtime}>{renderView(props.metadata.view, context)}</ShellRuntimeProvider>
+          </Animated.View>
+        </KeyboardAvoidingView>
       </View>
     </GestureDetector>
   );
@@ -242,11 +249,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.56)',
   },
   frame: {
-    bottom: 0,
-    left: 0,
     maxHeight: '100%',
-    position: 'absolute',
-    right: 0,
+  },
+  framePosition: {
+    justifyContent: 'flex-end',
   },
   overlay: {
     zIndex: 10,

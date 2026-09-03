@@ -653,6 +653,18 @@ app.routing({
   `Route.routing`, схлопываются для основной screen projection, поскольку frame
   отображается отдельным shell layer. Поэтому общий tab/layout не дублируется,
   а открытие или закрытие frame не создаёт обычный screen transition.
+- Native `Screen` является общей физической единицей presentation, а не
+  синонимом Route либо Module. Application route outlet, каждый frame layer и
+  modal layer передают screen renderer одну стабильную presentation identity и
+  заменяют fallback, positive либо negative content внутри неё без создания
+  второго screen. Presentation compositor определяет единственный активный
+  process в порядке `application < frame < modal` с учётом глубины вложенных
+  frame. Покрытый overlay-слоем screen остаётся смонтированным, но перестаёт
+  принимать input, скрывается от accessibility focus и приостанавливает
+  screen-focus effects. Снятие верхнего слоя реактивирует предыдущий screen без
+  navigation operation, fallback либо повторного loader. Native `Modal`
+  сохраняет собственную modality и z-order; compositor управляет activity, а не
+  заменяет platform modal обычным `View`.
 - Pending forward navigation создаёт target screen в первом изменившемся content
   outlet. Layouts неизменившейся Route-ancestry остаются смонтированными вне
   physical transition и не дублируются. Первым содержимым target screen является
@@ -821,26 +833,47 @@ app.routing({
   focus-навигацию: `TextInput`, IME и submit сохраняют нативную platform-
   семантику. Adapter только предоставляет keyboard-aware presentation для
   scrollable Module и Shell content и разрешает конфликты с framework-жестами.
-- Каждый независимый native presentation surface получает собственную keyboard
-  integration boundary. Основной screen/frame surface создаётся application
-  host. React Native `Modal` создаёт отдельное native window/surface, поэтому
-  пользовательская modal presentation оборачивает своё содержимое публичным
-  `KeyboardSurface`; это не заменяет `Modal`, не переносит его под application
-  Layout и не ослабляет modality. Notification, не содержащая input, такой
-  boundary автоматически не получает.
-- Ordinary Module presentation и `ShellScrollView` автоматически сохраняют
-  сфокусированный `TextInput` и caret видимыми над клавиатурой средствами
-  поддерживаемого keyboard-aware scroll primitive. Ручные измерения координат,
-  `setTimeout` для focus/scroll и прикладные keyboard spacers в Module views не
-  являются framework contract. Tap по доступному form control обрабатывается с
-  первого нажатия; keyboard dismiss следует нативному режиму платформы
-  (`interactive` на iOS, `on-drag` на Android).
+- Native renderer создаёт один стабильный `KeyboardSurface` над полным деревом
+  presentation: application, frame, modal и notification. Он является единым
+  источником native keyboard/focused-input events и не размонтируется при смене
+  presentation process. Создавать вложенный `KeyboardSurface` для frame либо
+  React Native `Modal` запрещено: конкурирующие `KeyboardProvider` нарушают
+  порядок keyboard events и теряют ownership focus при возврате между native
+  windows.
+- Application, Frame и Modal остаются независимыми presentation processes и
+  получают собственный keyboard-aware scroll owner. Поддерживаемый primitive
+  сопоставляет focused input с владельцем по native parent ScrollView target,
+  поэтому keyboard geometry применяет только соответствующий scroll container.
+  `KeyboardSurface` не заменяет native `Modal`, не переносит overlays под
+  application Layout и не ослабляет их modality либо z-order.
+- Ordinary Module presentation сохраняет текущий сфокусированный `TextInput` и
+  caret видимыми над клавиатурой средствами поддерживаемого keyboard-aware scroll
+  primitive. Frame использует другую композицию: его
+  presentation-контейнер целиком поднимает surface и ограничивает её доступной
+  над IME областью, а `ShellScrollView` отвечает только за внутреннее
+  переполнение уже расположенного frame. Он не прокручивает focused input внутри
+  неподвижной frame surface. Ручные измерения координат, `setTimeout` для
+  focus/scroll и прикладные keyboard spacers в Module views не являются
+  framework contract. Tap по доступному form control обрабатывается с первого
+  нажатия; keyboard dismiss следует нативному режиму платформы (`interactive` на
+  iOS, `on-drag` на Android).
 - Для пользовательской presentation, создающей отдельную scrollable surface
   (включая Prompt в React Native `Modal`), native adapter предоставляет
-  `KeyboardScrollView`. `KeyboardSurface` подключает keyboard runtime к native
-  surface, но намеренно не создаёт прокрутку автоматически: это исключает
-  вложенные scroll containers и оставляет владельцу presentation контроль над
-  структурой содержимого.
+  `KeyboardScrollView`. Presentation не создаёт собственный `KeyboardSurface`:
+  она наследует единый keyboard runtime application host. При этом scroll не
+  создаётся автоматически — владелец presentation сохраняет контроль над
+  структурой содержимого и не получает вложенные scroll containers.
+- Деактивация screen снимает текущий native input focus. Native adapter не хранит
+  последний вручную сфокусированный input и не восстанавливает его либо
+  клавиатуру при повторной активации presentation. Клавиатура после активации
+  появляется только у явно объявленного screen autofocus; без autofocus поле
+  остаётся несфокусированным до пользовательского действия. Универсальный
+  `useScreenAutoFocus` связывает focusable ref с activity screen и одинаково
+  применим к обычному `TextInput`, полям формы и пользовательским input-
+  компонентам. Keyboard-aware scroll owner не выбирает focus: после подтверждения
+  показа native keyboard он только доводит явно autofocus-поле до видимой области.
+  Механизм не требует таймеров, сохранения input identity, ручного измерения его
+  координат или логики конкретной формы.
 - Жест, начавшийся при видимой клавиатуре, не может в ходе того же touch sequence
   превратиться в pull-to-refresh или dismiss frame. В Module он только завершает
   нативное взаимодействие с клавиатурой; revalidation разрешается следующим
@@ -862,7 +895,7 @@ app.routing({
   renderer state и не публикуется в core.
 
   Frame presentation владеет собственным автоматом `presenting | visible |
-  dismissing | hidden`. Источник logical close ему неизвестен: scoped
+dismissing | hidden`. Источник logical close ему неизвестен: scoped
   `navigate.close()` из controller/view, `useShell().close()`, platform Back и
   завершённый dismiss-жест приводят к одному целевому состоянию `hidden`.
   После core commit native adapter удерживает уже показанный nested runtime в
@@ -2238,9 +2271,9 @@ new Route({
   клавиатуре, не запускает pull-to-refresh и не закрывает frame; следующий новый
   drag соответственно может ревалидировать Module либо закрыть frame. Prompt в
   React Native `Modal` получает autofocus после `onShow`, остаётся над Layout,
-  блокирует underlying interaction и использует отдельные `KeyboardSurface` и
-  `KeyboardScrollView`; focused input и actions остаются достижимыми при открытой
-  клавиатуре.
+  блокирует underlying interaction и использует собственный
+  `KeyboardScrollView` внутри единого application `KeyboardSurface`; focused
+  input и actions остаются достижимыми при открытой клавиатуре.
 - React Native navigation-history tests проверяют одинаковую семантику истории
   для tab, link, navigation item и imperative navigation, в том числе возврат
   `Products -> Brands -> Categories -> Back -> Brands -> Back -> Products`.

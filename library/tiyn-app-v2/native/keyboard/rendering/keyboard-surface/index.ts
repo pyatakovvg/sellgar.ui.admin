@@ -1,1 +1,1 @@
-export { KeyboardSurface } from './keyboard-surface.tsx';
+export { KeyboardSurface } from './keyboard-surface';

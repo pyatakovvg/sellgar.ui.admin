@@ -20,7 +20,6 @@ const LocalNavigationBlocker: React.FC<NavigationBlockerViewProps> = (props) => 
       { label: 'Discard', onPress: props.leave, tone: 'destructive' },
     ]}
     description="This presentation belongs to the Products screen registration."
-    onRequestClose={props.stay}
     title="Local Products blocker"
   />
 );

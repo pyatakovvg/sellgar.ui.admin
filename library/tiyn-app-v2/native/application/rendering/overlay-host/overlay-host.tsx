@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { KeyboardSurface } from '../../../keyboard/rendering/keyboard-surface';
+import { KeyboardRuntimeProvider } from '../../../keyboard/runtime/keyboard-runtime-context';
+import { ScreenCompositor, ScreenLayerHost } from '../../../screen/rendering/screen-compositor';
 
 interface OverlayHostProps {
   readonly children: React.ReactNode;
@@ -11,13 +13,15 @@ interface OverlayHostProps {
 
 export const OverlayHost: React.FC<OverlayHostProps> = (props) => {
   return (
-    <>
-      <KeyboardSurface>
-        {props.children}
-        {props.frame}
-      </KeyboardSurface>
-      {props.modal}
-      {props.notification}
-    </>
+    <KeyboardSurface>
+      <KeyboardRuntimeProvider>
+        <ScreenCompositor>
+          <ScreenLayerHost kind="application">{props.children}</ScreenLayerHost>
+          {props.frame}
+          {props.modal}
+          {props.notification}
+        </ScreenCompositor>
+      </KeyboardRuntimeProvider>
+    </KeyboardSurface>
   );
 };

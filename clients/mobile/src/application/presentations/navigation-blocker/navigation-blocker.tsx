@@ -11,7 +11,6 @@ export const NavigationBlocker: React.FC<NavigationBlockerViewProps> = (props) =
       { label: 'Leave', onPress: props.leave, tone: 'destructive' },
     ]}
     description="Unsaved changes will be lost."
-    onRequestClose={props.stay}
     title="Leave this screen?"
   />
 );
