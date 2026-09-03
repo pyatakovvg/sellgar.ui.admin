@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android -i",
     "start": "react-native start --reset-cache",
     "typecheck": "tsc --noEmit"
   },
