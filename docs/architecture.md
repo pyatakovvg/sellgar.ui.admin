@@ -14,7 +14,7 @@ Host не должен становиться местом для feature UI и�
 
 ## Runtime
 
-Приложение использует `@sellgar/app-v2`, а route contracts принадлежат `@library/route-tokens`.
+Приложение использует `@sellgar/app`, а route contracts принадлежат `@library/route-tokens`.
 
 - `Application` собирает runtime.
 - `Route` и `Router` задают route tree.
@@ -50,7 +50,7 @@ Host не должен становиться местом для feature UI и�
 - `layouts/*` владеют общим каркасом экрана.
 - `library/domain` владеет domain entities, repositories, API clients и HTTP helper.
 - `library/design` - shared UI wrappers только без domain imports.
-- `library/tiyn-app-v2` - локальный runtime package `@sellgar/app-v2`.
+- `library/sellgar.app.ui` - локальный runtime package `@sellgar/app`.
 - `library/route-tokens` - route token contracts.
 - `utils/*` - чистые утилиты.
 

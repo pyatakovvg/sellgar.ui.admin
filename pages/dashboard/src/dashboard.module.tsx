@@ -1,4 +1,4 @@
-import { Module } from '@sellgar/app-v2/react';
+import { Module } from '@sellgar/app/react';
 
 import { ModuleView } from './view/module.view.tsx';
 

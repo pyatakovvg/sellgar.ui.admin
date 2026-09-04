@@ -1,5 +1,5 @@
 import { type StoreProductResultEntity, type StoreServiceInterface } from '@library/domain';
-import type { RouteQueryServiceInterface } from '@sellgar/app-v2';
+import type { RouteQueryServiceInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FilterQuery } from '../../filter/query/filter.query.ts';

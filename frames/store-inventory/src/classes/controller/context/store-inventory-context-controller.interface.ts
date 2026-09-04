@@ -1,4 +1,4 @@
-import type { ControllerArgs, WithParams } from '@sellgar/app-v2';
+import type { ControllerArgs, WithParams } from '@sellgar/app';
 
 import type { StoreInventoryResultEntity } from './domain/store-inventory-result.entity.ts';
 import { StoreInventoryFrameParams } from '../../params/frame.params.ts';

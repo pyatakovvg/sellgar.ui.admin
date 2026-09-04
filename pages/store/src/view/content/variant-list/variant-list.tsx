@@ -1,5 +1,5 @@
 import type { StoreProductEntity } from '@library/domain';
-import * as App from '@sellgar/app-v2/react';
+import * as App from '@sellgar/app/react';
 import { Table } from '@sellgar/kit';
 
 import React from 'react';

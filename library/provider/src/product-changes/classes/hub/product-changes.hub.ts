@@ -1,6 +1,6 @@
 import { AuthServiceInterface, ConfigInterface, ProductEntity } from '@library/domain';
 import { SocketIOConnectionsInterface, type SocketIOConnectionInterface } from '@library/socket-io';
-import { Inject, Injectable, LocationServiceInterface, type RouterLocationSnapshot } from '@sellgar/app-v2';
+import { Inject, Injectable, LocationServiceInterface, type RouterLocationSnapshot } from '@sellgar/app';
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';
 

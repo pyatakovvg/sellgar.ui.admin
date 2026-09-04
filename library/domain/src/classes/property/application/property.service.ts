@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@sellgar/app-v2';
+import { Inject, Injectable } from '@sellgar/app';
 
 import { PropertyServiceInterface } from './property-service.interface.ts';
 import { PropertyGatewayInterface } from '../data/gateway/property-gateway.interface.ts';

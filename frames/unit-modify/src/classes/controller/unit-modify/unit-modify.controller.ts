@@ -1,6 +1,6 @@
 import { UnitServiceInterface } from '@library/domain';
-import { Controller, Inject, RevalidateServiceInterface } from '@sellgar/app-v2';
-import { NavigateServiceInterface } from '@sellgar/app-v2';
+import { Controller, Inject, RevalidateServiceInterface } from '@sellgar/app';
+import { NavigateServiceInterface } from '@sellgar/app';
 
 import { UnitModifyControllerInterface } from './unit-modify-controller.interface.ts';
 

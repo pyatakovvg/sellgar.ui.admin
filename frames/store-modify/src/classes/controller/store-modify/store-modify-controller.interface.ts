@@ -1,5 +1,5 @@
 import type { StoreProductEntity } from '@library/domain';
-import type { ControllerArgs, WithParams, WithPayload } from '@sellgar/app-v2';
+import type { ControllerArgs, WithParams, WithPayload } from '@sellgar/app';
 
 import { StoreModifyFrameParams } from '../../params/frame.params.ts';
 

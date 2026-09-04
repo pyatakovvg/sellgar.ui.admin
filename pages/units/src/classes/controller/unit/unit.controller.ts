@@ -1,5 +1,5 @@
 import { UnitServiceInterface } from '@library/domain';
-import { Controller, Inject } from '@sellgar/app-v2';
+import { Controller, Inject } from '@sellgar/app';
 
 import { UnitControllerInterface } from './unit-controller.interface.ts';
 

@@ -1,4 +1,4 @@
-import type { ControllerArgs, WithPayload, WithProps } from '@sellgar/app-v2';
+import type { ControllerArgs, WithPayload, WithProps } from '@sellgar/app';
 
 export abstract class LogoutControllerInterface {
   abstract action(

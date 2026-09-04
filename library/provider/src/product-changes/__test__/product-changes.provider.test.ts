@@ -1,5 +1,5 @@
 import { ProductEntity, ProductResultEntity } from '@library/domain';
-import type { ProviderCleanup } from '@sellgar/app-v2';
+import type { ProviderCleanup } from '@sellgar/app';
 import { plainToInstance } from 'class-transformer';
 
 import {

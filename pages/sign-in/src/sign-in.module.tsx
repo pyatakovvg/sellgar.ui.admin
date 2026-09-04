@@ -1,5 +1,5 @@
-import { UseBindings } from '@sellgar/app-v2';
-import { Module } from '@sellgar/app-v2/react';
+import { UseBindings } from '@sellgar/app';
+import { Module } from '@sellgar/app/react';
 
 import { SignInBindings } from './classes/classes.bindings.ts';
 

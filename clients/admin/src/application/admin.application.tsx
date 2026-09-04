@@ -1,6 +1,6 @@
-import { UseBindings } from '@sellgar/app-v2';
-import { Application, UserRequestFeature, UserRequestPresentation } from '@sellgar/app-v2/react';
-import type { ApplicationConfiguratorInterface } from '@sellgar/app-v2/react';
+import { UseBindings } from '@sellgar/app';
+import { Application, UserRequestFeature, UserRequestPresentation } from '@sellgar/app/react';
+import type { ApplicationConfiguratorInterface } from '@sellgar/app/react';
 
 import { MainLayout } from '@layout/main';
 

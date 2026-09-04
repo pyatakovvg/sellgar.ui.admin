@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { BrandServiceInterface } from './application/brand-service.interface.ts';
 import { BrandService } from './application/brand.service.ts';

@@ -1,5 +1,5 @@
 import { Button } from '@sellgar/kit';
-import { useController, useSubmit } from '@sellgar/app-v2/react';
+import { useController, useSubmit } from '@sellgar/app/react';
 
 import React from 'react';
 

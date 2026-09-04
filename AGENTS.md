@@ -7,7 +7,7 @@
 ## Кратко
 
 - Монорепа Yarn workspaces, основной клиент: `clients/admin` (Vite + React 19).
-- Runtime приложения: `@sellgar/app-v2`; DI bindings лежат рядом с application/pages/frames/widgets.
+- Runtime приложения: `@sellgar/app`; DI bindings лежат рядом с application/pages/frames/widgets.
 - Route tokens принадлежат отдельному пакету `@library/route-tokens`.
 - UI kit: `@sellgar/kit`; иконки брать из `@sellgar/kit/icons`, не из font-class API.
 - Домен и HTTP: `@library/domain`.
@@ -43,9 +43,8 @@
 - `library/socket-io` - demand-driven Socket.IO connections без domain-specific контрактов.
 - `library/sellgar.kit.ui` - nested submodule UI kit; его commit и gitlink admin UI фиксируются раздельно.
 - `library/sellgar.orm.ui` - nested submodule ORM UI; его commit и gitlink admin UI фиксируются раздельно.
-- `library/tiyn-app-v2` - активный runtime `@sellgar/app-v2`.
+- `library/sellgar.app.ui` - единственный активный runtime `@sellgar/app`; nested submodule и источник framework-контракта.
 - `library/route-tokens` - стабильные route token contracts без зависимости от React/runtime host.
-- `library/sellgar.app.ui` - неиспользуемый V1 runtime; новый application code не должен от него зависеть.
 - `utils/*` - чистые утилиты.
 
 ## Структура feature-пакета

@@ -1,6 +1,6 @@
 import { type ProductResultEntity, type ProductServiceInterface } from '@library/domain';
 import { ProductCreateRoute, ProductModifyRoute } from '@library/route-tokens';
-import type { NavigateServiceInterface } from '@sellgar/app-v2';
+import type { NavigateServiceInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ProductController } from '../product.controller.ts';

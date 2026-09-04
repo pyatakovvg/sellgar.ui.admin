@@ -1,5 +1,5 @@
-import { UseBindings } from '@sellgar/app-v2';
-import { Widget, WidgetDefinition } from '@sellgar/app-v2/react';
+import { UseBindings } from '@sellgar/app';
+import { Widget, WidgetDefinition } from '@sellgar/app/react';
 
 import { LogoutBindings } from './classes/classes.bindings.ts';
 

@@ -1,5 +1,5 @@
 import { CategoryServiceInterface } from '@library/domain';
-import { Controller, Inject } from '@sellgar/app-v2';
+import { Controller, Inject } from '@sellgar/app';
 
 import { CategoryOptionsControllerInterface } from './category-options-controller.interface.ts';
 

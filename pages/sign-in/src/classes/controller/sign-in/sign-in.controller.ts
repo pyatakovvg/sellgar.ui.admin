@@ -1,5 +1,5 @@
 import { AuthServiceInterface, ProfileServiceInterface, ProfileEntity } from '@library/domain';
-import { ApplicationStoreInterface, Controller, Inject, SessionRuntimeStateInterface } from '@sellgar/app-v2';
+import { ApplicationStoreInterface, Controller, Inject, SessionRuntimeStateInterface } from '@sellgar/app';
 
 import { SignInMapper } from './mapper/sign-in.mapper.ts';
 import { SignInControllerInterface } from './sign-in-controller.interface.ts';

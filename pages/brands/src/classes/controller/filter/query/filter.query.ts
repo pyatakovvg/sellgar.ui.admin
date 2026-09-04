@@ -1,4 +1,4 @@
-import { Query } from '@sellgar/app-v2';
+import { Query } from '@sellgar/app';
 import { Transform } from 'class-transformer';
 import { IsString } from 'class-validator';
 

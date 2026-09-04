@@ -24,8 +24,8 @@ import {
   UnitModifyRoute,
   UnitsRoute,
 } from '@library/route-tokens';
-import { param, segments } from '@sellgar/app-v2';
-import { Route, Router } from '@sellgar/app-v2/react';
+import { param, segments } from '@sellgar/app';
+import { Route, Router } from '@sellgar/app/react';
 
 import { BaseLayout } from '@layout/base';
 import { NavigateLayout } from '@layout/navigate';

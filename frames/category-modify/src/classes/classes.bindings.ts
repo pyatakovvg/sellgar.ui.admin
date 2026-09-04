@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { CategoryListControllerInterface } from './controller/category-list/category-list-controller.interface.ts';
 import { CategoryListController } from './controller/category-list/category-list.controller.ts';

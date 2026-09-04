@@ -1,6 +1,6 @@
 import { Drawer } from '@sellgar/kit';
-import { Shell, ShellInterface } from '@sellgar/app-v2/react';
-import type { ShellContextInterface } from '@sellgar/app-v2/react';
+import { Shell, ShellInterface } from '@sellgar/app/react';
+import type { ShellContextInterface } from '@sellgar/app/react';
 
 import React from 'react';
 

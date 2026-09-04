@@ -1,4 +1,4 @@
-import { Layout } from '@sellgar/app-v2/react';
+import { Layout } from '@sellgar/app/react';
 
 import { LayoutView } from './view/layout.view.tsx';
 

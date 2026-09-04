@@ -1,5 +1,5 @@
 import type { StoreOfferEntity } from '@library/domain';
-import * as App from '@sellgar/app-v2/react';
+import * as App from '@sellgar/app/react';
 import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
 import { amountFormat } from '@utils/format';

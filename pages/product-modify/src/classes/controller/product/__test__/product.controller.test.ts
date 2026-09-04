@@ -1,6 +1,6 @@
 import type { FileServiceInterface, ProductEntity, ProductServiceInterface } from '@library/domain';
 import { ProductModifyRoute } from '@library/route-tokens';
-import type { NavigateServiceInterface, RevalidateServiceInterface } from '@sellgar/app-v2';
+import type { NavigateServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ProductController } from '../product.controller.ts';

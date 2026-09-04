@@ -9,7 +9,7 @@
 - package exports: каждый package `src/index.ts`;
 - package dependencies: каждый package `package.json`;
 - UI contracts: installed types `@sellgar/kit` и локальные usage examples;
-- runtime contracts: `library/tiyn-app-v2/core`, `library/tiyn-app-v2/react` и `library/tiyn-app-v2/docs`;
+- runtime contracts: `library/sellgar.app.ui/core`, `library/sellgar.app.ui/react` и `library/sellgar.app.ui/docs`;
 - route contracts: `library/route-tokens/src`.
 
 ## Правило документации

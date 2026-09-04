@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@sellgar/app-v2';
+import { Inject, Injectable } from '@sellgar/app';
 
 import { CurrencyServiceInterface } from './currency-service.interface.ts';
 import { CurrencyGatewayInterface } from '../data/gateway/currency-gateway.interface.ts';

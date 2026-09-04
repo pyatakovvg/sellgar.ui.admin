@@ -14,8 +14,8 @@
 
 Runtime и UI imports:
 
-- `@sellgar/app-v2` - renderer-neutral application/runtime/DI/router contracts.
-- `@sellgar/app-v2/react` - React declarations, hosts и hooks.
+- `@sellgar/app` - renderer-neutral application/runtime/DI/router contracts.
+- `@sellgar/app/react` - React declarations, hosts и hooks.
 - `@library/route-tokens` - tokenized navigation contracts.
 - `@sellgar/kit` - UI components.
 - `@sellgar/kit/icons` - SVG icon components.
@@ -36,7 +36,7 @@ Runtime и UI imports:
 ```tsx
 import { Button } from '@sellgar/kit';
 import { BrandCreateRoute } from '@library/route-tokens';
-import { useNavigate } from '@sellgar/app-v2/react';
+import { useNavigate } from '@sellgar/app/react';
 import { AddLineIcon } from '@sellgar/kit/icons';
 
 import s from './header.module.scss';

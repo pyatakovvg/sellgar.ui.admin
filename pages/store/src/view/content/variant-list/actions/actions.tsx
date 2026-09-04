@@ -1,6 +1,6 @@
 import type { StoreOfferEntity } from '@library/domain';
 import { StoreInventoryRoute } from '@library/route-tokens';
-import * as App from '@sellgar/app-v2/react';
+import * as App from '@sellgar/app/react';
 import * as Kit from '@sellgar/kit';
 import { Button } from '@sellgar/kit';
 import { StockLineIcon } from '@sellgar/kit/icons';

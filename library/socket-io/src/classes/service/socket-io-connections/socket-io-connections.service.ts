@@ -1,4 +1,4 @@
-import { Injectable } from '@sellgar/app-v2';
+import { Injectable } from '@sellgar/app';
 
 import { SocketIOConnection } from '../../connection/socket-io/socket-io.connection.ts';
 

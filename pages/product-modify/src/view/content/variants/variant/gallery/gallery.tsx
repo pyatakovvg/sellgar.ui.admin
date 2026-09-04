@@ -1,5 +1,5 @@
 import { ImageGallery } from '@library/design';
-import * as App from '@sellgar/app-v2/react';
+import * as App from '@sellgar/app/react';
 import { Field, Label } from '@sellgar/kit';
 
 import React from 'react';

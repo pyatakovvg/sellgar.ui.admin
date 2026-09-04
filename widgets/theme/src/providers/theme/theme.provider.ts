@@ -1,4 +1,4 @@
-import { Inject, Provider, type ProviderCleanup, type ProviderInterface } from '@sellgar/app-v2';
+import { Inject, Provider, type ProviderCleanup, type ProviderInterface } from '@sellgar/app';
 import { autorun } from 'mobx';
 
 import { ThemeStoreInterface } from '../../classes/store/theme/theme-store.interface.ts';

@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { CurrencyListControllerInterface } from './controller/currency-list/currency-list-controller.interface.ts';
 import { CurrencyListController } from './controller/currency-list/currency-list.controller.ts';

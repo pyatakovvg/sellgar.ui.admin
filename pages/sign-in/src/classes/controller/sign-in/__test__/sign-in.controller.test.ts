@@ -1,5 +1,5 @@
 import { ProfileEntity, type AuthServiceInterface, type ProfileServiceInterface } from '@library/domain';
-import { type ApplicationStoreInterface, type SessionRuntimeStateInterface } from '@sellgar/app-v2';
+import { type ApplicationStoreInterface, type SessionRuntimeStateInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
 
 import { SignInController } from '../sign-in.controller.ts';

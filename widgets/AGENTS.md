@@ -15,7 +15,7 @@
 - Widgets использовать для UI, который встраивается в pages/layouts/frames.
 - Widget controllers и bindings держать локально, если widget владеет behavior.
 - Runtime Widget, controllers, bindings, providers и hooks реализовывать через
-  `@sellgar/app-v2` и `@sellgar/app-v2/react`.
+  `@sellgar/app` и `@sellgar/app/react`.
 - `widgets/gallery` сейчас не содержит runtime declaration и потребителей;
   не создавать фиктивный `WidgetDefinition` без реального reusable use case.
 

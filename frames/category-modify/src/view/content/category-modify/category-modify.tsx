@@ -1,4 +1,4 @@
-import { useLoaderData, useSubmit } from '@sellgar/app-v2/react';
+import { useLoaderData, useSubmit } from '@sellgar/app/react';
 
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';

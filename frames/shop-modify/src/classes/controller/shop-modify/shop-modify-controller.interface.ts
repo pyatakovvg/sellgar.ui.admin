@@ -1,5 +1,5 @@
 import type { CreateShopInput, ShopEntity, UpdateShopInput } from '@library/domain';
-import type { ControllerArgs, WithParams, WithPayload } from '@sellgar/app-v2';
+import type { ControllerArgs, WithParams, WithPayload } from '@sellgar/app';
 
 import { ShopModifyFrameParams } from '../../params/frame.params.ts';
 

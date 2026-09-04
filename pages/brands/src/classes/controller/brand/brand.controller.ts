@@ -1,6 +1,6 @@
 import { BrandServiceInterface } from '@library/domain';
 
-import { Controller, Inject } from '@sellgar/app-v2';
+import { Controller, Inject } from '@sellgar/app';
 
 import { BrandControllerInterface } from './brand-controller.interface.ts';
 

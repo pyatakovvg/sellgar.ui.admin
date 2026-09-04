@@ -1,5 +1,5 @@
 import type { BrandEntity, CreateBrandInput, UpdateBrandInput } from '@library/domain';
-import type { ControllerArgs, WithParams, WithPayload } from '@sellgar/app-v2';
+import type { ControllerArgs, WithParams, WithPayload } from '@sellgar/app';
 
 import { BrandModifyFrameParams } from '../../params/frame.params.ts';
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@sellgar/app-v2';
+import { Inject, Injectable } from '@sellgar/app';
 
 import { FolderServiceInterface } from './folder-service.interface.ts';
 import { FolderGatewayInterface } from '../data/gateway/folder-gateway.interface.ts';

@@ -1,4 +1,4 @@
-import { Injectable } from '@sellgar/app-v2';
+import { Injectable } from '@sellgar/app';
 import { action, computed, makeObservable, observable } from 'mobx';
 
 import { ThemeStoreInterface } from './theme-store.interface.ts';

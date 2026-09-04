@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactHookForm from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { useSubmit } from '@sellgar/app-v2/react';
+import { useSubmit } from '@sellgar/app/react';
 
 import { SignInControllerInterface } from '../../classes/controller/sign-in/sign-in-controller.interface.ts';
 import type { SignInInput } from '../../classes/controller/sign-in/input/sign-in.input.ts';

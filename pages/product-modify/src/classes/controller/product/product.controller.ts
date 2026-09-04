@@ -4,7 +4,7 @@ import { validateOrReject } from 'class-validator';
 import { FileServiceInterface, ProductServiceInterface } from '@library/domain';
 import { ProductModifyRoute } from '@library/route-tokens';
 
-import { Controller, Inject, NavigateServiceInterface, RevalidateServiceInterface } from '@sellgar/app-v2';
+import { Controller, Inject, NavigateServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
 
 import { ProductModifyResultEntity } from './domain/product-modify-result.entity.ts';
 import { ProductFormMapper } from './mapper/product-form.mapper.ts';

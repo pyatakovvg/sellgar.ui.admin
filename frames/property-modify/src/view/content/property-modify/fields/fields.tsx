@@ -1,4 +1,4 @@
-import { useLoaderData } from '@sellgar/app-v2/react';
+import { useLoaderData } from '@sellgar/app/react';
 
 import React from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';

@@ -20,9 +20,9 @@ import {
   StoreRoute,
   UnitsRoute,
 } from '@library/route-tokens';
-import * as App from '@sellgar/app-v2/react';
-import { ApplicationStoreInterface, type NavigationRequestFactory } from '@sellgar/app-v2';
-import { NavLink, WidgetHost } from '@sellgar/app-v2/react';
+import * as App from '@sellgar/app/react';
+import { ApplicationStoreInterface, type NavigationRequestFactory } from '@sellgar/app';
+import { NavLink, WidgetHost } from '@sellgar/app/react';
 import { LogoutWidget } from '@widget/logout';
 import { ThemeWidget } from '@widget/theme';
 

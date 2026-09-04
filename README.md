@@ -5,9 +5,9 @@
 ## Стек
 
 - React 19, Vite, TypeScript.
-- Runtime приложения: `@sellgar/app-v2`.
+- Runtime приложения: `@sellgar/app`.
 - Route tokens: отдельный пакет `@library/route-tokens`.
-- DI: bindings из `@sellgar/app-v2` и `inversify`.
+- DI: bindings из `@sellgar/app` и `inversify`.
 - UI kit: `@sellgar/kit`, иконки из `@sellgar/kit/icons`.
 - Доменный слой и HTTP: `@library/domain`.
 

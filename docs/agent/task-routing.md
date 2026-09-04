@@ -53,6 +53,6 @@
 
 - `library/design` - только visual shared wrappers.
 - `library/domain` - entities, repositories, API clients и HTTP helpers.
-- `library/tiyn-app-v2` - runtime changes.
+- `library/sellgar.app.ui` - runtime changes.
 - `library/route-tokens` - route token contracts.
 - `utils/*` - pure utility functions.

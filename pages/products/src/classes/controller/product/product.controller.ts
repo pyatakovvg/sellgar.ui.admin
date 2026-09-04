@@ -1,7 +1,7 @@
 import { ProductServiceInterface } from '@library/domain';
 import { ProductCreateRoute, ProductModifyRoute } from '@library/route-tokens';
 
-import { Controller, Inject, NavigateServiceInterface } from '@sellgar/app-v2';
+import { Controller, Inject, NavigateServiceInterface } from '@sellgar/app';
 
 import { ProductControllerInterface } from './product-controller.interface.ts';
 

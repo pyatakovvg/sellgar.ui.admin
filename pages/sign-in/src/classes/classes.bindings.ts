@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { SignInControllerInterface } from './controller/sign-in/sign-in-controller.interface.ts';
 import { SignInController } from './controller/sign-in/sign-in.controller.ts';

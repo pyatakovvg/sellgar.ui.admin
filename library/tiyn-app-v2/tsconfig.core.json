@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "jsx": "preserve",
-    "types": []
-  },
-  "files": ["./core/index.ts"]
-}

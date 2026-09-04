@@ -1,7 +1,7 @@
 import { DomainBinding } from '@library/domain';
 import { MessageBindings } from '@library/message';
 import { PushBindings } from '@library/push';
-import { BindingModuleInterface, SessionExpirationNotifierInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
+import { BindingModuleInterface, SessionExpirationNotifierInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { SessionExpirationNotifier } from '../session-expiration-notifier.ts';
 

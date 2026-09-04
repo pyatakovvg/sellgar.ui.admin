@@ -1,4 +1,4 @@
-import { useException } from '@sellgar/app-v2/react';
+import { useException } from '@sellgar/app/react';
 import { Typography } from '@sellgar/kit';
 
 import React from 'react';

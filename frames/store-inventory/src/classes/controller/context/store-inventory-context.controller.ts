@@ -1,6 +1,6 @@
 import { StoreServiceInterface } from '@library/domain';
-import { Controller, Inject } from '@sellgar/app-v2';
-import { NavigateServiceInterface } from '@sellgar/app-v2';
+import { Controller, Inject } from '@sellgar/app';
+import { NavigateServiceInterface } from '@sellgar/app';
 
 import { plainToInstance } from 'class-transformer';
 import { validateOrReject } from 'class-validator';

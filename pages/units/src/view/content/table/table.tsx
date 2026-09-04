@@ -1,5 +1,5 @@
 import { UnitModifyRoute } from '@library/route-tokens';
-import * as App from '@sellgar/app-v2/react';
+import * as App from '@sellgar/app/react';
 import { Table as TableComponent } from '@sellgar/kit';
 
 import React from 'react';

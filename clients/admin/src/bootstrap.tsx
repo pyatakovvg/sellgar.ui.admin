@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createWebRouterBridge } from '@sellgar/app-v2/react';
+import { createWebRouterBridge } from '@sellgar/app/react';
 
 import { AdminApplication } from './application';
 import { RegisterAndUpdateServiceWorker } from './sw';

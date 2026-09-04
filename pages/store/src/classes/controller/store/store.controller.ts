@@ -1,6 +1,6 @@
 import { StoreServiceInterface, type StoreProductResultEntity } from '@library/domain';
 
-import { Controller, Inject, RouteQueryServiceInterface } from '@sellgar/app-v2';
+import { Controller, Inject, RouteQueryServiceInterface } from '@sellgar/app';
 
 import { FilterQuery } from '../filter/query/filter.query.ts';
 import { StoreControllerInterface } from './store-controller.interface.ts';

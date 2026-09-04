@@ -9,8 +9,8 @@ import {
   StoreLineIcon,
   UnsplashLineIcon,
 } from '@sellgar/kit/icons';
-import { ApplicationStoreInterface, type NavigationRequestFactory } from '@sellgar/app-v2';
-import { NavLink, useDependency } from '@sellgar/app-v2/react';
+import { ApplicationStoreInterface, type NavigationRequestFactory } from '@sellgar/app';
+import { NavLink, useDependency } from '@sellgar/app/react';
 import { ProfileEntity } from '@library/domain';
 import {
   BrandsRoute,

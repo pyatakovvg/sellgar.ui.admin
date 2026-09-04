@@ -1,4 +1,4 @@
-import { Injectable } from '@sellgar/app-v2';
+import { Injectable } from '@sellgar/app';
 
 import { CreateCategoryDto } from '../dto/create-category.dto.ts';
 import { UpdateCategoryDto } from '../dto/update-category.dto.ts';

@@ -1,4 +1,4 @@
-import { Injectable } from '@sellgar/app-v2';
+import { Injectable } from '@sellgar/app';
 
 import { PushMessageDto } from './dto/push-message.dto.ts';
 

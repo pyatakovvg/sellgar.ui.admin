@@ -1,6 +1,6 @@
 # OOP-Контракт Runtime
 
-Runtime приложения - `@sellgar/app-v2`; React API импортируется из `@sellgar/app-v2/react`.
+Runtime приложения - `@sellgar/app`; React API импортируется из `@sellgar/app/react`.
 
 ## Application
 

@@ -6,7 +6,7 @@ import {
   type SocketIOConnectionsInterface,
   type SocketIORealtimeDeliveryHandler,
 } from '@library/socket-io';
-import type { LocationServiceInterface, LocationServiceListener, RouterLocationSnapshot } from '@sellgar/app-v2';
+import type { LocationServiceInterface, LocationServiceListener, RouterLocationSnapshot } from '@sellgar/app';
 
 import { ProductChangesHub } from '../product-changes.hub.ts';
 

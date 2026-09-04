@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { StoreInventoryContextControllerInterface } from './controller/context/store-inventory-context-controller.interface.ts';
 import { StoreInventoryContextController } from './controller/context/store-inventory-context.controller.ts';

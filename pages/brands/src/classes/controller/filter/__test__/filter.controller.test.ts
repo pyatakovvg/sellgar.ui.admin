@@ -1,4 +1,4 @@
-import type { RouteQueryServiceInterface } from '@sellgar/app-v2';
+import type { RouteQueryServiceInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
 
 import { FilterController } from '../filter.controller.ts';

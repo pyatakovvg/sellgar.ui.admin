@@ -1,5 +1,5 @@
 import { PropertyServiceInterface } from '@library/domain';
-import { Controller, Inject } from '@sellgar/app-v2';
+import { Controller, Inject } from '@sellgar/app';
 
 import { PropertyOptionsControllerInterface } from './property-options-controller.interface.ts';
 

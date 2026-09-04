@@ -1,5 +1,5 @@
 import { StoreProductEntity, type StoreServiceInterface } from '@library/domain';
-import type { NavigateServiceInterface } from '@sellgar/app-v2';
+import type { NavigateServiceInterface } from '@sellgar/app';
 
 import { plainToInstance } from 'class-transformer';
 import { describe, expect, it, vi } from 'vitest';

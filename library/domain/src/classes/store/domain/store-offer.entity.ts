@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { Entity } from '@sellgar/app-v2';
+import { Entity } from '@sellgar/app';
 import {
   IsArray,
   IsBoolean,

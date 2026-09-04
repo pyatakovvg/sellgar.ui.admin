@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { ProfileServiceInterface } from './application/profile-service.interface.ts';
 import { ProfileService } from './application/profile.service.ts';

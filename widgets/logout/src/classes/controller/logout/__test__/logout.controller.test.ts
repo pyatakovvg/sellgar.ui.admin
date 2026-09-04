@@ -1,5 +1,5 @@
 import type { AuthServiceInterface } from '@library/domain';
-import type { ApplicationStoreInterface, SessionRuntimeStateInterface } from '@sellgar/app-v2';
+import type { ApplicationStoreInterface, SessionRuntimeStateInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
 
 import { LogoutController } from '../logout.controller.ts';

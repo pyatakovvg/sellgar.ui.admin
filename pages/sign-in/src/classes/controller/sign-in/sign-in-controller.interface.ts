@@ -1,4 +1,4 @@
-import type { ControllerArgs, WithPayload } from '@sellgar/app-v2';
+import type { ControllerArgs, WithPayload } from '@sellgar/app';
 
 import type { SignInInput } from './input/sign-in.input.ts';
 

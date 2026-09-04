@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { UnitModifyControllerInterface } from './controller/unit-modify/unit-modify-controller.interface.ts';
 import { UnitModifyController } from './controller/unit-modify/unit-modify.controller.ts';

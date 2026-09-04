@@ -1,4 +1,4 @@
-import type { ControllerArgs, WithPayload, WithProps } from '@sellgar/app-v2';
+import type { ControllerArgs, WithPayload, WithProps } from '@sellgar/app';
 
 import type { ThemeStoreInterface } from '../../store/theme/theme-store.interface.ts';
 import type { ThemeWidgetProps } from './dto/theme-widget-props.dto.ts';

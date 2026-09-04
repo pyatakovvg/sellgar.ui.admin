@@ -1,5 +1,5 @@
 import { StoreOfferEntity, StoreProductEntity } from '@library/domain';
-import type { ProviderCleanup } from '@sellgar/app-v2';
+import type { ProviderCleanup } from '@sellgar/app';
 
 import {
   StoreOfferChangesHubInterface,

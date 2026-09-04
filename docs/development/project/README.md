@@ -6,7 +6,7 @@
 - Feature logic держать в `pages/*`, `frames/*` или `widgets/*`.
 - `clients/admin` держать как composition root.
 - Для UI использовать `@sellgar/kit`, для SVG-иконок - `@sellgar/kit/icons`.
-- Использовать runtime contracts из `@sellgar/app-v2`, React API из `@sellgar/app-v2/react` и tokens из `@library/route-tokens`.
+- Использовать runtime contracts из `@sellgar/app`, React API из `@sellgar/app/react` и tokens из `@library/route-tokens`.
 - Для Drawer forms использовать frames и общий application shell, а не widgets или отдельный Modal shell.
 - Документацию писать на русском языке.
 

@@ -1,5 +1,5 @@
 import type { CategoryEntity } from '@library/domain';
-import * as App from '@sellgar/app-v2/react';
+import * as App from '@sellgar/app/react';
 import { Caption, Field, Label, Select } from '@sellgar/kit';
 
 import React from 'react';

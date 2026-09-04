@@ -1,4 +1,4 @@
-import * as App from '@sellgar/app-v2/react';
+import * as App from '@sellgar/app/react';
 import { Button, Field, Input } from '@sellgar/kit';
 import { SearchLineIcon } from '@sellgar/kit/icons';
 

@@ -22,7 +22,7 @@
 
 - `library/domain` может знать о domain и HTTP.
 - `library/design` должен оставаться visual и domain-free.
-- `library/tiyn-app-v2` владеет runtime behavior и меняется только когда этого требует app-level contract.
+- `library/sellgar.app.ui` владеет runtime behavior и меняется только когда этого требует app-level contract.
 - `library/route-tokens` владеет route token contracts.
 
 ## UI Kit

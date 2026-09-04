@@ -7,7 +7,7 @@ import {
   type ProviderResult,
   updateEntity,
   UseBindings,
-} from '@sellgar/app-v2';
+} from '@sellgar/app';
 
 import { StoreOfferChangesBindings } from './classes/classes.bindings.ts';
 import { StoreOfferChangesHubInterface } from './classes/hub/store-offer-changes-hub.interface.ts';

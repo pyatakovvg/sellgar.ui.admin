@@ -1,4 +1,4 @@
-import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app-v2';
+import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { ProductChangesHubInterface } from './hub/product-changes-hub.interface.ts';
 import { ProductChangesHub } from './hub/product-changes.hub.ts';

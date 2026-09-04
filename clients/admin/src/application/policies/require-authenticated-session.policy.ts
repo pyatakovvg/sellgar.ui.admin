@@ -1,5 +1,5 @@
-import { Policy, RoutePolicyInterface } from '@sellgar/app-v2';
-import type { PolicyResult, RuntimeContextInterface } from '@sellgar/app-v2';
+import { Policy, RoutePolicyInterface } from '@sellgar/app';
+import type { PolicyResult, RuntimeContextInterface } from '@sellgar/app';
 
 @Policy()
 export class RequireAuthenticatedSessionPolicy extends RoutePolicyInterface {

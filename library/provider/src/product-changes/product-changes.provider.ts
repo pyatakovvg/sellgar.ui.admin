@@ -8,7 +8,7 @@ import {
   type ProviderResult,
   updateEntity,
   UseBindings,
-} from '@sellgar/app-v2';
+} from '@sellgar/app';
 
 import { ProductChangesBindings } from './classes/classes.bindings.ts';
 import { ProductChangesHubInterface } from './classes/hub/product-changes-hub.interface.ts';

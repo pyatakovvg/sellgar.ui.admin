@@ -1,6 +1,6 @@
-import { UnauthorizedException } from '@sellgar/app-v2';
+import { UnauthorizedException } from '@sellgar/app';
 import { SignInRoute } from '@library/route-tokens';
-import { useException, useNavigate } from '@sellgar/app-v2/react';
+import { useException, useNavigate } from '@sellgar/app/react';
 
 import React from 'react';
 

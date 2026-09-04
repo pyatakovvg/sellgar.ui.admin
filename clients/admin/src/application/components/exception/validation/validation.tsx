@@ -1,5 +1,5 @@
 import { Typography, Container } from '@sellgar/kit';
-import { useException } from '@sellgar/app-v2/react';
+import { useException } from '@sellgar/app/react';
 
 import React from 'react';
 import { ValidationError } from 'class-validator';

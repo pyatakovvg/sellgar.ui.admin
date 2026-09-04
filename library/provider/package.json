@@ -10,7 +10,7 @@
   "dependencies": {
     "@library/domain": "0.0.1",
     "@library/socket-io": "0.0.1",
-    "@sellgar/app-v2": "0.0.1",
+    "@sellgar/app": "0.0.1",
     "class-validator": "0.15.1"
   }
 }

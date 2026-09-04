@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@sellgar/app-v2';
+import { Inject, Injectable } from '@sellgar/app';
 
 import { MessageEntity } from '../stores/entity/message.entity.ts';
 import { MessageStore, MessageStoreSymbol } from '../stores/message.store.ts';

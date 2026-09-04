@@ -1,5 +1,5 @@
 import { UnitCreateRoute } from '@library/route-tokens';
-import * as App from '@sellgar/app-v2/react';
+import * as App from '@sellgar/app/react';
 import { Button } from '@sellgar/kit';
 import { AddLineIcon } from '@sellgar/kit/icons';
 

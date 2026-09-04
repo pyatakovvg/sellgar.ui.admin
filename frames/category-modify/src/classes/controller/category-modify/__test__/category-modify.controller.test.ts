@@ -1,6 +1,6 @@
 import type { CategoryEntity, CategoryServiceInterface, CreateCategoryInput, UpdateCategoryInput } from '@library/domain';
-import type { RevalidateServiceInterface } from '@sellgar/app-v2';
-import type { NavigateServiceInterface } from '@sellgar/app-v2';
+import type { RevalidateServiceInterface } from '@sellgar/app';
+import type { NavigateServiceInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
 
 import { CategoryModifyController } from '../category-modify.controller.ts';
