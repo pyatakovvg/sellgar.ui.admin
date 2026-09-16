@@ -8,16 +8,17 @@ import { Default } from './default';
 import { Validation } from './validation';
 
 export const Exception: React.FC = () => {
-  const error = useException();
+  const exception = useException();
+  const error = exception.cause;
 
   if (error instanceof UnauthorizedException) {
     return <RedirectToSignIn />;
   }
 
   if (Array.isArray(error)) {
-    return <Validation />;
+    return <Validation errors={error} />;
   }
-  return <Default error={normalizeError(error)} />;
+  return <Default error={exception.error} />;
 };
 
 const RedirectToSignIn: React.FC = () => {
@@ -31,23 +32,7 @@ const RedirectToSignIn: React.FC = () => {
 };
 
 export const Failed: React.FC = () => {
-  const error = useException();
+  const exception = useException();
 
-  return <Default error={normalizeError(error)} />;
-};
-
-const normalizeError = (error: unknown): Error => {
-  if (error instanceof Error) {
-    return error;
-  }
-
-  if (typeof error === 'string') {
-    return new Error(error);
-  }
-
-  if (error === null || error === undefined) {
-    return new Error('Unknown application error');
-  }
-
-  return new Error(JSON.stringify(error));
+  return <Default error={exception.error} />;
 };
