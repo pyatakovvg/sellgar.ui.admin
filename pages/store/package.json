@@ -20,12 +20,12 @@
     "@utils/format": "0.0.1",
     "class-transformer": "0.5.1",
     "class-validator": "0.15.1",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "react-hook-form": "7.84.0"
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-hook-form": "7.88.0"
   },
   "devDependencies": {
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.4"
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
   }
 }
