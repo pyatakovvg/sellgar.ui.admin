@@ -3480,6 +3480,43 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@page/template-modify@workspace:pages/template-modify":
+  version: 0.0.0-use.local
+  resolution: "@page/template-modify@workspace:pages/template-modify"
+  dependencies:
+    "@hookform/resolvers": "npm:5.9.1"
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    class-transformer: "npm:0.5.1"
+    class-validator: "npm:0.15.1"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+    react-hook-form: "npm:7.88.0"
+    yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
+"@page/templates@workspace:pages/templates":
+  version: 0.0.0-use.local
+  resolution: "@page/templates@workspace:pages/templates"
+  dependencies:
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+  languageName: unknown
+  linkType: soft
+
 "@page/units@npm:0.0.1, @page/units@workspace:pages/units":
   version: 0.0.0-use.local
   resolution: "@page/units@workspace:pages/units"
@@ -4118,7 +4155,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sellgar/app@workspace:library/sellgar.app.ui"
   dependencies:
-    classnames: "npm:2.5.1"
     inversify: "npm:8.2.3"
     mobx: "npm:6.16.1"
     mobx-react: "npm:9.2.2"
@@ -4127,6 +4163,7 @@ __metadata:
     "@floating-ui/react": ^0.27.0
     class-transformer: ^0.5.1
     class-validator: ^0.15.1
+    classnames: ^2.5.1
     react: ^19.2.0
     react-dom: ^19.0.0
     react-native: ">=0.86.0 <1.0.0"
@@ -4138,6 +4175,8 @@ __metadata:
     reflect-metadata: ^0.2.2
   peerDependenciesMeta:
     "@floating-ui/react":
+      optional: true
+    classnames:
       optional: true
     react:
       optional: true

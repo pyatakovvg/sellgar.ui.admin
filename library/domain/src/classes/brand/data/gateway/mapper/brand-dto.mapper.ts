@@ -9,24 +9,20 @@ import { UpdateBrandInput } from '../input/update-brand.input.ts';
 
 export class BrandDtoMapper {
   static create(input: CreateBrandInput): CreateBrandDto {
-    const { image, ...values } = input;
+    const { images, ...values } = input;
     const dto = plainToInstance(CreateBrandDto, values);
 
-    return Object.assign(new CreateBrandDto(), dto, { image: this.image(image) });
+    return Object.assign(new CreateBrandDto(), dto, { images: images?.map((image) => this.image(image)) });
   }
 
   static update(input: UpdateBrandInput): UpdateBrandDto {
-    const { image, ...values } = input;
+    const { images, ...values } = input;
     const dto = plainToInstance(UpdateBrandDto, values);
 
-    return Object.assign(new UpdateBrandDto(), dto, { image: this.image(image) });
+    return Object.assign(new UpdateBrandDto(), dto, { images: images?.map((image) => this.image(image)) });
   }
 
-  private static image(image: BrandImageInput | null | undefined): BrandImageDto | null | undefined {
-    if (!image) {
-      return image;
-    }
-
+  private static image(image: BrandImageInput): BrandImageDto {
     const { file, ...values } = image;
     const dto = plainToInstance(BrandImageDto, values);
 

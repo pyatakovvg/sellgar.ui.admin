@@ -1,5 +1,5 @@
 export interface CreateUnitInput {
   code: string;
   name: string;
-  description: string;
+  symbol: string;
 }

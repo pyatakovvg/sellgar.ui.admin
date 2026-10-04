@@ -1,24 +1,19 @@
-import { Expose } from 'class-transformer';
-import { IsOptional, IsString, IsUUID } from 'class-validator';
+import { Expose, Type } from 'class-transformer';
+import { IsArray, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator';
 
 import type { ProductPropertyInput } from '../input/product-property.input.ts';
+import { PropertyValueDto } from './property-value.dto.ts';
 
 export class ProductPropertyDto implements ProductPropertyInput {
   @Expose()
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
-  @Expose()
-  @IsUUID()
-  propertyUuid: string;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  optionUuid?: string | null;
-
-  @Expose()
   @IsString()
-  value: string;
+  @MinLength(1)
+  @MaxLength(256)
+  propertyCode: string;
+
+  @Expose()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PropertyValueDto)
+  values: PropertyValueDto[];
 }

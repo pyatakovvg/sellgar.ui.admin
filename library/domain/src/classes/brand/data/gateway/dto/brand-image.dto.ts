@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { IsInstance, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsInstance, IsInt, IsOptional, IsUUID, Max, Min } from 'class-validator';
 
 import type { BrandImageInput } from '../input/brand-image.input.ts';
 
@@ -15,7 +15,9 @@ export class BrandImageDto implements BrandImageInput {
   file?: File;
 
   @Expose()
-  @IsString()
+  @IsInt()
+  @Min(0)
+  @Max(2147483647)
   @IsOptional()
-  alt?: string | null;
+  sortOrder?: number;
 }

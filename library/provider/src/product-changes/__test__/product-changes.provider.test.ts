@@ -13,7 +13,10 @@ describe('ProductChangesProvider', () => {
     const existingProduct = createProduct('a438434d-4467-4c00-a61f-299ea4dd204f', 4, 'Existing');
     const createdProduct = createProduct('521524f6-06d1-4e42-9aa3-af1b6789d183', 1, 'Created');
     const result = plainToInstance(ProductResultEntity, {
-      data: [existingProduct],
+      items: [existingProduct],
+      total: 1,
+      limit: 50,
+      offset: 0,
     });
     const hub = new TestProductChangesHub();
     const provider = new ProductChangesProvider(hub);
@@ -23,7 +26,9 @@ describe('ProductChangesProvider', () => {
 
     await hub.emitCreated(createdProduct);
 
-    expect(result.data).toEqual([createdProduct, existingProduct]);
+    expect(result.items).toHaveLength(2);
+    expect(result.items[0]).toMatchObject({ uuid: createdProduct.uuid, version: 1, name: 'Created' });
+    expect(result.items[1]).toMatchObject({ uuid: existingProduct.uuid, version: 4, name: 'Existing' });
 
     await dispose();
   });

@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Typography size={'body-l'}>
-        <p className={s.label}>Остаток: {data.offer.variant.name}</p>
+        <p className={s.label}>Остаток: {data.offer.variantSnapshot?.name ?? 'Не синхронизирован'}</p>
       </Typography>
       <Drawer.Close />
     </div>

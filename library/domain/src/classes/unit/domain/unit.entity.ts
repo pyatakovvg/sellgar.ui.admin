@@ -1,15 +1,7 @@
 import { Expose } from 'class-transformer';
-import { IsDateString, IsNumber, IsString, IsUUID } from 'class-validator';
+import { IsDateString, IsInt, IsString } from 'class-validator';
 
 export class UnitEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsNumber()
-  version: number;
-
   @Expose()
   @IsString()
   code: string;
@@ -20,7 +12,11 @@ export class UnitEntity {
 
   @Expose()
   @IsString()
-  description: string;
+  symbol: string;
+
+  @Expose()
+  @IsInt()
+  version: number;
 
   @Expose()
   @IsDateString()

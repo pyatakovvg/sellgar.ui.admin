@@ -14,7 +14,7 @@ import {
 
 import { StoreOfferStatus } from './store-offer-status.enum.ts';
 
-import { StoreVariantEntity } from './store-variant.entity.ts';
+import { StoreVariantSnapshotEntity } from './store-variant-snapshot.entity.ts';
 
 import { StorePriceHistoryEntity } from './store-price-history.entity.ts';
 
@@ -46,9 +46,22 @@ export class StoreOfferEntity {
   article?: string | null;
 
   @Expose()
+  @IsUUID()
+  storeProductUuid: string;
+
+  @Expose()
+  @IsUUID()
+  productUuid: string;
+
+  @Expose()
+  @IsUUID()
+  variantUuid: string;
+
+  @Expose()
+  @IsOptional()
   @ValidateNested()
-  @Type(() => StoreVariantEntity)
-  variant: StoreVariantEntity;
+  @Type(() => StoreVariantSnapshotEntity)
+  variantSnapshot?: StoreVariantSnapshotEntity | null;
 
   @IsArray()
   @Expose()

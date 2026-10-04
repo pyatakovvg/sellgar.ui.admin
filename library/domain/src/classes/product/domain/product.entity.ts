@@ -1,14 +1,10 @@
-import { Expose, Type } from 'class-transformer';
-import { IsArray, IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { Entity } from '@sellgar/app';
+import { Expose, Type } from 'class-transformer';
+import { IsArray, IsDateString, IsEnum, IsInt, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
+import { ProductFieldEntity } from './product-field.entity.ts';
 import { ProductStatus } from './product-status.enum.ts';
-
-import { BrandEntity } from '../../brand';
-import { VariantEntity } from '../../variant';
-import { CategoryEntity } from '../../category';
-
-import { ProductPropertyEntity } from './product-property.entity.ts';
+import { ProductVariantEntity } from './product-variant.entity.ts';
 
 @Entity({ identity: 'uuid' })
 export class ProductEntity {
@@ -17,52 +13,45 @@ export class ProductEntity {
   uuid: string;
 
   @Expose()
-  @IsNumber()
-  version: number;
+  @IsUUID()
+  typeUuid: string;
 
   @Expose()
-  @IsUUID()
-  @IsOptional()
-  brandUuid?: string;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  categoryUuid?: string;
+  @IsInt()
+  typeVersion: number;
 
   @Expose()
   @IsString()
   name: string;
 
   @Expose()
+  @IsOptional()
   @IsString()
-  description: string;
+  description: string | null;
+
+  @Expose()
+  @IsString()
+  brandCode: string;
 
   @Expose()
   @IsEnum(ProductStatus)
   status: ProductStatus;
 
   @Expose()
-  @ValidateNested()
-  @Type(() => CategoryEntity)
-  category: CategoryEntity;
+  @IsInt()
+  version: number;
 
   @Expose()
-  @ValidateNested()
-  @Type(() => BrandEntity)
-  brand: BrandEntity;
-
   @IsArray()
-  @Expose()
   @ValidateNested({ each: true })
-  @Type(() => ProductPropertyEntity)
-  properties: ProductPropertyEntity[];
+  @Type(() => ProductFieldEntity)
+  properties: ProductFieldEntity[];
 
-  @IsArray()
   @Expose()
+  @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => VariantEntity)
-  variants: VariantEntity[];
+  @Type(() => ProductVariantEntity)
+  variants: ProductVariantEntity[];
 
   @Expose()
   @IsDateString()

@@ -20,6 +20,9 @@ import {
   StoreInventoryRoute,
   StoreModifyRoute,
   StoreRoute,
+  TemplateCreateRoute,
+  TemplateModifyRoute,
+  TemplatesRoute,
   UnitCreateRoute,
   UnitModifyRoute,
   UnitsRoute,
@@ -81,6 +84,23 @@ export const createAdminRouter = (): Router => {
                 token: ProductModifyRoute,
                 address: segments(param('uuid')),
                 load: () => import('@page/product-modify'),
+              }),
+            ],
+          }),
+          new Route({
+            address: segments('templates'),
+            load: () => import('@page/templates'),
+            token: TemplatesRoute,
+            routes: [
+              new Route({
+                token: TemplateCreateRoute,
+                address: segments('create'),
+                load: () => import('@page/template-modify'),
+              }),
+              new Route({
+                token: TemplateModifyRoute,
+                address: segments(param('uuid')),
+                load: () => import('@page/template-modify'),
               }),
             ],
           }),
@@ -159,7 +179,7 @@ const createBrandRouting = (): Router => {
     new Route({ token: BrandCreateRoute, address: segments('brand'), load: () => import('@frame/brand-modify') }),
     new Route({
       token: BrandModifyRoute,
-      address: segments('brand', param('uuid')),
+      address: segments('brand', param('code')),
       load: () => import('@frame/brand-modify'),
     }),
   ]);
@@ -185,7 +205,7 @@ const createUnitRouting = (): Router => {
     new Route({ token: UnitCreateRoute, address: segments('unit'), load: () => import('@frame/unit-modify') }),
     new Route({
       token: UnitModifyRoute,
-      address: segments('unit', param('uuid')),
+      address: segments('unit', param('code')),
       load: () => import('@frame/unit-modify'),
     }),
   ]);
@@ -200,7 +220,7 @@ const createPropertyRouting = (): Router => {
     }),
     new Route({
       token: PropertyModifyRoute,
-      address: segments('property', param('uuid')),
+      address: segments('property', param('code')),
       load: () => import('@frame/property-modify'),
     }),
   ]);

@@ -1,7 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { IsArray, ValidateNested } from 'class-validator';
-
-import { MetaEntity } from '../../meta/index.ts';
+import { IsArray, IsInt, ValidateNested } from 'class-validator';
 
 import { BrandEntity } from './brand.entity.ts';
 
@@ -10,10 +8,17 @@ export class BrandResultEntity {
   @Expose()
   @ValidateNested({ each: true })
   @Type(() => BrandEntity)
-  data: BrandEntity[];
+  items: BrandEntity[];
 
   @Expose()
-  @ValidateNested()
-  @Type(() => MetaEntity)
-  meta: MetaEntity;
+  @IsInt()
+  total: number;
+
+  @Expose()
+  @IsInt()
+  limit: number;
+
+  @Expose()
+  @IsInt()
+  offset: number;
 }

@@ -1,5 +1,20 @@
-import type { CurrencyEntity } from '@library/domain';
-import { Badge, Caption, Checkbox, Field, Input, InputAmount2, Label, Select, TabMenu, Typography } from '@sellgar/kit';
+import type { CurrencyEntity, StoreProductEntity } from '@library/domain';
+import { StoreInventoryRoute } from '@library/route-tokens';
+import * as App from '@sellgar/app/react';
+import {
+  Badge,
+  Button,
+  Caption,
+  Checkbox,
+  Field,
+  Input,
+  InputAmount2,
+  Label,
+  Select,
+  TabMenu,
+  Typography,
+} from '@sellgar/kit';
+import { StockLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 import { Controller, type FieldArrayWithId, useFormContext } from 'react-hook-form';
@@ -13,9 +28,11 @@ interface IProps {
   currencies: CurrencyEntity[];
   product?: ProductOption;
   fields: FieldArrayWithId<IFormData, 'offers', 'id'>[];
+  storeProduct?: StoreProductEntity;
 }
 
 export const OffersTabs: React.FC<IProps> = (props) => {
+  const navigate = App.useNavigate();
   const {
     control,
     formState: { errors },
@@ -24,6 +41,11 @@ export const OffersTabs: React.FC<IProps> = (props) => {
   const firstVariantUuid = props.fields[0]?.variantUuid;
   const tabMenuKey = React.useMemo(() => props.fields.map((offer) => offer.variantUuid).join('|'), [props.fields]);
   const variantByUuid = React.useMemo(() => new Map(variants.map((variant) => [variant.uuid, variant])), [variants]);
+  const storedOfferByUuid = React.useMemo(
+    () => new Map((props.storeProduct?.offers ?? []).map((offer) => [offer.uuid, offer])),
+    [props.storeProduct],
+  );
+  const storeProductUuid = props.storeProduct?.uuid;
 
   if (!props.product && props.fields.length === 0) {
     return null;
@@ -66,9 +88,42 @@ export const OffersTabs: React.FC<IProps> = (props) => {
           </TabMenu.Line>
         </div>
         {props.fields.map((offer, index) => {
+          const storedOffer = offer.uuid ? storedOfferByUuid.get(offer.uuid) : undefined;
+
           return (
             <TabMenu.Content key={offer.id} name={offer.variantUuid}>
               <div className={s.fields}>
+                {storedOffer && storeProductUuid ? (
+                  <div className={s.inventory}>
+                    <div className={s.inventoryValues}>
+                      <Typography size={'caption-m'}>
+                        <span>Остаток: {storedOffer.inventory?.quantity ?? 0}</span>
+                      </Typography>
+                      <Typography size={'caption-m'}>
+                        <span>Резерв: {storedOffer.inventory?.reserved ?? 0}</span>
+                      </Typography>
+                      <Typography size={'caption-m'}>
+                        <span>Доступно: {storedOffer.inventory?.available ?? 0}</span>
+                      </Typography>
+                    </div>
+                    <Button
+                      type={'button'}
+                      size={'sm'}
+                      style={'secondary'}
+                      leadIcon={<StockLineIcon />}
+                      onClick={() =>
+                        void navigate.to(StoreInventoryRoute, {
+                          params: {
+                            storeProductUuid,
+                            offerUuid: storedOffer.uuid,
+                          },
+                        })
+                      }
+                    >
+                      Управлять остатками
+                    </Button>
+                  </div>
+                ) : null}
                 <Controller
                   name={`offers.${index}.article`}
                   control={control}

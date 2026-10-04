@@ -6,7 +6,7 @@ import { BrandResultEntity } from '../domain/brand-result.entity.ts';
 
 export abstract class BrandServiceInterface {
   abstract findAll(): Promise<BrandResultEntity>;
-  abstract findByUuid(code: string): Promise<BrandEntity>;
+  abstract findByCode(code: string): Promise<BrandEntity>;
   abstract create(input: CreateBrandInput): Promise<BrandEntity>;
-  abstract update(uuid: string, input: UpdateBrandInput): Promise<BrandEntity>;
+  abstract update(code: string, input: UpdateBrandInput): Promise<BrandEntity>;
 }

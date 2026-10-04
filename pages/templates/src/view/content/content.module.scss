@@ -1,0 +1,11 @@
+.wrapper {
+  display: flex;
+  flex: 1 0;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.cell {
+  padding: var(--numbers-8) var(--numbers-12);
+  color: var(--text-base-primary);
+}

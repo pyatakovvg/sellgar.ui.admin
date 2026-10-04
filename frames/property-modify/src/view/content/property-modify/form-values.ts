@@ -1,117 +1,91 @@
-import { CreatePropertyInput, PropertyEntity, UpdatePropertyInput } from '@library/domain';
+import type { PropertyEntity } from '@library/domain';
 
-import type { IFormData } from './form.schema.ts';
+import type { PropertyModifyActionPayload } from '../../../classes/controller/property-modify/property-modify-controller.interface.ts';
+import type { IFormData, PropertyKind } from './form.schema.ts';
 
 type OptionMetadata = IFormData['options'][number]['metadata'][number];
 
-export const propertyTypes: Array<{ code: PropertyEntity['type']; name: string }> = [
+export const propertyTypes: Array<{ code: PropertyKind; name: string }> = [
   { code: 'TEXT', name: 'Текст' },
-  { code: 'NUMBER', name: 'Число' },
+  { code: 'INTEGER', name: 'Целое число' },
+  { code: 'DECIMAL', name: 'Десятичное число' },
   { code: 'BOOLEAN', name: 'Да/нет' },
-  { code: 'OPTION', name: 'Опция' },
   { code: 'DATE', name: 'Дата' },
+  { code: 'OPTIONS', name: 'Список' },
 ];
 
 export const metadataValueTypes: Array<{ code: OptionMetadata['valueType']; name: string }> = [
   { code: 'TEXT', name: 'Текст' },
+  { code: 'ICON', name: 'Иконка' },
   { code: 'COLOR', name: 'Цвет' },
   { code: 'IMAGE', name: 'Изображение' },
-  { code: 'ICON', name: 'Иконка' },
 ];
 
 export const createEmptyOptionMetadata = (): OptionMetadata => ({
   valueType: 'COLOR',
   textValue: '',
   colorValue: '#000000',
-  fileUuid: null,
-  iconCode: '',
+  imageUuid: null,
 });
 
 export const createEmptyOption = (): IFormData['options'][number] => ({
+  persisted: false,
   code: '',
   name: '',
   metadata: [],
 });
 
-export const createDefaultValues = (property?: PropertyEntity): IFormData => {
-  return {
-    unitUuid: property?.type === 'NUMBER' ? (property.unitUuid ?? undefined) : undefined,
-    code: property?.code ?? '',
-    name: property?.name ?? '',
-    type: property?.type ?? 'TEXT',
-    description: property?.description ?? '',
-    options:
-      property?.type === 'OPTION'
-        ? (property.options?.map((option) => ({
-            uuid: option.uuid,
-            code: option.code,
-            name: option.name,
-            metadata:
-              option.metadata?.map((metadata) => ({
-                uuid: metadata.uuid,
-                valueType: metadata.valueType,
-                textValue: metadata.textValue,
-                colorValue: metadata.colorValue,
-                fileUuid: metadata.fileUuid,
-                iconCode: metadata.iconCode,
-              })) ?? [],
-          })) ?? [])
-        : [],
-  };
-};
+export const createDefaultValues = (property?: PropertyEntity): IFormData => ({
+  unitCode: property?.unitCode ?? undefined,
+  code: property?.code ?? '',
+  name: property?.name ?? '',
+  kind: property ? (property.kind as PropertyKind) : 'TEXT',
+  description: property?.description ?? '',
+  options: property?.options.map((option) => ({
+    persisted: true,
+    code: option.code,
+    name: option.name,
+    metadata: option.extras.map((extra) => ({
+      valueType: extra.type === 'TEXT' && extra.textDisplay === 'ICON' ? 'ICON' : extra.type,
+      textValue: extra.valueText,
+      colorValue: extra.valueColor,
+      imageUuid: extra.imageUuid,
+    })),
+  })) ?? [],
+});
 
-const createMetadataPayload = (metadata: OptionMetadata, sortOrder: number) => {
-  const base = {
-    uuid: metadata.uuid,
-    valueType: metadata.valueType,
-    sortOrder,
-    textValue: null,
-    colorValue: null,
-    fileUuid: null,
-    iconCode: null,
-  };
-
-  switch (metadata.valueType) {
-    case 'TEXT':
-      return { ...base, textValue: metadata.textValue ?? '' };
-    case 'COLOR':
-      return { ...base, colorValue: metadata.colorValue ?? '' };
-    case 'IMAGE':
-      return { ...base, fileUuid: metadata.fileUuid || null };
-    case 'ICON':
-      return { ...base, iconCode: metadata.iconCode ?? '' };
+const createExtra = (metadata: OptionMetadata, sortOrder: number) => {
+  if (metadata.valueType === 'COLOR') {
+    return { type: 'COLOR' as const, sortOrder, valueColor: metadata.colorValue ?? '' };
   }
+  if (metadata.valueType === 'IMAGE') {
+    return { type: 'IMAGE' as const, sortOrder, imageUuid: metadata.imageUuid ?? '' };
+  }
+  return {
+    type: 'TEXT' as const,
+    sortOrder,
+    textDisplay: metadata.valueType === 'ICON' ? ('ICON' as const) : ('TEXT' as const),
+    valueText: metadata.textValue ?? '',
+  };
 };
 
 export const createPropertyPayload = (
   values: IFormData,
   property?: PropertyEntity,
-): CreatePropertyInput | UpdatePropertyInput => {
-  const payload: CreatePropertyInput = {
-    unitUuid: values.type === 'NUMBER' ? values.unitUuid || undefined : undefined,
-    code: values.code,
-    name: values.name,
-    type: values.type,
-    description: values.description,
-    options:
-      values.type === 'OPTION'
-        ? values.options.map((option, optionOrder) => ({
-            uuid: option.uuid,
-            code: option.code,
-            name: option.name,
-            sortOrder: optionOrder,
-            metadata: option.metadata.map((metadata, metadataOrder) => createMetadataPayload(metadata, metadataOrder)),
-          }))
-        : [],
-  };
-
-  if (!property) {
-    return payload;
-  }
-
-  return {
-    ...payload,
-    uuid: property.uuid,
-    version: property.version,
-  };
-};
+): PropertyModifyActionPayload => ({
+  code: values.code,
+  name: values.name,
+  description: values.description || null,
+  kind: values.kind,
+  unitCode: values.unitCode || null,
+  version: property?.version,
+  options: values.kind === 'OPTIONS'
+    ? values.options.map((option, optionOrder) => ({
+        persisted: option.persisted,
+        code: option.code,
+        name: option.name,
+        sortOrder: optionOrder,
+        extras: option.metadata.map(createExtra),
+      }))
+    : [],
+});

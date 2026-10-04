@@ -1,60 +1,46 @@
 import { describe, expect, it } from 'vitest';
 
 import type { CreateProductInput } from '../input/create-product.input.ts';
-import type { UpdateProductInput } from '../input/update-product.input.ts';
 import { ProductDtoMapper } from './product-dto.mapper.ts';
 
 const createInput = (file: File): CreateProductInput => ({
+  typeUuid: 'f564dede-fd09-4a29-8375-59191b6ae793',
+  typeVersion: 2,
   name: 'Товар',
   description: 'Описание',
-  categoryUuid: 'f564dede-fd09-4a29-8375-59191b6ae793',
-  brandUuid: '0dfe2598-3835-4dd1-9188-cde04915ee6e',
-  properties: [],
+  brandCode: 'brand',
+  properties: [{ propertyCode: 'material', values: [{ valueOptionCode: 'cotton' }] }],
   variants: [
     {
       name: 'Вариант',
       description: 'Описание варианта',
-      properties: [],
-      images: [{ file, alt: null }],
+      properties: [{ propertyCode: 'size', values: [{ valueOptionCode: 'm' }] }],
+      images: [{ file }],
     },
   ],
 });
 
 describe('ProductDtoMapper', () => {
-  it('сохраняет исходный File при создании вложенного DTO', () => {
+  it('создаёт валидируемый вложенный DTO и сохраняет File для multipart', () => {
     const file = new File(['image'], 'product.png', { type: 'image/png' });
-    const input = createInput(file);
-    Object.freeze(input.variants[0].images?.[0]);
-    Object.freeze(input.variants[0].images);
-    Object.freeze(input.variants[0]);
-    Object.freeze(input.variants);
-    Object.freeze(input);
+    const dto = ProductDtoMapper.create(createInput(file));
 
-    const dto = ProductDtoMapper.create(input);
-
-    expect(dto).not.toBe(input);
-    expect(dto.variants).not.toBe(input.variants);
-    expect(dto.variants[0].images?.[0]).not.toBe(input.variants[0].images?.[0]);
+    expect(dto.typeVersion).toBe(2);
+    expect(dto.properties?.[0].values[0].valueOptionCode).toBe('cotton');
+    expect(dto.variants[0].properties[0].values[0].valueOptionCode).toBe('m');
     expect(dto.variants[0].images?.[0].file).toBe(file);
   });
 
-  it('сохраняет поля update и исходный File', () => {
+  it('сохраняет File при построении DTO обновления варианта', () => {
     const file = new File(['image'], 'product.png', { type: 'image/png' });
-    const input: UpdateProductInput = {
-      ...createInput(file),
-      uuid: 'c7fd8d23-c843-4d47-8d23-33698a5f034f',
-      version: 3,
-    };
-    Object.freeze(input.variants[0].images?.[0]);
-    Object.freeze(input.variants[0].images);
-    Object.freeze(input.variants[0]);
-    Object.freeze(input.variants);
-    Object.freeze(input);
+    const dto = ProductDtoMapper.updateVariant({
+      version: 7,
+      typeVersion: 2,
+      name: 'Вариант',
+      images: [{ file }],
+    });
 
-    const dto = ProductDtoMapper.update(input);
-
-    expect(dto.uuid).toBe(input.uuid);
-    expect(dto.version).toBe(input.version);
-    expect(dto.variants[0].images?.[0].file).toBe(file);
+    expect(dto.version).toBe(7);
+    expect(dto.images?.[0].file).toBe(file);
   });
 });

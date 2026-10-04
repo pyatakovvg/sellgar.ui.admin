@@ -14,21 +14,15 @@ interface IProps {
 }
 
 const toImageGalleryItems = (
-  image: FS.IFormData['image'],
+  images: FS.IFormData['images'],
   getFileImageUrl: (imageUuid: string) => string,
 ): ImageGalleryItem[] => {
-  if (!image) {
-    return [];
-  }
-
-  return [
-    {
-      id: image.imageUuid ?? 'image',
-      src: image.imageUuid ? getFileImageUrl(image.imageUuid) : undefined,
-      file: image.file,
-      fileName: image.file?.name,
-    },
-  ];
+  return images.map((image, index) => ({
+    id: image.imageUuid ?? `new-${index}`,
+    src: image.imageUuid ? getFileImageUrl(image.imageUuid) : undefined,
+    file: image.file,
+    fileName: image.file?.name ?? ('fileName' in image ? String(image.fileName) : undefined),
+  }));
 };
 
 export const ImageField: React.FC<IProps> = (props) => {
@@ -37,29 +31,28 @@ export const ImageField: React.FC<IProps> = (props) => {
     field,
     fieldState: { error },
   } = RHF.useController({
-    name: 'image',
+    name: 'images',
     control: props.control,
     disabled: props.inProcess,
   });
 
   const getFileImageUrl = (imageUuid: string) => fileService.getPublicImageUrl(imageUuid);
-  const items = toImageGalleryItems(field.value, getFileImageUrl);
+  const items = toImageGalleryItems(field.value ?? [], getFileImageUrl);
 
   const handleSelect = (files: File[]) => {
-    const file = files[0];
-
-    if (!file) {
-      return;
-    }
-
-    field.onChange({
-      file,
-      alt: null,
-    });
+    field.onChange([...(field.value ?? []), ...files.map((file) => ({ file }))]);
   };
 
-  const handleRemove = () => {
-    field.onChange(null);
+  const handleRemove = (id: string) => {
+    const images = field.value ?? [];
+    const index = images.findIndex((image, imageIndex) => (image.imageUuid ?? `new-${imageIndex}`) === id);
+    field.onChange(index < 0 ? images : images.filter((_image, imageIndex) => imageIndex !== index));
+  };
+
+  const handleReorder = (event: { ids: string[] }) => {
+    const images = field.value ?? [];
+    const byId = new Map(images.map((image, index) => [image.imageUuid ?? `new-${index}`, image]));
+    field.onChange(event.ids.map((id, index) => ({ ...byId.get(id), sortOrder: index })));
   };
 
   return (
@@ -72,10 +65,10 @@ export const ImageField: React.FC<IProps> = (props) => {
           <Field.Content>
             <ImageGallery
               items={items}
-              multiple={false}
               disabled={props.inProcess}
               onSelect={handleSelect}
               onRemove={handleRemove}
+              onReorder={handleReorder}
             />
           </Field.Content>
           {error?.message && (

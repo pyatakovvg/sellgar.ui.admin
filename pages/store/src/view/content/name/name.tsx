@@ -13,7 +13,7 @@ const NameComponent: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-l'} weight={'medium'}>
-        <p className={s.name}>{data.product.name}</p>
+        <p className={s.name}>{data.productSnapshot?.name ?? data.article}</p>
       </Typography>
     </div>
   );

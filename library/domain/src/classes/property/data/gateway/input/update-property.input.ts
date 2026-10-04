@@ -1,6 +1,5 @@
-import type { CreatePropertyInput } from './create-property.input.ts';
-
-export interface UpdatePropertyInput extends CreatePropertyInput {
-  uuid: string;
+export interface UpdatePropertyInput {
   version: number;
+  name: string;
+  description?: string | null;
 }

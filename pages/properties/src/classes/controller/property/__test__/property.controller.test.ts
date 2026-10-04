@@ -5,7 +5,7 @@ import { PropertyController } from '../property.controller.ts';
 
 describe('PropertyController', () => {
   it('загружает список свойств через предметный сервис', async () => {
-    const result = { data: [], meta: {} } as PropertyResultEntity;
+    const result = { items: [], total: 0, limit: 50, offset: 0 } as PropertyResultEntity;
     const propertyService = { findAll: vi.fn().mockResolvedValue(result) } as unknown as PropertyServiceInterface;
     const controller = new PropertyController(propertyService);
 

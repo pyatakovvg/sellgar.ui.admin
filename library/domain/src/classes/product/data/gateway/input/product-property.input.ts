@@ -1,6 +1,13 @@
+export interface PropertyValueInput {
+  valueText?: string;
+  valueInteger?: string;
+  valueDecimal?: string;
+  valueBoolean?: boolean;
+  valueDate?: string;
+  valueOptionCode?: string;
+}
+
 export interface ProductPropertyInput {
-  uuid?: string;
-  propertyUuid: string;
-  optionUuid?: string | null;
-  value: string;
+  propertyCode: string;
+  values: PropertyValueInput[];
 }

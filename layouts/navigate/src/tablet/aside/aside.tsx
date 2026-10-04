@@ -5,6 +5,7 @@ import {
   Home2LineIcon,
   LinksLineIcon,
   ShoppingBag3LineIcon,
+  FileList3LineIcon,
   StockLineIcon,
   StoreLineIcon,
   UnsplashLineIcon,
@@ -20,6 +21,7 @@ import {
   PropertiesRoute,
   ShopsRoute,
   StoreRoute,
+  TemplatesRoute,
   UnitsRoute,
 } from '@library/route-tokens';
 
@@ -79,6 +81,11 @@ export const Aside = () => {
               navigation={(navigate) => navigate.to(ProductsRoute)}
               icon={<ShoppingBag3LineIcon />}
               caption={'Товары'}
+            />
+            <NavigationItem
+              navigation={(navigate) => navigate.to(TemplatesRoute)}
+              icon={<FileList3LineIcon />}
+              caption={'Шаблоны'}
             />
             <NavigationItem
               navigation={(navigate) => navigate.to(StoreRoute)}

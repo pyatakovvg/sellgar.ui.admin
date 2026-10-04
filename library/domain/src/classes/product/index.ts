@@ -1,5 +1,12 @@
 export { ProductEntity } from './domain/product.entity.ts';
+export { ProductFieldEntity } from './domain/product-field.entity.ts';
+export { ProductVariantEntity } from './domain/product-variant.entity.ts';
+export { ProductSummaryEntity } from './domain/product-summary.entity.ts';
 export { ProductResultEntity } from './domain/product-result.entity.ts';
 export { ProductServiceInterface } from './application/product-service.interface.ts';
 export type { CreateProductInput } from './data/gateway/input/create-product.input.ts';
+export type { CreateVariantInput as CreateProductVariantInput } from './data/gateway/input/create-variant.input.ts';
+export type { ProductPropertyInput, PropertyValueInput } from './data/gateway/input/product-property.input.ts';
+export type { ProductVariantInput } from './data/gateway/input/product-variant.input.ts';
 export type { UpdateProductInput } from './data/gateway/input/update-product.input.ts';
+export type { UpdateVariantInput as UpdateProductVariantInput } from './data/gateway/input/update-variant.input.ts';

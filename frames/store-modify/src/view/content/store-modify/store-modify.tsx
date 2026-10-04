@@ -26,11 +26,11 @@ export const StoreModify: React.FC = () => {
     }
 
     return {
-      uuid: data.product.uuid,
-      name: data.product.name,
+      uuid: data.productUuid,
+      name: data.productSnapshot?.name ?? data.article,
       variants: data.offers.map((offer) => ({
-        uuid: offer.variant.uuid,
-        name: offer.variant.name,
+        uuid: offer.variantUuid,
+        name: offer.variantSnapshot?.name ?? offer.article ?? 'Не синхронизирован',
       })),
     };
   }, [data]);
@@ -47,9 +47,9 @@ export const StoreModify: React.FC = () => {
       return [];
     }
 
-    const product = products.find((item) => item.uuid === data.product.uuid) ?? initialProduct;
+    const product = products.find((item) => item.uuid === data.productUuid) ?? initialProduct;
     const variants = product?.variants ?? [];
-    const offerByVariantUuid = new Map(data.offers.map((offer) => [offer.variant.uuid, offer]));
+    const offerByVariantUuid = new Map(data.offers.map((offer) => [offer.variantUuid, offer]));
 
     return variants.map((variant) => {
       const offer = offerByVariantUuid.get(variant.uuid);
@@ -72,8 +72,8 @@ export const StoreModify: React.FC = () => {
     reValidateMode: 'onChange',
     shouldUnregister: false,
     defaultValues: {
-      shopUuid: data?.shop.uuid ?? '',
-      productUuid: data?.product.uuid ?? '',
+      shopUuid: data?.shopUuid ?? '',
+      productUuid: data?.productUuid ?? '',
       showing: data?.showing ?? false,
       offers: defaultOffers,
     },
@@ -90,7 +90,7 @@ export const StoreModify: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <form id={STORE_MODIFY_FORM_ID} className={s.wrapper} onSubmit={handleSubmit}>
-        <Fields currencies={currencies} products={products} />
+        <Fields currencies={currencies} products={products} storeProduct={data} />
       </form>
     </FormProvider>
   );

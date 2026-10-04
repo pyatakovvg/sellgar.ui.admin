@@ -14,13 +14,13 @@ export const InventoryContext: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Typography size={'body-m'} weight={'medium'}>
-        <p className={s.title}>{data.storeProduct.product.name}</p>
+        <p className={s.title}>{data.storeProduct.productSnapshot?.name ?? data.storeProduct.article}</p>
       </Typography>
       <Typography size={'caption-l'}>
-        <p className={s.text}>Магазин: {data.storeProduct.shop.name}</p>
+        <p className={s.text}>Магазин: {data.storeProduct.shopSnapshot?.name ?? 'Не синхронизирован'}</p>
       </Typography>
       <Typography size={'caption-l'}>
-        <p className={s.text}>Вариант: {data.offer.variant.name}</p>
+        <p className={s.text}>Вариант: {data.offer.variantSnapshot?.name ?? 'Не синхронизирован'}</p>
       </Typography>
       <Typography size={'caption-l'}>
         <p className={s.text}>Артикул: {data.offer.article || '-'}</p>

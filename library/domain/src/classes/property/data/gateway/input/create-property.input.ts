@@ -1,10 +1,10 @@
 import type { PropertyOptionInput } from './property-option.input.ts';
 
 export interface CreatePropertyInput {
-  unitUuid?: string | null;
+  unitCode?: string | null;
   code: string;
   name: string;
-  type: 'TEXT' | 'NUMBER' | 'BOOLEAN' | 'OPTION' | 'DATE';
-  description: string;
+  kind: 'TEXT' | 'INTEGER' | 'DECIMAL' | 'BOOLEAN' | 'DATE' | 'OPTIONS';
+  description?: string | null;
   options?: PropertyOptionInput[];
 }

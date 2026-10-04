@@ -10,17 +10,17 @@ describe('BrandFormDataFactory', () => {
       code: 'brand',
       name: 'Brand',
       description: 'Description',
-      image: { file, alt: 'Brand image' },
+      images: [{ file, sortOrder: 0 }],
     });
 
     const formData = new BrandFormDataFactory().create(dto);
     const payload = JSON.parse(String(formData.get('payload')));
-    const localId = payload.image.localId;
+    const localId = payload.images[0].localId;
 
     expect(localId).toEqual(expect.any(String));
     expect(formData.get(`image:${localId}`)).toMatchObject({ name: 'brand.png', type: 'image/png', size: 5 });
-    expect(payload.image).toEqual({ localId, fileName: 'brand.png', alt: 'Brand image' });
-    expect(payload.image).not.toHaveProperty('file');
+    expect(payload.images[0]).toEqual({ localId, sortOrder: 0 });
+    expect(payload.images[0]).not.toHaveProperty('file');
   });
 
   it('сохраняет ссылку на существующее изображение без файловой части', () => {
@@ -28,16 +28,16 @@ describe('BrandFormDataFactory', () => {
       code: 'brand',
       name: 'Brand',
       description: 'Description',
-      image: { imageUuid: '16b16fc6-d252-4846-8840-c9241749711e', alt: null },
+      images: [{ imageUuid: '16b16fc6-d252-4846-8840-c9241749711e', sortOrder: 0 }],
     });
 
     const formData = new BrandFormDataFactory().create(dto);
     const payload = JSON.parse(String(formData.get('payload')));
 
     expect([...formData.keys()]).toEqual(['payload']);
-    expect(payload.image).toEqual({
+    expect(payload.images[0]).toEqual({
       imageUuid: '16b16fc6-d252-4846-8840-c9241749711e',
-      alt: null,
+      sortOrder: 0,
     });
   });
 });

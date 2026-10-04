@@ -22,12 +22,12 @@ export class BrandGateway implements BrandGatewayInterface {
     @Inject(BrandFormDataFactoryInterface) private readonly formDataFactory: BrandFormDataFactoryInterface,
   ) {}
 
-  async update(uuid: string, input: UpdateBrandInput): Promise<BrandEntity> {
+  async update(code: string, input: UpdateBrandInput): Promise<BrandEntity> {
     const dto = BrandDtoMapper.update(input);
     await validateOrReject(dto);
-    const result = await this.requestExecutor.run({ scope: `brand:update:${uuid}` }, ({ signal }) => {
+    const result = await this.requestExecutor.run({ scope: `brand:update:${code}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.patch(this.config.get('GATEWAY_API') + '/v2/brands/' + uuid, this.formDataFactory.create(dto));
+      return request.patch(this.config.get('GATEWAY_API') + '/v2/brands/' + encodeURIComponent(code), this.formDataFactory.create(dto));
     });
     return this.toBrand(result);
   }
@@ -42,10 +42,10 @@ export class BrandGateway implements BrandGatewayInterface {
     return this.toBrand(result);
   }
 
-  async findByUuid(uuid: string): Promise<BrandEntity> {
-    const result = await this.requestExecutor.run({ scope: `brand:${uuid}` }, ({ signal }) => {
+  async findByCode(code: string): Promise<BrandEntity> {
+    const result = await this.requestExecutor.run({ scope: `brand:${code}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.get(this.config.get('GATEWAY_API') + '/v2/brands/' + uuid);
+      return request.get(this.config.get('GATEWAY_API') + '/v2/brands/' + encodeURIComponent(code));
     });
     return this.toBrand(result);
   }

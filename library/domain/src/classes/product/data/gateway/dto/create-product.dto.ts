@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { IsArray, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { ArrayMinSize, IsArray, IsInt, IsOptional, IsString, IsUUID, Min, ValidateNested } from 'class-validator';
 
 import type { CreateProductInput } from '../input/create-product.input.ts';
 import { ProductPropertyDto } from './product-property.dto.ts';
@@ -7,20 +7,26 @@ import { ProductVariantDto } from './product-variant.dto.ts';
 
 export class CreateProductDto implements CreateProductInput {
   @Expose()
+  @IsUUID()
+  typeUuid: string;
+
+  @Expose()
+  @IsInt()
+  @Min(1)
+  typeVersion: number;
+
+  @Expose()
   @IsString()
   name: string;
 
   @Expose()
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string | null;
 
   @Expose()
-  @IsUUID()
-  categoryUuid: string;
-
-  @Expose()
-  @IsUUID()
-  brandUuid: string;
+  @IsString()
+  brandCode: string;
 
   @Expose()
   @IsArray()
@@ -31,6 +37,7 @@ export class CreateProductDto implements CreateProductInput {
 
   @Expose()
   @IsArray()
+  @ArrayMinSize(1)
   @ValidateNested({ each: true })
   @Type(() => ProductVariantDto)
   variants: ProductVariantDto[];

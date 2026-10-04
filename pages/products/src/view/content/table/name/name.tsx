@@ -1,4 +1,4 @@
-import type { ProductEntity } from '@library/domain';
+import type { ProductSummaryEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
 import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
@@ -8,7 +8,7 @@ import React from 'react';
 import s from './default.module.scss';
 
 const NameComponent: React.FC = () => {
-  const { data } = Kit.useCellData<ProductEntity>();
+  const { data } = Kit.useCellData<ProductSummaryEntity>();
 
   return (
     <div className={s.wrapper}>

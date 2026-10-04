@@ -16,6 +16,23 @@
   gap: var(--numbers-12);
 }
 
+.inventory {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--numbers-16);
+  padding: var(--numbers-12);
+  border: var(--numbers-1) solid var(--border-base-divider);
+  border-radius: var(--numbers-8);
+}
+
+.inventoryValues {
+  display: flex;
+  align-items: center;
+  gap: var(--numbers-16);
+  color: var(--text-base-secondary);
+}
+
 .empty {
   display: block;
 }

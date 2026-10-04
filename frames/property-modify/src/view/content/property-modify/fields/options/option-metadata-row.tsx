@@ -154,11 +154,11 @@ const renderMetadataValue = ({ control, path, valueType, inProcess }: RenderMeta
       );
     case 'IMAGE':
       return (
-        <MetadataInput control={control} name={`${path}.fileUuid`} inProcess={inProcess} placeholder={'UUID файла'} />
+        <MetadataInput control={control} name={`${path}.imageUuid`} inProcess={inProcess} placeholder={'UUID изображения'} />
       );
     case 'ICON':
       return (
-        <MetadataInput control={control} name={`${path}.iconCode`} inProcess={inProcess} placeholder={'Код иконки'} />
+        <MetadataInput control={control} name={`${path}.textValue`} inProcess={inProcess} placeholder={'Код иконки'} />
       );
     case 'TEXT':
     default:

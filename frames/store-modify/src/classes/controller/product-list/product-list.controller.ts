@@ -1,4 +1,4 @@
-import { ProductServiceInterface, type ProductEntity } from '@library/domain';
+import { ProductServiceInterface, type ProductSummaryEntity } from '@library/domain';
 import { Controller, Inject } from '@sellgar/app';
 
 import { ProductListControllerInterface } from './product-list-controller.interface.ts';
@@ -6,9 +6,9 @@ import { ProductListControllerInterface } from './product-list-controller.interf
 export class ProductListController implements ProductListControllerInterface {
   constructor(@Inject(ProductServiceInterface) private readonly productService: ProductServiceInterface) {}
 
-  async loader(): Promise<ProductEntity[]> {
+  async loader(): Promise<ProductSummaryEntity[]> {
     const result = await this.productService.findAll();
 
-    return result.data;
+    return result.items;
   }
 }

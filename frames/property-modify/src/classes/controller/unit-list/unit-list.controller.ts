@@ -9,6 +9,6 @@ export class UnitListController implements UnitListControllerInterface {
   async loader(): Promise<UnitEntity[]> {
     const result = await this.unitService.findAll();
 
-    return result.data;
+    return result.items;
   }
 }

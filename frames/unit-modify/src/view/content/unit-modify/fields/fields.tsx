@@ -1,5 +1,5 @@
 import { Form } from '@library/design';
-import { Caption, Field, Input, Label, Textarea } from '@sellgar/kit';
+import { Caption, Field, Input, Label } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -10,6 +10,7 @@ import s from './default.module.scss';
 
 interface IProps {
   inProcess: boolean;
+  immutable: boolean;
 }
 
 export const Fields: React.FC<IProps> = (props) => {
@@ -32,6 +33,7 @@ export const Fields: React.FC<IProps> = (props) => {
                   <Input
                     {...field}
                     autoFocus={true}
+                    disabled={props.inProcess || props.immutable}
                     target={error?.message ? 'destructive' : undefined}
                     size={'md'}
                     placeholder={'Код'}
@@ -77,7 +79,7 @@ export const Fields: React.FC<IProps> = (props) => {
         )}
       />
       <Controller
-        name={'description'}
+        name={'symbol'}
         control={control}
         disabled={props.inProcess}
         render={({ field, fieldState: { error } }) => (
@@ -85,14 +87,14 @@ export const Fields: React.FC<IProps> = (props) => {
             <Form.Fields.Field>
               <Field>
                 <Field.Label>
-                  <Label label={'Описание'} />
+                  <Label label={'Обозначение'} />
                 </Field.Label>
                 <Field.Content>
-                  <Textarea
+                  <Input
                     {...field}
                     target={error?.message ? 'destructive' : undefined}
                     size={'md'}
-                    placeholder={'Описание'}
+                    placeholder={'Например: см'}
                   />
                 </Field.Content>
                 {error?.message && (

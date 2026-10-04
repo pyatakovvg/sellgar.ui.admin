@@ -18,10 +18,10 @@ export const Table: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <TableComponent
-        data={{ nodes: properties.data }}
+        data={{ nodes: properties.items }}
         row={{
           handlers: {
-            click: ({ row }) => void navigate.to(PropertyModifyRoute, { params: { uuid: row.uuid } }),
+            click: ({ row }) => void navigate.to(PropertyModifyRoute, { params: { code: row.code } }),
           },
         }}
       >

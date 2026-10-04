@@ -23,8 +23,9 @@ export class ProductVariantDto implements ProductVariantInput {
   name: string;
 
   @Expose()
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string | null;
 
   @Expose()
   @IsArray()

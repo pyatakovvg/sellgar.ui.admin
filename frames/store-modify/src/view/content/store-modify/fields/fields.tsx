@@ -1,4 +1,4 @@
-import type { CurrencyEntity } from '@library/domain';
+import type { CurrencyEntity, StoreProductEntity } from '@library/domain';
 
 import React from 'react';
 
@@ -12,6 +12,7 @@ import s from './default.module.scss';
 interface IProps {
   currencies: CurrencyEntity[];
   products: ProductOption[];
+  storeProduct?: StoreProductEntity;
 }
 
 export const Fields: React.FC<IProps> = (props) => {
@@ -24,7 +25,7 @@ export const Fields: React.FC<IProps> = (props) => {
         <div className={s.field}>
           <Showing />
         </div>
-        <ProductOffers currencies={props.currencies} products={props.products} />
+        <ProductOffers currencies={props.currencies} products={props.products} storeProduct={props.storeProduct} />
       </div>
     </div>
   );

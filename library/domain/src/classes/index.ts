@@ -13,10 +13,32 @@ export { MetaEntity } from './meta/index.ts';
 export { PersonEntity } from './person/index.ts';
 export { PriceEntity, PriceResultEntity, PriceServiceInterface } from './price/index.ts';
 export type { CreatePriceInput } from './price/index.ts';
-export { ProductEntity, ProductResultEntity, ProductServiceInterface } from './product/index.ts';
-export type { CreateProductInput, UpdateProductInput } from './product/index.ts';
+export {
+  ProductEntity,
+  ProductFieldEntity,
+  ProductResultEntity,
+  ProductServiceInterface,
+  ProductSummaryEntity,
+  ProductVariantEntity,
+} from './product/index.ts';
+export type {
+  CreateProductInput,
+  CreateProductVariantInput,
+  ProductPropertyInput,
+  ProductVariantInput,
+  PropertyValueInput,
+  UpdateProductInput,
+  UpdateProductVariantInput,
+} from './product/index.ts';
+export {
+  ProductTypeEntity,
+  ProductTypeFieldEntity,
+  ProductTypeResultEntity,
+  ProductTypeServiceInterface,
+} from './product-type/index.ts';
+export type { CreateProductTypeInput, ProductTypeFieldInput, UpdateProductTypeInput } from './product-type/index.ts';
 export { ProfileEntity, ProfileServiceInterface } from './profile/index.ts';
-export { PropertyEntity, PropertyResultEntity, PropertyServiceInterface } from './property/index.ts';
+export { PropertyEntity, PropertyKind, PropertyResultEntity, PropertyServiceInterface } from './property/index.ts';
 export type { CreatePropertyInput, UpdatePropertyInput } from './property/index.ts';
 export { ShopEntity, ShopResultEntity, ShopServiceInterface } from './shop/index.ts';
 export type { CreateShopInput, UpdateShopInput } from './shop/index.ts';

@@ -1,15 +1,39 @@
-import { Expose } from 'class-transformer';
-import { IsNumber, IsUUID } from 'class-validator';
+import { Expose, Type } from 'class-transformer';
+import { IsArray, IsInt, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
 
-import { CreateProductDto } from './create-product.dto.ts';
 import type { UpdateProductInput } from '../input/update-product.input.ts';
+import { ProductPropertyDto } from './product-property.dto.ts';
 
-export class UpdateProductDto extends CreateProductDto implements UpdateProductInput {
+export class UpdateProductDto implements UpdateProductInput {
   @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   version: number;
+
+  @Expose()
+  @IsInt()
+  @Min(1)
+  typeVersion: number;
+
+  @Expose()
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @Expose()
+  @IsOptional()
+  @IsString()
+  description?: string | null;
+
+  @Expose()
+  @IsOptional()
+  @IsString()
+  brandCode?: string;
+
+  @Expose()
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ProductPropertyDto)
+  properties?: ProductPropertyDto[];
 }

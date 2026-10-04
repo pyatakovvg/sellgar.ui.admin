@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { ProductController } from '../product.controller.ts';
 
 const createController = () => {
-  const result = { data: [], meta: {} } as ProductResultEntity;
+  const result = { items: [], total: 0, limit: 50, offset: 0 } as ProductResultEntity;
   const productService = { findAll: vi.fn().mockResolvedValue(result) } as unknown as ProductServiceInterface;
   const navigateService = { to: vi.fn().mockResolvedValue(undefined) } as unknown as NavigateServiceInterface;
 

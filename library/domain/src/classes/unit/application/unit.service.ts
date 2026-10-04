@@ -15,12 +15,12 @@ export class UnitService implements UnitServiceInterface {
     return this.unitGateway.findAll();
   }
 
-  findByUuid(uuid: string): Promise<UnitEntity> {
-    return this.unitGateway.findByUuid(uuid);
+  findByCode(code: string): Promise<UnitEntity> {
+    return this.unitGateway.findByCode(code);
   }
 
-  update(uuid: string, input: UpdateUnitInput): Promise<UnitEntity> {
-    return this.unitGateway.update(uuid, input);
+  update(code: string, input: UpdateUnitInput): Promise<UnitEntity> {
+    return this.unitGateway.update(code, input);
   }
 
   create(input: CreateUnitInput): Promise<UnitEntity> {

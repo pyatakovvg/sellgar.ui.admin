@@ -14,9 +14,9 @@ export const Name: React.FC = () => {
       <Typography size={'caption-l'} weight={'semi-bold'}>
         <p className={s.name}>{data.name}</p>
       </Typography>
-      {data.unit ? (
+      {data.unitCode ? (
         <Typography size={'caption-m'} weight={'semi-bold'}>
-          <p className={s.unit}>[{data.unit.name}]</p>
+          <p className={s.unit}>[{data.unitCode}]</p>
         </Typography>
       ) : null}
     </div>

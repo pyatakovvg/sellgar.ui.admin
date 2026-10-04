@@ -74,6 +74,7 @@ export const Options: React.FC<IProps> = (props) => {
                       fieldId={option.id}
                       index={index}
                       inProcess={props.inProcess}
+                      persisted={option.persisted}
                       onDelete={() => optionRows.remove(index)}
                     />
                   ))}

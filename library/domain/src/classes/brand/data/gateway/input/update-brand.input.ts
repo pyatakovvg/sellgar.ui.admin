@@ -1,6 +1,8 @@
-import type { CreateBrandInput } from './create-brand.input.ts';
+import type { BrandImageInput } from './brand-image.input.ts';
 
-export interface UpdateBrandInput extends CreateBrandInput {
-  uuid: string;
+export interface UpdateBrandInput {
   version: number;
+  name: string;
+  description?: string | null;
+  images?: BrandImageInput[];
 }

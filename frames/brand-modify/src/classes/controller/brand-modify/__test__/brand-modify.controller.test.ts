@@ -1,4 +1,4 @@
-import type { BrandEntity, BrandServiceInterface, CreateBrandInput, UpdateBrandInput } from '@library/domain';
+import type { BrandEntity, BrandServiceInterface, CreateBrandInput } from '@library/domain';
 import type { RevalidateServiceInterface } from '@sellgar/app';
 import type { NavigateServiceInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
@@ -9,7 +9,7 @@ const createController = () => {
   const brandService = {
     create: vi.fn(),
     findAll: vi.fn(),
-    findByUuid: vi.fn(),
+    findByCode: vi.fn(),
     update: vi.fn(),
   } as unknown as BrandServiceInterface;
   const navigateService = {
@@ -31,7 +31,7 @@ const createPayload = (file: File): CreateBrandInput => ({
   code: 'brand',
   name: 'Бренд',
   description: 'Описание',
-  image: { file, alt: null },
+  images: [{ file, sortOrder: 0 }],
 });
 
 describe('BrandModifyController', () => {
@@ -47,24 +47,24 @@ describe('BrandModifyController', () => {
       }),
     ).resolves.toBeUndefined();
 
-    expect(fixture.brandService.findByUuid).not.toHaveBeenCalled();
+    expect(fixture.brandService.findByCode).not.toHaveBeenCalled();
   });
 
   it('загружает бренд по frame props', async () => {
     const fixture = createController();
-    const brand = { uuid: 'c7fd8d23-c843-4d47-8d23-33698a5f034f' } as BrandEntity;
-    vi.mocked(fixture.brandService.findByUuid).mockResolvedValue(brand);
+    const brand = { code: 'brand' } as BrandEntity;
+    vi.mocked(fixture.brandService.findByCode).mockResolvedValue(brand);
 
     await expect(
       fixture.controller.loader({
         params: {},
-        params: { uuid: brand.uuid },
+        params: { code: brand.code },
         request: new Request('http://localhost/brands'),
         signal: new AbortController().signal,
       }),
     ).resolves.toBe(brand);
 
-    expect(fixture.brandService.findByUuid).toHaveBeenCalledWith(brand.uuid);
+    expect(fixture.brandService.findByCode).toHaveBeenCalledWith(brand.code);
   });
 
   it('закрывает frame по пользовательской команде', async () => {
@@ -89,28 +89,32 @@ describe('BrandModifyController', () => {
     });
 
     expect(fixture.brandService.create).toHaveBeenCalledWith(payload);
-    expect(vi.mocked(fixture.brandService.create).mock.calls[0][0].image?.file).toBe(file);
+    expect(vi.mocked(fixture.brandService.create).mock.calls[0][0].images?.[0].file).toBe(file);
     expect(fixture.revalidateService.revalidate).toHaveBeenCalledOnce();
     expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 
   it('передаёт update payload в сервис без преобразования', async () => {
     const fixture = createController();
-    const payload: UpdateBrandInput = {
+    const payload = {
       ...createPayload(new File(['image'], 'brand.png', { type: 'image/png' })),
-      uuid: 'c7fd8d23-c843-4d47-8d23-33698a5f034f',
       version: 3,
     };
 
     await fixture.controller.action({
       params: {},
       payload,
-      params: { uuid: payload.uuid },
+      params: { code: payload.code },
       request: new Request('http://localhost/brands', { method: 'POST' }),
       signal: new AbortController().signal,
     });
 
-    expect(fixture.brandService.update).toHaveBeenCalledWith(payload.uuid, payload);
+    expect(fixture.brandService.update).toHaveBeenCalledWith(payload.code, {
+      version: payload.version,
+      name: payload.name,
+      description: payload.description,
+      images: payload.images,
+    });
     expect(fixture.brandService.create).not.toHaveBeenCalled();
   });
 });

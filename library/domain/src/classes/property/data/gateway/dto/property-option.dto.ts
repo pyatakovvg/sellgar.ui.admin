@@ -1,15 +1,10 @@
 import { Expose, Type } from 'class-transformer';
-import { IsArray, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 import type { PropertyOptionInput } from '../input/property-option.input.ts';
-import { PropertyOptionMetadataDto } from './property-option-metadata.dto.ts';
+import { PropertyOptionExtraDto } from './property-option-extra.dto.ts';
 
 export class PropertyOptionDto implements PropertyOptionInput {
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
   @Expose()
   @IsString()
   code: string;
@@ -25,8 +20,8 @@ export class PropertyOptionDto implements PropertyOptionInput {
 
   @Expose()
   @ValidateNested({ each: true })
-  @Type(() => PropertyOptionMetadataDto)
+  @Type(() => PropertyOptionExtraDto)
   @IsArray()
   @IsOptional()
-  metadata?: PropertyOptionMetadataDto[];
+  extras?: PropertyOptionExtraDto[];
 }

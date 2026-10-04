@@ -1,36 +1,16 @@
-import { Expose, Type } from 'class-transformer';
-import { IsBoolean, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-
-import { ImageEntity } from '../../image';
+import { Expose } from 'class-transformer';
+import { IsInt, IsString, IsUUID } from 'class-validator';
 
 export class BrandImageEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsUUID()
-  brandUuid: string;
-
   @Expose()
   @IsUUID()
   imageUuid: string;
 
   @Expose()
-  @IsNumber()
-  sortOrder: number;
-
-  @Expose()
-  @IsBoolean()
-  isPrimary: boolean;
-
-  @Expose()
   @IsString()
-  @IsOptional()
-  alt?: string | null;
+  fileName: string;
 
   @Expose()
-  @ValidateNested()
-  @Type(() => ImageEntity)
-  image: ImageEntity;
+  @IsInt()
+  sortOrder: number;
 }

@@ -1,85 +1,57 @@
-import type { PropertyEntity } from '@library/domain';
-
 import * as yup from 'yup';
 
+export type PropertyKind = 'TEXT' | 'INTEGER' | 'DECIMAL' | 'BOOLEAN' | 'DATE' | 'OPTIONS';
+
 export interface IFormData {
-  unitUuid?: string;
+  unitCode?: string;
   code: string;
   name: string;
-  type: PropertyEntity['type'];
+  kind: PropertyKind;
   description: string;
   options: Array<{
-    uuid?: string;
+    persisted: boolean;
     code: string;
     name: string;
     metadata: Array<{
-      uuid?: string;
-      valueType: 'TEXT' | 'COLOR' | 'IMAGE' | 'ICON';
+      valueType: 'TEXT' | 'ICON' | 'COLOR' | 'IMAGE';
       textValue?: string | null;
       colorValue?: string | null;
-      fileUuid?: string | null;
-      iconCode?: string | null;
+      imageUuid?: string | null;
     }>;
   }>;
 }
 
 export const schema: yup.ObjectSchema<IFormData> = yup.object({
-  unitUuid: yup.string().uuid('Неверный формат').optional(),
+  unitCode: yup.string().optional(),
   code: yup.string().required('Необходимо заполнить'),
   name: yup.string().required('Необходимо заполнить'),
-  type: yup
-    .mixed<PropertyEntity['type']>()
-    .oneOf(['TEXT', 'NUMBER', 'BOOLEAN', 'OPTION', 'DATE'])
+  kind: yup.mixed<PropertyKind>()
+    .oneOf(['TEXT', 'INTEGER', 'DECIMAL', 'BOOLEAN', 'DATE', 'OPTIONS'])
     .required('Необходимо выбрать'),
-  description: yup.string().required('Необходимо заполнить'),
-  options: yup
-    .array(
-      yup.object({
-        uuid: yup.string().uuid().optional(),
-        code: yup.string().required('Необходимо заполнить'),
-        name: yup.string().required('Необходимо заполнить'),
-        metadata: yup
-          .array(
-            yup
-              .object({
-                uuid: yup.string().uuid().optional(),
-                valueType: yup
-                  .mixed<IFormData['options'][number]['metadata'][number]['valueType']>()
-                  .oneOf(['TEXT', 'COLOR', 'IMAGE', 'ICON'])
-                  .required('Необходимо выбрать'),
-                textValue: yup.string().nullable().optional(),
-                colorValue: yup.string().nullable().optional(),
-                fileUuid: yup.string().uuid('Неверный формат').nullable().optional(),
-                iconCode: yup.string().nullable().optional(),
-              })
-              .test('metadata-value', 'Необходимо заполнить значение', (metadata) => {
-                if (!metadata) {
-                  return false;
-                }
-
-                switch (metadata.valueType) {
-                  case 'TEXT':
-                    return Boolean(metadata.textValue?.trim());
-                  case 'COLOR':
-                    return /^#[0-9A-Fa-f]{6}$/.test(metadata.colorValue ?? '');
-                  case 'IMAGE':
-                    return Boolean(metadata.fileUuid);
-                  case 'ICON':
-                    return Boolean(metadata.iconCode?.trim());
-                  default:
-                    return false;
-                }
-              }),
-          )
-          .required(),
-      }),
-    )
-    .test('required-for-option', 'Нужно добавить хотя бы одну опцию', function (options) {
-      return this.parent.type !== 'OPTION' || Boolean(options?.length);
+  description: yup.string().defined(),
+  options: yup.array(yup.object({
+    persisted: yup.boolean().required(),
+    code: yup.string().required('Необходимо заполнить'),
+    name: yup.string().required('Необходимо заполнить'),
+    metadata: yup.array(yup.object({
+      valueType: yup.mixed<'TEXT' | 'ICON' | 'COLOR' | 'IMAGE'>()
+        .oneOf(['TEXT', 'ICON', 'COLOR', 'IMAGE'])
+        .required('Необходимо выбрать'),
+      textValue: yup.string().nullable().optional(),
+      colorValue: yup.string().nullable().optional(),
+      imageUuid: yup.string().uuid('Неверный формат').nullable().optional(),
+    }).test('metadata-value', 'Необходимо заполнить значение', (metadata) => {
+      if (!metadata) return false;
+      if (metadata.valueType === 'COLOR') return /^#[0-9A-Fa-f]{6}(?:[0-9A-Fa-f]{2})?$/.test(metadata.colorValue ?? '');
+      if (metadata.valueType === 'IMAGE') return Boolean(metadata.imageUuid);
+      return Boolean(metadata.textValue?.trim());
+    })).required(),
+  }))
+    .test('required-for-options', 'Нужно добавить хотя бы одну опцию', function (options) {
+      return this.parent.kind !== 'OPTIONS' || Boolean(options?.length);
     })
     .test('unique-option-code', 'Коды опций не должны повторяться', (options) => {
       const codes = (options ?? []).map((option) => option.code.trim()).filter(Boolean);
-
       return new Set(codes).size === codes.length;
     })
     .required(),

@@ -7,6 +7,10 @@ export class StoreOfferInventoryEntity {
   uuid: string;
 
   @Expose()
+  @IsUUID()
+  offerUuid: string;
+
+  @Expose()
   @IsNumber()
   quantity: number;
 

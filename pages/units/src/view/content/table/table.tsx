@@ -6,7 +6,7 @@ import React from 'react';
 
 import { UnitControllerInterface } from '../../../classes/controller/unit/unit-controller.interface.ts';
 
-import { Description } from './description';
+import { Symbol } from './symbol';
 import { Name } from './name';
 
 import s from './default.module.scss';
@@ -18,10 +18,10 @@ export const Table: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <TableComponent
-        data={{ nodes: units.data }}
+        data={{ nodes: units.items }}
         row={{
           handlers: {
-            click: ({ row }) => void navigate.to(UnitModifyRoute, { params: { uuid: row.uuid } }),
+            click: ({ row }) => void navigate.to(UnitModifyRoute, { params: { code: row.code } }),
           },
         }}
       >
@@ -40,9 +40,9 @@ export const Table: React.FC = () => {
             <Column>
               {({ Head, Cell }) => (
                 <>
-                  <Head label={'Описание'} />
+                  <Head label={'Обозначение'} />
                   <Cell>
-                    <Description />
+                    <Symbol />
                   </Cell>
                 </>
               )}

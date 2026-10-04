@@ -15,6 +15,7 @@ interface IProps {
   fieldId: string;
   index: number;
   inProcess: boolean;
+  persisted: boolean;
   onDelete: () => void;
 }
 
@@ -60,7 +61,13 @@ export const OptionRow: React.FC<IProps> = (props) => {
           render={({ field, fieldState: { error } }) => (
             <Field>
               <Field.Content>
-                <Input {...field} target={error?.message ? 'destructive' : undefined} size={'md'} placeholder={'Код'} />
+                <Input
+                  {...field}
+                  target={error?.message ? 'destructive' : undefined}
+                  size={'md'}
+                  placeholder={'Код'}
+                  disabled={props.inProcess || props.persisted}
+                />
               </Field.Content>
               {error?.message && (
                 <Field.Caption>
@@ -100,7 +107,7 @@ export const OptionRow: React.FC<IProps> = (props) => {
             style={'ghost'}
             target={'destructive'}
             leadIcon={<DeleteBin5LineIcon />}
-            disabled={props.inProcess}
+            disabled={props.inProcess || props.persisted}
             onClick={props.onDelete}
           />
         </div>

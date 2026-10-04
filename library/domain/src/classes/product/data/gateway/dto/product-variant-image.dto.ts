@@ -1,14 +1,9 @@
 import { Expose } from 'class-transformer';
-import { IsInstance, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsInstance, IsInt, IsOptional, IsUUID, Min } from 'class-validator';
 
 import type { ProductVariantImageInput } from '../input/product-variant-image.input.ts';
 
 export class ProductVariantImageDto implements ProductVariantImageInput {
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  uuid?: string;
-
   @Expose()
   @IsUUID()
   @IsOptional()
@@ -20,7 +15,8 @@ export class ProductVariantImageDto implements ProductVariantImageInput {
   file?: File;
 
   @Expose()
-  @IsString()
   @IsOptional()
-  alt?: string | null;
+  @IsInt()
+  @Min(0)
+  sortOrder?: number;
 }

@@ -14,16 +14,25 @@ export class BrandModifyController implements BrandModifyControllerInterface {
   ) {}
 
   async loader(args: Parameters<BrandModifyControllerInterface['loader']>[0]) {
-    if (!args.params.uuid) {
+    if (!args.params.code) {
       return void 0;
     }
 
-    return this.brandService.findByUuid(args.params.uuid);
+    return this.brandService.findByCode(args.params.code);
   }
 
   async action(args: Parameters<BrandModifyControllerInterface['action']>[0]) {
-    if ('uuid' in args.payload) {
-      await this.brandService.update(args.payload.uuid, args.payload);
+    if (args.params.code) {
+      if (args.payload.version === undefined) {
+        throw new Error('Не передана версия бренда.');
+      }
+
+      await this.brandService.update(args.params.code, {
+        version: args.payload.version,
+        name: args.payload.name,
+        description: args.payload.description,
+        images: args.payload.images,
+      });
     } else {
       await this.brandService.create(args.payload);
     }

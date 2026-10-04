@@ -9,6 +9,7 @@ import * as FS from '../../form.schema.ts';
 interface IProps {
   control: RHF.Control<FS.IFormData>;
   inProcess: boolean;
+  immutable: boolean;
 }
 
 export const CodeField: React.FC<IProps> = (props) => {
@@ -32,6 +33,7 @@ export const CodeField: React.FC<IProps> = (props) => {
             <Input
               {...field}
               autoFocus={true}
+              disabled={props.inProcess || props.immutable}
               target={error?.message ? 'destructive' : undefined}
               size={'md'}
               placeholder={'Код'}

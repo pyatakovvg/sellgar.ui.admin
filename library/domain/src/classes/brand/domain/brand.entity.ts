@@ -1,17 +1,9 @@
 import { Expose, Type } from 'class-transformer';
-import { IsDateString, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsArray, IsDateString, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 import { BrandImageEntity } from './brand-image.entity.ts';
 
 export class BrandEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsNumber()
-  version: number;
-
   @Expose()
   @IsString()
   code: string;
@@ -21,14 +13,19 @@ export class BrandEntity {
   name: string;
 
   @Expose()
+  @IsOptional()
   @IsString()
-  description: string;
+  description: string | null;
 
   @Expose()
-  @ValidateNested()
+  @IsInt()
+  version: number;
+
+  @Expose()
+  @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => BrandImageEntity)
-  @IsOptional()
-  image?: BrandImageEntity | null;
+  images: BrandImageEntity[];
 
   @Expose()
   @IsDateString()

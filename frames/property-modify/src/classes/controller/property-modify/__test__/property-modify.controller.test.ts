@@ -1,15 +1,18 @@
-import type { CreatePropertyInput, PropertyEntity, PropertyServiceInterface, UpdatePropertyInput } from '@library/domain';
+import type { PropertyEntity, PropertyServiceInterface } from '@library/domain';
 import type { RevalidateServiceInterface } from '@sellgar/app';
 import type { NavigateServiceInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
 
 import { PropertyModifyController } from '../property-modify.controller.ts';
+import type { PropertyModifyActionPayload } from '../property-modify-controller.interface.ts';
 
 const createController = () => {
   const propertyService = {
     create: vi.fn(),
-    findByUuid: vi.fn(),
+    createOption: vi.fn(),
+    findByCode: vi.fn(),
     update: vi.fn(),
+    updateOption: vi.fn(),
   } as unknown as PropertyServiceInterface;
   const navigateService = { close: vi.fn() } as unknown as NavigateServiceInterface;
   const revalidateService = { revalidate: vi.fn() } as unknown as RevalidateServiceInterface;
@@ -22,10 +25,11 @@ const createController = () => {
   };
 };
 
-const createPayload: CreatePropertyInput = {
+const createPayload: PropertyModifyActionPayload = {
   code: 'color',
   name: 'Цвет',
-  type: 'OPTION',
+  kind: 'OPTIONS',
+  unitCode: null,
   description: 'Цвет товара',
   options: [],
 };
@@ -43,24 +47,24 @@ describe('PropertyModifyController', () => {
       }),
     ).resolves.toBeUndefined();
 
-    expect(fixture.propertyService.findByUuid).not.toHaveBeenCalled();
+    expect(fixture.propertyService.findByCode).not.toHaveBeenCalled();
   });
 
   it('загружает свойство по frame props', async () => {
     const fixture = createController();
-    const property = { uuid: 'c7fd8d23-c843-4d47-8d23-33698a5f034f' } as PropertyEntity;
-    vi.mocked(fixture.propertyService.findByUuid).mockResolvedValue(property);
+    const property = { code: 'color' } as PropertyEntity;
+    vi.mocked(fixture.propertyService.findByCode).mockResolvedValue(property);
 
     await expect(
       fixture.controller.loader({
         params: {},
-        params: { uuid: property.uuid },
+        params: { code: property.code },
         request: new Request('http://localhost/properties'),
         signal: new AbortController().signal,
       }),
     ).resolves.toBe(property);
 
-    expect(fixture.propertyService.findByUuid).toHaveBeenCalledWith(property.uuid);
+    expect(fixture.propertyService.findByCode).toHaveBeenCalledWith(property.code);
   });
 
   it('закрывает frame по пользовательской команде', async () => {
@@ -82,28 +86,75 @@ describe('PropertyModifyController', () => {
       signal: new AbortController().signal,
     });
 
-    expect(fixture.propertyService.create).toHaveBeenCalledWith(createPayload);
+    expect(fixture.propertyService.create).toHaveBeenCalledWith({
+      code: createPayload.code,
+      name: createPayload.name,
+      description: createPayload.description,
+      kind: createPayload.kind,
+      unitCode: createPayload.unitCode,
+      options: [],
+    });
     expect(fixture.revalidateService.revalidate).toHaveBeenCalledOnce();
     expect(fixture.navigateService.close).toHaveBeenCalledOnce();
   });
 
-  it('определяет update по uuid в payload', async () => {
+  it('обновляет свойство по коду из frame params', async () => {
     const fixture = createController();
-    const payload: UpdatePropertyInput = {
+    const payload: PropertyModifyActionPayload = {
       ...createPayload,
-      uuid: 'c7fd8d23-c843-4d47-8d23-33698a5f034f',
       version: 2,
     };
+    const updated = { code: payload.code, version: 3 } as PropertyEntity;
+    vi.mocked(fixture.propertyService.update).mockResolvedValue(updated);
 
     await fixture.controller.action({
       params: {},
       payload,
-      params: { uuid: payload.uuid },
+      params: { code: payload.code },
       request: new Request('http://localhost/properties', { method: 'POST' }),
       signal: new AbortController().signal,
     });
 
-    expect(fixture.propertyService.update).toHaveBeenCalledWith(payload.uuid, payload);
+    expect(fixture.propertyService.update).toHaveBeenCalledWith(payload.code, {
+      version: payload.version,
+      name: payload.name,
+      description: payload.description,
+    });
     expect(fixture.propertyService.create).not.toHaveBeenCalled();
+  });
+
+  it('последовательно меняет опции с актуальной версией агрегата', async () => {
+    const fixture = createController();
+    const payload: PropertyModifyActionPayload = {
+      ...createPayload,
+      version: 2,
+      options: [
+        { persisted: true, code: 'red', name: 'Красный', sortOrder: 0, extras: [] },
+        { persisted: false, code: 'blue', name: 'Синий', sortOrder: 1, extras: [] },
+      ],
+    };
+    vi.mocked(fixture.propertyService.update).mockResolvedValue({ version: 3 } as PropertyEntity);
+    vi.mocked(fixture.propertyService.updateOption).mockResolvedValue({ version: 4 } as PropertyEntity);
+    vi.mocked(fixture.propertyService.createOption).mockResolvedValue({ version: 5 } as PropertyEntity);
+
+    await fixture.controller.action({
+      params: { code: payload.code },
+      payload,
+      request: new Request('http://localhost/properties', { method: 'POST' }),
+      signal: new AbortController().signal,
+    });
+
+    expect(fixture.propertyService.updateOption).toHaveBeenCalledWith(payload.code, 'red', {
+      version: 3,
+      name: 'Красный',
+      sortOrder: 0,
+      extras: [],
+    });
+    expect(fixture.propertyService.createOption).toHaveBeenCalledWith(payload.code, 4, {
+      code: 'blue',
+      name: 'Синий',
+      sortOrder: 1,
+      extras: [],
+    });
   });
 });

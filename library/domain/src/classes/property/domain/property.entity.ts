@@ -1,24 +1,10 @@
 import { Expose, Type } from 'class-transformer';
-import { IsArray, IsDateString, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-
-import { UnitEntity } from '../../unit';
+import { IsArray, IsDateString, IsEnum, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 import { PropertyOptionEntity } from './property-option.entity.ts';
+import { PropertyKind } from './property-kind.enum.ts';
 
 export class PropertyEntity {
-  @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsNumber()
-  version: number;
-
-  @Expose()
-  @IsUUID()
-  @IsOptional()
-  unitUuid?: string | null;
-
   @Expose()
   @IsString()
   code: string;
@@ -28,25 +14,28 @@ export class PropertyEntity {
   name: string;
 
   @Expose()
+  @IsOptional()
   @IsString()
-  description: string;
+  description: string | null;
 
   @Expose()
-  @IsString()
-  type: 'TEXT' | 'NUMBER' | 'BOOLEAN' | 'OPTION' | 'DATE';
+  @IsEnum(PropertyKind)
+  kind: PropertyKind;
 
   @Expose()
   @IsOptional()
-  @ValidateNested()
-  @Type(() => UnitEntity)
-  unit?: UnitEntity | null;
+  @IsString()
+  unitCode: string | null;
+
+  @Expose()
+  @IsInt()
+  version: number;
 
   @IsArray()
   @Expose()
-  @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => PropertyOptionEntity)
-  options?: PropertyOptionEntity[];
+  options: PropertyOptionEntity[];
 
   @Expose()
   @IsDateString()

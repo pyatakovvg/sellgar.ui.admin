@@ -1,56 +1,88 @@
+import { PropertyKind } from '@library/domain';
 import * as Yup from 'yup';
 
-import type { ProductFormInput } from '../classes/controller/product/input/product-form.input.ts';
+import type {
+  ProductFormInput,
+  ProductPropertyFormInput,
+} from '../classes/controller/product/input/product-form.input.ts';
 
-const requiredUuidSelect = () => Yup.string().uuid('Необходимо выбрать').required('Необходимо выбрать');
+const hasValue = (value: unknown): boolean => {
+  return typeof value === 'boolean' || (typeof value === 'string' && value.length > 0);
+};
+
+const propertySchema = Yup.object({
+  propertyCode: Yup.string().required(),
+  propertyName: Yup.string().required(),
+  kind: Yup.mixed<PropertyKind>().oneOf(Object.values(PropertyKind)).required(),
+  unitCode: Yup.string().nullable().defined(),
+  required: Yup.boolean().required(),
+  multiple: Yup.boolean().required(),
+  options: Yup.array()
+    .of(Yup.object({ code: Yup.string().required(), name: Yup.string().required() }))
+    .required(),
+  values: Yup.array()
+    .of(Yup.object({ value: Yup.mixed<string | boolean>().nullable().defined() }))
+    .min(1)
+    .required()
+    .test('required-property', 'Необходимо заполнить', function (values) {
+      const property = this.parent as ProductPropertyFormInput;
+      return !property.required || values.some((item) => hasValue(item.value));
+    })
+    .test('single-property', 'Свойство допускает только одно значение', function (values) {
+      const property = this.parent as ProductPropertyFormInput;
+      return property.multiple || values.filter((item) => hasValue(item.value)).length <= 1;
+    })
+    .test('value-format', 'Некорректное значение', function (values) {
+      const property = this.parent as ProductPropertyFormInput;
+      const filled = values.filter((item) => hasValue(item.value));
+
+      if (property.kind === PropertyKind.INTEGER) {
+        return filled.every((item) => typeof item.value === 'string' && /^-?\d+$/.test(item.value));
+      }
+      if (property.kind === PropertyKind.DECIMAL) {
+        return filled.every(
+          (item) => typeof item.value === 'string' && /^-?(?:0|[1-9]\d*)(?:\.\d+)?$/.test(item.value),
+        );
+      }
+      if (property.kind === PropertyKind.BOOLEAN) {
+        return filled.every((item) => typeof item.value === 'boolean');
+      }
+      if (property.kind === PropertyKind.DATE) {
+        return filled.every((item) => typeof item.value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(item.value));
+      }
+      return filled.every((item) => typeof item.value === 'string');
+    }),
+});
 
 export const schema: Yup.ObjectSchema<ProductFormInput> = Yup.object({
   uuid: Yup.string().uuid().optional(),
-  version: Yup.number().integer().optional(),
+  version: Yup.number().integer().min(1).optional(),
+  typeUuid: Yup.string().uuid('Необходимо выбрать').required('Необходимо выбрать'),
+  typeVersion: Yup.number().integer().min(1).required('Необходимо выбрать тип товара'),
   name: Yup.string().required('Необходимо заполнить'),
-  brandUuid: Yup.string().required('Необходимо выбрать'),
-  categoryUuid: Yup.string().required('Необходимо выбрать'),
-  description: Yup.string().required('Необходимо заполнить'),
-  properties: Yup.array()
-    .of(
-      Yup.object({
-        uuid: Yup.string().optional(),
-        propertyUuid: requiredUuidSelect(),
-        optionUuid: Yup.string().uuid('Необходимо выбрать').nullable().optional(),
-        value: Yup.string().required('Необходимо заполнить'),
-      }),
-    )
-    .required(),
+  brandCode: Yup.string().required('Необходимо выбрать'),
+  description: Yup.string().defined(),
+  properties: Yup.array().of(propertySchema).required(),
   variants: Yup.array()
     .of(
       Yup.object({
+        uuid: Yup.string().uuid().optional(),
+        name: Yup.string().required('Необходимо заполнить'),
+        description: Yup.string().defined(),
         images: Yup.array()
           .of(
             Yup.object({
-              uuid: Yup.string().optional(),
-              imageUuid: Yup.string().optional(),
+              imageUuid: Yup.string().uuid().optional(),
               file: Yup.mixed<File>().optional(),
-              alt: Yup.string().nullable().optional(),
+              sortOrder: Yup.number().integer().min(0).optional(),
             }),
           )
           .required(),
-        uuid: Yup.string().optional(),
-        name: Yup.string().required('Необходимо заполнить'),
-        description: Yup.string().required('Необходимо заполнить'),
-        properties: Yup.array()
-          .of(
-            Yup.object({
-              uuid: Yup.string().optional(),
-              propertyUuid: requiredUuidSelect(),
-              optionUuid: Yup.string().uuid('Необходимо выбрать').nullable().optional(),
-              value: Yup.string().required('Необходимо заполнить'),
-            }),
-          )
-          .required(),
+        properties: Yup.array().of(propertySchema).required(),
       }),
     )
     .min(1, 'Необходимо добавить вариант')
     .required(),
 });
 
-export type IFormData = Yup.InferType<typeof schema>;
+export type IFormData = ProductFormInput;

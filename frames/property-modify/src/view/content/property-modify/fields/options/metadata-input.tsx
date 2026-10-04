@@ -9,7 +9,7 @@ type MetadataPath = `options.${number}.metadata.${number}`;
 
 interface IProps {
   control: Control<IFormData>;
-  name: `${MetadataPath}.${'textValue' | 'fileUuid' | 'iconCode'}`;
+  name: `${MetadataPath}.${'textValue' | 'imageUuid'}`;
   type?: 'text';
   inProcess: boolean;
   placeholder: string;

@@ -4,6 +4,8 @@ export { SignInRoute } from './screen/sign-in.route-token.ts';
 export { ShopsRoute } from './screen/shops.route-token.ts';
 export { ProductsRoute } from './screen/products.route-token.ts';
 export { ProductCreateRoute, ProductModifyRoute } from './screen/product-modify.route-token.ts';
+export { TemplatesRoute } from './screen/templates.route-token.ts';
+export { TemplateCreateRoute, TemplateModifyRoute } from './screen/template-modify.route-token.ts';
 export { StoreRoute } from './screen/store.route-token.ts';
 export { BrandRoute } from './screen/brand.route-token.ts';
 export { BrandsRoute } from './screen/brands.route-token.ts';

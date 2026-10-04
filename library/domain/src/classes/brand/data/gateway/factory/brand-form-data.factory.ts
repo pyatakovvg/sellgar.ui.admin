@@ -8,26 +8,19 @@ import { BrandFormDataFactoryInterface } from './brand-form-data-factory.interfa
 export class BrandFormDataFactory implements BrandFormDataFactoryInterface {
   create(dto: CreateBrandDto | UpdateBrandDto): FormData {
     const formData = new FormData();
-    let image:
-      { localId: string; fileName: string; alt: string | null } | { imageUuid?: string; alt: string | null } | null =
-      null;
+    const images = dto.images?.map((image, index) => {
+      const sortOrder = image.sortOrder ?? index;
 
-    if (dto.image?.file) {
+      if (!image.file) {
+        return { imageUuid: image.imageUuid, sortOrder };
+      }
+
       const localId = globalThis.crypto.randomUUID();
-      image = {
-        localId,
-        fileName: dto.image.file.name,
-        alt: dto.image.alt ?? null,
-      };
-      formData.append(`image:${localId}`, dto.image.file, dto.image.file.name);
-    } else if (dto.image) {
-      image = {
-        imageUuid: dto.image.imageUuid,
-        alt: dto.image.alt ?? null,
-      };
-    }
+      formData.append(`image:${localId}`, image.file, image.file.name);
+      return { localId, sortOrder };
+    });
 
-    formData.append('payload', JSON.stringify({ ...dto, image }));
+    formData.append('payload', JSON.stringify({ ...dto, images }));
     return formData;
   }
 }

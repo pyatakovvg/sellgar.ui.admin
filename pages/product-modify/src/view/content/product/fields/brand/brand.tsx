@@ -14,7 +14,7 @@ export const Brand: React.FC = () => {
   return (
     <RHF.Controller
       control={control}
-      name={'brandUuid'}
+      name={'brandCode'}
       render={({ field, fieldState: { error } }) => (
         <Field>
           <Field.Label>
@@ -22,9 +22,9 @@ export const Brand: React.FC = () => {
           </Field.Label>
           <Field.Content>
             <Select
-              optionKey={'uuid'}
+              optionKey={'code'}
               optionValue={'name'}
-              options={brands.data}
+              options={brands.items}
               target={error?.message ? 'destructive' : undefined}
               value={field.value}
               onChange={field.onChange}

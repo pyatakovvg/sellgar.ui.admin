@@ -1,5 +1,6 @@
-import { ProductEntity } from '@library/domain';
+import { ProductEntity, ProductSummaryEntity } from '@library/domain';
 import { SocketIOBindings } from '@library/socket-io';
+import { plainToInstance } from 'class-transformer';
 import {
   Inject,
   insertEntity,
@@ -24,10 +25,18 @@ export class ProductChangesProvider implements ProviderInterface {
   activate(): ProviderResult {
     return this.hub.subscribe({
       created: async (payload) => {
-        insertEntity(ProductEntity, payload, { position: 'start' });
+        insertEntity(
+          ProductSummaryEntity,
+          plainToInstance(ProductSummaryEntity, payload, { excludeExtraneousValues: true }),
+          { position: 'start' },
+        );
       },
       updated: async (payload) => {
         updateEntity(ProductEntity, payload);
+        updateEntity(
+          ProductSummaryEntity,
+          plainToInstance(ProductSummaryEntity, payload, { excludeExtraneousValues: true }),
+        );
       },
     });
   }

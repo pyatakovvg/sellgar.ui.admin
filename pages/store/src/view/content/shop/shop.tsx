@@ -13,7 +13,7 @@ const ShopComponent: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-m'} weight={'medium'}>
-        <p className={s.value}>{data.shop.name}</p>
+        <p className={s.value}>{data.shopSnapshot?.name ?? 'Не синхронизирован'}</p>
       </Typography>
     </div>
   );

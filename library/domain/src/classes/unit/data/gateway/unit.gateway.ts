@@ -21,12 +21,12 @@ export class UnitGateway implements UnitGatewayInterface {
     @Inject(RequestExecutorInterface) private readonly requestExecutor: RequestExecutorInterface,
   ) {}
 
-  async update(uuid: string, input: UpdateUnitInput): Promise<UnitEntity> {
+  async update(code: string, input: UpdateUnitInput): Promise<UnitEntity> {
     const dto = plainToInstance(UpdateUnitDto, input);
     await validateOrReject(dto);
-    const result = await this.requestExecutor.run({ scope: `unit:update:${uuid}` }, ({ signal }) => {
+    const result = await this.requestExecutor.run({ scope: `unit:update:${code}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.patch(this.config.get('GATEWAY_API') + '/v2/units/' + uuid, dto);
+      return request.patch(this.config.get('GATEWAY_API') + '/v2/units/' + encodeURIComponent(code), dto);
     });
     return this.toUnit(result);
   }
@@ -41,10 +41,10 @@ export class UnitGateway implements UnitGatewayInterface {
     return this.toUnit(result);
   }
 
-  async findByUuid(uuid: string): Promise<UnitEntity> {
-    const result = await this.requestExecutor.run({ scope: `unit:${uuid}` }, ({ signal }) => {
+  async findByCode(code: string): Promise<UnitEntity> {
+    const result = await this.requestExecutor.run({ scope: `unit:${code}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.get(this.config.get('GATEWAY_API') + '/v2/units/' + uuid);
+      return request.get(this.config.get('GATEWAY_API') + '/v2/units/' + encodeURIComponent(code));
     });
     return this.toUnit(result);
   }

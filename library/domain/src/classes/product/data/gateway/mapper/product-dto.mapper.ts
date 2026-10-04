@@ -1,59 +1,54 @@
 import { plainToInstance } from 'class-transformer';
 
 import { CreateProductDto } from '../dto/create-product.dto.ts';
-import { ProductPropertyDto } from '../dto/product-property.dto.ts';
-import { ProductVariantImageDto } from '../dto/product-variant-image.dto.ts';
+import { CreateVariantDto } from '../dto/create-variant.dto.ts';
 import { ProductVariantDto } from '../dto/product-variant.dto.ts';
+import { ProductVariantImageDto } from '../dto/product-variant-image.dto.ts';
 import { UpdateProductDto } from '../dto/update-product.dto.ts';
-import { CreateProductInput } from '../input/create-product.input.ts';
-import { ProductPropertyInput } from '../input/product-property.input.ts';
-import { ProductVariantImageInput } from '../input/product-variant-image.input.ts';
-import { ProductVariantInput } from '../input/product-variant.input.ts';
-import { UpdateProductInput } from '../input/update-product.input.ts';
+import { UpdateVariantDto } from '../dto/update-variant.dto.ts';
+import type { CreateProductInput } from '../input/create-product.input.ts';
+import type { CreateVariantInput } from '../input/create-variant.input.ts';
+import type { UpdateProductInput } from '../input/update-product.input.ts';
+import type { UpdateVariantInput } from '../input/update-variant.input.ts';
+import type { ProductVariantInput } from '../input/product-variant.input.ts';
+import type { ProductVariantImageInput } from '../input/product-variant-image.input.ts';
 
 export class ProductDtoMapper {
   static create(input: CreateProductInput): CreateProductDto {
-    const { values, properties, variants } = this.values(input);
-    const dto = plainToInstance(CreateProductDto, values);
-
-    return Object.assign(new CreateProductDto(), dto, { properties, variants });
+    const { variants, ...values } = input;
+    const dto = plainToInstance(CreateProductDto, { ...values, variants: [] });
+    dto.variants = variants.map((variant) => this.variant(variant));
+    return dto;
   }
 
   static update(input: UpdateProductInput): UpdateProductDto {
-    const { values, properties, variants } = this.values(input);
-    const dto = plainToInstance(UpdateProductDto, values);
-
-    return Object.assign(new UpdateProductDto(), dto, { properties, variants });
+    return plainToInstance(UpdateProductDto, input);
   }
 
-  private static values<TInput extends CreateProductInput>(input: TInput) {
-    const { properties, variants, ...values } = input;
-
-    return {
-      values,
-      properties: properties?.map((property) => this.property(property)),
-      variants: variants.map((variant) => this.variant(variant)),
-    };
+  static createVariant(input: CreateVariantInput): CreateVariantDto {
+    const dto = plainToInstance(CreateVariantDto, { ...input, variant: undefined });
+    dto.variant = this.variant(input.variant);
+    return dto;
   }
 
-  private static property(input: ProductPropertyInput): ProductPropertyDto {
-    return plainToInstance(ProductPropertyDto, input);
+  static updateVariant(input: UpdateVariantInput): UpdateVariantDto {
+    const { images, ...values } = input;
+    const dto = plainToInstance(UpdateVariantDto, values);
+    dto.images = images?.map((image) => this.image(image));
+    return dto;
   }
 
   private static variant(input: ProductVariantInput): ProductVariantDto {
-    const { images, properties, ...values } = input;
+    const { images, ...values } = input;
     const dto = plainToInstance(ProductVariantDto, values);
-
-    return Object.assign(new ProductVariantDto(), dto, {
-      images: images?.map((image) => this.image(image)),
-      properties: properties.map((property) => this.property(property)),
-    });
+    dto.images = images?.map((image) => this.image(image));
+    return dto;
   }
 
   private static image(input: ProductVariantImageInput): ProductVariantImageDto {
     const { file, ...values } = input;
     const dto = plainToInstance(ProductVariantImageDto, values);
-
-    return Object.assign(new ProductVariantImageDto(), dto, { file });
+    dto.file = file;
+    return dto;
   }
 }

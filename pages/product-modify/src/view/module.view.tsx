@@ -31,7 +31,10 @@ const ModuleViewComponent: React.FC = () => {
     form.reset(ProductFormMapper.toFormInput(product));
   }, [form, product?.uuid, product?.version]);
 
-  const handleSubmit = form.handleSubmit((input) => submit(input));
+  const handleSubmit = form.handleSubmit(async (input) => {
+    const result = await submit(input);
+    form.reset(ProductFormMapper.toFormInput(result));
+  });
 
   return (
     <RHF.FormProvider {...form}>

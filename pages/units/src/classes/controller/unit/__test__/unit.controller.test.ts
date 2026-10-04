@@ -5,7 +5,7 @@ import { UnitController } from '../unit.controller.ts';
 
 describe('UnitController', () => {
   it('загружает список единиц измерения через предметный сервис', async () => {
-    const result = { data: [], meta: {} } as UnitResultEntity;
+    const result = { items: [], total: 0, limit: 50, offset: 0 } as UnitResultEntity;
     const unitService = { findAll: vi.fn().mockResolvedValue(result) } as unknown as UnitServiceInterface;
     const controller = new UnitController(unitService);
 

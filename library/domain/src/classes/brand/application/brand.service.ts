@@ -15,12 +15,12 @@ export class BrandService implements BrandServiceInterface {
     return this.brandGateway.findAll();
   }
 
-  findByUuid(uuid: string): Promise<BrandEntity> {
-    return this.brandGateway.findByUuid(uuid);
+  findByCode(code: string): Promise<BrandEntity> {
+    return this.brandGateway.findByCode(code);
   }
 
-  update(uuid: string, input: UpdateBrandInput): Promise<BrandEntity> {
-    return this.brandGateway.update(uuid, input);
+  update(code: string, input: UpdateBrandInput): Promise<BrandEntity> {
+    return this.brandGateway.update(code, input);
   }
 
   create(input: CreateBrandInput): Promise<BrandEntity> {

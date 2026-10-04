@@ -1,19 +1,14 @@
-import { ButtonLink, Field, Label } from '@sellgar/kit';
-import { AddLineIcon } from '@sellgar/kit/icons';
-
+import { Field, Label } from '@sellgar/kit';
 import React from 'react';
-import * as Motion from 'framer-motion';
 import * as RHF from 'react-hook-form';
 
-import { ProductFormMapper } from '../../../classes/controller/product/mapper/product-form.mapper.ts';
 import type { IFormData } from '../../schema.ts';
-
 import { Empty } from './empty';
 import { Property } from './property';
 
 import s from './default.module.scss';
 
-type PropertiesFieldName = 'properties' | `variants.${number}.properties`;
+export type PropertiesFieldName = 'properties' | `variants.${number}.properties`;
 
 interface IProps {
   name: PropertiesFieldName;
@@ -24,29 +19,7 @@ interface IProps {
 
 export const Properties: React.FC<IProps> = (props) => {
   const { control } = RHF.useFormContext<IFormData>();
-  const { fields, append, remove, move } = RHF.useFieldArray({
-    control,
-    name: props.name,
-  });
-
-  const handleAddProperty = () => {
-    append(ProductFormMapper.createEmptyProperty());
-  };
-
-  const handleReorder = (value: string[]) => {
-    const movedId = value.find((id, newIndex) => fields[newIndex]?.id !== id);
-
-    if (!movedId) {
-      return;
-    }
-
-    const newIndex = value.findIndex((id) => id === movedId);
-    const oldIndex = fields.findIndex((item) => item.id === movedId);
-
-    if (oldIndex >= 0 && newIndex >= 0) {
-      move(oldIndex, newIndex);
-    }
-  };
+  const properties = RHF.useWatch({ control, name: props.name }) ?? [];
 
   return (
     <div className={s.wrapper}>
@@ -54,42 +27,17 @@ export const Properties: React.FC<IProps> = (props) => {
         <Field.Label>
           <div className={s.header}>
             <Label label={props.label} />
-            <ButtonLink
-              type={'button'}
-              size={'xs'}
-              target={'info'}
-              leadIcon={<AddLineIcon />}
-              onClick={handleAddProperty}
-            >
-              Добавить свойство
-            </ButtonLink>
           </div>
         </Field.Label>
         <Field.Content>
-          {fields.length === 0 ? (
+          {properties.length === 0 ? (
             <Empty />
           ) : (
-            <Motion.MotionConfig reducedMotion={'always'}>
-              <Motion.Reorder.Group
-                className={s.content}
-                as={'div'}
-                axis={'y'}
-                onReorder={handleReorder}
-                values={fields.map((field) => field.id)}
-              >
-                {fields.map((item, index) => (
-                  <Property
-                    key={item.id}
-                    fieldId={item.id}
-                    name={props.name}
-                    index={index}
-                    scope={props.scope}
-                    variantIndex={props.variantIndex}
-                    onDelete={() => remove(index)}
-                  />
-                ))}
-              </Motion.Reorder.Group>
-            </Motion.MotionConfig>
+            <div className={s.content}>
+              {properties.map((property, index) => (
+                <Property key={property.propertyCode} name={props.name} index={index} property={property} />
+              ))}
+            </div>
           )}
         </Field.Content>
       </Field>

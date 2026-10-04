@@ -1,5 +1,5 @@
-import type { CreateUnitInput } from './create-unit.input.ts';
-
-export interface UpdateUnitInput extends CreateUnitInput {
+export interface UpdateUnitInput {
   version: number;
+  name: string;
+  symbol: string;
 }

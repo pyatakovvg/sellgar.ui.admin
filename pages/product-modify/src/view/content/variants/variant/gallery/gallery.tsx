@@ -24,7 +24,7 @@ export const Gallery: React.FC = () => {
       return;
     }
 
-    append(files.map((file) => ({ file, alt: null })));
+    append(files.map((file) => ({ file })));
   };
 
   const handleRemove = (id: string) => {

@@ -21,7 +21,7 @@ export const UnitModify: React.FC = () => {
     defaultValues: {
       code: unit?.code ?? '',
       name: unit?.name ?? '',
-      description: unit?.description ?? '',
+      symbol: unit?.symbol ?? '',
     },
     resolver: yupResolver(schema),
   });
@@ -32,7 +32,7 @@ export const UnitModify: React.FC = () => {
         version: unit.version,
         code: values.code,
         name: values.name,
-        description: values.description,
+        symbol: values.symbol,
       });
       return;
     }
@@ -40,14 +40,14 @@ export const UnitModify: React.FC = () => {
     await submit({
       code: values.code,
       name: values.name,
-      description: values.description,
+      symbol: values.symbol,
     });
   });
 
   return (
     <FormProvider {...methods}>
       <form id={UNIT_MODIFY_FORM_ID} className={s.wrapper} onSubmit={handleSubmit}>
-        <Fields inProcess={submit.inProcess} />
+        <Fields inProcess={submit.inProcess} immutable={Boolean(unit)} />
       </form>
     </FormProvider>
   );

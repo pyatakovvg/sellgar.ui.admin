@@ -1,5 +1,3 @@
-import { NavigateLayout } from '@layout/navigate';
-
 import React from 'react';
 
 import { Create } from './create';
@@ -13,9 +11,9 @@ export const Header: React.FC = () => {
       <div className={s.title}>
         <Title />
       </div>
-      <NavigateLayout.Slot>
+      <div className={s.create}>
         <Create />
-      </NavigateLayout.Slot>
+      </div>
     </div>
   );
 };

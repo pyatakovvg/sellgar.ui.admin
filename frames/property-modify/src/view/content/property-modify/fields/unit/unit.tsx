@@ -9,6 +9,7 @@ import type { IFormData } from '../../form.schema.ts';
 
 interface IProps {
   inProcess: boolean;
+  immutable: boolean;
   units: UnitEntity[];
 }
 
@@ -17,7 +18,7 @@ export const Unit: React.FC<IProps> = (props) => {
 
   return (
     <Controller
-      name={'unitUuid'}
+      name={'unitCode'}
       control={control}
       disabled={props.inProcess}
       render={({ field, fieldState: { error } }) => (
@@ -31,11 +32,11 @@ export const Unit: React.FC<IProps> = (props) => {
                 <Select
                   target={error?.message ? 'destructive' : undefined}
                   isClearable={true}
-                  optionKey={'uuid'}
+                  optionKey={'code'}
                   optionValue={'name'}
                   options={props.units}
                   value={field.value ?? undefined}
-                  disabled={props.inProcess}
+                  disabled={props.inProcess || props.immutable}
                   onBlur={field.onBlur}
                   onChange={(value) => field.onChange(value || undefined)}
                 />

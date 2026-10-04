@@ -6,7 +6,7 @@ import React from 'react';
 import { ProductControllerInterface } from '../../../classes/controller/product/product-controller.interface.ts';
 
 import { Name } from './name';
-import { Category } from './category';
+import { Brand } from './brand';
 
 import s from './default.module.scss';
 
@@ -17,7 +17,7 @@ export const Table: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <TableComponent
-        data={{ nodes: products.data }}
+        data={{ nodes: products.items }}
         row={{
           handlers: {
             click: ({ row }) => void controller.open(row.uuid),
@@ -39,9 +39,9 @@ export const Table: React.FC = () => {
             <Column>
               {({ Head, Cell }) => (
                 <>
-                  <Head label={'Категория'} />
+                  <Head label={'Бренд'} />
                   <Cell>
-                    <Category />
+                    <Brand />
                   </Cell>
                 </>
               )}

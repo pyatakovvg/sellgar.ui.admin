@@ -1,4 +1,4 @@
-import type { CurrencyEntity } from '@library/domain';
+import type { CurrencyEntity, StoreProductEntity } from '@library/domain';
 
 import React from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
@@ -13,6 +13,7 @@ import s from './default.module.scss';
 interface IProps {
   currencies: CurrencyEntity[];
   products: ProductOption[];
+  storeProduct?: StoreProductEntity;
 }
 
 export const ProductOffers: React.FC<IProps> = (props) => {
@@ -54,7 +55,7 @@ export const ProductOffers: React.FC<IProps> = (props) => {
         <ProductField products={props.products} onProductChange={handleProductChange} />
       </div>
       <div className={s.field}>
-        <OffersTabs currencies={props.currencies} product={product} fields={fields} />
+        <OffersTabs currencies={props.currencies} product={product} fields={fields} storeProduct={props.storeProduct} />
       </div>
     </div>
   );

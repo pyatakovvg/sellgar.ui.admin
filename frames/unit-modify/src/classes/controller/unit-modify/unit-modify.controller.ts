@@ -13,28 +13,29 @@ export class UnitModifyController implements UnitModifyControllerInterface {
   ) {}
 
   async loader(args: Parameters<UnitModifyControllerInterface['loader']>[0]) {
-    if (!args.params.uuid) {
+    if (!args.params.code) {
       return void 0;
     }
 
-    return this.unitService.findByUuid(args.params.uuid);
+    return this.unitService.findByCode(args.params.code);
   }
 
   async action(args: Parameters<UnitModifyControllerInterface['action']>[0]) {
-    if (args.params.uuid) {
+    if (args.params.code) {
       if (args.payload.version === undefined) {
         throw new Error('Не передана версия размерности.');
       }
 
-      await this.unitService.update(args.params.uuid, {
-        ...args.payload,
+      await this.unitService.update(args.params.code, {
         version: args.payload.version,
+        name: args.payload.name,
+        symbol: args.payload.symbol,
       });
     } else {
       await this.unitService.create({
         code: args.payload.code,
         name: args.payload.name,
-        description: args.payload.description,
+        symbol: args.payload.symbol,
       });
     }
 

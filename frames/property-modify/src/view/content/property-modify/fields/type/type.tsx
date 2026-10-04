@@ -9,6 +9,7 @@ import type { IFormData } from '../../form.schema.ts';
 
 interface IProps {
   inProcess: boolean;
+  immutable: boolean;
 }
 
 export const Type: React.FC<IProps> = (props) => {
@@ -16,7 +17,7 @@ export const Type: React.FC<IProps> = (props) => {
 
   return (
     <Controller
-      name={'type'}
+      name={'kind'}
       control={control}
       disabled={props.inProcess}
       render={({ field, fieldState: { error } }) => (
@@ -33,7 +34,7 @@ export const Type: React.FC<IProps> = (props) => {
                   optionValue={'name'}
                   options={propertyTypes}
                   value={field.value}
-                  disabled={props.inProcess}
+                  disabled={props.inProcess || props.immutable}
                   onBlur={field.onBlur}
                   onChange={field.onChange}
                 />

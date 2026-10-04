@@ -11,6 +11,7 @@ import { FileBinding } from './file/file.binding.ts';
 import { FolderBinding } from './folder/folder.binding.ts';
 import { PriceBinding } from './price/price.binding.ts';
 import { ProductBinding } from './product/product.binding.ts';
+import { ProductTypeBinding } from './product-type/product-type.binding.ts';
 import { ProfileBinding } from './profile/profile.binding.ts';
 import { PropertyBinding } from './property/property.binding.ts';
 import { ShopBinding } from './shop/shop.binding.ts';
@@ -32,6 +33,7 @@ export class DomainBinding extends BindingModuleInterface {
     new FolderBinding().register(registry);
     new PriceBinding().register(registry);
     new ProductBinding().register(registry);
+    new ProductTypeBinding().register(registry);
     new ProfileBinding().register(registry);
     new PropertyBinding().register(registry);
     new ShopBinding().register(registry);

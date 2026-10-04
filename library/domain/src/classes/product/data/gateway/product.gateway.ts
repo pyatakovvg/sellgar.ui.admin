@@ -10,7 +10,9 @@ import { ProductEntity } from '../../domain/product.entity.ts';
 import { ProductResultEntity } from '../../domain/product-result.entity.ts';
 import { ProductFormDataFactoryInterface } from './factory/product-form-data-factory.interface.ts';
 import { CreateProductInput } from './input/create-product.input.ts';
+import { CreateVariantInput } from './input/create-variant.input.ts';
 import { UpdateProductInput } from './input/update-product.input.ts';
+import { UpdateVariantInput } from './input/update-variant.input.ts';
 import { ProductDtoMapper } from './mapper/product-dto.mapper.ts';
 import { ProductGatewayInterface } from './product-gateway.interface.ts';
 
@@ -48,7 +50,7 @@ export class ProductGateway implements ProductGatewayInterface {
     await validateOrReject(dto);
     const result = await this.requestExecutor.run({ scope: 'product:create' }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.post(this.config.get('GATEWAY_API') + '/v2/products', this.formDataFactory.create(dto));
+      return request.post(this.config.get('GATEWAY_API') + '/v2/products', this.formDataFactory.createProduct(dto));
     });
     return this.toProduct(result);
   }
@@ -58,7 +60,43 @@ export class ProductGateway implements ProductGatewayInterface {
     await validateOrReject(dto);
     const result = await this.requestExecutor.run({ scope: `product:update:${uuid}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.patch(this.config.get('GATEWAY_API') + '/v2/products/' + uuid, this.formDataFactory.create(dto));
+      return request.patch(this.config.get('GATEWAY_API') + '/v2/products/' + uuid, dto);
+    });
+    return this.toProduct(result);
+  }
+
+  async createVariant(uuid: string, input: CreateVariantInput): Promise<ProductEntity> {
+    const dto = ProductDtoMapper.createVariant(input);
+    await validateOrReject(dto);
+    const result = await this.requestExecutor.run({ scope: `product:create-variant:${uuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.post(
+        this.config.get('GATEWAY_API') + `/v2/products/${uuid}/variants`,
+        this.formDataFactory.createVariant(dto),
+      );
+    });
+    return this.toProduct(result);
+  }
+
+  async updateVariant(uuid: string, variantUuid: string, input: UpdateVariantInput): Promise<ProductEntity> {
+    const dto = ProductDtoMapper.updateVariant(input);
+    await validateOrReject(dto);
+    const result = await this.requestExecutor.run({ scope: `product:update-variant:${variantUuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.patch(
+        this.config.get('GATEWAY_API') + `/v2/products/${uuid}/variants/${variantUuid}`,
+        this.formDataFactory.updateVariant(dto),
+      );
+    });
+    return this.toProduct(result);
+  }
+
+  async archiveVariant(uuid: string, variantUuid: string, version: number): Promise<ProductEntity> {
+    const result = await this.requestExecutor.run({ scope: `product:archive-variant:${variantUuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.patch(this.config.get('GATEWAY_API') + `/v2/products/${uuid}/variants/${variantUuid}/archive`, {
+        version,
+      });
     });
     return this.toProduct(result);
   }

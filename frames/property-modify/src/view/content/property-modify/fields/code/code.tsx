@@ -8,6 +8,7 @@ import type { IFormData } from '../../form.schema.ts';
 
 interface IProps {
   inProcess: boolean;
+  immutable: boolean;
 }
 
 export const Code: React.FC<IProps> = (props) => {
@@ -29,6 +30,7 @@ export const Code: React.FC<IProps> = (props) => {
                 <Input
                   {...field}
                   autoFocus={true}
+                  disabled={props.inProcess || props.immutable}
                   target={error?.message ? 'destructive' : undefined}
                   size={'md'}
                   placeholder={'Код'}

@@ -24,7 +24,7 @@ export const BrandModify: React.FC = () => {
       code: data?.code ?? '',
       name: data?.name ?? '',
       description: data?.description ?? '',
-      image: data?.image ?? null,
+      images: data?.images ?? [],
     },
     resolver: YR.yupResolver(FS.schema),
   });
@@ -32,12 +32,11 @@ export const BrandModify: React.FC = () => {
   const handleSubmit = methods.handleSubmit(async (values) => {
     if (data) {
       await submit({
-        uuid: data.uuid,
-        version: data.version,
         code: values.code,
+        version: data.version,
         name: values.name,
         description: values.description,
-        image: values.image,
+        images: values.images,
       });
       return;
     }
@@ -46,14 +45,14 @@ export const BrandModify: React.FC = () => {
       code: values.code,
       name: values.name,
       description: values.description,
-      image: values.image,
+      images: values.images,
     });
   });
 
   return (
     <RHF.FormProvider {...methods}>
       <form id={BRAND_MODIFY_FORM_ID} className={s.wrapper} onSubmit={handleSubmit}>
-        <Fields inProcess={submit.inProcess} />
+        <Fields inProcess={submit.inProcess} immutable={Boolean(data)} />
       </form>
     </RHF.FormProvider>
   );

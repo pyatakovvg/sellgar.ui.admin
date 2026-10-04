@@ -5,6 +5,6 @@ export interface ProductVariantInput {
   uuid?: string;
   images?: ProductVariantImageInput[];
   name: string;
-  description: string;
+  description?: string | null;
   properties: ProductPropertyInput[];
 }

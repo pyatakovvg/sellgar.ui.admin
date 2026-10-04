@@ -8,7 +8,7 @@ import { UnitModifyController } from '../unit-modify.controller.ts';
 const createController = () => {
   const unitService = {
     create: vi.fn(),
-    findByUuid: vi.fn(),
+    findByCode: vi.fn(),
     update: vi.fn(),
   } as unknown as UnitServiceInterface;
   const navigateService = { close: vi.fn() } as unknown as NavigateServiceInterface;
@@ -25,7 +25,7 @@ const createController = () => {
 const payload = {
   code: 'kg',
   name: 'Килограмм',
-  description: 'Единица массы',
+  symbol: 'кг',
 };
 
 describe('UnitModifyController', () => {
@@ -41,24 +41,24 @@ describe('UnitModifyController', () => {
       }),
     ).resolves.toBeUndefined();
 
-    expect(fixture.unitService.findByUuid).not.toHaveBeenCalled();
+    expect(fixture.unitService.findByCode).not.toHaveBeenCalled();
   });
 
   it('загружает размерность по frame props', async () => {
     const fixture = createController();
-    const unit = { uuid: 'c7fd8d23-c843-4d47-8d23-33698a5f034f' } as UnitEntity;
-    vi.mocked(fixture.unitService.findByUuid).mockResolvedValue(unit);
+    const unit = { code: 'kg' } as UnitEntity;
+    vi.mocked(fixture.unitService.findByCode).mockResolvedValue(unit);
 
     await expect(
       fixture.controller.loader({
         params: {},
-        params: { uuid: unit.uuid },
+        params: { code: unit.code },
         request: new Request('http://localhost/units'),
         signal: new AbortController().signal,
       }),
     ).resolves.toBe(unit);
 
-    expect(fixture.unitService.findByUuid).toHaveBeenCalledWith(unit.uuid);
+    expect(fixture.unitService.findByCode).toHaveBeenCalledWith(unit.code);
   });
 
   it('закрывает frame по пользовательской команде', async () => {
@@ -87,17 +87,21 @@ describe('UnitModifyController', () => {
 
   it('требует version и формирует update-команду для открытой размерности', async () => {
     const fixture = createController();
-    const uuid = 'c7fd8d23-c843-4d47-8d23-33698a5f034f';
+    const code = 'kg';
 
     await fixture.controller.action({
       params: {},
       payload: { ...payload, version: 4 },
-      params: { uuid },
+      params: { code },
       request: new Request('http://localhost/units', { method: 'POST' }),
       signal: new AbortController().signal,
     });
 
-    expect(fixture.unitService.update).toHaveBeenCalledWith(uuid, { ...payload, version: 4 });
+    expect(fixture.unitService.update).toHaveBeenCalledWith(code, {
+      version: 4,
+      name: payload.name,
+      symbol: payload.symbol,
+    });
   });
 
   it('не отправляет update без version', async () => {
@@ -107,7 +111,7 @@ describe('UnitModifyController', () => {
       fixture.controller.action({
         params: {},
         payload,
-        params: { uuid: 'c7fd8d23-c843-4d47-8d23-33698a5f034f' },
+        params: { code: 'kg' },
         request: new Request('http://localhost/units', { method: 'POST' }),
         signal: new AbortController().signal,
       }),

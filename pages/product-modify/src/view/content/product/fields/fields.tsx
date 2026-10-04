@@ -3,7 +3,7 @@ import React from 'react';
 import { Properties as PropertiesField } from '../../properties';
 
 import { Name } from './name';
-import { Category } from './category';
+import { Type } from './type';
 import { Brand } from './brand';
 import { Description } from './description';
 
@@ -16,7 +16,7 @@ export const Fields: React.FC = () => {
         <Name />
       </div>
       <div className={s.field}>
-        <Category />
+        <Type />
       </div>
       <div className={s.field}>
         <Brand />

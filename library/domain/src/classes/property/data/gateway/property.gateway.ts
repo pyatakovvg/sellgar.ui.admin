@@ -9,8 +9,13 @@ import { PropertyEntity } from '../../domain/property.entity.ts';
 import { PropertyResultEntity } from '../../domain/property-result.entity.ts';
 import { CreatePropertyDto } from './dto/create-property.dto.ts';
 import { UpdatePropertyDto } from './dto/update-property.dto.ts';
+import { CreatePropertyOptionDto } from './dto/create-property-option.dto.ts';
+import { PropertyOptionDto } from './dto/property-option.dto.ts';
+import { UpdatePropertyOptionDto } from './dto/update-property-option.dto.ts';
 import { CreatePropertyInput } from './input/create-property.input.ts';
 import { UpdatePropertyInput } from './input/update-property.input.ts';
+import { PropertyOptionInput } from './input/property-option.input.ts';
+import { UpdatePropertyOptionInput } from './input/update-property-option.input.ts';
 import { PropertyGatewayInterface } from './property-gateway.interface.ts';
 
 @Injectable()
@@ -21,12 +26,12 @@ export class PropertyGateway implements PropertyGatewayInterface {
     @Inject(RequestExecutorInterface) private readonly requestExecutor: RequestExecutorInterface,
   ) {}
 
-  async update(uuid: string, input: UpdatePropertyInput): Promise<PropertyEntity> {
+  async update(code: string, input: UpdatePropertyInput): Promise<PropertyEntity> {
     const dto = plainToInstance(UpdatePropertyDto, input);
     await validateOrReject(dto);
-    const result = await this.requestExecutor.run({ scope: `property:update:${uuid}` }, ({ signal }) => {
+    const result = await this.requestExecutor.run({ scope: `property:update:${code}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.patch(this.config.get('GATEWAY_API') + '/v2/properties/' + uuid, dto);
+      return request.patch(this.config.get('GATEWAY_API') + '/v2/properties/' + encodeURIComponent(code), dto);
     });
     return this.toProperty(result);
   }
@@ -41,10 +46,10 @@ export class PropertyGateway implements PropertyGatewayInterface {
     return this.toProperty(result);
   }
 
-  async findByUuid(uuid: string): Promise<PropertyEntity> {
-    const result = await this.requestExecutor.run({ scope: `property:${uuid}` }, ({ signal }) => {
+  async findByCode(code: string): Promise<PropertyEntity> {
+    const result = await this.requestExecutor.run({ scope: `property:${code}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.get(this.config.get('GATEWAY_API') + '/v2/properties/' + uuid);
+      return request.get(this.config.get('GATEWAY_API') + '/v2/properties/' + encodeURIComponent(code));
     });
     return this.toProperty(result);
   }
@@ -57,6 +62,36 @@ export class PropertyGateway implements PropertyGatewayInterface {
     const entity = plainToInstance(PropertyResultEntity, result);
     await validateOrReject(entity);
     return entity;
+  }
+
+  async createOption(code: string, version: number, option: PropertyOptionInput): Promise<PropertyEntity> {
+    const dto = plainToInstance(CreatePropertyOptionDto, {
+      version,
+      option: plainToInstance(PropertyOptionDto, option),
+    });
+    await validateOrReject(dto);
+    const result = await this.requestExecutor.run({ scope: `property:${code}:option:create` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.post(this.config.get('GATEWAY_API') + '/v2/properties/' + encodeURIComponent(code) + '/options', dto);
+    });
+    return this.toProperty(result);
+  }
+
+  async updateOption(
+    code: string,
+    optionCode: string,
+    input: UpdatePropertyOptionInput,
+  ): Promise<PropertyEntity> {
+    const dto = plainToInstance(UpdatePropertyOptionDto, input);
+    await validateOrReject(dto);
+    const result = await this.requestExecutor.run({ scope: `property:${code}:option:${optionCode}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.patch(
+        this.config.get('GATEWAY_API') + '/v2/properties/' + encodeURIComponent(code) + '/options/' + encodeURIComponent(optionCode),
+        dto,
+      );
+    });
+    return this.toProperty(result);
   }
 
   private async toProperty(result: unknown): Promise<PropertyEntity> {

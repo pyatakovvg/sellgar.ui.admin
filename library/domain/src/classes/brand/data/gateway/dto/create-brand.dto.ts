@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from 'class-validator';
 
 import type { CreateBrandInput } from '../input/create-brand.input.ts';
 import { BrandImageDto } from './brand-image.dto.ts';
@@ -7,19 +7,25 @@ import { BrandImageDto } from './brand-image.dto.ts';
 export class CreateBrandDto implements CreateBrandInput {
   @Expose()
   @IsString()
+  @MinLength(1)
+  @MaxLength(256)
   code: string;
 
   @Expose()
   @IsString()
+  @MinLength(1)
+  @MaxLength(256)
   name: string;
 
   @Expose()
+  @IsOptional()
   @IsString()
-  description: string;
+  description?: string | null;
 
   @Expose()
-  @ValidateNested()
+  @IsArray()
+  @ValidateNested({ each: true })
   @Type(() => BrandImageDto)
   @IsOptional()
-  image?: BrandImageDto | null;
+  images?: BrandImageDto[];
 }
