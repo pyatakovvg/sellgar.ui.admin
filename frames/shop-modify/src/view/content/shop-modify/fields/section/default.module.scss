@@ -1,0 +1,20 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-16);
+  padding: var(--numbers-24);
+  border-bottom: 1px solid var(--border-base-divider);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--numbers-12);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-16);
+}

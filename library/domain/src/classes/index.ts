@@ -40,8 +40,16 @@ export type { CreateProductTypeInput, ProductTypeFieldInput, UpdateProductTypeIn
 export { ProfileEntity, ProfileServiceInterface } from './profile/index.ts';
 export { PropertyEntity, PropertyKind, PropertyResultEntity, PropertyServiceInterface } from './property/index.ts';
 export type { CreatePropertyInput, UpdatePropertyInput } from './property/index.ts';
-export { ShopEntity, ShopResultEntity, ShopServiceInterface } from './shop/index.ts';
-export type { CreateShopInput, UpdateShopInput } from './shop/index.ts';
+export {
+  ShopAddressType,
+  ShopContactPurpose,
+  ShopContactType,
+  ShopEntity,
+  ShopLegalForm,
+  ShopResultEntity,
+  ShopServiceInterface,
+} from './shop/index.ts';
+export type { CreateShopInput, ShopQueryInput, UpdateShopInput } from './shop/index.ts';
 export {
   StoreInventoryMovementEntity,
   StoreOfferEntity,

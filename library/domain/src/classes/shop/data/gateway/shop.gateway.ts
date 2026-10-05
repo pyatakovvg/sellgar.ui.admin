@@ -8,8 +8,10 @@ import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
 import { ShopEntity } from '../../domain/shop.entity.ts';
 import { ShopResultEntity } from '../../domain/shop-result.entity.ts';
 import { CreateShopDto } from './dto/create-shop.dto.ts';
+import { ShopQueryDto } from './dto/shop-query.dto.ts';
 import { UpdateShopDto } from './dto/update-shop.dto.ts';
 import { CreateShopInput } from './input/create-shop.input.ts';
+import { ShopQueryInput } from './input/shop-query.input.ts';
 import { UpdateShopInput } from './input/update-shop.input.ts';
 import { ShopGatewayInterface } from './shop-gateway.interface.ts';
 
@@ -21,12 +23,14 @@ export class ShopGateway implements ShopGatewayInterface {
     @Inject(RequestExecutorInterface) private readonly requestExecutor: RequestExecutorInterface,
   ) {}
 
-  async findAll(): Promise<ShopResultEntity> {
+  async findAll(query: ShopQueryInput = {}): Promise<ShopResultEntity> {
+    const dto = plainToInstance(ShopQueryDto, query, { excludeExtraneousValues: true });
+    await validateOrReject(dto);
     const result = await this.requestExecutor.run({ scope: 'shops:list' }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.get(this.config.get('GATEWAY_API') + '/v2/shops');
+      return request.get(this.config.get('GATEWAY_API') + '/v2/shops', { params: dto });
     });
-    const entity = plainToInstance(ShopResultEntity, result);
+    const entity = plainToInstance(ShopResultEntity, result, { excludeExtraneousValues: true });
     await validateOrReject(entity);
     return entity;
   }
@@ -40,7 +44,7 @@ export class ShopGateway implements ShopGatewayInterface {
   }
 
   async create(input: CreateShopInput): Promise<ShopEntity> {
-    const dto = plainToInstance(CreateShopDto, input);
+    const dto = plainToInstance(CreateShopDto, input, { excludeExtraneousValues: true });
     await validateOrReject(dto);
     const result = await this.requestExecutor.run({ scope: 'shop:create' }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
@@ -50,7 +54,7 @@ export class ShopGateway implements ShopGatewayInterface {
   }
 
   async update(uuid: string, input: UpdateShopInput): Promise<ShopEntity> {
-    const dto = plainToInstance(UpdateShopDto, input);
+    const dto = plainToInstance(UpdateShopDto, input, { excludeExtraneousValues: true });
     await validateOrReject(dto);
     const result = await this.requestExecutor.run({ scope: `shop:update:${uuid}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
@@ -60,7 +64,7 @@ export class ShopGateway implements ShopGatewayInterface {
   }
 
   private async toShop(result: unknown): Promise<ShopEntity> {
-    const entity = plainToInstance(ShopEntity, result);
+    const entity = plainToInstance(ShopEntity, result, { excludeExtraneousValues: true });
     await validateOrReject(entity);
     return entity;
   }

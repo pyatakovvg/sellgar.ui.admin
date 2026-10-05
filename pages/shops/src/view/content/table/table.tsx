@@ -7,6 +7,7 @@ import React from 'react';
 import { ShopControllerInterface } from '../../../classes/controller/shop/shop-controller.interface.ts';
 
 import { Name } from './name';
+import { Inn } from './inn';
 
 import s from './default.module.scss';
 
@@ -32,6 +33,16 @@ export const Table: React.FC = () => {
                   <Head label={'Название'} />
                   <Cell>
                     <Name />
+                  </Cell>
+                </>
+              )}
+            </Column>
+            <Column>
+              {({ Head, Cell }) => (
+                <>
+                  <Head label={'ИНН'} />
+                  <Cell>
+                    <Inn />
                   </Cell>
                 </>
               )}

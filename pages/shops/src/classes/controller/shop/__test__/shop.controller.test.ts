@@ -10,6 +10,6 @@ describe('ShopController', () => {
     const controller = new ShopController(shopService);
 
     await expect(controller.loader()).resolves.toBe(result);
-    expect(shopService.findAll).toHaveBeenCalledOnce();
+    expect(shopService.findAll).toHaveBeenCalledWith();
   });
 });

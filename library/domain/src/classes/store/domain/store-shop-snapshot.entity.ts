@@ -1,7 +1,5 @@
 import { Expose } from 'class-transformer';
-import { IsDateString, IsEnum, IsNumber, IsString, IsUUID } from 'class-validator';
-
-import { StoreShopStatus } from './store-shop-status.enum.ts';
+import { IsDateString, IsNumber, IsString, IsUUID } from 'class-validator';
 
 export class StoreShopSnapshotEntity {
   @Expose()
@@ -15,10 +13,6 @@ export class StoreShopSnapshotEntity {
   @Expose()
   @IsString()
   name: string;
-
-  @Expose()
-  @IsEnum(StoreShopStatus)
-  status: StoreShopStatus;
 
   @Expose()
   @IsDateString()

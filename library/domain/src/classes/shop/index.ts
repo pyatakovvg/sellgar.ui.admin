@@ -1,5 +1,10 @@
 export { ShopEntity } from './domain/shop.entity.ts';
 export { ShopResultEntity } from './domain/shop-result.entity.ts';
+export { ShopLegalForm } from './domain/shop-legal-form.enum.ts';
+export { ShopContactType } from './domain/shop-contact-type.enum.ts';
+export { ShopContactPurpose } from './domain/shop-contact-purpose.enum.ts';
+export { ShopAddressType } from './domain/shop-address-type.enum.ts';
 export { ShopServiceInterface } from './application/shop-service.interface.ts';
 export type { CreateShopInput } from './data/gateway/input/create-shop.input.ts';
+export type { ShopQueryInput } from './data/gateway/input/shop-query.input.ts';
 export type { UpdateShopInput } from './data/gateway/input/update-shop.input.ts';

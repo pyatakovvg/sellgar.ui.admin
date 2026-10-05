@@ -1,5 +1,9 @@
-import type { CreateShopInput } from './create-shop.input.ts';
+import type { ShopAddressInput, ShopContactInput, ShopLegalDetailsInput } from './shop-details.input.ts';
 
-export interface UpdateShopInput extends CreateShopInput {
-  uuid: string;
+export interface UpdateShopInput {
+  version: number;
+  name?: string;
+  legalDetails?: ShopLegalDetailsInput | null;
+  contacts?: ShopContactInput[];
+  addresses?: ShopAddressInput[];
 }

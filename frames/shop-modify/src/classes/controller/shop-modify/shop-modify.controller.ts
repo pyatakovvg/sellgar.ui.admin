@@ -1,16 +1,17 @@
 import { ShopServiceInterface } from '@library/domain';
+import { ShopsRoute } from '@library/route-tokens';
 
-import { Controller, Inject, RevalidateServiceInterface } from '@sellgar/app';
+import { Controller, Inject } from '@sellgar/app';
 import { NavigateServiceInterface } from '@sellgar/app';
 
 import { ShopModifyControllerInterface } from './shop-modify-controller.interface.ts';
+import { ShopFormMapper } from './mapper/shop-form.mapper.ts';
 
 @Controller()
 export class ShopModifyController implements ShopModifyControllerInterface {
   constructor(
     @Inject(ShopServiceInterface) private readonly shopService: ShopServiceInterface,
     @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
-    @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
   ) {}
 
   async loader(args: Parameters<ShopModifyControllerInterface['loader']>[0]) {
@@ -18,18 +19,17 @@ export class ShopModifyController implements ShopModifyControllerInterface {
       return void 0;
     }
 
-    return this.shopService.findByUuid(args.params.uuid);
+    return { shop: await this.shopService.findByUuid(args.params.uuid) };
   }
 
   async action(args: Parameters<ShopModifyControllerInterface['action']>[0]) {
-    if ('uuid' in args.payload) {
-      await this.shopService.update(args.payload.uuid, args.payload);
+    if (args.params.uuid) {
+      await this.shopService.update(args.params.uuid, ShopFormMapper.toUpdateInput(args.payload));
     } else {
-      await this.shopService.create(args.payload);
+      await this.shopService.create(ShopFormMapper.toCreateInput(args.payload));
     }
 
-    await this.revalidateService.revalidate();
-    await this.navigateService.close();
+    await this.navigateService.to(ShopsRoute, { revalidate: true });
   }
 
   async close() {

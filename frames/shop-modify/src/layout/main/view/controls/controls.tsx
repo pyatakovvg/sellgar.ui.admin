@@ -1,6 +1,5 @@
 import { useController, useSubmit } from '@sellgar/app/react';
 import { Button } from '@sellgar/kit';
-
 import React from 'react';
 
 import { SHOP_MODIFY_FORM_ID } from '../../../../constants/shop-modify.constants.ts';
@@ -11,7 +10,6 @@ import s from './default.module.scss';
 
 export const Controls: React.FC = () => {
   const controller = useController(ShopModifyControllerInterface);
-
   const submit = useSubmit(ShopModifyControllerInterface);
 
   return (

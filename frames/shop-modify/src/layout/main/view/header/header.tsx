@@ -11,7 +11,7 @@ export const Header: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Typography size={'body-m'} weight={'medium'}>
-        <p className={s.label}>{shop ? 'Редактировать магазин' : 'Новый магазин'}</p>
+        <p className={s.label}>{shop ? `Редактировать: ${shop.shop.name}` : 'Новый магазин'}</p>
       </Typography>
       <Drawer.Close />
     </div>

@@ -1,7 +1,18 @@
-import { Expose } from 'class-transformer';
-import { IsDateString, IsEnum, IsNumber, IsString, IsUUID } from 'class-validator';
+import { Expose, Type } from 'class-transformer';
+import {
+  IsArray,
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 
-import { ShopStatus } from './shop-status.enum.ts';
+import { ShopAddressEntity } from './shop-address.entity.ts';
+import { ShopContactEntity } from './shop-contact.entity.ts';
+import { ShopLegalDetailsEntity } from './shop-legal-details.entity.ts';
 
 export class ShopEntity {
   @Expose()
@@ -9,7 +20,8 @@ export class ShopEntity {
   uuid: string;
 
   @Expose()
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   version: number;
 
   @Expose()
@@ -17,8 +29,22 @@ export class ShopEntity {
   name: string;
 
   @Expose()
-  @IsEnum(ShopStatus)
-  status: ShopStatus;
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => ShopLegalDetailsEntity)
+  legalDetails: ShopLegalDetailsEntity | null;
+
+  @Expose()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ShopContactEntity)
+  contacts: ShopContactEntity[];
+
+  @Expose()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ShopAddressEntity)
+  addresses: ShopAddressEntity[];
 
   @Expose()
   @IsDateString()

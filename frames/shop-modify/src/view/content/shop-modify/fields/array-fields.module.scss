@@ -1,0 +1,26 @@
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-12);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-16);
+  padding: var(--numbers-16);
+  border: 1px solid var(--border-base-divider);
+  border-radius: var(--radius-12);
+  background: var(--background-surface-neutral);
+}
+
+.rowHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--numbers-12);
+}
+
+.empty {
+  color: var(--text-base-secondary);
+}
