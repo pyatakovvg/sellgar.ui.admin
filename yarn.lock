@@ -3494,6 +3494,7 @@ __metadata:
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
     class-validator: "npm:0.15.1"
+    framer-motion: "npm:13.4.4"
     react: "npm:19.3.0"
     react-dom: "npm:19.3.0"
     react-hook-form: "npm:7.88.0"

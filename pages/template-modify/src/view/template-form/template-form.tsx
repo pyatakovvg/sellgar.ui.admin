@@ -6,7 +6,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { TemplateModifyControllerInterface } from '../../classes/controller/template-modify-controller.interface.ts';
 import type { TemplateFormInput } from '../../classes/controller/input/template-form.input.ts';
-import { TemplateFields } from './template-fields.tsx';
+import { TemplateFields } from './template-fields';
 
 import s from './template-form.module.scss';
 
