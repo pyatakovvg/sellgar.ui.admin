@@ -1,7 +1,7 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  flex: 1 0;
+  flex: 1;
   align-items: center;
   justify-content: center;
   padding: var(--numbers-24);
@@ -28,7 +28,8 @@
 .content {
   display: flex;
   flex-direction: column;
-  flex: 0 0 auto;
+  flex: 1 0 auto;
+  width: 100%;
   overflow: auto;
 }
 
