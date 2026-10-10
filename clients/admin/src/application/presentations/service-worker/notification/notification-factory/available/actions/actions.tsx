@@ -9,11 +9,11 @@ export const AvailableActions: React.FC = () => {
 
   return (
     <div className={s.wrapper}>
-      <Button size="xs" style="secondary" onClick={notification.remindLater}>
-        Напомнить через 15 минут
-      </Button>
       <Button size="xs" target="info" onClick={() => void notification.update()}>
         Обновить сейчас
+      </Button>
+      <Button size="xs" style="tertiary" onClick={notification.remindLater}>
+        Напомнить через 15 минут
       </Button>
     </div>
   );

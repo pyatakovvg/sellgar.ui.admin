@@ -2100,7 +2100,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@feature/service-worker@npm:0.0.1, @feature/service-worker@workspace:features/service-worker":
+"@feature/service-worker@npm:0.0.1, @feature/service-worker@workspace:*, @feature/service-worker@workspace:features/service-worker":
   version: 0.0.0-use.local
   resolution: "@feature/service-worker@workspace:features/service-worker"
   dependencies:
@@ -2108,8 +2108,9 @@ __metadata:
     mobx: "npm:6.16.1"
     mobx-react: "npm:9.2.2"
     react: "npm:19.3.0"
+    vite-plugin-pwa: "npm:2.0.0"
   peerDependencies:
-    vite-plugin-pwa: 2.0.0
+    vite: ^8.3.4
   languageName: unknown
   linkType: soft
 
@@ -10304,6 +10305,7 @@ __metadata:
   resolution: "root@workspace:."
   dependencies:
     "@eslint/js": "npm:10.0.1"
+    "@feature/service-worker": "workspace:*"
     "@testing-library/dom": "npm:10.4.2"
     "@testing-library/jest-dom": "npm:7.0.1"
     "@testing-library/react": "npm:16.3.3"
@@ -10325,6 +10327,7 @@ __metadata:
     stylelint-config-prettier: "npm:9.0.5"
     stylelint-prettier: "npm:5.0.3"
     typescript: "npm:6.0.3"
+    vite: "npm:8.3.4"
     vitest: "npm:5.0.3"
   languageName: unknown
   linkType: soft

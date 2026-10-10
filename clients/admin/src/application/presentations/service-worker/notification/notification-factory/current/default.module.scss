@@ -1,4 +1,6 @@
 .controls {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: row;
+  flex: 1;
+  justify-content: flex-start;
 }

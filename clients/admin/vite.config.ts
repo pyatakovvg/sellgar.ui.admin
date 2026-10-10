@@ -1,5 +1,6 @@
+import { serviceWorker } from '@feature/service-worker/vite';
+
 import { defineConfig } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
 import reactSwc from '@vitejs/plugin-react-swc';
 
 function createCodeSplittingGroups(mapping: Record<string, string[]>) {
@@ -11,9 +12,6 @@ function createCodeSplittingGroups(mapping: Record<string, string[]>) {
     priority: entries.length - index,
   }));
 }
-
-const ONE_DAY = 60 * 60 * 24;
-const MAXIMUM_CACHE_FILE_SIZE = 10 * 1024 * 1024;
 
 export default defineConfig({
   cacheDir: '/tmp/.vite',
@@ -50,13 +48,7 @@ export default defineConfig({
       plugins: [],
       tsDecorators: true,
     }),
-    VitePWA({
-      minify: true,
-      registerType: 'prompt',
-      devOptions: {
-        enabled: true,
-        type: 'module',
-      },
+    serviceWorker({
       manifest: {
         id: '/terminals-management',
         lang: 'ru',
@@ -66,43 +58,6 @@ export default defineConfig({
         display: 'fullscreen',
         background_color: '#ffffff',
         start_url: '.',
-      },
-      workbox: {
-        skipWaiting: false,
-        clientsClaim: false,
-        cleanupOutdatedCaches: true,
-        globIgnores: ['**/config.js'],
-        maximumFileSizeToCacheInBytes: MAXIMUM_CACHE_FILE_SIZE,
-        runtimeCaching: [
-          {
-            urlPattern: /.*\.(ico|png|svg|webp|webv)/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'static-images-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: ONE_DAY,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-          {
-            urlPattern: /.*\.(ttf|woff|woff2|eot)/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'static-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: ONE_DAY * 365,
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-        ],
       },
     }),
   ],

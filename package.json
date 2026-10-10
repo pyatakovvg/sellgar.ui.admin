@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@feature/service-worker": "workspace:*",
     "@testing-library/dom": "10.4.2",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.3",
@@ -35,6 +36,7 @@
     "stylelint-config-prettier": "9.0.5",
     "stylelint-prettier": "5.0.3",
     "typescript": "6.0.3",
+    "vite": "8.3.4",
     "vitest": "5.0.3"
   },
   "resolutions": {

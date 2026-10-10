@@ -13,6 +13,8 @@
 - Initializers приложения: `src/application/initializers`.
 - Application-level presentations: `src/application/presentations`.
 - Подключение `@feature/service-worker` через `app.features`.
+- Подключение пресета `@feature/service-worker/vite` в `vite.config.ts`; правила
+  регистрации, активации и кеширования принадлежат фиче. Manifest и иконки — приложению.
 - Глобальные стили: `src/styles/index.css`.
 
 ## Правила

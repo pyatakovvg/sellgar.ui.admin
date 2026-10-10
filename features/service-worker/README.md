@@ -26,8 +26,49 @@ app.features([
 
 Фича импортирует `registerSW` из `virtual:pwa-register` самостоятельно. Адаптер
 регистрации, отдельный initializer и React-компонент в bootstrap не нужны.
-Существующий `VitePWA` в приложении создаёт virtual module и `sw.js`; его
-конфигурация не входит в пакет фичи. Пресета для сборщика нет.
+Пресет `@feature/service-worker/vite` создаёт virtual module и `sw.js`.
+Runtime и сборщик используют отдельные входы одного пакета; вход `/vite`
+не импортирует React, DI и presentation фичи.
+
+## Подключение Vite
+
+```ts
+import { defineConfig } from 'vite';
+import { serviceWorker } from '@feature/service-worker/vite';
+
+export default defineConfig({
+  plugins: [
+    serviceWorker({
+      manifest: {
+        id: '/sellgar-admin',
+        name: 'Sellgar Admin',
+        short_name: 'Sellgar',
+        lang: 'ru',
+      },
+    }),
+  ],
+});
+```
+
+Пресет владеет `generateSW`, регистрацией через virtual module (`injectRegister: false`),
+`prompt`, `skipWaiting: false`, `clientsClaim: false`, dev-регистрацией и очисткой
+старого кеша. `base`, `root`, `publicDir` и каталог сборки берутся из Vite.
+Регистрацию и активацию worker по-прежнему выполняет runtime фичи.
+
+Приложение передаёт `manifest`, опциональные `includeAssets`, дополнительные
+`runtimeCaching` и `buildId`. Без `manifest` генерируется только Service Worker.
+Иконки manifest берутся из `publicDir` приложения. Генератор иконок и исходные
+изображения остаются в приложении.
+
+Стандартные правила кешируют изображения на сутки и шрифты на год, максимум
+по 10 записей. Правила приложения проверяются раньше стандартных правил.
+Максимальный размер файла precache — 10 MiB; `config.js` исключён из precache.
+
+Пресет определяет `import.meta.env.VITE_APP_BUILD_ID`, который использует
+`ReloadService`: сначала явный `buildId`, затем `VITE_APP_BUILD_ID` из среды Vite
+с учётом `mode` и `envDir`, затем новый UUID для каждой сборки. Для dev без
+заданного значения используется `development`. Если идентификатор передаёт CI,
+он должен меняться между релизами.
 
 В Admin `devOptions.enabled: true`: регистрация работает и при обычном запуске
 `yarn dev:admin_ui`, без отдельного флага среды. После успешной регистрации
@@ -47,6 +88,10 @@ Notification layer приложения и внешняя SW view Admin испо
 - `classes/service/reload` — reload marker и проверка идентификатора сборки.
 - `classes/store/update` — наблюдаемый статус без таймеров и побочных эффектов.
 - `classes/controller/update` — пользовательские действия notification view.
+- `vite/index.ts` — отдельный публичный фасад для сборщика.
+- `vite/service-worker.ts` — композиция build plugin и `VitePWA` с правилами фичи.
+- `vite/service-worker-build.plugin.ts` — передача идентификатора сборки в runtime.
+- `vite/runtime-caching.ts` — стандартные правила кеширования.
 
 Внешнее представление Admin находится в
 `clients/admin/src/application/presentations/service-worker/notification`;
@@ -78,9 +123,13 @@ SW сохраняется независимо от lifecycle приложени
 ```bash
 ./node_modules/.bin/vitest run features/service-worker
 ./node_modules/.bin/tsc --noEmit -p features/service-worker/tsconfig.json
+./node_modules/.bin/tsc --noEmit -p features/service-worker/tsconfig.vite.json
 yarn build:admin_ui
 ```
 
 Тесты проверяют регистрацию, polling, напоминание, повторные действия, activation,
 timeout, замену worker, reload verification и завершение приложения.
+Интеграционные тесты `/vite` выполняют реальные сборки: проверяют генерацию worker,
+manifest и virtual registration, передачу `base`, исключение `config.js`, порядок
+правил кеша, смену build ID и env-конфигурацию.
 Исторический аудит прежней реализации находится в `docs/service-worker.audit.md`.
