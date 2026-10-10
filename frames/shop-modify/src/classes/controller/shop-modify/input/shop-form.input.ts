@@ -14,7 +14,8 @@ export interface ShopAddressFormInput {
 }
 
 export interface ShopFormInput {
-  version?: number;
+  uuid: string;
+  version: number;
   name: string;
   legalForm: ShopLegalForm;
   legalName: string;

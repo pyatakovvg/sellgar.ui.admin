@@ -12,7 +12,7 @@
 - Auth policies маршрутов: `src/application/policies`.
 - Initializers приложения: `src/application/initializers`.
 - Application-level presentations: `src/application/presentations`.
-- UI service worker: `src/sw`.
+- Подключение `@feature/service-worker` через `app.features`.
 - Глобальные стили: `src/styles/index.css`.
 
 ## Правила

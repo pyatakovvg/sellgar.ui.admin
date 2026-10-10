@@ -15,13 +15,3 @@ body {
   overflow: hidden;
   z-index: 0;
 }
-
-#sw {
-  position: fixed;
-  right: var(--numbers-24);
-  bottom: var(--numbers-24);
-  display: flex;
-  flex-direction: column;
-  flex: 1 0;
-  z-index: 90;
-}

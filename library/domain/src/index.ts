@@ -102,6 +102,7 @@ export type {
   UpdateUnitInput,
   UpdateUserInput,
   UpdateVariantInput,
+  ShopAddressEntity,
   WriteOffOfferInventoryInput,
 } from './classes/index.ts';
 

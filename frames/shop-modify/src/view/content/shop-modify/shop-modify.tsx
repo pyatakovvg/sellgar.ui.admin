@@ -9,7 +9,10 @@ import { ShopFormMapper } from '../../../classes/controller/shop-modify/mapper/s
 import type { ShopFormInput } from '../../../classes/controller/shop-modify/input/shop-form.input.ts';
 import { SHOP_MODIFY_FORM_ID } from '../../../constants/shop-modify.constants.ts';
 
+import { Base } from './base';
+import { Addresses } from './addresses';
 import { Fields } from './fields';
+
 import { schema } from './form.schema.ts';
 
 import s from './default.module.scss';
@@ -20,7 +23,7 @@ export const ShopModify: React.FC = () => {
 
   const methods = useForm<ShopFormInput>({
     mode: 'onChange',
-    defaultValues: ShopFormMapper.fromEntity(data?.shop),
+    defaultValues: ShopFormMapper.fromEntity(data),
     resolver: yupResolver(schema),
   });
 
@@ -29,10 +32,12 @@ export const ShopModify: React.FC = () => {
   });
 
   return (
-    <FormProvider {...methods}>
-      <form id={SHOP_MODIFY_FORM_ID} className={s.wrapper} onSubmit={handleSubmit}>
+    <form id={SHOP_MODIFY_FORM_ID} className={s.wrapper} onSubmit={handleSubmit}>
+      <FormProvider {...methods}>
+        <Base />
+        <Addresses />
         <Fields inProcess={submit.inProcess} />
-      </form>
-    </FormProvider>
+      </FormProvider>
+    </form>
   );
 };

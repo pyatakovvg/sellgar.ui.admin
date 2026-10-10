@@ -11,7 +11,6 @@ interface Props {
 
 export const Fields: React.FC<Props> = ({ inProcess }) => (
   <>
-    <GeneralFields disabled={inProcess} />
     <LegalFields disabled={inProcess} />
     <ContactFields disabled={inProcess} />
     <AddressFields disabled={inProcess} />

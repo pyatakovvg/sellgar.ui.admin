@@ -20,16 +20,14 @@ export default defineConfig({
   build: {
     modulePreload: false,
     outDir: 'build',
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 4000,
     sourcemap: process.env.SOURCE_MAP === 'true',
     rolldownOptions: {
       output: {
+        keepNames: true,
         codeSplitting: {
           groups: createCodeSplittingGroups({
-            'react.vendor': ['react', 'react-dom'],
-            'app.vendor': ['@sellgar/app'],
-            'domain.vendor': ['@library/domain'],
-            'kit.vendor': ['@sellgar/kit'],
+            'react.vendor': ['react', 'react-dom', 'react-router'],
           }),
         },
       },
@@ -49,6 +47,7 @@ export default defineConfig({
   },
   plugins: [
     reactSwc({
+      plugins: [],
       tsDecorators: true,
     }),
     VitePWA({
@@ -72,10 +71,11 @@ export default defineConfig({
         skipWaiting: false,
         clientsClaim: false,
         cleanupOutdatedCaches: true,
+        globIgnores: ['**/config.js'],
         maximumFileSizeToCacheInBytes: MAXIMUM_CACHE_FILE_SIZE,
         runtimeCaching: [
           {
-            urlPattern: /.*\.(ico|png|svg|webp|webm)/i,
+            urlPattern: /.*\.(ico|png|svg|webp|webv)/i,
             handler: 'CacheFirst',
             options: {
               cacheName: 'static-images-cache',

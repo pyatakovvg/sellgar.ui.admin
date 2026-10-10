@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import { createWebRouterBridge } from '@sellgar/app/react';
 
 import { AdminApplication } from './application';
-import { RegisterAndUpdateServiceWorker } from './sw';
 
 const app = new AdminApplication({
   routerBridge: createWebRouterBridge({
@@ -19,7 +18,6 @@ const root = ReactDOM.createRoot(document.querySelector('#root')!);
 
 root.render(
   <React.StrictMode>
-    <RegisterAndUpdateServiceWorker />
     <AppView />
   </React.StrictMode>,
 );

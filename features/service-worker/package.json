@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@feature/service-worker",
+  "version": "0.0.1",
+  "description": "Application feature для обновления Service Worker",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@sellgar/app": "workspace:*",
+    "mobx": "6.16.1",
+    "mobx-react": "9.2.2",
+    "react": "19.3.0"
+  },
+  "peerDependencies": {
+    "vite-plugin-pwa": "2.0.0"
+  }
+}

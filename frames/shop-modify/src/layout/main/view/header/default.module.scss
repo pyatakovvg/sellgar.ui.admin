@@ -7,6 +7,23 @@
   padding: var(--numbers-16) var(--numbers-24);
 }
 
+.content {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0 auto;
+  gap: var(--numbers-16);
+}
+
+.back {
+  font-size: var(--numbers-24);
+  color: var(--icon-base-secondary);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--icon-base-primary);
+  }
+}
+
 .label {
   color: var(--text-base-primary);
 }

@@ -47,6 +47,7 @@ export {
   ShopEntity,
   ShopLegalForm,
   ShopResultEntity,
+  ShopAddressEntity,
   ShopServiceInterface,
 } from './shop/index.ts';
 export type { CreateShopInput, ShopQueryInput, UpdateShopInput } from './shop/index.ts';

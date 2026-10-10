@@ -1,0 +1,21 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--numbers-24);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--numbers-16);
+}
+
+.label {
+  color: var(--text-base-primary);
+}
+
+.value {
+  color: var(--text-base-secondary);
+}

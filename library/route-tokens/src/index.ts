@@ -13,7 +13,10 @@ export { CategoriesRoute } from './screen/categories.route-token.ts';
 export { UnitsRoute } from './screen/units.route-token.ts';
 export { PropertiesRoute } from './screen/properties.route-token.ts';
 
-export { ShopCreateRoute, ShopModifyRoute } from './frame/shop-modify.route-token.ts';
+export { ShopCreateRoute } from './frame/shop/shop-create.token.ts';
+export { ShopReviewRoute } from './frame/shop/shop-review.token.ts';
+export { ShopModifyRoute } from './frame/shop/shop-modify.token.ts';
+
 export { StoreCreateRoute, StoreModifyRoute } from './frame/store-modify.route-token.ts';
 export { StoreInventoryRoute } from './frame/store-inventory.route-token.ts';
 export { BrandCreateRoute, BrandModifyRoute } from './frame/brand-modify.route-token.ts';

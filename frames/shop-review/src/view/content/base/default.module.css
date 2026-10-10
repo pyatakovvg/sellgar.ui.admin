@@ -1,0 +1,9 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  text-align: center;
+  padding: var(--numbers-24);
+  border-radius: var(--measurements-radius-lg);
+  background: var(--background-surface-neutral);
+}

@@ -1,11 +1,13 @@
 import { ShopServiceInterface } from '@library/domain';
-import { ShopsRoute } from '@library/route-tokens';
-
-import { Controller, Inject } from '@sellgar/app';
+import * as Tokens from '@library/route-tokens';
+import { Controller, type ControllerArgs, Inject, type WithParams, type WithPayload } from '@sellgar/app';
 import { NavigateServiceInterface } from '@sellgar/app';
 
 import { ShopModifyControllerInterface } from './shop-modify-controller.interface.ts';
 import { ShopFormMapper } from './mapper/shop-form.mapper.ts';
+import { ShopModifyFrameParams } from '../../params/frame.params.ts';
+
+import type { ShopFormInput } from './input/shop-form.input.ts';
 
 @Controller()
 export class ShopModifyController implements ShopModifyControllerInterface {
@@ -14,25 +16,21 @@ export class ShopModifyController implements ShopModifyControllerInterface {
     @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
   ) {}
 
-  async loader(args: Parameters<ShopModifyControllerInterface['loader']>[0]) {
+  async loader(args: ControllerArgs<WithParams<ShopModifyFrameParams>>) {
     if (!args.params.uuid) {
-      return void 0;
+      throw new Error('Missing uuid');
     }
 
-    return { shop: await this.shopService.findByUuid(args.params.uuid) };
+    return await this.shopService.findByUuid(args.params.uuid);
   }
 
-  async action(args: Parameters<ShopModifyControllerInterface['action']>[0]) {
-    if (args.params.uuid) {
-      await this.shopService.update(args.params.uuid, ShopFormMapper.toUpdateInput(args.payload));
-    } else {
-      await this.shopService.create(ShopFormMapper.toCreateInput(args.payload));
-    }
+  async action(args: ControllerArgs<WithPayload<ShopFormInput>>) {
+    await this.shopService.update(args.payload.uuid, ShopFormMapper.toUpdateInput(args.payload));
 
-    await this.navigateService.to(ShopsRoute, { revalidate: true });
+    await this.navigateService.to(Tokens.ShopReviewRoute, { params: { uuid: args.payload.uuid }, revalidate: true });
   }
 
-  async close() {
-    await this.navigateService.close();
+  async toReview(uuid: string) {
+    await this.navigateService.to(Tokens.ShopReviewRoute, { params: { uuid } });
   }
 }

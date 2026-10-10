@@ -4,6 +4,7 @@ export { ShopLegalForm } from './domain/shop-legal-form.enum.ts';
 export { ShopContactType } from './domain/shop-contact-type.enum.ts';
 export { ShopContactPurpose } from './domain/shop-contact-purpose.enum.ts';
 export { ShopAddressType } from './domain/shop-address-type.enum.ts';
+export { ShopAddressEntity } from './domain/shop-address.entity.ts';
 export { ShopServiceInterface } from './application/shop-service.interface.ts';
 export type { CreateShopInput } from './data/gateway/input/create-shop.input.ts';
 export type { ShopQueryInput } from './data/gateway/input/shop-query.input.ts';

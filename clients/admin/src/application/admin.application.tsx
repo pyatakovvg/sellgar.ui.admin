@@ -3,6 +3,7 @@ import { Application, UserRequestFeature, UserRequestPresentation } from '@sellg
 import type { ApplicationConfiguratorInterface } from '@sellgar/app/react';
 
 import { MainLayout } from '@layout/main';
+import { ServiceWorkerFeature, ServiceWorkerPresentation } from '@feature/service-worker';
 
 import { Exception, Failed } from './components/exception';
 import { Loading } from './components/loading';
@@ -11,6 +12,7 @@ import { Splash } from './components/splash';
 
 import { AdminBindings } from './bindings';
 import { ResolveAuthStateInitializer } from './initializers';
+import { ServiceWorkerNotificationView } from './presentations/service-worker';
 import { AlertUserRequestView } from './presentations/user-request';
 import { createAdminRouter } from './routes';
 import { DrawerShell } from './shells/drawer';
@@ -29,6 +31,11 @@ export class AdminApplication extends Application {
     app.layouts([MainLayout]);
 
     app.features([
+      ServiceWorkerFeature.configure({
+        presentation: ServiceWorkerPresentation.define((registry) => {
+          registry.notification(ServiceWorkerNotificationView);
+        }),
+      }),
       UserRequestFeature.configure({
         presentation: UserRequestPresentation.define((registry) => {
           registry.alert(AlertUserRequestView);

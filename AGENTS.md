@@ -16,11 +16,11 @@
 ## Входные точки
 
 - `clients/admin/src/main.tsx` - глобальные стили и bootstrap.
-- `clients/admin/src/bootstrap.tsx` - создание `AdminApplication`, React root, service worker.
+- `clients/admin/src/bootstrap.tsx` - создание `AdminApplication` и React root.
 - `clients/admin/src/application/admin.application.tsx` - application-wide components, shell, initializers и features.
 - `clients/admin/src/application/routes` - route graph и nested routing.
 - `clients/admin/src/application/bindings/admin.bindings.ts` - host-level bindings.
-- `clients/admin/src/sw/service-worker.tsx` - UI обновления service worker.
+- `features/service-worker` - application feature регистрации и обновления service worker.
 - `clients/admin/src/styles/index.css` - глобальные стили.
 
 ## Роутинг
@@ -34,6 +34,7 @@
 ## Пакеты
 
 - `clients/admin` - host и composition root. Не складывать сюда feature logic.
+- `features/*` - application features с именами `@feature/*`, подключаемые через `app.features`.
 - `layouts/*` - layout-пакеты.
 - `pages/*` - route-level feature pages.
 - `frames/*` - цельные nested drawer workflows с собственными bindings/controller/view.

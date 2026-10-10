@@ -1,20 +1,26 @@
 import { Drawer, Typography } from '@sellgar/kit';
-import { useLoaderData } from '@sellgar/app/react';
+import { ArrowLeftLineIcon } from '@sellgar/kit/icons';
+import { useController, useLoaderData } from '@sellgar/app/react';
 
 import React from 'react';
+
+import { ShopModifyControllerInterface } from '../../../../classes/controller/shop-modify/shop-modify-controller.interface.ts';
 
 import s from './default.module.scss';
 
 export const Header: React.FC = () => {
-  const shop = useLoaderData(ShopModifyControllerInterface);
+  const data = useLoaderData(ShopModifyControllerInterface);
+  const controller = useController(ShopModifyControllerInterface);
 
   return (
     <div className={s.wrapper}>
-      <Typography size={'body-m'} weight={'medium'}>
-        <p className={s.label}>{shop ? `Редактировать: ${shop.shop.name}` : 'Новый магазин'}</p>
-      </Typography>
+      <div className={s.content}>
+        <ArrowLeftLineIcon className={s.back} onClick={() => controller.toReview(data.uuid)} />
+        <Typography size={'body-m'} weight={'medium'}>
+          <p className={s.label}>Редактирование</p>
+        </Typography>
+      </div>
       <Drawer.Close />
     </div>
   );
 };
-import { ShopModifyControllerInterface } from '../../../../classes/controller/shop-modify/shop-modify-controller.interface.ts';
