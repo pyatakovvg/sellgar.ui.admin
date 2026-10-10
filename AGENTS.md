@@ -7,7 +7,7 @@
 ## Кратко
 
 - Монорепа Yarn workspaces, основной клиент: `clients/admin` (Vite + React 19).
-- Runtime приложения: `@sellgar/app`; DI bindings лежат рядом с application/pages/frames/widgets.
+- Runtime приложения: `@sellgar/app`; DI bindings лежат рядом с application/modules/frames/widgets.
 - Route tokens принадлежат отдельному пакету `@library/route-tokens`.
 - UI kit: `@sellgar/kit`; иконки брать из `@sellgar/kit/icons`, не из font-class API.
 - Домен и HTTP: `@library/domain`.
@@ -36,11 +36,11 @@
 - `clients/admin` - host и composition root. Не складывать сюда feature logic.
 - `features/*` - application features с именами `@feature/*`, подключаемые через `app.features`.
 - `layouts/*` - layout-пакеты.
-- `pages/*` - route-level feature pages.
+- `modules/*` - route-level feature modules.
 - `frames/*` - цельные nested drawer workflows с собственными bindings/controller/view.
 - `widgets/*` - встраиваемые reusable widgets.
-- `library/*` - общие слои. `library/design` не должен зависеть от domain/pages/widgets.
-- `library/provider` - reusable singleton providers и concrete realtime Hub adapters.
+- `library/*` - общие слои. `library/design` не должен зависеть от domain/modules/widgets.
+- `providers/*` - самостоятельные runtime provider packages с именами `@provider/*`, собственными bindings и concrete realtime Hub adapters.
 - `library/socket-io` - demand-driven Socket.IO connections без domain-specific контрактов.
 - `library/sellgar.kit.ui` - nested submodule UI kit; его commit и gitlink admin UI фиксируются раздельно.
 - `library/sellgar.orm.ui` - nested submodule ORM UI; его commit и gitlink admin UI фиксируются раздельно.
@@ -59,7 +59,7 @@
 ## Runtime правила
 
 - Pages используют `@Module` и `@UseBindings`.
-- Frames остаются feature-пакетами `frames/*`, но runtime-декларация у них единая с pages: `@Module` и
+- Frames остаются feature-пакетами `frames/*`, но runtime-декларация у них единая с modules: `@Module` и
   `@UseBindings`; address и shell задаются route graph/application routing.
 - Route identifiers приходят в `ControllerArgs<WithParams<...>>['params']`; тип выводить из token через `RouteParams<typeof Token>`.
 - Navigation выполнять через `useNavigate()`/`NavigateServiceInterface` и route token, без строковых URL.

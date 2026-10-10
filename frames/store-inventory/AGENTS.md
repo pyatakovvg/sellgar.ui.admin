@@ -8,7 +8,7 @@
 
 - Route token: `StoreInventoryRoute`.
 - Shell: общий application-level Drawer.
-- Открывается из вложенной таблицы offer-ов на странице `@page/store` через tokenized navigation.
+- Открывается из вложенной таблицы offer-ов на странице `@module/store` через tokenized navigation.
 
 ## Правила
 

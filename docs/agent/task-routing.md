@@ -15,7 +15,7 @@
 
 ## Route screen
 
-Работать в `pages/<feature>`.
+Работать в `modules/<feature>`.
 
 Примеры:
 
@@ -51,6 +51,8 @@
 
 ## Общие UI, domain и runtime
 
+- `providers/*` - самостоятельные runtime provider packages `@provider/*`, включая
+  подписки на realtime изменения товаров и складских позиций.
 - `library/design` - только visual shared wrappers.
 - `library/domain` - entities, repositories, API clients и HTTP helpers.
 - `library/sellgar.app.ui` - runtime changes.

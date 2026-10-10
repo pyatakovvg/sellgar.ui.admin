@@ -1,1 +1,1 @@
-export { NavigateLayout } from './navigate.layout.tsx';
+export { NavigateLayout } from './navigate.layout';

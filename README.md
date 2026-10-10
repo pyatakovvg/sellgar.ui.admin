@@ -23,9 +23,10 @@
 
 - `clients/admin` - host-приложение и composition root.
 - `layouts/*` - layout-пакеты приложения.
-- `pages/*` - route-level страницы.
+- `modules/*` - route-level страницы.
 - `frames/*` - вложенные route workflows, отображаемые через единый application-level `Drawer`.
 - `widgets/*` - переиспользуемые встраиваемые UI-блоки.
+- `providers/*` - отдельные пакеты `@provider/*` для переиспользуемых runtime providers.
 - `library/*` - общие библиотеки runtime/design/domain/message/push.
 - `utils/*` - общие утилиты без UI.
 

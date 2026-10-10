@@ -8,7 +8,7 @@
 
 - Frame package объявляет renderer-модуль через `@Module` и подключает bindings через `@UseBindings`.
 - Shell, controller, bindings, loader, requests и form view держать внутри frame-пакета.
-- Открывать frames из pages через `NavigateServiceInterface`/`useNavigate()` и route token.
+- Открывать frames из modules через `NavigateServiceInterface`/`useNavigate()` и route token.
 - Параметры loader/action читать из `args.params`; тип выводить через `RouteParams<typeof RouteToken>`.
 - Form state инициализировать из loader data при создании формы.
 - После успешного create/update закрывать nested Router через `navigate.close()`.

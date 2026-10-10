@@ -7,7 +7,7 @@
 ## Текущие пакеты
 
 - `layouts/app` - root app layout и providers.
-- `layouts/base` - базовый публичный shell.
+- `layouts/anonymous` - shell неавторизованной зоны.
 - `layouts/navigate` - authenticated shell, sidebar и область навигации.
 
 ## Правила

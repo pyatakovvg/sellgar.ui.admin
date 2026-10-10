@@ -7,5 +7,5 @@
 ## Правила
 
 - Browser push и service-worker helpers должны оставаться application-safe.
-- Не импортировать pages, frames, widgets или layouts.
+- Не импортировать modules, frames, widgets или layouts.
 - Регистрация и UI обновлений service worker принадлежат `@feature/service-worker` в `features/service-worker`.

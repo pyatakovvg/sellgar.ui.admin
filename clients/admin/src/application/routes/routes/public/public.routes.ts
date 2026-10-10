@@ -2,20 +2,20 @@ import * as Tokens from '@library/route-tokens';
 import { segments } from '@sellgar/app';
 import { Route, Router } from '@sellgar/app/react';
 
-import { BaseLayout } from '@layout/base';
+import { AnonymousLayout } from '@layout/anonymous';
 
 import { RequireAnonymousSessionPolicy } from '../../../policies';
 
 export const PublicRoutes = (): Route[] => {
   return [
     new Route({
-      layouts: [BaseLayout],
+      layouts: [AnonymousLayout],
       routes: [
         new Route({
           token: Tokens.SignInRoute,
           address: segments('sign-in'),
           canMatch: [RequireAnonymousSessionPolicy.configure().onFail(Router.redirectToSaved({ replace: true }))],
-          load: () => import('@page/sign-in'),
+          load: () => import('@module/sign-in'),
         }),
       ],
     }),

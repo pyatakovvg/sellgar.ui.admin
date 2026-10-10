@@ -20,7 +20,7 @@
 ## Правила
 
 - Не добавлять сюда feature UI и business logic.
-- Здесь только регистрируются pages и frames; реализация живет в `pages/*` или `frames/*`.
+- Здесь только регистрируются modules и frames; реализация живет в `modules/*` или `frames/*`.
 - Для routing, policies и application composition использовать primitives из `@sellgar/app`.
 - Host bindings ограничивать application-wide/domain infrastructure.
 - Recovery защищённой сессии при 401 принадлежит `RequestExecutor` из

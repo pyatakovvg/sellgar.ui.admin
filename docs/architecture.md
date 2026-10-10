@@ -28,26 +28,28 @@ Host не должен становиться местом для feature UI и�
 
 Публичная ветка:
 
-- `/sign-in` -> `@page/sign-in`, доступен только для anonymous session.
+- `/sign-in` -> `@module/sign-in`, доступен только для anonymous session.
 
 Приватная ветка под `NavigateLayout`:
 
-- `/` -> `@page/dashboard`;
-- `/shops` -> `@page/shop`;
-- `/products` -> `@page/products`;
-- `/products/create` -> `@page/product-modify`;
-- `/products/:uuid` -> `@page/product-modify`;
-- `/store` -> `@page/store` и nested routes `@frame/store-modify`/`@frame/store-inventory`;
+- `/` -> `@module/dashboard`;
+- `/shops` -> `@module/shops`;
+- `/products` -> `@module/products`;
+- `/products/create` -> `@module/product-modify`;
+- `/products/:uuid` -> `@module/product-modify`;
+- `/store` -> `@module/store` и nested routes `@frame/store-modify`/`@frame/store-inventory`;
 - `/brands`, `/categories`, `/units`, `/properties` -> list pages и nested create/edit frame routes.
 
 Все nested frame routes отображаются одним application-level `Drawer` shell. Отдельного Modal shell для frames нет.
 
 ## Границы пакетов
 
-- `pages/*` владеют route-level экранами и списками.
+- `modules/*` владеют route-level экранами и списками.
 - `frames/*` владеют nested drawer формами и их loader/mutation процессом.
 - `widgets/*` владеют маленькими reusable blocks, которые встраиваются в layout/page/frame.
 - `layouts/*` владеют общим каркасом экрана.
+- `providers/*` — отдельный слой runtime providers. Каждый provider — самостоятельный
+  пакет `@provider/*`; страницы подключают нужный пакет через `providers: [...]`.
 - `library/domain` владеет domain entities, repositories, API clients и HTTP helper.
 - `library/design` - shared UI wrappers только без domain imports.
 - `library/sellgar.app.ui` - локальный runtime package `@sellgar/app`.

@@ -8,7 +8,7 @@
 
 - Hash source: `brand`.
 - Shell: drawer.
-- Открывается из `@page/brands` через `useFrame(BrandModifyFrame)`.
+- Открывается из `@module/brands` через `useFrame(BrandModifyFrame)`.
 
 ## Правила
 

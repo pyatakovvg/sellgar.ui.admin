@@ -1553,21 +1553,24 @@ __metadata:
     "@frame/store-inventory": "npm:0.0.1"
     "@frame/store-modify": "npm:0.0.1"
     "@frame/unit-modify": "npm:0.0.1"
+    "@layout/anonymous": "npm:0.0.1"
     "@layout/navigate": "npm:0.0.1"
     "@library/design": "npm:0.0.1"
     "@library/push": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
+    "@module/brands": "npm:0.0.1"
+    "@module/categories": "npm:0.0.1"
+    "@module/dashboard": "npm:0.0.1"
+    "@module/product-modify": "npm:0.0.1"
+    "@module/products": "npm:0.0.1"
+    "@module/properties": "npm:0.0.1"
+    "@module/shops": "npm:0.0.1"
+    "@module/sign-in": "npm:0.0.1"
+    "@module/store": "npm:0.0.1"
+    "@module/template-modify": "npm:0.0.1"
+    "@module/templates": "npm:0.0.1"
+    "@module/units": "npm:0.0.1"
     "@originjs/vite-plugin-federation": "npm:1.4.1"
-    "@page/brands": "npm:0.0.1"
-    "@page/categories": "npm:0.0.1"
-    "@page/dashboard": "npm:0.0.1"
-    "@page/product-modify": "npm:0.0.1"
-    "@page/products": "npm:0.0.1"
-    "@page/properties": "npm:0.0.1"
-    "@page/shops": "npm:0.0.1"
-    "@page/sign-in": "npm:0.0.1"
-    "@page/store": "npm:0.0.1"
-    "@page/units": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
     "@types/node": "npm:26.6.4"
     "@types/react": "npm:19.3.0"
@@ -3185,9 +3188,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@layout/base@workspace:layouts/base":
+"@layout/anonymous@npm:0.0.1, @layout/anonymous@workspace:layouts/anonymous":
   version: 0.0.0-use.local
-  resolution: "@layout/base@workspace:layouts/base"
+  resolution: "@layout/anonymous@workspace:layouts/anonymous"
   dependencies:
     "@library/design": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
@@ -3287,17 +3290,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@library/provider@npm:0.0.1, @library/provider@workspace:library/provider":
-  version: 0.0.0-use.local
-  resolution: "@library/provider@workspace:library/provider"
-  dependencies:
-    "@library/domain": "npm:0.0.1"
-    "@library/socket-io": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    class-validator: "npm:0.15.1"
-  languageName: unknown
-  linkType: soft
-
 "@library/push@npm:0.0.1, @library/push@workspace:library/push":
   version: 0.0.0-use.local
   resolution: "@library/push@workspace:library/push"
@@ -3322,6 +3314,227 @@ __metadata:
     "@sellgar/app": "npm:0.0.1"
     class-validator: "npm:0.15.1"
     socket.io-client: "npm:4.8.4"
+  languageName: unknown
+  linkType: soft
+
+"@module/brands@npm:0.0.1, @module/brands@workspace:modules/brands":
+  version: 0.0.0-use.local
+  resolution: "@module/brands@workspace:modules/brands"
+  dependencies:
+    "@frame/brand-modify": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    class-transformer: "npm:0.5.1"
+    class-validator: "npm:0.15.1"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+    react-hook-form: "npm:7.89.0"
+  languageName: unknown
+  linkType: soft
+
+"@module/categories@npm:0.0.1, @module/categories@workspace:modules/categories":
+  version: 0.0.0-use.local
+  resolution: "@module/categories@workspace:modules/categories"
+  dependencies:
+    "@frame/category-modify": "npm:0.0.1"
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+  languageName: unknown
+  linkType: soft
+
+"@module/dashboard@npm:0.0.1, @module/dashboard@workspace:modules/dashboard":
+  version: 0.0.0-use.local
+  resolution: "@module/dashboard@workspace:modules/dashboard"
+  dependencies:
+    "@library/design": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+  languageName: unknown
+  linkType: soft
+
+"@module/product-modify@npm:0.0.1, @module/product-modify@workspace:modules/product-modify":
+  version: 0.0.0-use.local
+  resolution: "@module/product-modify@workspace:modules/product-modify"
+  dependencies:
+    "@hookform/resolvers": "npm:5.9.1"
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@provider/product-changes": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    class-transformer: "npm:0.5.1"
+    class-validator: "npm:0.15.1"
+    framer-motion: "npm:14.0.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+    react-hook-form: "npm:7.89.0"
+    yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
+"@module/products@npm:0.0.1, @module/products@workspace:modules/products":
+  version: 0.0.0-use.local
+  resolution: "@module/products@workspace:modules/products"
+  dependencies:
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@provider/product-changes": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+  languageName: unknown
+  linkType: soft
+
+"@module/properties@npm:0.0.1, @module/properties@workspace:modules/properties":
+  version: 0.0.0-use.local
+  resolution: "@module/properties@workspace:modules/properties"
+  dependencies:
+    "@frame/property-modify": "npm:0.0.1"
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+  languageName: unknown
+  linkType: soft
+
+"@module/shops@npm:0.0.1, @module/shops@workspace:modules/shops":
+  version: 0.0.0-use.local
+  resolution: "@module/shops@workspace:modules/shops"
+  dependencies:
+    "@frame/shop-modify": "npm:0.0.1"
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    class-transformer: "npm:0.5.1"
+    class-validator: "npm:0.15.1"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+    react-hook-form: "npm:7.89.0"
+  languageName: unknown
+  linkType: soft
+
+"@module/sign-in@npm:0.0.1, @module/sign-in@workspace:modules/sign-in":
+  version: 0.0.0-use.local
+  resolution: "@module/sign-in@workspace:modules/sign-in"
+  dependencies:
+    "@hookform/resolvers": "npm:5.9.1"
+    "@library/domain": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+    react-hook-form: "npm:7.89.0"
+    yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
+"@module/store@npm:0.0.1, @module/store@workspace:modules/store":
+  version: 0.0.0-use.local
+  resolution: "@module/store@workspace:modules/store"
+  dependencies:
+    "@frame/store-inventory": "npm:0.0.1"
+    "@frame/store-modify": "npm:0.0.1"
+    "@layout/navigate": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@provider/store-offer-changes": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    "@utils/format": "npm:0.0.1"
+    class-transformer: "npm:0.5.1"
+    class-validator: "npm:0.15.1"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+    react-hook-form: "npm:7.89.0"
+  languageName: unknown
+  linkType: soft
+
+"@module/template-modify@npm:0.0.1, @module/template-modify@workspace:modules/template-modify":
+  version: 0.0.0-use.local
+  resolution: "@module/template-modify@workspace:modules/template-modify"
+  dependencies:
+    "@hookform/resolvers": "npm:5.9.1"
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    class-transformer: "npm:0.5.1"
+    class-validator: "npm:0.15.1"
+    framer-motion: "npm:14.0.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+    react-hook-form: "npm:7.89.0"
+    yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
+"@module/templates@npm:0.0.1, @module/templates@workspace:modules/templates":
+  version: 0.0.0-use.local
+  resolution: "@module/templates@workspace:modules/templates"
+  dependencies:
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
+  languageName: unknown
+  linkType: soft
+
+"@module/units@npm:0.0.1, @module/units@workspace:modules/units":
+  version: 0.0.0-use.local
+  resolution: "@module/units@workspace:modules/units"
+  dependencies:
+    "@frame/unit-modify": "npm:0.0.1"
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.190"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
   languageName: unknown
   linkType: soft
 
@@ -3390,227 +3603,6 @@ __metadata:
   checksum: 10/b123d6c8ed40b683be9af3a976148d522c621421bbae2d5716d210cda7a858108daa4bad77450b780f63529f2c43bd00e4c179f5952ffb6abbaacebdc71e282f
   languageName: node
   linkType: hard
-
-"@page/brands@npm:0.0.1, @page/brands@workspace:pages/brands":
-  version: 0.0.0-use.local
-  resolution: "@page/brands@workspace:pages/brands"
-  dependencies:
-    "@frame/brand-modify": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@library/route-tokens": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    class-transformer: "npm:0.5.1"
-    class-validator: "npm:0.15.1"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-    react-hook-form: "npm:7.89.0"
-  languageName: unknown
-  linkType: soft
-
-"@page/categories@npm:0.0.1, @page/categories@workspace:pages/categories":
-  version: 0.0.0-use.local
-  resolution: "@page/categories@workspace:pages/categories"
-  dependencies:
-    "@frame/category-modify": "npm:0.0.1"
-    "@library/design": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@library/route-tokens": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-  languageName: unknown
-  linkType: soft
-
-"@page/dashboard@npm:0.0.1, @page/dashboard@workspace:pages/dashboard":
-  version: 0.0.0-use.local
-  resolution: "@page/dashboard@workspace:pages/dashboard"
-  dependencies:
-    "@library/design": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-  languageName: unknown
-  linkType: soft
-
-"@page/product-modify@npm:0.0.1, @page/product-modify@workspace:pages/product-modify":
-  version: 0.0.0-use.local
-  resolution: "@page/product-modify@workspace:pages/product-modify"
-  dependencies:
-    "@hookform/resolvers": "npm:5.9.1"
-    "@library/design": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@library/provider": "npm:0.0.1"
-    "@library/route-tokens": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    class-transformer: "npm:0.5.1"
-    class-validator: "npm:0.15.1"
-    framer-motion: "npm:14.0.0"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-    react-hook-form: "npm:7.89.0"
-    yup: "npm:1.7.1"
-  languageName: unknown
-  linkType: soft
-
-"@page/products@npm:0.0.1, @page/products@workspace:pages/products":
-  version: 0.0.0-use.local
-  resolution: "@page/products@workspace:pages/products"
-  dependencies:
-    "@library/design": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@library/provider": "npm:0.0.1"
-    "@library/route-tokens": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-  languageName: unknown
-  linkType: soft
-
-"@page/properties@npm:0.0.1, @page/properties@workspace:pages/properties":
-  version: 0.0.0-use.local
-  resolution: "@page/properties@workspace:pages/properties"
-  dependencies:
-    "@frame/property-modify": "npm:0.0.1"
-    "@library/design": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@library/route-tokens": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-  languageName: unknown
-  linkType: soft
-
-"@page/shops@npm:0.0.1, @page/shops@workspace:pages/shops":
-  version: 0.0.0-use.local
-  resolution: "@page/shops@workspace:pages/shops"
-  dependencies:
-    "@frame/shop-modify": "npm:0.0.1"
-    "@library/design": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@library/route-tokens": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    class-transformer: "npm:0.5.1"
-    class-validator: "npm:0.15.1"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-    react-hook-form: "npm:7.89.0"
-  languageName: unknown
-  linkType: soft
-
-"@page/sign-in@npm:0.0.1, @page/sign-in@workspace:pages/sign-in":
-  version: 0.0.0-use.local
-  resolution: "@page/sign-in@workspace:pages/sign-in"
-  dependencies:
-    "@hookform/resolvers": "npm:5.9.1"
-    "@library/domain": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-    react-hook-form: "npm:7.89.0"
-    yup: "npm:1.7.1"
-  languageName: unknown
-  linkType: soft
-
-"@page/store@npm:0.0.1, @page/store@workspace:pages/store":
-  version: 0.0.0-use.local
-  resolution: "@page/store@workspace:pages/store"
-  dependencies:
-    "@frame/store-inventory": "npm:0.0.1"
-    "@frame/store-modify": "npm:0.0.1"
-    "@layout/navigate": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@library/provider": "npm:0.0.1"
-    "@library/route-tokens": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    "@utils/format": "npm:0.0.1"
-    class-transformer: "npm:0.5.1"
-    class-validator: "npm:0.15.1"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-    react-hook-form: "npm:7.89.0"
-  languageName: unknown
-  linkType: soft
-
-"@page/template-modify@workspace:pages/template-modify":
-  version: 0.0.0-use.local
-  resolution: "@page/template-modify@workspace:pages/template-modify"
-  dependencies:
-    "@hookform/resolvers": "npm:5.9.1"
-    "@library/design": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@library/route-tokens": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    class-transformer: "npm:0.5.1"
-    class-validator: "npm:0.15.1"
-    framer-motion: "npm:14.0.0"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-    react-hook-form: "npm:7.89.0"
-    yup: "npm:1.7.1"
-  languageName: unknown
-  linkType: soft
-
-"@page/templates@workspace:pages/templates":
-  version: 0.0.0-use.local
-  resolution: "@page/templates@workspace:pages/templates"
-  dependencies:
-    "@library/design": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@library/route-tokens": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-  languageName: unknown
-  linkType: soft
-
-"@page/units@npm:0.0.1, @page/units@workspace:pages/units":
-  version: 0.0.0-use.local
-  resolution: "@page/units@workspace:pages/units"
-  dependencies:
-    "@frame/unit-modify": "npm:0.0.1"
-    "@library/design": "npm:0.0.1"
-    "@library/domain": "npm:0.0.1"
-    "@library/route-tokens": "npm:0.0.1"
-    "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
-    "@types/react": "npm:19.3.0"
-    "@types/react-dom": "npm:19.3.0"
-    react: "npm:19.3.0"
-    react-dom: "npm:19.3.0"
-  languageName: unknown
-  linkType: soft
 
 "@parcel/watcher-android-arm64@npm:2.5.6":
   version: 2.5.6
@@ -3776,6 +3768,32 @@ __metadata:
   checksum: 10/20db2f1cc5678ef71c01e8f0844818d7ebfbc1061752d62297bcb99cde3c9b12b23eadaffd0274b24b663118e2f35167d06cc9a527a83323cc77f2296b5d9582
   languageName: node
   linkType: hard
+
+"@provider/product-changes@npm:0.0.1, @provider/product-changes@workspace:providers/product-changes":
+  version: 0.0.0-use.local
+  resolution: "@provider/product-changes@workspace:providers/product-changes"
+  dependencies:
+    "@library/domain": "npm:0.0.1"
+    "@library/socket-io": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    class-transformer: "npm:0.5.1"
+    class-validator: "npm:0.15.1"
+    reflect-metadata: "npm:0.2.2"
+  languageName: unknown
+  linkType: soft
+
+"@provider/store-offer-changes@npm:0.0.1, @provider/store-offer-changes@workspace:providers/store-offer-changes":
+  version: 0.0.0-use.local
+  resolution: "@provider/store-offer-changes@workspace:providers/store-offer-changes"
+  dependencies:
+    "@library/domain": "npm:0.0.1"
+    "@library/socket-io": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    class-transformer: "npm:0.5.1"
+    class-validator: "npm:0.15.1"
+    reflect-metadata: "npm:0.2.2"
+  languageName: unknown
+  linkType: soft
 
 "@quansync/fs@npm:^1.0.0":
   version: 1.0.0

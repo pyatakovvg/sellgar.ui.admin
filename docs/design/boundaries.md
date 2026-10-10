@@ -8,7 +8,7 @@
 
 ## Pages
 
-`pages/*` владеют route screens. Page может открыть frame, но frame владеет своей form и mutations.
+`modules/*` владеют route screens. Page может открыть frame, но frame владеет своей form и mutations.
 
 ## Frames
 

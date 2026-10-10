@@ -15,7 +15,7 @@
 - Host bindings: `clients/admin/src/application/bindings/admin.bindings.ts`.
 - Sidebar: `layouts/navigate`.
 - Актуальные примеры frames: `frames/*`.
-- Актуальные примеры таблиц: `pages/brands`, `pages/categories`, `pages/products`, `pages/properties`.
+- Актуальные примеры таблиц: `modules/brands`, `modules/categories`, `modules/products`, `modules/properties`.
 
 ## Гигиена документации
 

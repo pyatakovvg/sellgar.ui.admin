@@ -8,7 +8,7 @@
 
 - Hash source: `category`.
 - Shell: drawer.
-- Открывается из `@page/categories` через `useFrame(CategoryModifyFrame)`.
+- Открывается из `@module/categories` через `useFrame(CategoryModifyFrame)`.
 
 ## Правила
 

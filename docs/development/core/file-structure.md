@@ -4,19 +4,19 @@
 
 - `clients/admin` - Vite application host.
 - `layouts/*` - layout workspaces.
-- `pages/*` - route-level page workspaces.
+- `modules/*` - route-level module workspaces.
 - `frames/*` - nested Drawer frame workspaces.
 - `widgets/*` - embedded widget workspaces.
 - `library/*` - shared libraries.
 - `utils/*` - utility packages.
 - `docs/*` - project и agent documentation.
 
-## Page-Пакет
+## Module-Пакет
 
 Типовая структура:
 
 ```text
-pages/<name>/
+modules/<name>/
   package.json
   AGENTS.md
   src/
@@ -28,7 +28,7 @@ pages/<name>/
     requests/
 ```
 
-Pages использовать для экранов, которые загружаются route.
+Modules использовать для экранов, которые загружаются route.
 
 ## Frame-Пакет
 

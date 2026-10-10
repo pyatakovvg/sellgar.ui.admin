@@ -16,6 +16,6 @@
 
 - Публичные exports держать в `src/index.ts` каждого пакета.
 - `library/design` должен оставаться domain-free.
-- Не импортировать pages, frames, widgets или layouts из libraries.
+- Не импортировать modules, frames, widgets или layouts из libraries.
 - `library/tiyn-app` менять только если меняется сам runtime contract.
 - Feature-specific поведение добавлять в owning page/frame/widget, а не в shared libraries.

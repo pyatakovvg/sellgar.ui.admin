@@ -13,3 +13,13 @@
 - Не добавлять page-specific loaders или mutations.
 - Theme и logout controls рендерить через `WidgetHost` с публичными tokens
   `ThemeWidget` и `LogoutWidget`.
+
+## Структура
+
+- `src/navigate.layout.ts` содержит только declaration и metadata.
+- `src/view/layout.view.tsx` выбирает отображение shell по размеру экрана.
+- `src/view/hooks` содержит локальный hook размера экрана.
+- `src/view/desktop/aside` разделяет профиль, навигацию и нижние действия.
+- Компонент пункта меню принадлежит `navigation/navigation-item`.
+- Desktop и tablet используют `Desktop`, mobile — `Mobile`.
+- Публичный фасад экспортирует только `NavigateLayout`.

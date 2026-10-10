@@ -6,7 +6,7 @@
 
 - `@client/admin`
 - `@layout/*`
-- `@page/*`
+- `@module/*`
 - `@frame/*`
 - `@widget/*`
 - `@library/*`

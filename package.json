@@ -46,9 +46,10 @@
     "clients/**/*",
     "helpers/*",
     "features/*",
+    "providers/*",
     "library/*",
     "frames/*",
-    "pages/**/*",
+    "modules/**/*",
     "utils/**/*",
     "widgets/**/*",
     "layouts/**/*"

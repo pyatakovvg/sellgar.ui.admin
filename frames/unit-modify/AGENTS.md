@@ -8,7 +8,7 @@
 
 - Hash source: `unit`.
 - Shell: drawer.
-- Открывается из `@page/units` через `useFrame(UnitModifyFrame)`.
+- Открывается из `@module/units` через `useFrame(UnitModifyFrame)`.
 
 ## Правила
 

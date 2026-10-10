@@ -8,7 +8,7 @@
 
 - Hash source: `store`.
 - Shell: drawer.
-- Открывается из `@page/store` через `useFrame(StoreModifyFrame)`.
+- Открывается из `@module/store` через `useFrame(StoreModifyFrame)`.
 
 ## Правила
 

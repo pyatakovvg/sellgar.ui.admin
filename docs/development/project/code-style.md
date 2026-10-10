@@ -16,7 +16,7 @@
 
 ## Именование
 
-- Page packages: `@page/<feature>`.
+- Module packages: `@module/<feature>`.
 - Frame packages: `@frame/<feature>-modify`.
 - Widget packages: `@widget/<name>`.
 - Controller interfaces заканчиваются на `ControllerInterface`.

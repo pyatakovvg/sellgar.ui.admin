@@ -7,8 +7,8 @@
 - `clients/admin/AGENTS.md` - правила composition root.
 - `layouts/AGENTS.md` - общие правила layouts.
 - `layouts/*/AGENTS.md` - правила конкретного layout package.
-- `pages/AGENTS.md` - общие правила pages.
-- `pages/*/AGENTS.md` - правила конкретного page package.
+- `modules/AGENTS.md` - общие правила modules.
+- `modules/*/AGENTS.md` - правила конкретного module package.
 - `frames/AGENTS.md` - общие правила frames.
 - `frames/*/AGENTS.md` - правила конкретного frame package.
 - `widgets/AGENTS.md` - общие правила widgets.

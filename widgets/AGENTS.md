@@ -12,7 +12,7 @@
 
 ## Правила
 
-- Widgets использовать для UI, который встраивается в pages/layouts/frames.
+- Widgets использовать для UI, который встраивается в modules/layouts/frames.
 - Widget controllers и bindings держать локально, если widget владеет behavior.
 - Runtime Widget, controllers, bindings, providers и hooks реализовывать через
   `@sellgar/app` и `@sellgar/app/react`.

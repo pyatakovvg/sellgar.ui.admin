@@ -8,7 +8,7 @@
 
 - Hash source: `property`.
 - Shell: drawer.
-- Открывается из `@page/properties` через `useFrame(PropertyModifyFrame)`.
+- Открывается из `@module/properties` через `useFrame(PropertyModifyFrame)`.
 
 ## Правила
 
