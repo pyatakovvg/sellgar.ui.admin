@@ -5,7 +5,8 @@ const ONE_DAY = 60 * 60 * 24;
 export function createRuntimeCaching(): NonNullable<VitePWAOptions['workbox']['runtimeCaching']> {
   return [
     {
-      urlPattern: /.*\.(ico|png|svg|webp|webv)/i,
+      urlPattern: ({ request, url }) =>
+        request.destination === 'image' && /\.(ico|png|svg|webp|webv)$/i.test(url.pathname),
       handler: 'CacheFirst',
       options: {
         cacheName: 'static-images-cache',
@@ -17,7 +18,7 @@ export function createRuntimeCaching(): NonNullable<VitePWAOptions['workbox']['r
       },
     },
     {
-      urlPattern: /.*\.(ttf|woff|woff2|eot)/i,
+      urlPattern: ({ request, url }) => request.destination === 'font' && /\.(ttf|woff|woff2|eot)$/i.test(url.pathname),
       handler: 'CacheFirst',
       options: {
         cacheName: 'static-fonts-cache',

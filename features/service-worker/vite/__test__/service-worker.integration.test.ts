@@ -4,7 +4,7 @@ import { mkdtemp, mkdir, readFile, readdir, rm, symlink, writeFile } from 'node:
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { build, resolveConfig } from 'vite';
+import { build, createServer, resolveConfig } from 'vite';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { serviceWorker, type ServiceWorkerViteOptions } from '@feature/service-worker/vite';
 
@@ -122,5 +122,31 @@ describe('Service Worker Vite integration', () => {
 
     expect(config.define?.['import.meta.env.VITE_APP_BUILD_ID']).toBe('"staging-release"');
     expect(config.plugins.some((plugin) => plugin.name === 'vite-plugin-pwa:dev-sw')).toBe(true);
+  });
+
+  it('в dev генерирует worker без перехвата исходников runtime-кешированием', async () => {
+    const server = await createServer({
+      root,
+      configFile: false,
+      envDir: false,
+      logLevel: 'silent',
+      plugins: [serviceWorker()],
+      server: { host: '127.0.0.1', port: 0 },
+    });
+
+    try {
+      await server.listen();
+      const address = server.httpServer?.address();
+      if (!address || typeof address === 'string') throw new Error('Не найден порт dev-сервера.');
+      const response = await fetch(`http://127.0.0.1:${address.port}/dev-sw.js?dev-sw`);
+      expect(response.status).toBe(200);
+      const worker = await response.text();
+      expect(worker).toContain('SKIP_WAITING');
+      expect(worker).not.toContain('static-images-cache');
+      expect(worker).not.toContain('static-fonts-cache');
+      expect(worker).not.toContain('CacheFirst');
+    } finally {
+      await server.close();
+    }
   });
 });

@@ -15,6 +15,7 @@ export function serviceWorker(options: ServiceWorkerViteOptions = {}): PluginOpt
       devOptions: {
         enabled: true,
         type: 'module',
+        disableRuntimeConfig: true,
       },
       manifest: options.manifest ?? false,
       includeAssets: options.includeAssets,
