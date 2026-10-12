@@ -3,10 +3,11 @@ import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
 
 import React from 'react';
+import { reactive } from '@sellgar/app/react';
 
 import s from './default.module.scss';
 
-export const Name: React.FC = () => {
+export const Name: React.FC = reactive(() => {
   const { data } = Kit.useCellData<UnitEntity>();
 
   return (
@@ -16,4 +17,4 @@ export const Name: React.FC = () => {
       </Typography>
     </div>
   );
-};
+});

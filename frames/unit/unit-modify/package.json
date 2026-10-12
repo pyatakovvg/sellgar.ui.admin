@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@frame/unit-modify",
+  "version": "0.0.1",
+  "description": "Создание и редактирование единицы измерения",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@hookform/resolvers": "5.9.1",
+    "@library/design": "0.0.1",
+    "@library/domain": "0.0.1",
+    "@library/route-tokens": "0.0.1",
+    "@sellgar/app": "0.0.1",
+    "@sellgar/kit": "0.0.1",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-hook-form": "7.89.0",
+    "yup": "1.7.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
+  }
+}

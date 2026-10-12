@@ -1,6 +1,8 @@
 import { Expose } from 'class-transformer';
-import { IsDateString, IsInt, IsString } from 'class-validator';
+import { IsDateString, IsInt, IsOptional, IsString } from 'class-validator';
+import { Entity } from '@sellgar/app';
 
+@Entity({ identity: 'code' })
 export class UnitEntity {
   @Expose()
   @IsString()
@@ -13,6 +15,11 @@ export class UnitEntity {
   @Expose()
   @IsString()
   symbol: string;
+
+  @Expose()
+  @IsOptional()
+  @IsString()
+  description: string | null;
 
   @Expose()
   @IsInt()

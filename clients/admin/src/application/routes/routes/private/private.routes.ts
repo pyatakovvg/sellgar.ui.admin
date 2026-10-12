@@ -6,6 +6,7 @@ import { NavigateLayout } from '@layout/navigate';
 
 import { ShopRouting } from './frames/shop/shop.routing.ts';
 import { BrandRouting } from './frames/brand/brand.routing.ts';
+import { UnitRouting } from './frames/unit/unit.routing.ts';
 
 import { RequireAuthenticatedSessionPolicy } from '../../../policies';
 
@@ -88,7 +89,7 @@ export const PrivateRoutes = (): Route[] => {
           token: Tokens.UnitsRoute,
           address: segments('units'),
           load: () => import('@module/units'),
-          routing: [createUnitRouting()],
+          routing: [UnitRouting],
         }),
         new Route({
           token: Tokens.PropertiesRoute,
@@ -139,17 +140,6 @@ const createCategoryRouting = (): Router => {
       token: Tokens.CategoryModifyRoute,
       address: segments('category', param('uuid')),
       load: () => import('@frame/category-modify'),
-    }),
-  ]);
-};
-
-const createUnitRouting = (): Router => {
-  return createModifyRouting([
-    new Route({ token: Tokens.UnitCreateRoute, address: segments('unit'), load: () => import('@frame/unit-modify') }),
-    new Route({
-      token: Tokens.UnitModifyRoute,
-      address: segments('unit', param('code')),
-      load: () => import('@frame/unit-modify'),
     }),
   ]);
 };
