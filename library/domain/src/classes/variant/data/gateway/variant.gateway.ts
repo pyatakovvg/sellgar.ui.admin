@@ -4,7 +4,7 @@ import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../../infrastructure/config/config.interface.ts';
 import { DeviceServiceInterface } from '../../../../infrastructure/device/service/device-service.interface.ts';
-import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
+import { HttpRequest } from '../../../../infrastructure/http-client';
 import { ProductVariantResultEntity } from '../../domain/product-variant-result.entity.ts';
 import { VariantEntity } from '../../domain/variant.entity.ts';
 import { AddVariantImageDto } from './dto/add-variant-image.dto.ts';

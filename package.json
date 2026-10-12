@@ -48,7 +48,7 @@
     "features/*",
     "providers/*",
     "library/*",
-    "frames/*",
+    "frames/**/*",
     "modules/**/*",
     "utils/**/*",
     "widgets/**/*",

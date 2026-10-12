@@ -1,8 +1,13 @@
 import { Expose } from 'class-transformer';
-import { IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import type { ShopQueryInput } from '../input/shop-query.input.ts';
 
 export class ShopQueryDto implements ShopQueryInput {
+  @Expose()
+  @IsOptional()
+  @IsString()
+  term?: string;
+
   @Expose()
   @IsOptional()
   @IsInt()

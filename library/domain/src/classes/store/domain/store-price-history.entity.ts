@@ -1,7 +1,7 @@
 import { Expose, Type } from 'class-transformer';
 import { IsDateString, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 
-import { CurrencyEntity } from '../../currency/index.ts';
+import { CurrencyEntity } from '../../currency';
 
 export class StorePriceHistoryEntity {
   @IsUUID()

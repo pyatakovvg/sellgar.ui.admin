@@ -12,7 +12,7 @@
     "@hookform/resolvers": "5.9.1",
     "@library/domain": "0.0.1",
     "@sellgar/app": "0.0.1",
-    "@sellgar/kit": "0.0.190",
+    "@sellgar/kit": "0.0.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "react-hook-form": "7.89.0",

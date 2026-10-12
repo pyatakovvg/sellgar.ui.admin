@@ -22,7 +22,7 @@ export default defineConfig({
     sourcemap: process.env.SOURCE_MAP === 'true',
     rolldownOptions: {
       output: {
-        keepNames: true,
+        keepNames: false,
         codeSplitting: {
           groups: createCodeSplittingGroups({
             'react.vendor': ['react', 'react-dom', 'react-router'],

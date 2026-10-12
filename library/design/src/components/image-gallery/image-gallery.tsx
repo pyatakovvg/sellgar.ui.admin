@@ -81,7 +81,11 @@ const ImageItem: React.FC<ImageItemProps> = (props) => {
   return (
     <div
       ref={sortable.ref}
-      className={[s.image, sortable.isDragging ? s.dragging : undefined, sortable.isDropTarget ? s.dropTarget : undefined]
+      className={[
+        s.image,
+        sortable.isDragging ? s.dragging : undefined,
+        sortable.isDropTarget ? s.dropTarget : undefined,
+      ]
         .filter(Boolean)
         .join(' ')}
     >
@@ -182,12 +186,12 @@ export const ImageGallery: React.FC<ImageGalleryProps> = (props) => {
           {!hasItems && (
             <div className={s.placeholder}>
               <Typography size={'caption-l'} weight={'semi-bold'}>
-                <p className={s.header}>Добавление изображений</p>
+                <p className={s.header}>{multiple ? 'Добавление изображений' : 'Добавление изображения'}</p>
               </Typography>
               <Typography size={'caption-s'}>
                 <p className={s.description}>
-                  Перетащите файлы в эту область или воспользуйтесь кнопкой <ImageAddLineIcon className={s.contract} />{' '}
-                  для выбора
+                  {multiple ? 'Перетащите файлы' : 'Перетащите файл'} в эту область или воспользуйтесь кнопкой{' '}
+                  <ImageAddLineIcon className={s.contract} /> для выбора
                 </p>
               </Typography>
             </div>

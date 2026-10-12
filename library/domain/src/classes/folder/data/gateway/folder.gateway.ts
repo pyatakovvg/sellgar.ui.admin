@@ -4,7 +4,7 @@ import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../../infrastructure/config/config.interface.ts';
 import { DeviceServiceInterface } from '../../../../infrastructure/device/service/device-service.interface.ts';
-import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
+import { HttpRequest } from '../../../../infrastructure/http-client';
 import { FolderEntity } from '../../domain/folder.entity.ts';
 import { FolderResultEntity } from '../../domain/folder-result.entity.ts';
 import { GetAllFolderFilterDto } from './dto/get-all-folder-filter.dto.ts';

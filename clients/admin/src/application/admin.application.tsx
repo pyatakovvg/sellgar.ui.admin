@@ -1,5 +1,11 @@
 import { UseBindings } from '@sellgar/app';
-import { Application, UserRequestFeature, UserRequestPresentation } from '@sellgar/app/react';
+import {
+  Application,
+  NavigationBlockerFeature,
+  NavigationBlockerPresentation,
+  UserRequestFeature,
+  UserRequestPresentation,
+} from '@sellgar/app/react';
 import type { ApplicationConfiguratorInterface } from '@sellgar/app/react';
 
 import { MainLayout } from '@layout/main';
@@ -14,6 +20,7 @@ import { AdminBindings } from './bindings';
 import { ResolveAuthStateInitializer } from './initializers';
 import { ServiceWorkerNotificationView } from './presentations/service-worker';
 import { AlertUserRequestView } from './presentations/user-request';
+import { NavigationBlockerView } from './presentations/navigation-blocker';
 import { createAdminRouter } from './routes';
 import { DrawerShell } from './shells/drawer';
 
@@ -31,6 +38,9 @@ export class AdminApplication extends Application {
     app.layouts([MainLayout]);
 
     app.features([
+      NavigationBlockerFeature.configure({
+        presentation: NavigationBlockerPresentation.define(NavigationBlockerView),
+      }),
       ServiceWorkerFeature.configure({
         presentation: ServiceWorkerPresentation.define((registry) => {
           registry.notification(ServiceWorkerNotificationView);

@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { UnauthorizedException } from '@sellgar/app';
 import { describe, expect, it } from 'vitest';
 
-import { HttpRequest } from '../index.ts';
+import { HttpRequest } from '..';
 
 describe('HttpRequest', () => {
   it('maps Axios-compatible errors without relying on constructor identity', async () => {

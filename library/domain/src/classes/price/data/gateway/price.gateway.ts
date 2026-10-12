@@ -4,7 +4,7 @@ import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../../infrastructure/config/config.interface.ts';
 import { DeviceServiceInterface } from '../../../../infrastructure/device/service/device-service.interface.ts';
-import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
+import { HttpRequest } from '../../../../infrastructure/http-client';
 import { PriceEntity } from '../../domain/price.entity.ts';
 import { PriceResultEntity } from '../../domain/price-result.entity.ts';
 import { CreatePriceDto } from './dto/create-price.dto.ts';

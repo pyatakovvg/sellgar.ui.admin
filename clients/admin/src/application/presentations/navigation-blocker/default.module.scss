@@ -1,0 +1,24 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-8);
+  max-width: 420px;
+  padding: var(--numbers-24);
+}
+
+.title,
+.description {
+  margin: 0;
+}
+
+.description {
+  color: var(--text-base-secondary);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--numbers-8);
+  margin-top: var(--numbers-24);
+}

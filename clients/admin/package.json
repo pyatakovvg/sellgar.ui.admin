@@ -13,6 +13,7 @@
   "dependencies": {
     "@feature/service-worker": "0.0.1",
     "@frame/brand-modify": "0.0.1",
+    "@frame/brand-review": "0.0.1",
     "@frame/category-modify": "0.0.1",
     "@frame/property-modify": "0.0.1",
     "@frame/shop-modify": "0.0.1",

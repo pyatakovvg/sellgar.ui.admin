@@ -5,7 +5,7 @@ import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../../infrastructure/config/config.interface.ts';
 import { DeviceServiceInterface } from '../../../../infrastructure/device/service/device-service.interface.ts';
-import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
+import { HttpRequest } from '../../../../infrastructure/http-client';
 import { ProductEntity } from '../../domain/product.entity.ts';
 import { ProductResultEntity } from '../../domain/product-result.entity.ts';
 import { ProductFormDataFactoryInterface } from './factory/product-form-data-factory.interface.ts';

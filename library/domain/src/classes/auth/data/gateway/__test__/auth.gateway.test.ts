@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { ConfigInterface } from '../../../../../infrastructure/config/config.interface.ts';
 import type { DeviceServiceInterface } from '../../../../../infrastructure/device/service/device-service.interface.ts';
-import { HttpRequest } from '../../../../../infrastructure/http-client/index.ts';
+import { HttpRequest } from '../../../../../infrastructure/http-client';
 
 import { AuthGateway } from '../auth.gateway.ts';
 

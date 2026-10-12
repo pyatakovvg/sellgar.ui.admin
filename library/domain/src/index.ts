@@ -62,7 +62,7 @@ export {
   UserServiceInterface,
   VariantEntity,
   VariantServiceInterface,
-} from './classes/index.ts';
+} from './classes';
 export type {
   AddVariantImageInput,
   AdjustOfferInventoryInput,
@@ -104,6 +104,6 @@ export type {
   UpdateVariantInput,
   ShopAddressEntity,
   WriteOffOfferInventoryInput,
-} from './classes/index.ts';
+} from './classes';
 
 export { ConfigInterface } from './infrastructure/config/config.interface.ts';

@@ -4,7 +4,7 @@ import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../../infrastructure/config/config.interface.ts';
 import { DeviceServiceInterface } from '../../../../infrastructure/device/service/device-service.interface.ts';
-import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
+import { HttpRequest } from '../../../../infrastructure/http-client';
 import { ShopEntity } from '../../domain/shop.entity.ts';
 import { ShopResultEntity } from '../../domain/shop-result.entity.ts';
 import { CreateShopDto } from './dto/create-shop.dto.ts';
@@ -24,22 +24,30 @@ export class ShopGateway implements ShopGatewayInterface {
   ) {}
 
   async findAll(query: ShopQueryInput = {}): Promise<ShopResultEntity> {
-    const dto = plainToInstance(ShopQueryDto, query, { excludeExtraneousValues: true });
-    await validateOrReject(dto);
+    const queryDto = plainToInstance(ShopQueryDto, query, { excludeExtraneousValues: true });
+
+    await validateOrReject(queryDto);
+
     const result = await this.requestExecutor.run({ scope: 'shops:list' }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.get(this.config.get('GATEWAY_API') + '/v2/shops', { params: dto });
+
+      return request.get(this.config.get('GATEWAY_API') + '/v2/shops', { params: queryDto });
     });
+
     const entity = plainToInstance(ShopResultEntity, result, { excludeExtraneousValues: true });
+
     await validateOrReject(entity);
+
     return entity;
   }
 
   async findByUuid(uuid: string): Promise<ShopEntity> {
     const result = await this.requestExecutor.run({ scope: `shop:${uuid}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+
       return request.get(this.config.get('GATEWAY_API') + '/v2/shops/' + uuid);
     });
+
     return this.toShop(result);
   }
 

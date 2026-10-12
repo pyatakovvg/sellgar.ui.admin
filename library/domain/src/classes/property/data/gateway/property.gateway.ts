@@ -4,7 +4,7 @@ import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../../infrastructure/config/config.interface.ts';
 import { DeviceServiceInterface } from '../../../../infrastructure/device/service/device-service.interface.ts';
-import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
+import { HttpRequest } from '../../../../infrastructure/http-client';
 import { PropertyEntity } from '../../domain/property.entity.ts';
 import { PropertyResultEntity } from '../../domain/property-result.entity.ts';
 import { CreatePropertyDto } from './dto/create-property.dto.ts';
@@ -72,22 +72,25 @@ export class PropertyGateway implements PropertyGatewayInterface {
     await validateOrReject(dto);
     const result = await this.requestExecutor.run({ scope: `property:${code}:option:create` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.post(this.config.get('GATEWAY_API') + '/v2/properties/' + encodeURIComponent(code) + '/options', dto);
+      return request.post(
+        this.config.get('GATEWAY_API') + '/v2/properties/' + encodeURIComponent(code) + '/options',
+        dto,
+      );
     });
     return this.toProperty(result);
   }
 
-  async updateOption(
-    code: string,
-    optionCode: string,
-    input: UpdatePropertyOptionInput,
-  ): Promise<PropertyEntity> {
+  async updateOption(code: string, optionCode: string, input: UpdatePropertyOptionInput): Promise<PropertyEntity> {
     const dto = plainToInstance(UpdatePropertyOptionDto, input);
     await validateOrReject(dto);
     const result = await this.requestExecutor.run({ scope: `property:${code}:option:${optionCode}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
       return request.patch(
-        this.config.get('GATEWAY_API') + '/v2/properties/' + encodeURIComponent(code) + '/options/' + encodeURIComponent(optionCode),
+        this.config.get('GATEWAY_API') +
+          '/v2/properties/' +
+          encodeURIComponent(code) +
+          '/options/' +
+          encodeURIComponent(optionCode),
         dto,
       );
     });

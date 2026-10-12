@@ -1,8 +1,10 @@
 import { Expose, Type } from 'class-transformer';
+import { EntityCollection } from '@sellgar/app';
 import { IsArray, IsInt, ValidateNested } from 'class-validator';
 
 import { BrandEntity } from './brand.entity.ts';
 
+@EntityCollection({ entity: BrandEntity, property: 'items' })
 export class BrandResultEntity {
   @IsArray()
   @Expose()

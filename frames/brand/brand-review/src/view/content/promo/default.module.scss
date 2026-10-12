@@ -1,0 +1,20 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  gap: var(--numbers-8);
+}
+
+.image {
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+  align-items: center;
+  justify-content: center;
+  width: var(--numbers-120);
+  height: var(--numbers-120);
+  border: var(--numbers-1) solid var(--border-base-divider);
+  background: var(--background-surface-neutral);
+  border-radius: var(--measurements-radius-lg);
+}

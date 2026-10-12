@@ -11,7 +11,7 @@
   "dependencies": {
     "@library/domain": "0.0.1",
     "@sellgar/app": "0.0.1",
-    "@sellgar/kit": "0.0.190",
+    "@sellgar/kit": "0.0.1",
     "react": "19.3.0"
   },
   "devDependencies": {

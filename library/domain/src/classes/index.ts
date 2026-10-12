@@ -1,18 +1,18 @@
-export { AuthEntity, AuthServiceInterface, SocketTicketEntity } from './auth/index.ts';
-export { BrandEntity, BrandResultEntity, BrandServiceInterface } from './brand/index.ts';
-export type { CreateBrandInput, UpdateBrandInput } from './brand/index.ts';
-export { CategoryEntity, CategoryResultEntity, CategoryServiceInterface } from './category/index.ts';
-export type { CreateCategoryInput, UpdateCategoryInput } from './category/index.ts';
-export { CurrencyEntity, CurrencyResultEntity, CurrencyServiceInterface } from './currency/index.ts';
-export type { CreateCurrencyInput, UpdateCurrencyInput } from './currency/index.ts';
-export { FileEntity, FileResultEntity, FileServiceInterface, UploadFileEntity } from './file/index.ts';
-export type { GetAllFileFilterInput } from './file/index.ts';
-export { FolderEntity, FolderResultEntity, FolderServiceInterface } from './folder/index.ts';
-export type { GetAllFolderFilterInput } from './folder/index.ts';
-export { MetaEntity } from './meta/index.ts';
-export { PersonEntity } from './person/index.ts';
-export { PriceEntity, PriceResultEntity, PriceServiceInterface } from './price/index.ts';
-export type { CreatePriceInput } from './price/index.ts';
+export { AuthEntity, AuthServiceInterface, SocketTicketEntity } from './auth';
+export { BrandEntity, BrandResultEntity, BrandServiceInterface } from './brand';
+export type { CreateBrandInput, UpdateBrandInput } from './brand';
+export { CategoryEntity, CategoryResultEntity, CategoryServiceInterface } from './category';
+export type { CreateCategoryInput, UpdateCategoryInput } from './category';
+export { CurrencyEntity, CurrencyResultEntity, CurrencyServiceInterface } from './currency';
+export type { CreateCurrencyInput, UpdateCurrencyInput } from './currency';
+export { FileEntity, FileResultEntity, FileServiceInterface, UploadFileEntity } from './file';
+export type { GetAllFileFilterInput } from './file';
+export { FolderEntity, FolderResultEntity, FolderServiceInterface } from './folder';
+export type { GetAllFolderFilterInput } from './folder';
+export { MetaEntity } from './meta';
+export { PersonEntity } from './person';
+export { PriceEntity, PriceResultEntity, PriceServiceInterface } from './price';
+export type { CreatePriceInput } from './price';
 export {
   ProductEntity,
   ProductFieldEntity,
@@ -20,7 +20,7 @@ export {
   ProductServiceInterface,
   ProductSummaryEntity,
   ProductVariantEntity,
-} from './product/index.ts';
+} from './product';
 export type {
   CreateProductInput,
   CreateProductVariantInput,
@@ -29,17 +29,17 @@ export type {
   PropertyValueInput,
   UpdateProductInput,
   UpdateProductVariantInput,
-} from './product/index.ts';
+} from './product';
 export {
   ProductTypeEntity,
   ProductTypeFieldEntity,
   ProductTypeResultEntity,
   ProductTypeServiceInterface,
-} from './product-type/index.ts';
-export type { CreateProductTypeInput, ProductTypeFieldInput, UpdateProductTypeInput } from './product-type/index.ts';
-export { ProfileEntity, ProfileServiceInterface } from './profile/index.ts';
-export { PropertyEntity, PropertyKind, PropertyResultEntity, PropertyServiceInterface } from './property/index.ts';
-export type { CreatePropertyInput, UpdatePropertyInput } from './property/index.ts';
+} from './product-type';
+export type { CreateProductTypeInput, ProductTypeFieldInput, UpdateProductTypeInput } from './product-type';
+export { ProfileEntity, ProfileServiceInterface } from './profile';
+export { PropertyEntity, PropertyKind, PropertyResultEntity, PropertyServiceInterface } from './property';
+export type { CreatePropertyInput, UpdatePropertyInput } from './property';
 export {
   ShopAddressType,
   ShopContactPurpose,
@@ -49,8 +49,8 @@ export {
   ShopResultEntity,
   ShopAddressEntity,
   ShopServiceInterface,
-} from './shop/index.ts';
-export type { CreateShopInput, ShopQueryInput, UpdateShopInput } from './shop/index.ts';
+} from './shop';
+export type { CreateShopInput, ShopQueryInput, UpdateShopInput } from './shop';
 export {
   StoreInventoryMovementEntity,
   StoreOfferEntity,
@@ -58,7 +58,7 @@ export {
   StoreProductEntity,
   StoreProductResultEntity,
   StoreServiceInterface,
-} from './store/index.ts';
+} from './store';
 export type {
   AdjustOfferInventoryInput,
   ArchiveStoreProductInput,
@@ -67,12 +67,12 @@ export type {
   StoreProductQueryInput,
   UpdateStoreProductInput,
   WriteOffOfferInventoryInput,
-} from './store/index.ts';
-export { UnitEntity, UnitResultEntity, UnitServiceInterface } from './unit/index.ts';
-export type { CreateUnitInput, UpdateUnitInput } from './unit/index.ts';
-export { UserEntity, UserResultEntity, UserServiceInterface } from './user/index.ts';
-export type { CreateUserInput, FilterUserInput, UpdateUserInput } from './user/index.ts';
-export { ProductVariantResultEntity, VariantEntity, VariantServiceInterface } from './variant/index.ts';
-export type { AddVariantImageInput, CreateVariantInput, UpdateVariantInput } from './variant/index.ts';
+} from './store';
+export { UnitEntity, UnitResultEntity, UnitServiceInterface } from './unit';
+export type { CreateUnitInput, UpdateUnitInput } from './unit';
+export { UserEntity, UserResultEntity, UserServiceInterface } from './user';
+export type { CreateUserInput, FilterUserInput, UpdateUserInput } from './user';
+export { ProductVariantResultEntity, VariantEntity, VariantServiceInterface } from './variant';
+export type { AddVariantImageInput, CreateVariantInput, UpdateVariantInput } from './variant';
 
 export { DomainBinding } from './domain.binding.ts';

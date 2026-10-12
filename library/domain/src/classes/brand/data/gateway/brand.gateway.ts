@@ -4,7 +4,7 @@ import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../../infrastructure/config/config.interface.ts';
 import { DeviceServiceInterface } from '../../../../infrastructure/device/service/device-service.interface.ts';
-import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
+import { HttpRequest } from '../../../../infrastructure/http-client';
 import { BrandEntity } from '../../domain/brand.entity.ts';
 import { BrandResultEntity } from '../../domain/brand-result.entity.ts';
 import { BrandFormDataFactoryInterface } from './factory/brand-form-data-factory.interface.ts';
@@ -27,7 +27,10 @@ export class BrandGateway implements BrandGatewayInterface {
     await validateOrReject(dto);
     const result = await this.requestExecutor.run({ scope: `brand:update:${code}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.patch(this.config.get('GATEWAY_API') + '/v2/brands/' + encodeURIComponent(code), this.formDataFactory.create(dto));
+      return request.patch(
+        this.config.get('GATEWAY_API') + '/v2/brands/' + encodeURIComponent(code),
+        this.formDataFactory.create(dto),
+      );
     });
     return this.toBrand(result);
   }

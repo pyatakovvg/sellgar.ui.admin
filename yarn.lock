@@ -1546,6 +1546,7 @@ __metadata:
   dependencies:
     "@feature/service-worker": "npm:0.0.1"
     "@frame/brand-modify": "npm:0.0.1"
+    "@frame/brand-review": "npm:0.0.1"
     "@frame/category-modify": "npm:0.0.1"
     "@frame/property-modify": "npm:0.0.1"
     "@frame/shop-modify": "npm:0.0.1"
@@ -2126,31 +2127,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/core@npm:^1.7.5":
-  version: 1.7.5
-  resolution: "@floating-ui/core@npm:1.7.5"
-  dependencies:
-    "@floating-ui/utils": "npm:^0.2.11"
-  checksum: 10/fecdc9b3ce93f02bf78a6114b93730a4cb9fa8234c62f9a949016186297a039c9f9cd3c5c81ff74b93ebddf0b32048c4af7a528afe7904b75423ed2e7491b888
-  languageName: node
-  linkType: hard
-
 "@floating-ui/core@npm:^1.8.0":
   version: 1.8.0
   resolution: "@floating-ui/core@npm:1.8.0"
   dependencies:
     "@floating-ui/utils": "npm:^0.2.12"
   checksum: 10/762cd5677fd4e82597db2efdd8f1e81d248eac5615d8be755e1bbb5f12a14c56a6bccd735676374d4914db7ccb3f09ec405ec7433e8c48a5521f5d66dc8dd5d6
-  languageName: node
-  linkType: hard
-
-"@floating-ui/dom@npm:1.7.6, @floating-ui/dom@npm:^1.7.6":
-  version: 1.7.6
-  resolution: "@floating-ui/dom@npm:1.7.6"
-  dependencies:
-    "@floating-ui/core": "npm:^1.7.5"
-    "@floating-ui/utils": "npm:^0.2.11"
-  checksum: 10/84dff2ffdf85c8b92d7edafc543c55869abbeaeb3007fa983159467e050153b507a0f5fe8e84f88c3f28c35a82de9df9c20a6eef5560cbba3afae19141444ff2
   languageName: node
   linkType: hard
 
@@ -2174,18 +2156,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/react-dom@npm:^2.1.8":
-  version: 2.1.8
-  resolution: "@floating-ui/react-dom@npm:2.1.8"
-  dependencies:
-    "@floating-ui/dom": "npm:^1.7.6"
-  peerDependencies:
-    react: ">=16.8.0"
-    react-dom: ">=16.8.0"
-  checksum: 10/39c3e3e5538a111a3eadf1b9ca486d7dc17c7eb24b83a0ea9b4c189fa7dbe5abe01357388d8cf6a4badb2d3fec2b1090e10529537bde91acbcfe19b0a8d10f90
-  languageName: node
-  linkType: hard
-
 "@floating-ui/react-dom@npm:^2.1.9":
   version: 2.1.9
   resolution: "@floating-ui/react-dom@npm:2.1.9"
@@ -2195,20 +2165,6 @@ __metadata:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
   checksum: 10/d775609760291d0f1477a9e23fc3508a35bcda1f36601d74bd3e94b817841b266914fa9964697963cb1ac09b451e51283a2ce25f0c3719d0aca761e327bdee43
-  languageName: node
-  linkType: hard
-
-"@floating-ui/react@npm:0.27.19":
-  version: 0.27.19
-  resolution: "@floating-ui/react@npm:0.27.19"
-  dependencies:
-    "@floating-ui/react-dom": "npm:^2.1.8"
-    "@floating-ui/utils": "npm:^0.2.11"
-    tabbable: "npm:^6.0.0"
-  peerDependencies:
-    react: ">=17.0.0"
-    react-dom: ">=17.0.0"
-  checksum: 10/4ebdc582544d0abf8f8011a6182af2ce4464e3a6a9a0fd4ff5facef161e73c6defa80240a7dc62f7cd2cbd5ecfb00b17c5dd5b10aa6e787cbc1ed963f323245c
   languageName: node
   linkType: hard
 
@@ -2233,13 +2189,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/utils@npm:^0.2.11":
-  version: 0.2.11
-  resolution: "@floating-ui/utils@npm:0.2.11"
-  checksum: 10/72150138ba1c274d757a1da85233202fa9fdfd2272ec1fb0883eb0ffdf138863af81573049ed2c20b98adb4b7ae2236065541ce14037fe328955089831a678d5
-  languageName: node
-  linkType: hard
-
 "@floating-ui/utils@npm:^0.2.12":
   version: 0.2.12
   resolution: "@floating-ui/utils@npm:0.2.12"
@@ -2247,16 +2196,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@frame/brand-modify@npm:0.0.1, @frame/brand-modify@workspace:frames/brand-modify":
+"@frame/brand-modify@npm:0.0.1, @frame/brand-modify@workspace:frames/brand/brand-modify":
   version: 0.0.0-use.local
-  resolution: "@frame/brand-modify@workspace:frames/brand-modify"
+  resolution: "@frame/brand-modify@workspace:frames/brand/brand-modify"
   dependencies:
     "@hookform/resolvers": "npm:5.9.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -2265,6 +2214,22 @@ __metadata:
     react-dom: "npm:19.3.0"
     react-hook-form: "npm:7.89.0"
     yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
+"@frame/brand-review@npm:0.0.1, @frame/brand-review@workspace:frames/brand/brand-review":
+  version: 0.0.0-use.local
+  resolution: "@frame/brand-review@workspace:frames/brand/brand-review"
+  dependencies:
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.1"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
   languageName: unknown
   linkType: soft
 
@@ -2277,7 +2242,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -2298,7 +2263,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -2311,16 +2276,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@frame/shop-modify@npm:0.0.1, @frame/shop-modify@workspace:frames/shop-modify":
+"@frame/shop-modify@npm:0.0.1, @frame/shop-modify@workspace:frames/shop/shop-modify":
   version: 0.0.0-use.local
-  resolution: "@frame/shop-modify@workspace:frames/shop-modify"
+  resolution: "@frame/shop-modify@workspace:frames/shop/shop-modify"
   dependencies:
     "@hookform/resolvers": "npm:5.9.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -2332,16 +2297,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@frame/shop-review@npm:0.0.1, @frame/shop-review@workspace:frames/shop-review":
+"@frame/shop-review@npm:0.0.1, @frame/shop-review@workspace:frames/shop/shop-review":
   version: 0.0.0-use.local
-  resolution: "@frame/shop-review@workspace:frames/shop-review"
+  resolution: "@frame/shop-review@workspace:frames/shop/shop-review"
   dependencies:
     "@hookform/resolvers": "npm:5.9.1"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -2362,7 +2327,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -2383,7 +2348,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -2404,7 +2369,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -3194,7 +3159,7 @@ __metadata:
   dependencies:
     "@library/design": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     "@types/reflect-metadata": "npm:0.1.0"
@@ -3210,7 +3175,7 @@ __metadata:
   dependencies:
     "@library/design": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     classnames: "npm:2.5.1"
@@ -3227,7 +3192,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     "@types/reflect-metadata": "npm:0.1.0"
@@ -3325,7 +3290,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -3345,7 +3310,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     react: "npm:19.3.0"
@@ -3376,7 +3341,7 @@ __metadata:
     "@library/route-tokens": "npm:0.0.1"
     "@provider/product-changes": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -3398,7 +3363,7 @@ __metadata:
     "@library/route-tokens": "npm:0.0.1"
     "@provider/product-changes": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     react: "npm:19.3.0"
@@ -3415,7 +3380,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     react: "npm:19.3.0"
@@ -3432,7 +3397,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -3450,7 +3415,7 @@ __metadata:
     "@hookform/resolvers": "npm:5.9.1"
     "@library/domain": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     react: "npm:19.3.0"
@@ -3471,7 +3436,7 @@ __metadata:
     "@library/route-tokens": "npm:0.0.1"
     "@provider/store-offer-changes": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     "@utils/format": "npm:0.0.1"
@@ -3492,7 +3457,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     class-transformer: "npm:0.5.1"
@@ -3513,7 +3478,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     react: "npm:19.3.0"
@@ -3530,7 +3495,7 @@ __metadata:
     "@library/domain": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     react: "npm:19.3.0"
@@ -4293,32 +4258,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@sellgar/kit@npm:0.0.190":
-  version: 0.0.190
-  resolution: "@sellgar/kit@npm:0.0.190"
-  dependencies:
-    "@floating-ui/dom": "npm:1.7.6"
-    "@floating-ui/react": "npm:0.27.19"
-    "@react-input/mask": "npm:2.0.4"
-    "@react-input/number-format": "npm:2.0.3"
-    classnames: "npm:2.5.1"
-    date-fns: "npm:4.4.0"
-    moment: "npm:2.30.1"
-    moment-timezone: "npm:0.6.2"
-    react-slider: "npm:2.0.6"
-  peerDependencies:
-    react: ^19
-    react-dom: ^19
-  peerDependenciesMeta:
-    react:
-      optional: true
-    react-dom:
-      optional: true
-  checksum: 10/c1f79251824b4e3f91346e9d2dff775508fee4d23ddbd31d8a9bb30879be443695e4687e24d81afaf2c014fa3bf23841397ebcab3304eac391867956ae10505f
-  languageName: node
-  linkType: hard
-
-"@sellgar/kit@workspace:library/sellgar.kit.ui":
+"@sellgar/kit@npm:0.0.1, @sellgar/kit@workspace:library/sellgar.kit.ui":
   version: 0.0.0-use.local
   resolution: "@sellgar/kit@workspace:library/sellgar.kit.ui"
   dependencies:
@@ -5653,7 +5593,7 @@ __metadata:
   dependencies:
     "@library/domain": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     react: "npm:19.3.0"
@@ -5665,7 +5605,7 @@ __metadata:
   resolution: "@widget/theme@workspace:widgets/theme"
   dependencies:
     "@sellgar/app": "npm:0.0.1"
-    "@sellgar/kit": "npm:0.0.190"
+    "@sellgar/kit": "npm:0.0.1"
     "@types/react": "npm:19.3.0"
     "@types/react-dom": "npm:19.3.0"
     mobx: "npm:6.16.1"
@@ -9031,15 +8971,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment-timezone@npm:0.6.2":
-  version: 0.6.2
-  resolution: "moment-timezone@npm:0.6.2"
-  dependencies:
-    moment: "npm:^2.29.4"
-  checksum: 10/021f908742a392ff7234b3814fb20c786cb086d0fa3f98a58f6810181c71a305244e908e913d8bd6750c4a7e09300eda2c869cd77ef0b3f83e58028fa75f84de
-  languageName: node
-  linkType: hard
-
 "moment-timezone@npm:0.6.5":
   version: 0.6.5
   resolution: "moment-timezone@npm:0.6.5"
@@ -9049,7 +8980,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"moment@npm:*, moment@npm:2.30.1, moment@npm:^2.29.4":
+"moment@npm:*, moment@npm:^2.29.4":
   version: 2.30.1
   resolution: "moment@npm:2.30.1"
   checksum: 10/ae42d876d4ec831ef66110bdc302c0657c664991e45cf2afffc4b0f6cd6d251dde11375c982a5c0564ccc0fa593fc564576ddceb8c8845e87c15f58aa6baca69

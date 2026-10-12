@@ -4,7 +4,7 @@ import { validateOrReject } from 'class-validator';
 
 import { ConfigInterface } from '../../../../infrastructure/config/config.interface.ts';
 import { DeviceServiceInterface } from '../../../../infrastructure/device/service/device-service.interface.ts';
-import { HttpRequest } from '../../../../infrastructure/http-client/index.ts';
+import { HttpRequest } from '../../../../infrastructure/http-client';
 import { UserEntity } from '../../domain/user.entity.ts';
 import { UserResultEntity } from '../../domain/user-result.entity.ts';
 import { CreateUserDto } from './dto/create-user.dto.ts';

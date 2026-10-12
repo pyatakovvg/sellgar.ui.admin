@@ -5,6 +5,7 @@ import { Route, Router } from '@sellgar/app/react';
 import { NavigateLayout } from '@layout/navigate';
 
 import { ShopRouting } from './frames/shop/shop.routing.ts';
+import { BrandRouting } from './frames/brand/brand.routing.ts';
 
 import { RequireAuthenticatedSessionPolicy } from '../../../policies';
 
@@ -75,7 +76,7 @@ export const PrivateRoutes = (): Route[] => {
           token: Tokens.BrandsRoute,
           address: segments('brands'),
           load: () => import('@module/brands'),
-          routing: [createBrandRouting()],
+          routing: [BrandRouting],
         }),
         new Route({
           token: Tokens.CategoriesRoute,
@@ -125,21 +126,6 @@ const createStoreInventoryRouting = (): Router => {
       }),
     ],
   });
-};
-
-const createBrandRouting = (): Router => {
-  return createModifyRouting([
-    new Route({
-      token: Tokens.BrandCreateRoute,
-      address: segments('brand'),
-      load: () => import('@frame/brand-modify'),
-    }),
-    new Route({
-      token: Tokens.BrandModifyRoute,
-      address: segments('brand', param('code')),
-      load: () => import('@frame/brand-modify'),
-    }),
-  ]);
 };
 
 const createCategoryRouting = (): Router => {

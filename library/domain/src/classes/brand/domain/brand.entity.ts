@@ -1,8 +1,10 @@
 import { Expose, Type } from 'class-transformer';
+import { Entity } from '@sellgar/app';
 import { IsArray, IsDateString, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 import { BrandImageEntity } from './brand-image.entity.ts';
 
+@Entity({ identity: 'code' })
 export class BrandEntity {
   @Expose()
   @IsString()

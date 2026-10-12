@@ -19,7 +19,9 @@ export { ShopModifyRoute } from './frame/shop/shop-modify.token.ts';
 
 export { StoreCreateRoute, StoreModifyRoute } from './frame/store-modify.route-token.ts';
 export { StoreInventoryRoute } from './frame/store-inventory.route-token.ts';
-export { BrandCreateRoute, BrandModifyRoute } from './frame/brand-modify.route-token.ts';
+export { BrandCreateRoute } from './frame/brand/brand-create.token.ts';
+export { BrandModifyRoute } from './frame/brand/brand-modify.token.ts';
+export { BrandReviewRoute } from './frame/brand/brand-review.token.ts';
 export { CategoryCreateRoute, CategoryModifyRoute } from './frame/category-modify.route-token.ts';
 export { UnitCreateRoute, UnitModifyRoute } from './frame/unit-modify.route-token.ts';
 export { PropertyCreateRoute, PropertyModifyRoute } from './frame/property-modify.route-token.ts';

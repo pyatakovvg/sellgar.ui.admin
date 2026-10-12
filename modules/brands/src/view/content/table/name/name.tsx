@@ -1,4 +1,5 @@
 import type { BrandEntity } from '@library/domain';
+import { reactive } from '@sellgar/app/react';
 import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
 
@@ -6,7 +7,7 @@ import React from 'react';
 
 import s from './default.module.scss';
 
-export const Name: React.FC = () => {
+export const Name: React.FC = reactive(() => {
   const { data } = Kit.useCellData<BrandEntity>();
 
   return (
@@ -16,4 +17,4 @@ export const Name: React.FC = () => {
       </Typography>
     </div>
   );
-};
+});

@@ -1,4 +1,4 @@
-import { BrandModifyRoute } from '@library/route-tokens';
+import { BrandReviewRoute } from '@library/route-tokens';
 import * as App from '@sellgar/app/react';
 import { Table as TableComponent } from '@sellgar/kit';
 
@@ -11,7 +11,7 @@ import { Description } from './description';
 
 import s from './default.module.scss';
 
-export const Table: React.FC = () => {
+export const Table: React.FC = App.reactive(() => {
   const brands = App.useLoaderData(BrandControllerInterface);
   const navigate = App.useNavigate();
 
@@ -22,7 +22,7 @@ export const Table: React.FC = () => {
         data={{ nodes: brands.items }}
         row={{
           handlers: {
-            click: ({ row }) => void navigate.to(BrandModifyRoute, { params: { code: row.code } }),
+            click: ({ row }) => void navigate.to(BrandReviewRoute, { params: { code: row.code } }),
           },
         }}
       >
@@ -38,7 +38,7 @@ export const Table: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column>
+            <Column width={'minmax(0, 1fr)'}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Описание'} />
@@ -53,4 +53,4 @@ export const Table: React.FC = () => {
       </TableComponent>
     </div>
   );
-};
+});

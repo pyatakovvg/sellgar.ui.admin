@@ -2,7 +2,7 @@ import { Expose, Type } from 'class-transformer';
 import { IsArray, ValidateNested } from 'class-validator';
 import { EntityCollection } from '@sellgar/app';
 
-import { MetaEntity } from '../../meta/index.ts';
+import { MetaEntity } from '../../meta';
 
 import { StoreProductEntity } from './store-product.entity.ts';
 
