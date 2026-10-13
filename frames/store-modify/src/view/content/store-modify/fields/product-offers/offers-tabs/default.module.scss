@@ -27,6 +27,8 @@
 }
 
 .inventoryValues {
+  flex-wrap: wrap;
+  overflow-wrap: anywhere;
   display: flex;
   align-items: center;
   gap: var(--numbers-16);

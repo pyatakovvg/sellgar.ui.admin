@@ -18,7 +18,7 @@ export const AdjustInventoryForm: React.FC = () => {
   const methods = useForm<AdjustInventoryFormData>({
     mode: 'onChange',
     defaultValues: {
-      quantity: data.offer.inventory?.quantity ?? 0,
+      quantity: data.record.inventory.quantity,
       reason: '',
     },
     resolver: yupResolver(schema),
@@ -27,7 +27,7 @@ export const AdjustInventoryForm: React.FC = () => {
   const handleSubmit = methods.handleSubmit(async (values) => {
     await submit({
       ...values,
-      expectedVersion: data.offer.inventory?.version ?? 0,
+      expectedVersion: data.record.inventory.version,
     });
   });
 

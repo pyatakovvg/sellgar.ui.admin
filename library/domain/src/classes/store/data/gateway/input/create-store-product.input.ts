@@ -4,7 +4,6 @@ export interface CreateStoreProductInput {
   commandId: string;
   shopUuid: string;
   productUuid: string;
-  article: string;
   showing: boolean;
   offers: StoreOfferInput[];
 }

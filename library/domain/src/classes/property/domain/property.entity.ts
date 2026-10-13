@@ -1,9 +1,11 @@
+import { Entity } from '@sellgar/app';
 import { Expose, Type } from 'class-transformer';
 import { IsArray, IsDateString, IsEnum, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator';
 
 import { PropertyOptionEntity } from './property-option.entity.ts';
 import { PropertyKind } from './property-kind.enum.ts';
 
+@Entity({ identity: 'code' })
 export class PropertyEntity {
   @Expose()
   @IsString()

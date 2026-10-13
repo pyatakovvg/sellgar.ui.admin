@@ -1,3 +1,4 @@
+import { reactive } from '@sellgar/app/react';
 import type { PropertyEntity } from '@library/domain';
 import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
@@ -6,7 +7,7 @@ import React from 'react';
 
 import s from './default.module.scss';
 
-export const Name: React.FC = () => {
+export const Name: React.FC = reactive(() => {
   const { data } = Kit.useCellData<PropertyEntity>();
 
   return (
@@ -21,4 +22,4 @@ export const Name: React.FC = () => {
       ) : null}
     </div>
   );
-};
+});

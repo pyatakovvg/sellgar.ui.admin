@@ -1,0 +1,40 @@
+import { useBlocker, useLoaderData, useSubmit } from '@sellgar/app/react';
+
+import React from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import { PropertyModifyControllerInterface } from '../../../classes/controller/property-modify/property-modify-controller.interface.ts';
+import { PROPERTY_MODIFY_FORM_ID } from '../../../constants/property-modify.constants.ts';
+
+import { Fields } from './fields';
+import { PropertyFormFactory } from './factory/property-form.factory.ts';
+import { PropertyFormSerializer } from './serializer/property-form.serializer.ts';
+import { schema, type IFormData } from './form.schema.ts';
+
+import s from './default.module.scss';
+
+export const PropertyModify: React.FC = () => {
+  const property = useLoaderData(PropertyModifyControllerInterface);
+  const submit = useSubmit(PropertyModifyControllerInterface);
+
+  const methods = useForm<IFormData>({
+    mode: 'onChange',
+    defaultValues: PropertyFormFactory.create(property),
+    resolver: yupResolver(schema),
+  });
+
+  useBlocker(methods.formState.isDirty);
+
+  const handleSubmit = methods.handleSubmit(async (values) => {
+    await submit(PropertyFormSerializer.serialize(values, property));
+  });
+
+  return (
+    <FormProvider {...methods}>
+      <form id={PROPERTY_MODIFY_FORM_ID} className={s.wrapper} onSubmit={handleSubmit}>
+        <Fields inProcess={submit.inProcess} />
+      </form>
+    </FormProvider>
+  );
+};

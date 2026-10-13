@@ -2,12 +2,12 @@ import { Expose, Type } from 'class-transformer';
 import { Entity } from '@sellgar/app';
 import {
   IsArray,
+  ArrayMinSize,
   IsBoolean,
   IsDateString,
   IsEnum,
   IsNumber,
   IsOptional,
-  IsString,
   IsUUID,
   ValidateNested,
 } from 'class-validator';
@@ -18,9 +18,7 @@ import { StoreVariantSnapshotEntity } from './store-variant-snapshot.entity.ts';
 
 import { StorePriceHistoryEntity } from './store-price-history.entity.ts';
 
-import { StoreOfferInventoryEntity } from './store-offer-inventory.entity.ts';
-
-import { StoreInventoryMovementEntity } from './store-inventory-movement.entity.ts';
+import { StoreAccountingRecordEntity } from './store-accounting-record.entity.ts';
 
 @Entity({ identity: 'uuid' })
 export class StoreOfferEntity {
@@ -39,11 +37,6 @@ export class StoreOfferEntity {
   @Expose()
   @IsBoolean()
   showing: boolean;
-
-  @Expose()
-  @IsOptional()
-  @IsString()
-  article?: string | null;
 
   @Expose()
   @IsUUID()
@@ -76,17 +69,11 @@ export class StoreOfferEntity {
   currentPrice?: StorePriceHistoryEntity | null;
 
   @Expose()
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => StoreOfferInventoryEntity)
-  inventory?: StoreOfferInventoryEntity | null;
-
   @IsArray()
-  @Expose()
-  @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => StoreInventoryMovementEntity)
-  inventoryMovements?: StoreInventoryMovementEntity[];
+  @ArrayMinSize(1)
+  @Type(() => StoreAccountingRecordEntity)
+  records: StoreAccountingRecordEntity[];
 
   @Expose()
   @IsDateString()

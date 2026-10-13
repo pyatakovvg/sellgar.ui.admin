@@ -15,14 +15,14 @@ describe('AdjustInventoryController', () => {
     await controller.action({
       params: {},
       payload: { expectedVersion: 3, quantity: 12, reason: '' },
-      params: { storeProductUuid: 'store-product', offerUuid: 'offer' },
+      params: { storeProductUuid: 'store-product', recordUuid: 'offer' },
       request: new Request('http://localhost/store', { method: 'POST' }),
       signal: new AbortController().signal,
     });
 
     expect(storeService.adjustInventory).toHaveBeenCalledWith({
       commandId: expect.any(String),
-      offerUuid: 'offer',
+      recordUuid: 'offer',
       expectedVersion: 3,
       quantity: 12,
       reason: null,

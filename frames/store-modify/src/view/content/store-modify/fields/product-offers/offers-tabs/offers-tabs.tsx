@@ -7,7 +7,6 @@ import {
   Caption,
   Checkbox,
   Field,
-  Input,
   InputAmount2,
   Label,
   Select,
@@ -70,7 +69,6 @@ export const OffersTabs: React.FC<IProps> = (props) => {
               const variant = variantByUuid.get(offer.variantUuid);
               const offerError = errors.offers?.[index];
               const hasErrors = !!(
-                offerError?.article ||
                 offerError?.currentPrice?.value ||
                 offerError?.currentPrice?.currencyCode ||
                 offerError?.showing
@@ -93,62 +91,42 @@ export const OffersTabs: React.FC<IProps> = (props) => {
           return (
             <TabMenu.Content key={offer.id} name={offer.variantUuid}>
               <div className={s.fields}>
-                {storedOffer && storeProductUuid ? (
-                  <div className={s.inventory}>
-                    <div className={s.inventoryValues}>
-                      <Typography size={'caption-m'}>
-                        <span>Остаток: {storedOffer.inventory?.quantity ?? 0}</span>
-                      </Typography>
-                      <Typography size={'caption-m'}>
-                        <span>Резерв: {storedOffer.inventory?.reserved ?? 0}</span>
-                      </Typography>
-                      <Typography size={'caption-m'}>
-                        <span>Доступно: {storedOffer.inventory?.available ?? 0}</span>
-                      </Typography>
-                    </div>
-                    <Button
-                      type={'button'}
-                      size={'sm'}
-                      style={'secondary'}
-                      leadIcon={<StockLineIcon />}
-                      onClick={() =>
-                        void navigate.to(StoreInventoryRoute, {
-                          params: {
-                            storeProductUuid,
-                            offerUuid: storedOffer.uuid,
-                          },
-                        })
-                      }
-                    >
-                      Управлять остатками
-                    </Button>
-                  </div>
-                ) : null}
-                <Controller
-                  name={`offers.${index}.article`}
-                  control={control}
-                  render={({ field, fieldState: { error } }) => {
-                    return (
-                      <Field>
-                        <Field.Label>
-                          <Label label={'Артикул'} />
-                        </Field.Label>
-                        <Field.Content>
-                          <Input
-                            {...field}
-                            target={error?.message ? 'destructive' : undefined}
-                            value={field.value ?? ''}
-                          />
-                        </Field.Content>
-                        {!!error?.message && (
-                          <Field.Caption>
-                            <Caption state={'destructive'} caption={error.message} />
-                          </Field.Caption>
-                        )}
-                      </Field>
-                    );
-                  }}
-                />
+                {storedOffer && storeProductUuid
+                  ? storedOffer.records.map((record) => (
+                      <div key={record.uuid} className={s.inventory}>
+                        <div className={s.inventoryValues}>
+                          <Typography size={'caption-m'}>
+                            <span>{record.article}</span>
+                          </Typography>
+                          <Typography size={'caption-m'}>
+                            <span>{record.clarifications.map((item) => item.value).join(', ') || 'Без уточнений'}</span>
+                          </Typography>
+                          <Typography size={'caption-m'}>
+                            <span>Остаток: {record.inventory.quantity}</span>
+                          </Typography>
+                          <Typography size={'caption-m'}>
+                            <span>Резерв: {record.inventory.reserved}</span>
+                          </Typography>
+                          <Typography size={'caption-m'}>
+                            <span>Доступно: {record.inventory.available}</span>
+                          </Typography>
+                        </div>
+                        <Button
+                          type={'button'}
+                          size={'sm'}
+                          style={'secondary'}
+                          leadIcon={<StockLineIcon />}
+                          onClick={() =>
+                            void navigate.to(StoreInventoryRoute, {
+                              params: { storeProductUuid, recordUuid: record.uuid },
+                            })
+                          }
+                        >
+                          Управлять остатками
+                        </Button>
+                      </div>
+                    ))
+                  : null}
                 <Controller
                   name={`offers.${index}.currentPrice.value`}
                   control={control}

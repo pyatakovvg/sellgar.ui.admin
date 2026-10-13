@@ -1,4 +1,4 @@
-import { PropertyModifyRoute } from '@library/route-tokens';
+import { PropertyReviewRoute } from '@library/route-tokens';
 import * as App from '@sellgar/app/react';
 import { Table as TableComponent } from '@sellgar/kit';
 
@@ -11,7 +11,7 @@ import { Description } from './description';
 
 import s from './default.module.scss';
 
-export const Table: React.FC = () => {
+export const Table: React.FC = App.reactive(() => {
   const properties = App.useLoaderData(PropertyControllerInterface);
   const navigate = App.useNavigate();
 
@@ -21,7 +21,7 @@ export const Table: React.FC = () => {
         data={{ nodes: properties.items }}
         row={{
           handlers: {
-            click: ({ row }) => void navigate.to(PropertyModifyRoute, { params: { code: row.code } }),
+            click: ({ row }) => void navigate.to(PropertyReviewRoute, { params: { code: row.code } }),
           },
         }}
       >
@@ -37,7 +37,7 @@ export const Table: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column>
+            <Column width={'minmax(0, 1fr)'}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Описание'} />
@@ -52,4 +52,4 @@ export const Table: React.FC = () => {
       </TableComponent>
     </div>
   );
-};
+});

@@ -1,4 +1,5 @@
-import { Typography } from '@sellgar/kit';
+import { InfoLine } from '@library/design';
+import { Divider, Typography } from '@sellgar/kit';
 import { useLoaderData } from '@sellgar/app/react';
 
 import React from 'react';
@@ -9,33 +10,58 @@ import s from './default.module.scss';
 
 export const InventoryContext: React.FC = () => {
   const data = useLoaderData(StoreInventoryContextControllerInterface);
-  const inventory = data.offer.inventory;
+  const inventory = data.record.inventory;
+  const groups = [
+    {
+      label: 'Товар и магазин',
+      lines: [
+        { label: 'Товар', value: data.storeProduct.productSnapshot?.name ?? 'Не синхронизирован' },
+        { label: 'Магазин', value: data.storeProduct.shopSnapshot?.name ?? 'Не синхронизирован' },
+      ],
+    },
+    {
+      label: 'Учётная запись',
+      lines: [
+        { label: 'Вариант', value: data.offer.variantSnapshot?.name ?? 'Не синхронизирован' },
+        { label: 'Артикул', value: data.record.article },
+        {
+          label: 'Уточнения',
+          value: data.record.clarifications.map((item) => item.value).join(', ') || 'Без уточнений',
+        },
+      ],
+    },
+    {
+      label: 'Остатки',
+      lines: [
+        { label: 'Остаток', value: inventory.quantity },
+        { label: 'Резерв', value: inventory.reserved },
+        { label: 'Доступно', value: inventory.available },
+      ],
+    },
+  ];
 
   return (
     <div className={s.wrapper}>
-      <Typography size={'body-m'} weight={'medium'}>
-        <p className={s.title}>{data.storeProduct.productSnapshot?.name ?? data.storeProduct.article}</p>
-      </Typography>
-      <Typography size={'caption-l'}>
-        <p className={s.text}>Магазин: {data.storeProduct.shopSnapshot?.name ?? 'Не синхронизирован'}</p>
-      </Typography>
-      <Typography size={'caption-l'}>
-        <p className={s.text}>Вариант: {data.offer.variantSnapshot?.name ?? 'Не синхронизирован'}</p>
-      </Typography>
-      <Typography size={'caption-l'}>
-        <p className={s.text}>Артикул: {data.offer.article || '-'}</p>
-      </Typography>
-      <div className={s.inventory}>
-        <Typography size={'caption-l'}>
-          <p className={s.text}>Остаток: {inventory?.quantity ?? 0}</p>
-        </Typography>
-        <Typography size={'caption-l'}>
-          <p className={s.text}>Резерв: {inventory?.reserved ?? 0}</p>
-        </Typography>
-        <Typography size={'caption-l'}>
-          <p className={s.text}>Доступно: {inventory?.available ?? 0}</p>
-        </Typography>
-      </div>
+      {groups.map((group) => (
+        <div key={group.label} className={s.group}>
+          <Divider type={'label-center'} label={group.label} />
+          {group.lines.map((line) => (
+            <InfoLine
+              key={line.label}
+              label={
+                <Typography size={'caption-m'} weight={'semi-bold'}>
+                  <p className={s.label}>{line.label}:</p>
+                </Typography>
+              }
+              value={
+                <Typography size={'caption-m'} weight={'regular'}>
+                  <p className={s.value}>{line.value}</p>
+                </Typography>
+              }
+            />
+          ))}
+        </div>
+      ))}
     </div>
   );
 };

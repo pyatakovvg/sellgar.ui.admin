@@ -26,4 +26,6 @@ export { CategoryCreateRoute, CategoryModifyRoute } from './frame/category-modif
 export { UnitCreateRoute } from './frame/unit/unit-create.token.ts';
 export { UnitModifyRoute } from './frame/unit/unit-modify.token.ts';
 export { UnitReviewRoute } from './frame/unit/unit-review.token.ts';
-export { PropertyCreateRoute, PropertyModifyRoute } from './frame/property-modify.route-token.ts';
+export { PropertyCreateRoute } from './frame/property/property-create.token.ts';
+export { PropertyModifyRoute } from './frame/property/property-modify.token.ts';
+export { PropertyReviewRoute } from './frame/property/property-review.token.ts';

@@ -6,7 +6,6 @@ import {
   IsEnum,
   IsNumber,
   IsOptional,
-  IsString,
   IsUUID,
   ValidateNested,
 } from 'class-validator';
@@ -37,10 +36,6 @@ export class StoreProductEntity {
   @Expose()
   @IsBoolean()
   showing: boolean;
-
-  @Expose()
-  @IsString()
-  article: string;
 
   @Expose()
   @IsUUID()

@@ -16,6 +16,7 @@
     "@frame/brand-review": "0.0.1",
     "@frame/category-modify": "0.0.1",
     "@frame/property-modify": "0.0.1",
+    "@frame/property-review": "0.0.1",
     "@frame/shop-modify": "0.0.1",
     "@frame/shop-review": "0.0.1",
     "@frame/store-inventory": "0.0.1",

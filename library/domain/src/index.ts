@@ -49,7 +49,8 @@ export {
   ShopServiceInterface,
   StoreInventoryMovementEntity,
   StoreOfferEntity,
-  StoreOfferInventoryEntity,
+  StoreAccountingRecordEntity,
+  StoreRecordInventoryEntity,
   StoreProductEntity,
   StoreProductResultEntity,
   StoreServiceInterface,
@@ -65,7 +66,7 @@ export {
 } from './classes';
 export type {
   AddVariantImageInput,
-  AdjustOfferInventoryInput,
+  AdjustRecordInventoryInput,
   ArchiveStoreProductInput,
   CreateBrandInput,
   CreateCategoryInput,
@@ -79,6 +80,9 @@ export type {
   ProductVariantInput,
   PropertyValueInput,
   CreatePropertyInput,
+  PropertyOptionInput,
+  PropertyOptionExtraInput,
+  UpdatePropertyOptionInput,
   CreateShopInput,
   CreateStoreProductInput,
   CreateUnitInput,
@@ -87,7 +91,7 @@ export type {
   FilterUserInput,
   GetAllFileFilterInput,
   GetAllFolderFilterInput,
-  ReceiptOfferInventoryInput,
+  ReceiptRecordInventoryInput,
   ShopQueryInput,
   StoreProductQueryInput,
   UpdateBrandInput,
@@ -103,7 +107,7 @@ export type {
   UpdateUserInput,
   UpdateVariantInput,
   ShopAddressEntity,
-  WriteOffOfferInventoryInput,
+  WriteOffRecordInventoryInput,
 } from './classes';
 
 export { ConfigInterface } from './infrastructure/config/config.interface.ts';

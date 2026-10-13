@@ -1,4 +1,4 @@
-import { StoreOfferEntity, StoreProductEntity } from '@library/domain';
+import { StoreAccountingRecordEntity, StoreOfferEntity, StoreProductEntity } from '@library/domain';
 
 import { Expose, Type } from 'class-transformer';
 import { IsDefined, ValidateNested } from 'class-validator';
@@ -15,4 +15,9 @@ export class StoreInventoryResultEntity {
   @ValidateNested()
   @Type(() => StoreOfferEntity)
   offer: StoreOfferEntity;
+  @Expose()
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => StoreAccountingRecordEntity)
+  record: StoreAccountingRecordEntity;
 }

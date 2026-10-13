@@ -32,7 +32,6 @@ const payload: StoreModifyActionPayload = {
   offers: [
     {
       variantUuid: 'variant',
-      article: 'SKU-1',
       currentPrice: { value: '100.00', currencyCode: 'RUB' },
       showing: true,
     },
@@ -96,7 +95,6 @@ describe('StoreModifyController', () => {
       commandId: expect.any(String),
       shopUuid: payload.shopUuid,
       productUuid: payload.productUuid,
-      article: 'SKU-1',
       showing: true,
       offers: payload.offers,
     });
@@ -114,9 +112,6 @@ describe('StoreModifyController', () => {
       commandId: expect.any(String),
       uuid,
       expectedVersion: 5,
-      shopUuid: payload.shopUuid,
-      productUuid: payload.productUuid,
-      article: 'SKU-1',
       showing: true,
       offers: payload.offers,
     });

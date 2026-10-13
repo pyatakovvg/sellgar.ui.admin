@@ -7,6 +7,7 @@ import { NavigateLayout } from '@layout/navigate';
 import { ShopRouting } from './frames/shop/shop.routing.ts';
 import { BrandRouting } from './frames/brand/brand.routing.ts';
 import { UnitRouting } from './frames/unit/unit.routing.ts';
+import { PropertyRouting } from './frames/property/property.routing.ts';
 
 import { RequireAuthenticatedSessionPolicy } from '../../../policies';
 
@@ -95,7 +96,7 @@ export const PrivateRoutes = (): Route[] => {
           token: Tokens.PropertiesRoute,
           address: segments('properties'),
           load: () => import('@module/properties'),
-          routing: [createPropertyRouting()],
+          routing: [PropertyRouting],
         }),
       ],
     }),
@@ -122,7 +123,7 @@ const createStoreInventoryRouting = (): Router => {
     routes: [
       new Route({
         token: Tokens.StoreInventoryRoute,
-        address: segments('store-inventory', param('storeProductUuid'), param('offerUuid')),
+        address: segments('store-inventory', param('storeProductUuid'), param('recordUuid')),
         load: () => import('@frame/store-inventory'),
       }),
     ],
@@ -140,21 +141,6 @@ const createCategoryRouting = (): Router => {
       token: Tokens.CategoryModifyRoute,
       address: segments('category', param('uuid')),
       load: () => import('@frame/category-modify'),
-    }),
-  ]);
-};
-
-const createPropertyRouting = (): Router => {
-  return createModifyRouting([
-    new Route({
-      token: Tokens.PropertyCreateRoute,
-      address: segments('property'),
-      load: () => import('@frame/property-modify'),
-    }),
-    new Route({
-      token: Tokens.PropertyModifyRoute,
-      address: segments('property', param('code')),
-      load: () => import('@frame/property-modify'),
     }),
   ]);
 };

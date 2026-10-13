@@ -1,0 +1,21 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-8);
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--numbers-8);
+}
+.title {
+  color: var(--text-base-secondary);
+  font-size: var(--numbers-12);
+  line-height: var(--numbers-16);
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-8);
+}

@@ -27,7 +27,7 @@ export const WriteOffInventoryForm: React.FC = () => {
   const handleSubmit = methods.handleSubmit(async (values) => {
     await submit({
       ...values,
-      expectedVersion: data.offer.inventory?.version ?? 0,
+      expectedVersion: data.record.inventory.version,
     });
   });
 

@@ -9,7 +9,10 @@
 - Loader списка складских позиций, table и header держать здесь.
 - Для create/edit actions открывать `StoreModifyFrame`.
 - Использовать текущий `Table` из `@sellgar/kit`.
-- Row click является primary edit/open action для rows складских позиций.
+- Одиночный клик по товару открывает редактирование, двойной клик по товару или варианту раскрывает вложенную таблицу. Стрелки раскрытия не используются. Основная таблица использует `surface="standalone"` и `size="md"`; вложенные таблицы — `surface="embedded"` и минимальный `size="sm"`.
 - Данные store list приходят из `store_srv` через admin gateway. Не тянуть
   price/currency/store данные из product domain.
 - Не оборачивать эту страницу в sticky layout без redesign route-level scroll contract.
+
+- Таблица раскрывает товар → варианты → учётные записи. Артикул, уточнения и остаток относятся к записи; inventory action получает `recordUuid`.
+- Каждый вложенный уровень добавляет одинаковый отступ `var(--numbers-16)` и левую границу `var(--border-base-divider)` у своей таблицы. Основная таблица не имеет отступа вложенности.

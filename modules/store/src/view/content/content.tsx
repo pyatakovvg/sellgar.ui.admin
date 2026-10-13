@@ -22,12 +22,13 @@ export const Content: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <Table
+        surface={'standalone'}
         size={'md'}
         data={{ nodes: loaderData.data }}
         row={{
           handlers: {
-            click: ({ row }) => void navigate.to(StoreModifyRoute, { params: { uuid: row.uuid } }),
             doubleClick: ({ context }) => context.expansion?.toggle(),
+            click: ({ row }) => void navigate.to(StoreModifyRoute, { params: { uuid: row.uuid } }),
           },
         }}
       >
@@ -43,7 +44,7 @@ export const Content: React.FC = () => {
             <Column>
               {({ Head, Cell }) => (
                 <>
-                  <Head label={'Описание'} />
+                  <Head label={'Товар'} />
                   <Cell>
                     <Name />
                   </Cell>

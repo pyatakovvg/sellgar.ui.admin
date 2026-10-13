@@ -1,13 +1,14 @@
 export { StoreInventoryMovementEntity } from './domain/store-inventory-movement.entity.ts';
 export { StoreOfferEntity } from './domain/store-offer.entity.ts';
-export { StoreOfferInventoryEntity } from './domain/store-offer-inventory.entity.ts';
+export { StoreRecordInventoryEntity } from './domain/store-record-inventory.entity.ts';
 export { StoreProductEntity } from './domain/store-product.entity.ts';
 export { StoreProductResultEntity } from './domain/store-product-result.entity.ts';
 export { StoreServiceInterface } from './application/store-service.interface.ts';
-export type { AdjustOfferInventoryInput } from './data/gateway/input/adjust-offer-inventory.input.ts';
+export type { AdjustRecordInventoryInput } from './data/gateway/input/adjust-record-inventory.input.ts';
 export type { ArchiveStoreProductInput } from './data/gateway/input/archive-store-product.input.ts';
 export type { CreateStoreProductInput } from './data/gateway/input/create-store-product.input.ts';
-export type { ReceiptOfferInventoryInput } from './data/gateway/input/receipt-offer-inventory.input.ts';
+export type { ReceiptRecordInventoryInput } from './data/gateway/input/receipt-record-inventory.input.ts';
 export type { StoreProductQueryInput } from './data/gateway/input/store-product-query.input.ts';
 export type { UpdateStoreProductInput } from './data/gateway/input/update-store-product.input.ts';
-export type { WriteOffOfferInventoryInput } from './data/gateway/input/write-off-offer-inventory.input.ts';
+export type { WriteOffRecordInventoryInput } from './data/gateway/input/write-off-record-inventory.input.ts';
+export { StoreAccountingRecordEntity } from './domain/store-accounting-record.entity.ts';

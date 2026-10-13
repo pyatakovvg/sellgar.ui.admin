@@ -13,6 +13,6 @@ export class StoreController implements StoreControllerInterface {
   ) {}
 
   loader(): Promise<StoreProductResultEntity> {
-    return this.storeService.findAll(this.query.get(FilterQuery));
+    return this.storeService.getAll(this.query.get(FilterQuery));
   }
 }

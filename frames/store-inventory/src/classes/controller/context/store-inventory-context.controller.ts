@@ -17,15 +17,24 @@ export class StoreInventoryContextController implements StoreInventoryContextCon
 
   async loader(args: Parameters<StoreInventoryContextControllerInterface['loader']>[0]) {
     const storeProduct = await this.storeService.findByUuid(args.params.storeProductUuid);
-    const offer = storeProduct.offers.find((item) => item.uuid === args.params.offerUuid);
+    const offer = storeProduct.offers.find((item) =>
+      item.records.some((record) => record.uuid === args.params.recordUuid),
+    );
 
     if (!offer) {
-      throw new Error('Предложение товара на складе не найдено.');
+      throw new Error('Учётная запись на складе не найдена.');
+    }
+
+    const record = offer.records.find((item) => item.uuid === args.params.recordUuid);
+
+    if (!record) {
+      throw new Error('Учётная запись на складе не найдена.');
     }
 
     const result = plainToInstance(StoreInventoryResultEntity, {
       storeProduct,
       offer,
+      record,
     });
 
     await validateOrReject(result);

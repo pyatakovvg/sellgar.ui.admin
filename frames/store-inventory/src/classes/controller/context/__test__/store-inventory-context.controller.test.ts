@@ -14,7 +14,6 @@ const createController = () => {
     version: 1,
     status: 'active',
     showing: true,
-    article: 'article',
     shopUuid: '00000000-0000-4000-8000-000000000003',
     shopSnapshot: {
       shopUuid: '00000000-0000-4000-8000-000000000003',
@@ -37,7 +36,6 @@ const createController = () => {
         version: 1,
         status: 'active',
         showing: true,
-        article: 'offer-article',
         storeProductUuid: '00000000-0000-4000-8000-000000000001',
         productUuid: '00000000-0000-4000-8000-000000000004',
         variantUuid: '00000000-0000-4000-8000-000000000007',
@@ -50,7 +48,24 @@ const createController = () => {
           syncedAt: timestamp,
         },
         prices: [],
-        inventoryMovements: [],
+        records: [1, 2].map((number) => ({
+          uuid: `00000000-0000-4000-8000-00000000001${number}`,
+          offerUuid,
+          article: `SKU-${number}`,
+          version: 1,
+          clarifications: [{ position: 0, value: number === 1 ? 'S евростандарт' : 'L евростандарт' }],
+          inventory: {
+            uuid: `00000000-0000-4000-8000-00000000002${number}`,
+            recordUuid: `00000000-0000-4000-8000-00000000001${number}`,
+            quantity: number * 5,
+            reserved: number,
+            available: number * 4,
+            version: number,
+            updatedAt: timestamp,
+          },
+          createdAt: timestamp,
+          updatedAt: timestamp,
+        })),
         createdAt: timestamp,
         updatedAt: timestamp,
       },
@@ -74,15 +89,14 @@ const createController = () => {
 };
 
 describe('StoreInventoryContextController', () => {
-  it('загружает складскую позицию и находит предложение из frame props', async () => {
+  it('загружает складскую позицию и выбирает конкретную учётную запись из params', async () => {
     const fixture = createController();
 
     await expect(
       fixture.controller.loader({
-        params: {},
         params: {
           storeProductUuid: fixture.storeProduct.uuid,
-          offerUuid: fixture.offer.uuid,
+          recordUuid: fixture.offer.records[1].uuid,
         },
         request: new Request('http://localhost/store'),
         signal: new AbortController().signal,
@@ -90,6 +104,7 @@ describe('StoreInventoryContextController', () => {
     ).resolves.toEqual({
       storeProduct: fixture.storeProduct,
       offer: fixture.offer,
+      record: fixture.offer.records[1],
     });
 
     expect(fixture.storeService.findByUuid).toHaveBeenCalledWith(fixture.storeProduct.uuid);
@@ -100,15 +115,14 @@ describe('StoreInventoryContextController', () => {
 
     await expect(
       fixture.controller.loader({
-        params: {},
         params: {
           storeProductUuid: fixture.storeProduct.uuid,
-          offerUuid: '00000000-0000-4000-8000-000000000099',
+          recordUuid: '00000000-0000-4000-8000-000000000099',
         },
         request: new Request('http://localhost/store'),
         signal: new AbortController().signal,
       }),
-    ).rejects.toThrow('Предложение товара на складе не найдено.');
+    ).rejects.toThrow('Учётная запись на складе не найдена.');
   });
 
   it('закрывает frame по пользовательской команде', async () => {

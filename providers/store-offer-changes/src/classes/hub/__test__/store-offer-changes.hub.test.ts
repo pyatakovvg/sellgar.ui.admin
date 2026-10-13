@@ -84,7 +84,6 @@ const createFixture = () => {
 };
 
 const createStoreProductPayload = () => ({
-  article: 'STORE-PRODUCT',
   createdAt: '2026-08-08T12:00:00.000Z',
   offers: [],
   productUuid: '39782b12-1077-4b75-94d2-c783e2ce8817',

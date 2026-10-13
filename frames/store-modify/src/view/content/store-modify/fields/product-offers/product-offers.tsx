@@ -36,7 +36,6 @@ export const ProductOffers: React.FC<IProps> = (props) => {
       replace(
         (nextProduct?.variants ?? []).map((variant) => ({
           variantUuid: variant.uuid,
-          article: '',
           currentPrice: {
             value: '',
             currencyCode: defaultCurrencyCode,

@@ -8,7 +8,7 @@ export class StoreInventoryMovementEntity {
 
   @Expose()
   @IsUUID()
-  offerUuid: string;
+  recordUuid: string;
 
   @Expose()
   @IsString()

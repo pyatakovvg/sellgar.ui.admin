@@ -39,7 +39,13 @@ export {
 export type { CreateProductTypeInput, ProductTypeFieldInput, UpdateProductTypeInput } from './product-type';
 export { ProfileEntity, ProfileServiceInterface } from './profile';
 export { PropertyEntity, PropertyKind, PropertyResultEntity, PropertyServiceInterface } from './property';
-export type { CreatePropertyInput, UpdatePropertyInput } from './property';
+export type {
+  CreatePropertyInput,
+  UpdatePropertyInput,
+  PropertyOptionInput,
+  PropertyOptionExtraInput,
+  UpdatePropertyOptionInput,
+} from './property';
 export {
   ShopAddressType,
   ShopContactPurpose,
@@ -54,19 +60,20 @@ export type { CreateShopInput, ShopQueryInput, UpdateShopInput } from './shop';
 export {
   StoreInventoryMovementEntity,
   StoreOfferEntity,
-  StoreOfferInventoryEntity,
+  StoreAccountingRecordEntity,
+  StoreRecordInventoryEntity,
   StoreProductEntity,
   StoreProductResultEntity,
   StoreServiceInterface,
 } from './store';
 export type {
-  AdjustOfferInventoryInput,
+  AdjustRecordInventoryInput,
   ArchiveStoreProductInput,
   CreateStoreProductInput,
-  ReceiptOfferInventoryInput,
+  ReceiptRecordInventoryInput,
   StoreProductQueryInput,
   UpdateStoreProductInput,
-  WriteOffOfferInventoryInput,
+  WriteOffRecordInventoryInput,
 } from './store';
 export { UnitEntity, UnitResultEntity, UnitServiceInterface } from './unit';
 export type { CreateUnitInput, UpdateUnitInput } from './unit';

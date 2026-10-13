@@ -27,10 +27,10 @@ export const StoreModify: React.FC = () => {
 
     return {
       uuid: data.productUuid,
-      name: data.productSnapshot?.name ?? data.article,
+      name: data.productSnapshot?.name ?? 'Не синхронизирован',
       variants: data.offers.map((offer) => ({
         uuid: offer.variantUuid,
-        name: offer.variantSnapshot?.name ?? offer.article ?? 'Не синхронизирован',
+        name: offer.variantSnapshot?.name ?? 'Не синхронизирован',
       })),
     };
   }, [data]);
@@ -57,7 +57,6 @@ export const StoreModify: React.FC = () => {
       return {
         uuid: offer?.uuid,
         variantUuid: variant.uuid,
-        article: offer?.article ?? data.article,
         currentPrice: {
           value: offer?.currentPrice?.value ?? '',
           currencyCode: offer?.currentPrice?.currency.code ?? defaultCurrencyCode,

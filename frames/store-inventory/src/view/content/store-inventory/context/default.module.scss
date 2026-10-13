@@ -1,17 +1,18 @@
-.wrapper {
+.wrapper,
+.group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--numbers-16);
 }
 
-.title,
-.text {
+.label {
   margin: 0;
+  color: var(--text-base-primary);
 }
 
-.inventory {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 8px;
+.value {
+  margin: 0;
+  color: var(--text-base-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }

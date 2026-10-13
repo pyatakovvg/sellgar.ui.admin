@@ -7,7 +7,6 @@ export interface IFormData {
   offers: {
     uuid?: string;
     variantUuid: string;
-    article: string;
     currentPrice: {
       value: string;
       currencyCode: string;
@@ -34,7 +33,6 @@ export const schema: yup.ObjectSchema<IFormData> = yup.object({
       yup.object({
         uuid: yup.string().optional(),
         variantUuid: yup.string().required('Необходимо выбрать'),
-        article: yup.string().required('Необходимо заполнить'),
         currentPrice: priceSchema,
         showing: yup.boolean().required('Необходимо выбрать'),
       }),

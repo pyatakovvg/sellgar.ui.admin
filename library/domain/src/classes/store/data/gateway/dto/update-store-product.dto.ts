@@ -1,15 +1,16 @@
-import { Expose } from 'class-transformer';
-import { IsNumber, IsUUID } from 'class-validator';
-
-import { CreateStoreProductDto } from './create-store-product.dto.ts';
+import { Expose, Type } from 'class-transformer';
+import { IsArray, IsBoolean, IsInt, IsOptional, IsUUID, Min, ValidateNested } from 'class-validator';
+import { StoreOfferDto } from './store-offer.dto.ts';
 import type { UpdateStoreProductInput } from '../input/update-store-product.input.ts';
-
-export class UpdateStoreProductDto extends CreateStoreProductDto implements UpdateStoreProductInput {
+export class UpdateStoreProductDto implements UpdateStoreProductInput {
+  @Expose() @IsUUID() commandId: string;
+  @Expose() @IsUUID() uuid: string;
+  @Expose() @IsInt() @Min(1) expectedVersion: number;
+  @Expose() @IsOptional() @IsBoolean() showing?: boolean;
   @Expose()
-  @IsUUID()
-  uuid: string;
-
-  @Expose()
-  @IsNumber()
-  expectedVersion: number;
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => StoreOfferDto)
+  offers?: StoreOfferDto[];
 }

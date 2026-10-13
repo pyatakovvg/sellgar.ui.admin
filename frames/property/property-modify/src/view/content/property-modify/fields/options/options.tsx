@@ -1,0 +1,95 @@
+import { Form } from '@library/design';
+import { Button, Caption, Field, Label } from '@sellgar/kit';
+import { AddLineIcon } from '@sellgar/kit/icons';
+
+import React from 'react';
+import * as Motion from 'framer-motion';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+
+import { OptionFactory } from './factory/option.factory.ts';
+import type { IFormData } from '../../form.schema.ts';
+import { Option } from './option';
+
+import s from './default.module.scss';
+
+interface IProps {
+  inProcess: boolean;
+}
+
+export const Options: React.FC<IProps> = (props) => {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<IFormData>();
+  const optionRows = useFieldArray({ control, name: 'options' });
+  const optionsError = typeof errors.options?.message === 'string' ? errors.options.message : undefined;
+
+  const handleReorder = (value: string[]) => {
+    if (props.inProcess) return;
+    const movedId = value.find((id, newIndex) => optionRows.fields[newIndex]?.id !== id);
+
+    if (!movedId) {
+      return;
+    }
+
+    const newIndex = value.findIndex((id) => id === movedId);
+    const oldIndex = optionRows.fields.findIndex((item) => item.id === movedId);
+
+    if (oldIndex >= 0 && newIndex >= 0) {
+      optionRows.move(oldIndex, newIndex);
+    }
+  };
+
+  return (
+    <Form.Fields>
+      <Form.Fields.Field>
+        <Field>
+          <Field.Label>
+            <div className={s.header}>
+              <Label label={'Опции'} />
+              <Button
+                type={'button'}
+                size={'xs'}
+                style={'secondary'}
+                leadIcon={<AddLineIcon />}
+                disabled={props.inProcess}
+                onClick={() => optionRows.append(OptionFactory.create())}
+              >
+                Добавить опцию
+              </Button>
+            </div>
+          </Field.Label>
+          <Field.Content>
+            <div className={s.content}>
+              <Motion.MotionConfig reducedMotion="always">
+                <Motion.Reorder.Group
+                  className={s.options}
+                  as={'div'}
+                  axis="y"
+                  onReorder={handleReorder}
+                  values={optionRows.fields.map((field) => field.id)}
+                >
+                  {optionRows.fields.map((option, index) => (
+                    <Option
+                      key={option.id}
+                      fieldId={option.id}
+                      index={index}
+                      inProcess={props.inProcess}
+                      persisted={option.persisted}
+                      onDelete={() => optionRows.remove(index)}
+                    />
+                  ))}
+                </Motion.Reorder.Group>
+              </Motion.MotionConfig>
+            </div>
+          </Field.Content>
+          {optionsError && (
+            <Field.Caption>
+              <Caption state={'destructive'} caption={optionsError} />
+            </Field.Caption>
+          )}
+        </Field>
+      </Form.Fields.Field>
+    </Form.Fields>
+  );
+};

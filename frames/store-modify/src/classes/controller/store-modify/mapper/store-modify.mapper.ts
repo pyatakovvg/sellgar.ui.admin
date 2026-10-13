@@ -8,12 +8,10 @@ export class StoreModifyMapper {
       commandId,
       shopUuid: payload.shopUuid,
       productUuid: payload.productUuid,
-      article: payload.offers[0]?.article ?? '',
       showing: payload.showing,
       offers: payload.offers.map((offer) => ({
         uuid: offer.uuid,
         variantUuid: offer.variantUuid,
-        article: offer.article,
         currentPrice: offer.currentPrice,
         showing: offer.showing,
       })),

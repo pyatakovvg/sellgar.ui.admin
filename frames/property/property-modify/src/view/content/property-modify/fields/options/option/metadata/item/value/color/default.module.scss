@@ -1,0 +1,15 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: var(--numbers-32) minmax(0, 1fr);
+  gap: var(--numbers-6);
+  align-items: center;
+}
+.input {
+  width: var(--numbers-32);
+  height: var(--numbers-32);
+  padding: var(--numbers-0);
+  border: var(--numbers-1) solid var(--border-base-neutral);
+  border-radius: var(--numbers-6);
+  background: transparent;
+  cursor: pointer;
+}

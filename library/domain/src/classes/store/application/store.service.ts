@@ -2,14 +2,14 @@ import { Inject, Injectable } from '@sellgar/app';
 
 import { StoreServiceInterface } from './store-service.interface.ts';
 import { StoreGatewayInterface } from '../data/gateway/store-gateway.interface.ts';
-import { AdjustOfferInventoryInput } from '../data/gateway/input/adjust-offer-inventory.input.ts';
+import { AdjustRecordInventoryInput } from '../data/gateway/input/adjust-record-inventory.input.ts';
 import { ArchiveStoreProductInput } from '../data/gateway/input/archive-store-product.input.ts';
 import { CreateStoreProductInput } from '../data/gateway/input/create-store-product.input.ts';
-import { ReceiptOfferInventoryInput } from '../data/gateway/input/receipt-offer-inventory.input.ts';
+import { ReceiptRecordInventoryInput } from '../data/gateway/input/receipt-record-inventory.input.ts';
 import { StoreProductQueryInput } from '../data/gateway/input/store-product-query.input.ts';
 import { UpdateStoreProductInput } from '../data/gateway/input/update-store-product.input.ts';
-import { WriteOffOfferInventoryInput } from '../data/gateway/input/write-off-offer-inventory.input.ts';
-import { StoreOfferInventoryEntity } from '../domain/store-offer-inventory.entity.ts';
+import { WriteOffRecordInventoryInput } from '../data/gateway/input/write-off-record-inventory.input.ts';
+import { StoreRecordInventoryEntity } from '../domain/store-record-inventory.entity.ts';
 import { StoreProductEntity } from '../domain/store-product.entity.ts';
 import { StoreProductResultEntity } from '../domain/store-product-result.entity.ts';
 
@@ -17,8 +17,8 @@ import { StoreProductResultEntity } from '../domain/store-product-result.entity.
 export class StoreService implements StoreServiceInterface {
   constructor(@Inject(StoreGatewayInterface) private readonly storeGateway: StoreGatewayInterface) {}
 
-  findAll(query?: StoreProductQueryInput): Promise<StoreProductResultEntity> {
-    return this.storeGateway.findAll(query);
+  getAll(query?: StoreProductQueryInput): Promise<StoreProductResultEntity> {
+    return this.storeGateway.getAll(query);
   }
 
   findByUuid(uuid: string): Promise<StoreProductEntity> {
@@ -37,15 +37,15 @@ export class StoreService implements StoreServiceInterface {
     return this.storeGateway.archive(input);
   }
 
-  receiptInventory(input: ReceiptOfferInventoryInput): Promise<StoreOfferInventoryEntity> {
+  receiptInventory(input: ReceiptRecordInventoryInput): Promise<StoreRecordInventoryEntity> {
     return this.storeGateway.receiptInventory(input);
   }
 
-  writeOffInventory(input: WriteOffOfferInventoryInput): Promise<StoreOfferInventoryEntity> {
+  writeOffInventory(input: WriteOffRecordInventoryInput): Promise<StoreRecordInventoryEntity> {
     return this.storeGateway.writeOffInventory(input);
   }
 
-  adjustInventory(input: AdjustOfferInventoryInput): Promise<StoreOfferInventoryEntity> {
+  adjustInventory(input: AdjustRecordInventoryInput): Promise<StoreRecordInventoryEntity> {
     return this.storeGateway.adjustInventory(input);
   }
 }

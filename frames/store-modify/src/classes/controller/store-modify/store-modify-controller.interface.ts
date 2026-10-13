@@ -10,7 +10,6 @@ export interface StoreModifyActionPayload {
   offers: {
     uuid?: string;
     variantUuid: string;
-    article: string;
     currentPrice: {
       value: string;
       currencyCode: string;

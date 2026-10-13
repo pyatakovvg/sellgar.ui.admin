@@ -15,14 +15,14 @@ describe('WriteOffInventoryController', () => {
     await controller.action({
       params: {},
       payload: { expectedVersion: 8, quantity: 2, reason: 'Брак' },
-      params: { storeProductUuid: 'store-product', offerUuid: 'offer' },
+      params: { storeProductUuid: 'store-product', recordUuid: 'offer' },
       request: new Request('http://localhost/store', { method: 'POST' }),
       signal: new AbortController().signal,
     });
 
     expect(storeService.writeOffInventory).toHaveBeenCalledWith({
       commandId: expect.any(String),
-      offerUuid: 'offer',
+      recordUuid: 'offer',
       expectedVersion: 8,
       quantity: 2,
       reason: 'Брак',
