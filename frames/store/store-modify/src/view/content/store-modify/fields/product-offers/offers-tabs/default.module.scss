@@ -1,0 +1,21 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-16);
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--numbers-8);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-12);
+}
+
+.empty {
+  display: block;
+}

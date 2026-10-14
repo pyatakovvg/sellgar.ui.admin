@@ -21,6 +21,7 @@
     "@frame/shop-review": "0.0.1",
     "@frame/store-inventory": "0.0.1",
     "@frame/store-modify": "0.0.1",
+    "@frame/store-review": "0.0.1",
     "@frame/unit-modify": "0.0.1",
     "@frame/unit-review": "0.0.1",
     "@layout/anonymous": "0.0.1",

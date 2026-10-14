@@ -7,9 +7,9 @@
 ## Правила
 
 - Loader списка складских позиций, table и header держать здесь.
-- Для create/edit actions открывать `StoreModifyFrame`.
+- Создание открывает StoreCreateRoute; одиночный клик открывает StoreReviewRoute. Из просмотра редактирование открывается по StoreModifyRoute.
 - Использовать текущий `Table` из `@sellgar/kit`.
-- Одиночный клик по товару открывает редактирование, двойной клик по товару или варианту раскрывает вложенную таблицу. Стрелки раскрытия не используются. Основная таблица использует `surface="standalone"` и `size="md"`; вложенные таблицы — `surface="embedded"` и минимальный `size="sm"`.
+- Одиночный клик по товару открывает просмотр, двойной клик по товару или варианту раскрывает вложенную таблицу. Стрелки раскрытия не используются. Основная таблица использует `surface="standalone"` и `size="md"`; вложенные таблицы — `surface="embedded"` и минимальный `size="sm"`.
 - Данные store list приходят из `store_srv` через admin gateway. Не тянуть
   price/currency/store данные из product domain.
 - Не оборачивать эту страницу в sticky layout без redesign route-level scroll contract.

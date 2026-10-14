@@ -29,3 +29,5 @@ export { UnitReviewRoute } from './frame/unit/unit-review.token.ts';
 export { PropertyCreateRoute } from './frame/property/property-create.token.ts';
 export { PropertyModifyRoute } from './frame/property/property-modify.token.ts';
 export { PropertyReviewRoute } from './frame/property/property-review.token.ts';
+
+export { StoreReviewRoute } from './frame/store/store-review.token.ts';

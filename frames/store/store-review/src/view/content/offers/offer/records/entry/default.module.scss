@@ -1,0 +1,17 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-4);
+  min-width: 0;
+  padding-block: var(--numbers-8);
+}
+.article {
+  color: var(--text-base-primary);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.clarification {
+  color: var(--text-base-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

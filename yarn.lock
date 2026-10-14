@@ -1554,6 +1554,7 @@ __metadata:
     "@frame/shop-review": "npm:0.0.1"
     "@frame/store-inventory": "npm:0.0.1"
     "@frame/store-modify": "npm:0.0.1"
+    "@frame/store-review": "npm:0.0.1"
     "@frame/unit-modify": "npm:0.0.1"
     "@frame/unit-review": "npm:0.0.1"
     "@layout/anonymous": "npm:0.0.1"
@@ -2357,9 +2358,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@frame/store-modify@npm:0.0.1, @frame/store-modify@workspace:frames/store-modify":
+"@frame/store-modify@npm:0.0.1, @frame/store-modify@workspace:frames/store/store-modify":
   version: 0.0.0-use.local
-  resolution: "@frame/store-modify@workspace:frames/store-modify"
+  resolution: "@frame/store-modify@workspace:frames/store/store-modify"
   dependencies:
     "@hookform/resolvers": "npm:5.9.1"
     "@library/design": "npm:0.0.1"
@@ -2375,6 +2376,22 @@ __metadata:
     react-dom: "npm:19.3.0"
     react-hook-form: "npm:7.89.0"
     yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
+"@frame/store-review@npm:0.0.1, @frame/store-review@workspace:frames/store/store-review":
+  version: 0.0.0-use.local
+  resolution: "@frame/store-review@workspace:frames/store/store-review"
+  dependencies:
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.1"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.0"
+    react-dom: "npm:19.3.0"
   languageName: unknown
   linkType: soft
 
