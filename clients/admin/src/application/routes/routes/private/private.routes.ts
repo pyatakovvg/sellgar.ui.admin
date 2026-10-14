@@ -6,6 +6,7 @@ import { NavigateLayout } from '@layout/navigate';
 
 import { ShopRouting } from './frames/shop/shop.routing.ts';
 import { BrandRouting } from './frames/brand/brand.routing.ts';
+import { StoreRouting } from './frames/store/store.routing.ts';
 import { UnitRouting } from './frames/unit/unit.routing.ts';
 import { PropertyRouting } from './frames/property/property.routing.ts';
 
@@ -72,7 +73,7 @@ export const PrivateRoutes = (): Route[] => {
           token: Tokens.StoreRoute,
           address: segments('store'),
           load: () => import('@module/store'),
-          routing: [createStoreRouting(), createStoreInventoryRouting()],
+          routing: [StoreRouting, createStoreInventoryRouting()],
         }),
         new Route({
           token: Tokens.BrandsRoute,
@@ -101,21 +102,6 @@ export const PrivateRoutes = (): Route[] => {
       ],
     }),
   ];
-};
-
-const createStoreRouting = (): Router => {
-  return createModifyRouting([
-    new Route({
-      token: Tokens.StoreCreateRoute,
-      address: segments('store'),
-      load: () => import('@frame/store-modify'),
-    }),
-    new Route({
-      token: Tokens.StoreModifyRoute,
-      address: segments('store', param('uuid')),
-      load: () => import('@frame/store-modify'),
-    }),
-  ]);
 };
 
 const createStoreInventoryRouting = (): Router => {

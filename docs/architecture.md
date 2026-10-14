@@ -37,7 +37,7 @@ Host не должен становиться местом для feature UI и�
 - `/products` -> `@module/products`;
 - `/products/create` -> `@module/product-modify`;
 - `/products/:uuid` -> `@module/product-modify`;
-- `/store` -> `@module/store` и nested routes `@frame/store-modify`/`@frame/store-inventory`;
+- `/store` -> `@module/store` и nested routes `@frame/store-review`/`@frame/store-modify` (в `frames/store/`) и `@frame/store-inventory`;
 - `/brands`, `/categories`, `/units`, `/properties` -> list pages и nested create/edit frame routes.
 
 Все nested frame routes отображаются одним application-level `Drawer` shell. Отдельного Modal shell для frames нет.

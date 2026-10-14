@@ -1,4 +1,4 @@
-import { StoreModifyRoute } from '@library/route-tokens';
+import { StoreReviewRoute } from '@library/route-tokens';
 import * as App from '@sellgar/app/react';
 import { Table } from '@sellgar/kit';
 
@@ -28,7 +28,7 @@ export const Content: React.FC = () => {
         row={{
           handlers: {
             doubleClick: ({ context }) => context.expansion?.toggle(),
-            click: ({ row }) => void navigate.to(StoreModifyRoute, { params: { uuid: row.uuid } }),
+            click: ({ row }) => void navigate.to(StoreReviewRoute, { params: { uuid: row.uuid } }),
           },
         }}
       >
