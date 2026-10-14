@@ -71,59 +71,68 @@ export const OffersTabs: React.FC<IProps> = (props) => {
           return (
             <TabMenu.Content key={offer.id} name={offer.variantUuid}>
               <div className={s.fields}>
-                <Controller
-                  name={`offers.${index}.currentPrice.value`}
-                  control={control}
-                  render={({ field, fieldState: { error } }) => {
-                    return (
-                      <Field>
-                        <Field.Label>
-                          <Label label={'Цена'} />
-                        </Field.Label>
-                        <Field.Content>
-                          <InputAmount2
-                            {...field}
-                            target={error?.message ? 'destructive' : undefined}
-                            value={field.value ? Number(field.value) : undefined}
-                          />
-                        </Field.Content>
-                        {!!error?.message && (
-                          <Field.Caption>
-                            <Caption state={'destructive'} caption={error.message} />
-                          </Field.Caption>
-                        )}
-                      </Field>
-                    );
-                  }}
-                />
-                <Controller
-                  name={`offers.${index}.currentPrice.currencyCode`}
-                  control={control}
-                  render={({ field, fieldState: { error } }) => {
-                    return (
-                      <Field>
-                        <Field.Label>
-                          <Label label={'Валюта'} />
-                        </Field.Label>
-                        <Field.Content>
-                          <Select
-                            {...field}
-                            options={props.currencies}
-                            optionKey={'code'}
-                            optionValue={'code'}
-                            onBlur={field.onBlur}
-                            onChange={(value) => field.onChange(value ?? '')}
-                          />
-                        </Field.Content>
-                        {!!error?.message && (
-                          <Field.Caption>
-                            <Caption state={'destructive'} caption={error.message} />
-                          </Field.Caption>
-                        )}
-                      </Field>
-                    );
-                  }}
-                />
+                <Field>
+                  <Field.Label>
+                    <Label label={'Цена'} />
+                  </Field.Label>
+                  <Field.Content>
+                    <div className={s.price}>
+                      <div className={s['price-field']}>
+                        <Controller
+                          name={`offers.${index}.currentPrice.value`}
+                          control={control}
+                          render={({ field, fieldState: { error } }) => {
+                            return (
+                              <Field>
+                                <Field.Content>
+                                  <InputAmount2
+                                    {...field}
+                                    aria-label={'Сумма'}
+                                    target={error?.message ? 'destructive' : undefined}
+                                    value={field.value ? Number(field.value) : undefined}
+                                  />
+                                </Field.Content>
+                                {!!error?.message && (
+                                  <Field.Caption>
+                                    <Caption state={'destructive'} caption={error.message} />
+                                  </Field.Caption>
+                                )}
+                              </Field>
+                            );
+                          }}
+                        />
+                      </div>
+                      <div className={s['price-field']}>
+                        <Controller
+                          name={`offers.${index}.currentPrice.currencyCode`}
+                          control={control}
+                          render={({ field, fieldState: { error } }) => {
+                            return (
+                              <Field>
+                                <Field.Content>
+                                  <Select
+                                    {...field}
+                                    aria-label={'Валюта'}
+                                    options={props.currencies}
+                                    optionKey={'code'}
+                                    optionValue={'code'}
+                                    onBlur={field.onBlur}
+                                    onChange={(value) => field.onChange(value ?? '')}
+                                  />
+                                </Field.Content>
+                                {!!error?.message && (
+                                  <Field.Caption>
+                                    <Caption state={'destructive'} caption={error.message} />
+                                  </Field.Caption>
+                                )}
+                              </Field>
+                            );
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </Field.Content>
+                </Field>
                 <Controller
                   name={`offers.${index}.showing`}
                   control={control}

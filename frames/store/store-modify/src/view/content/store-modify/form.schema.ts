@@ -1,8 +1,10 @@
 import * as yup from 'yup';
 
+import type { ProductOption } from './fields/product-offers/product-option.ts';
+
 export interface IFormData {
   shopUuid: string;
-  productUuid: string;
+  product: ProductOption | null;
   showing: boolean;
   offers: {
     uuid?: string;
@@ -51,7 +53,18 @@ const recordSchema = yup.object({
 
 export const schema: yup.ObjectSchema<IFormData> = yup.object({
   shopUuid: yup.string().required('Необходимо выбрать'),
-  productUuid: yup.string().required('Необходимо выбрать'),
+  product: yup
+    .object({
+      uuid: yup.string().uuid().required(),
+      name: yup.string().defined(),
+      variants: yup
+        .array()
+        .of(yup.object({ uuid: yup.string().uuid().required(), name: yup.string().defined() }).required())
+        .defined(),
+    })
+    .nullable()
+    .defined()
+    .test('selected', 'Необходимо выбрать товар', (product) => product !== null),
   showing: yup.boolean().required('Необходимо выбрать'),
   offers: yup
     .array()

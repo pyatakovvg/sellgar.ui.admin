@@ -12,7 +12,6 @@ import s from './default.module.scss';
 
 interface IProps {
   currencies: CurrencyEntity[];
-  products: ProductOption[];
 }
 
 export const ProductOffers: React.FC<IProps> = (props) => {
@@ -22,16 +21,10 @@ export const ProductOffers: React.FC<IProps> = (props) => {
     control,
     name: 'offers',
   });
-  const productUuid = useWatch({ control, name: 'productUuid' });
-  const product = React.useMemo(
-    () => props.products.find((item) => item.uuid === productUuid),
-    [productUuid, props.products],
-  );
+  const product = useWatch({ control, name: 'product' });
 
   const handleProductChange = React.useCallback(
-    (nextProductUuid: string) => {
-      const nextProduct = props.products.find((item) => item.uuid === nextProductUuid);
-
+    (nextProduct: ProductOption | null) => {
       replace(
         (nextProduct?.variants ?? []).map((variant) => ({
           variantUuid: variant.uuid,
@@ -45,16 +38,16 @@ export const ProductOffers: React.FC<IProps> = (props) => {
       );
       clearErrors('offers');
     },
-    [clearErrors, defaultCurrencyCode, props.products, replace],
+    [clearErrors, defaultCurrencyCode, replace],
   );
 
   return (
     <div className={s.wrapper}>
       <div className={s.field}>
-        <ProductField products={props.products} onProductChange={handleProductChange} />
+        <ProductField onProductChange={handleProductChange} />
       </div>
       <div className={s.field}>
-        <OffersTabs currencies={props.currencies} product={product} fields={fields} />
+        <OffersTabs currencies={props.currencies} product={product ?? undefined} fields={fields} />
       </div>
     </div>
   );

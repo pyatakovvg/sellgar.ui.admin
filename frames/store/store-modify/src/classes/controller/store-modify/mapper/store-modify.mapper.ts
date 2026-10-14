@@ -4,10 +4,14 @@ import type { StoreModifyActionPayload } from '../store-modify-controller.interf
 
 export class StoreModifyMapper {
   static toCreateInput(payload: StoreModifyActionPayload, commandId: string): CreateStoreProductInput {
+    if (!payload.product) {
+      throw new Error('Не выбран товар.');
+    }
+
     return {
       commandId,
       shopUuid: payload.shopUuid,
-      productUuid: payload.productUuid,
+      productUuid: payload.product.uuid,
       showing: payload.showing,
       offers: payload.offers.map((offer) => ({
         uuid: offer.uuid,

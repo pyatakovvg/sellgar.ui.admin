@@ -15,6 +15,8 @@ import { UpdateProductInput } from './input/update-product.input.ts';
 import { UpdateVariantInput } from './input/update-variant.input.ts';
 import { ProductDtoMapper } from './mapper/product-dto.mapper.ts';
 import { ProductGatewayInterface } from './product-gateway.interface.ts';
+import { ProductQueryDto } from './dto/product-query.dto.ts';
+import type { ProductQueryInput } from './input/product-query.input.ts';
 
 @Injectable()
 export class ProductGateway implements ProductGatewayInterface {
@@ -25,10 +27,13 @@ export class ProductGateway implements ProductGatewayInterface {
     @Inject(ProductFormDataFactoryInterface) private readonly formDataFactory: ProductFormDataFactoryInterface,
   ) {}
 
-  async findAll(): Promise<ProductResultEntity> {
+  async findAll(query: ProductQueryInput = {}): Promise<ProductResultEntity> {
+    const queryDto = plainToInstance(ProductQueryDto, query, { excludeExtraneousValues: true });
+    await validateOrReject(queryDto);
+
     const result = await this.requestExecutor.run({ scope: 'products:list' }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.get(this.config.get('GATEWAY_API') + '/v2/products');
+      return request.get(this.config.get('GATEWAY_API') + '/v2/products', { params: queryDto });
     });
     const entity = plainToInstance(ProductResultEntity, result);
 

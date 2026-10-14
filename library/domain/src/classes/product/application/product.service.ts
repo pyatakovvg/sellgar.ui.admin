@@ -8,13 +8,14 @@ import { UpdateProductInput } from '../data/gateway/input/update-product.input.t
 import { UpdateVariantInput } from '../data/gateway/input/update-variant.input.ts';
 import { ProductEntity } from '../domain/product.entity.ts';
 import { ProductResultEntity } from '../domain/product-result.entity.ts';
+import type { ProductQueryInput } from '../data/gateway/input/product-query.input.ts';
 
 @Injectable()
 export class ProductService implements ProductServiceInterface {
   constructor(@Inject(ProductGatewayInterface) private readonly productGateway: ProductGatewayInterface) {}
 
-  findAll(): Promise<ProductResultEntity> {
-    return this.productGateway.findAll();
+  findAll(query?: ProductQueryInput): Promise<ProductResultEntity> {
+    return this.productGateway.findAll(query);
   }
 
   findByUuid(uuid: string): Promise<ProductEntity> {

@@ -33,7 +33,7 @@ const createController = () => {
 
 const payload: StoreModifyActionPayload = {
   shopUuid: 'shop',
-  productUuid: 'product',
+  product: { uuid: 'product' },
   showing: true,
   offers: [
     {
@@ -51,6 +51,16 @@ const actionArgs = (nextPayload: StoreModifyActionPayload, uuid?: string) => ({
 });
 
 describe('StoreModifyController', () => {
+  it('не отправляет команду создания без выбранного объекта товара', async () => {
+    const fixture = createController();
+
+    await expect(fixture.controller.action(actionArgs({ ...payload, product: null }))).rejects.toThrow(
+      'Не выбран товар.',
+    );
+    expect(fixture.storeService.create).not.toHaveBeenCalled();
+    expect(fixture.navigateService.to).not.toHaveBeenCalled();
+  });
+
   it('не загружает складскую позицию для create frame', async () => {
     const fixture = createController();
 
@@ -101,7 +111,7 @@ describe('StoreModifyController', () => {
     expect(fixture.storeService.create).toHaveBeenCalledWith({
       commandId: expect.any(String),
       shopUuid: payload.shopUuid,
-      productUuid: payload.productUuid,
+      productUuid: payload.product?.uuid,
       showing: true,
       offers: payload.offers,
     });

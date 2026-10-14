@@ -5,7 +5,7 @@ import { StoreModifyFrameParams } from '../../params/frame.params.ts';
 
 export interface StoreModifyActionPayload {
   shopUuid: string;
-  productUuid: string;
+  product: { uuid: string } | null;
   showing: boolean;
   offers: {
     uuid?: string;

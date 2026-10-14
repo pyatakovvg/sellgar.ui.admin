@@ -5,6 +5,7 @@ export { ProductSummaryEntity } from './domain/product-summary.entity.ts';
 export { ProductResultEntity } from './domain/product-result.entity.ts';
 export { ProductServiceInterface } from './application/product-service.interface.ts';
 export type { CreateProductInput } from './data/gateway/input/create-product.input.ts';
+export type { ProductQueryInput } from './data/gateway/input/product-query.input.ts';
 export type { CreateVariantInput as CreateProductVariantInput } from './data/gateway/input/create-variant.input.ts';
 export type { ProductPropertyInput, PropertyValueInput } from './data/gateway/input/product-property.input.ts';
 export type { ProductVariantInput } from './data/gateway/input/product-variant.input.ts';

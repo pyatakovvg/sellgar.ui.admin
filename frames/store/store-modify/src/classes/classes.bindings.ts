@@ -8,12 +8,15 @@ import { ShopListControllerInterface } from './controller/shop-list/shop-list-co
 import { ShopListController } from './controller/shop-list/shop-list.controller.ts';
 import { StoreModifyControllerInterface } from './controller/store-modify/store-modify-controller.interface.ts';
 import { StoreModifyController } from './controller/store-modify/store-modify.controller.ts';
+import { ProductSearchStoreInterface } from './store/product-search/product-search-store.interface.ts';
+import { ProductSearchStore } from './store/product-search/product-search.store.ts';
 
 export class StoreModifyBindings implements BindingModuleInterface {
   register(registry: BindingRegistryInterface): void {
     registry.bind(StoreModifyControllerInterface).to(StoreModifyController);
     registry.bind(ShopListControllerInterface).to(ShopListController);
     registry.bind(ProductListControllerInterface).to(ProductListController);
+    registry.bind(ProductSearchStoreInterface).to(ProductSearchStore);
     registry.bind(CurrencyListControllerInterface).to(CurrencyListController);
   }
 }

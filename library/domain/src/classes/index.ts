@@ -25,6 +25,7 @@ export type {
   CreateProductInput,
   CreateProductVariantInput,
   ProductPropertyInput,
+  ProductQueryInput,
   ProductVariantInput,
   PropertyValueInput,
   UpdateProductInput,

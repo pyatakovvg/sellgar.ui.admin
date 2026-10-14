@@ -16,6 +16,17 @@
   gap: var(--numbers-12);
 }
 
+.price {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, var(--numbers-128));
+  align-items: start;
+  gap: var(--numbers-8);
+}
+
+.price-field {
+  min-width: 0;
+}
+
 .empty {
   display: block;
 }

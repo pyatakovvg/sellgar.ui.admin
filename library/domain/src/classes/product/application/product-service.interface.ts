@@ -5,9 +5,10 @@ import { UpdateVariantInput } from '../data/gateway/input/update-variant.input.t
 
 import { ProductEntity } from '../domain/product.entity.ts';
 import { ProductResultEntity } from '../domain/product-result.entity.ts';
+import type { ProductQueryInput } from '../data/gateway/input/product-query.input.ts';
 
 export abstract class ProductServiceInterface {
-  abstract findAll(): Promise<ProductResultEntity>;
+  abstract findAll(query?: ProductQueryInput): Promise<ProductResultEntity>;
   abstract findByUuid(uuid: string): Promise<ProductEntity>;
   abstract create(input: CreateProductInput): Promise<ProductEntity>;
   abstract update(uuid: string, input: UpdateProductInput): Promise<ProductEntity>;

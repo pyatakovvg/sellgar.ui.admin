@@ -5,7 +5,6 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { CurrencyListControllerInterface } from '../../../classes/controller/currency-list/currency-list-controller.interface.ts';
-import { ProductListControllerInterface } from '../../../classes/controller/product-list/product-list-controller.interface.ts';
 import { StoreModifyControllerInterface } from '../../../classes/controller/store-modify/store-modify-controller.interface.ts';
 import { STORE_MODIFY_FORM_ID } from '../../../constants/store-modify.constants.ts';
 import { Fields } from './fields';
@@ -17,7 +16,6 @@ import s from './default.module.scss';
 export const StoreModify: React.FC = () => {
   const data = useLoaderData(StoreModifyControllerInterface);
   const currencies = useLoaderData(CurrencyListControllerInterface);
-  const loadedProducts = useLoaderData(ProductListControllerInterface);
   const submit = useSubmit(StoreModifyControllerInterface);
   const defaultCurrencyCode = currencies[0]?.code ?? '';
   const initialProduct = React.useMemo<ProductOption | undefined>(() => {
@@ -35,20 +33,12 @@ export const StoreModify: React.FC = () => {
     };
   }, [data]);
 
-  const products = React.useMemo<ProductOption[]>(() => {
-    if (!initialProduct || loadedProducts.some((product) => product.uuid === initialProduct.uuid)) {
-      return loadedProducts;
-    }
-
-    return [initialProduct, ...loadedProducts];
-  }, [initialProduct, loadedProducts]);
   const defaultOffers = React.useMemo<IFormData['offers']>(() => {
     if (!data) {
       return [];
     }
 
-    const product = products.find((item) => item.uuid === data.productUuid) ?? initialProduct;
-    const variants = product?.variants ?? [];
+    const variants = initialProduct?.variants ?? [];
     const offerByVariantUuid = new Map(data.offers.map((offer) => [offer.variantUuid, offer]));
 
     return variants.map((variant) => {
@@ -69,7 +59,7 @@ export const StoreModify: React.FC = () => {
         })) ?? [{ article: '', clarifications: [] }],
       };
     });
-  }, [data, defaultCurrencyCode, initialProduct, products]);
+  }, [data, defaultCurrencyCode, initialProduct]);
 
   const methods = useForm<IFormData>({
     disabled: submit.inProcess,
@@ -78,7 +68,7 @@ export const StoreModify: React.FC = () => {
     shouldUnregister: false,
     defaultValues: {
       shopUuid: data?.shopUuid ?? '',
-      productUuid: data?.productUuid ?? '',
+      product: initialProduct ?? null,
       showing: data?.showing ?? false,
       offers: defaultOffers,
     },
@@ -97,7 +87,7 @@ export const StoreModify: React.FC = () => {
   return (
     <FormProvider {...methods}>
       <form id={STORE_MODIFY_FORM_ID} className={s.wrapper} onSubmit={handleSubmit}>
-        <Fields currencies={currencies} products={products} />
+        <Fields currencies={currencies} />
       </form>
     </FormProvider>
   );
