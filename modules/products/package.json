@@ -9,14 +9,18 @@
   "license": "ISC",
   "main": "src/index.ts",
   "dependencies": {
+    "@hookform/resolvers": "5.9.1",
     "@library/design": "0.0.1",
     "@library/domain": "0.0.1",
     "@library/route-tokens": "0.0.1",
     "@provider/product-changes": "0.0.1",
     "@sellgar/app": "0.0.1",
     "@sellgar/kit": "0.0.1",
+    "class-validator": "0.15.1",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "react-hook-form": "7.89.0",
+    "yup": "1.7.1"
   },
   "devDependencies": {
     "@types/react": "19.3.0",
