@@ -9,7 +9,7 @@
     "@sellgar/app": "0.0.1",
     "@sellgar/kit": "0.0.1",
     "mobx": "6.16.1",
-    "react": "19.3.0"
+    "react": "19.3.1"
   },
   "devDependencies": {
     "@types/react": "19.3.0",

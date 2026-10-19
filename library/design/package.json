@@ -9,13 +9,13 @@
   "license": "ISC",
   "main": "./src/index.ts",
   "dependencies": {
-    "@dnd-kit/collision": "0.5.0",
-    "@dnd-kit/helpers": "0.5.0",
-    "@dnd-kit/react": "0.5.0",
+    "@dnd-kit/collision": "0.5.1",
+    "@dnd-kit/helpers": "0.5.1",
+    "@dnd-kit/react": "0.5.1",
     "@utils/format": "0.0.1",
     "classnames": "2.5.1",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "stickybits": "3.7.11"
   },
   "devDependencies": {

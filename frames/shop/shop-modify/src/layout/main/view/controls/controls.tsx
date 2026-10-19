@@ -1,4 +1,4 @@
-import { useController, useSubmit } from '@sellgar/app/react';
+import { useController, useLoaderData, useSubmit } from '@sellgar/app/react';
 import { Button } from '@sellgar/kit';
 import React from 'react';
 
@@ -9,12 +9,18 @@ import { ShopModifyControllerInterface } from '../../../../classes/controller/sh
 import s from './default.module.scss';
 
 export const Controls: React.FC = () => {
+  const data = useLoaderData(ShopModifyControllerInterface);
   const controller = useController(ShopModifyControllerInterface);
   const submit = useSubmit(ShopModifyControllerInterface);
 
   return (
     <div className={s.wrapper}>
-      <Button type={'button'} style={'secondary'} disabled={submit.inProcess} onClick={() => void controller.close()}>
+      <Button
+        type={'button'}
+        style={'secondary'}
+        disabled={submit.inProcess}
+        onClick={() => void controller.toReview(data.uuid)}
+      >
         Отмена
       </Button>
       <Button type={'submit'} form={SHOP_MODIFY_FORM_ID} inProcess={submit.inProcess}>
