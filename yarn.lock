@@ -4282,11 +4282,13 @@ __metadata:
     mobx: "npm:6.16.1"
     mobx-react: "npm:9.2.2"
     react-error-boundary: "npm:6.1.6"
+    typescript: "npm:6.0.3"
   peerDependencies:
     "@floating-ui/react": ^0.27.0
     class-transformer: ^0.5.1
     class-validator: ^0.15.1
     classnames: ^2.5.1
+    next: ">=16.3.0 <17"
     react: ^19.2.0
     react-dom: ^19.0.0
     react-native: ">=0.86.0 <1.0.0"
@@ -4296,10 +4298,13 @@ __metadata:
     react-native-safe-area-context: ^5.8.0
     react-native-worklets: ~0.13.0
     reflect-metadata: ^0.2.2
+    typescript: ">=5.9.0 <7"
   peerDependenciesMeta:
     "@floating-ui/react":
       optional: true
     classnames:
+      optional: true
+    next:
       optional: true
     react:
       optional: true
@@ -4316,6 +4321,8 @@ __metadata:
     react-native-safe-area-context:
       optional: true
     react-native-worklets:
+      optional: true
+    typescript:
       optional: true
   languageName: unknown
   linkType: soft
