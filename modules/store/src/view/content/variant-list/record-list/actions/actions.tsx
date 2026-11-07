@@ -1,7 +1,6 @@
 import type { StoreAccountingRecordEntity } from '@library/domain';
 import { StoreInventoryRoute } from '@library/route-tokens';
 import * as App from '@sellgar/app/react';
-import * as Kit from '@sellgar/kit';
 import { Button } from '@sellgar/kit';
 import { StockLineIcon } from '@sellgar/kit/icons';
 
@@ -11,10 +10,13 @@ import { RecordListContext } from '../record-list.context.ts';
 
 import s from './default.module.scss';
 
-export const Actions: React.FC = () => {
+interface IProps {
+  record: StoreAccountingRecordEntity;
+}
+
+export const Actions: React.FC<IProps> = (props) => {
   const offer = React.useContext(RecordListContext);
   const navigate = App.useNavigate();
-  const { data } = Kit.useCellData<StoreAccountingRecordEntity>();
 
   const handleClick: React.MouseEventHandler<HTMLButtonElement> = (event) => {
     event.stopPropagation();
@@ -22,7 +24,7 @@ export const Actions: React.FC = () => {
     void navigate.to(StoreInventoryRoute, {
       params: {
         storeProductUuid: offer.storeProductUuid,
-        recordUuid: data.uuid,
+        recordUuid: props.record.uuid,
       },
     });
   };

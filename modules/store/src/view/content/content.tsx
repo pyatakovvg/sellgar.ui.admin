@@ -1,6 +1,6 @@
 import { StoreReviewRoute } from '@library/route-tokens';
 import * as App from '@sellgar/app/react';
-import { Table } from '@sellgar/kit';
+import { Table } from '@sellgar/kit/table';
 
 import React from 'react';
 
@@ -24,7 +24,8 @@ export const Content: React.FC = () => {
       <Table
         surface={'standalone'}
         size={'md'}
-        data={{ nodes: loaderData.data }}
+        data={{ nodes: loaderData.data, getRowId: (row) => row.uuid }}
+        layout={{ scroll: 'external', stickyHeader: true, virtualization: true }}
         row={{
           handlers: {
             doubleClick: ({ context }) => context.expansion?.toggle(),
@@ -34,50 +35,38 @@ export const Content: React.FC = () => {
       >
         {({ Column, Expand }) => (
           <>
-            <Column width={24}>
-              {({ Cell }) => (
-                <Cell>
-                  <Visible />
-                </Cell>
-              )}
+            <Column key={'visible'} width={24}>
+              {({ Cell }) => <Cell render={({ row }) => <Visible product={row} />} />}
             </Column>
-            <Column>
+            <Column key={'name'} minWidth={240}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Товар'} />
-                  <Cell>
-                    <Name />
-                  </Cell>
+                  <Cell render={({ row }) => <Name product={row} />} />
                 </>
               )}
             </Column>
-            <Column>
+            <Column key={'shop'} minWidth={120}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Магазин'} />
-                  <Cell>
-                    <Shop />
-                  </Cell>
+                  <Cell render={({ row }) => <Shop product={row} />} />
                 </>
               )}
             </Column>
-            <Column width={140}>
+            <Column key={'variants'} width={140}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Варианты'} />
-                  <Cell>
-                    <Variants />
-                  </Cell>
+                  <Cell render={({ row }) => <Variants product={row} />} />
                 </>
               )}
             </Column>
-            <Column width={160}>
+            <Column key={'showcase'} width={160}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Витрина'} />
-                  <Cell>
-                    <Showcase />
-                  </Cell>
+                  <Cell render={({ row }) => <Showcase product={row} />} />
                 </>
               )}
             </Column>

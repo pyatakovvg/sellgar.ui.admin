@@ -2,10 +2,12 @@
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
+  min-width: 0;
   color: var(--text-base-primary);
 }
 
 .name {
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
   color: var(--text-base-primary);
 }

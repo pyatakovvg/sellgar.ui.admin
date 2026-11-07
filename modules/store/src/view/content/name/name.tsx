@@ -1,19 +1,20 @@
 import type { StoreProductEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-const NameComponent: React.FC = () => {
-  const { data } = Kit.useCellData<StoreProductEntity>();
+interface IProps {
+  product: StoreProductEntity;
+}
 
+const NameComponent: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-l'} weight={'medium'}>
-        <p className={s.name}>{data.productSnapshot?.name ?? 'Не синхронизирован'}</p>
+        <p className={s.name}>{props.product.productSnapshot?.name ?? 'Не синхронизирован'}</p>
       </Typography>
     </div>
   );

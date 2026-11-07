@@ -1,6 +1,6 @@
 import type { StoreOfferEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import { Table } from '@sellgar/kit';
+import { Table } from '@sellgar/kit/table';
 import React from 'react';
 import { Article } from './article';
 import { Clarifications } from './clarifications';
@@ -16,65 +16,57 @@ const RecordListComponent: React.FC<IProps> = (props) => {
   return (
     <RecordListContext.Provider value={props.offer}>
       <div className={s.wrapper}>
-        <Table surface={'embedded'} size={'sm'} style={'secondary'} data={{ nodes: props.offer.records }}>
+        <Table
+          surface={'embedded'}
+          size={'sm'}
+          style={'secondary'}
+          data={{ nodes: props.offer.records, getRowId: (row) => row.uuid }}
+          layout={{ scroll: 'external', stickyHeader: false, virtualization: true }}
+        >
           {({ Column }) => (
             <>
-              <Column width={220}>
+              <Column key={'article'} width={220}>
                 {({ Head, Cell }) => (
                   <>
                     <Head label={'Артикул'} />
-                    <Cell>
-                      <Article />
-                    </Cell>
+                    <Cell render={({ row }) => <Article record={row} />} />
                   </>
                 )}
               </Column>
-              <Column>
+              <Column key={'clarifications'} minWidth={140}>
                 {({ Head, Cell }) => (
                   <>
                     <Head label={'Уточнения'} />
-                    <Cell>
-                      <Clarifications />
-                    </Cell>
+                    <Cell render={({ row }) => <Clarifications record={row} />} />
                   </>
                 )}
               </Column>
-              <Column width={96} align={'right'}>
+              <Column key={'quantity'} width={96} align={'right'}>
                 {({ Head, Cell }) => (
                   <>
                     <Head label={'Остаток'} />
-                    <Cell>
-                      <Inventory value={'quantity'} />
-                    </Cell>
+                    <Cell render={({ row }) => <Inventory record={row} value={'quantity'} />} />
                   </>
                 )}
               </Column>
-              <Column width={96} align={'right'}>
+              <Column key={'reserved'} width={96} align={'right'}>
                 {({ Head, Cell }) => (
                   <>
                     <Head label={'Резерв'} />
-                    <Cell>
-                      <Inventory value={'reserved'} />
-                    </Cell>
+                    <Cell render={({ row }) => <Inventory record={row} value={'reserved'} />} />
                   </>
                 )}
               </Column>
-              <Column width={96} align={'right'}>
+              <Column key={'available'} width={96} align={'right'}>
                 {({ Head, Cell }) => (
                   <>
                     <Head label={'Доступно'} />
-                    <Cell>
-                      <Inventory value={'available'} />
-                    </Cell>
+                    <Cell render={({ row }) => <Inventory record={row} value={'available'} />} />
                   </>
                 )}
               </Column>
-              <Column width={52}>
-                {({ Cell }) => (
-                  <Cell>
-                    <Actions />
-                  </Cell>
-                )}
+              <Column key={'actions'} width={52}>
+                {({ Cell }) => <Cell render={({ row }) => <Actions record={row} />} />}
               </Column>
             </>
           )}

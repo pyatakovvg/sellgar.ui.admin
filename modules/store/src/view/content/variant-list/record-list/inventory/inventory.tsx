@@ -1,6 +1,5 @@
 import type { StoreAccountingRecordEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
 
 import React from 'react';
@@ -8,12 +7,12 @@ import React from 'react';
 import s from './default.module.scss';
 
 interface IProps {
+  record: StoreAccountingRecordEntity;
   value: 'quantity' | 'reserved' | 'available';
 }
 
 const InventoryComponent: React.FC<IProps> = (props) => {
-  const { data } = Kit.useCellData<StoreAccountingRecordEntity>();
-  const value = data.inventory[props.value];
+  const value = props.record.inventory[props.value];
 
   return (
     <div className={s.wrapper}>

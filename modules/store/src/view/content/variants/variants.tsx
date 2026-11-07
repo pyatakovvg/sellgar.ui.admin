@@ -1,6 +1,5 @@
 import type { StoreProductEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
 
 import React from 'react';
@@ -19,13 +18,15 @@ const formatVariantCount = (count: number): string => {
   return `${count} вариантов`;
 };
 
-const VariantsComponent: React.FC = () => {
-  const { data } = Kit.useCellData<StoreProductEntity>();
+interface IProps {
+  product: StoreProductEntity;
+}
 
+const VariantsComponent: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-m'} weight={'medium'}>
-        <p className={s.value}>{formatVariantCount(data.offers.length)}</p>
+        <p className={s.value}>{formatVariantCount(props.product.offers.length)}</p>
       </Typography>
     </div>
   );

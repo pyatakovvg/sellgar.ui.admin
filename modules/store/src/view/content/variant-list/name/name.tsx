@@ -1,19 +1,20 @@
 import type { StoreOfferEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-const NameComponent: React.FC = () => {
-  const { data } = Kit.useCellData<StoreOfferEntity>();
+interface IProps {
+  offer: StoreOfferEntity;
+}
 
+const NameComponent: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-m'} weight={'medium'}>
-        <p className={s.variant}>{data.variantSnapshot?.name ?? 'Не синхронизирован'}</p>
+        <p className={s.variant}>{props.offer.variantSnapshot?.name ?? 'Не синхронизирован'}</p>
       </Typography>
     </div>
   );

@@ -1,18 +1,19 @@
 import type { StoreProductEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import * as Kit from '@sellgar/kit';
 import { Dot } from '@sellgar/kit';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-const VisibleComponent: React.FC = () => {
-  const { data } = Kit.useCellData<StoreProductEntity>();
+interface IProps {
+  product: StoreProductEntity;
+}
 
+const VisibleComponent: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
-      <Dot size={'lg'} color={data.showing ? 'green' : 'gray'} />
+      <Dot size={'lg'} color={props.product.showing ? 'green' : 'gray'} />
     </div>
   );
 };

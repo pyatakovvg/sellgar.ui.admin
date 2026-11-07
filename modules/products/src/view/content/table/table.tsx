@@ -1,5 +1,5 @@
 import * as App from '@sellgar/app/react';
-import { Table as TableComponent } from '@sellgar/kit';
+import { Table as TableComponent } from '@sellgar/kit/table';
 
 import React from 'react';
 
@@ -17,7 +17,8 @@ export const Table: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <TableComponent
-        data={{ nodes: products.items }}
+        data={{ nodes: products.items, getRowId: (row) => row.uuid }}
+        layout={{ scroll: 'external', virtualization: true }}
         row={{
           handlers: {
             click: ({ row }) => void controller.open(row.uuid),
@@ -26,23 +27,19 @@ export const Table: React.FC = () => {
       >
         {({ Column }) => (
           <>
-            <Column>
+            <Column key={'description'} resizable={true}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Описание'} />
-                  <Cell>
-                    <Name />
-                  </Cell>
+                  <Cell render={({ row }) => <Name product={row} />} />
                 </>
               )}
             </Column>
-            <Column>
+            <Column key={'brand'}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Бренд'} />
-                  <Cell>
-                    <Brand />
-                  </Cell>
+                  <Cell render={({ row }) => <Brand product={row} />} />
                 </>
               )}
             </Column>

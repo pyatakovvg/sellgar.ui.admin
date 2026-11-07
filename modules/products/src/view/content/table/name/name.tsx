@@ -1,22 +1,23 @@
 import type { ProductSummaryEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-const NameComponent: React.FC = () => {
-  const { data } = Kit.useCellData<ProductSummaryEntity>();
+interface IProps {
+  product: ProductSummaryEntity;
+}
 
+const NameComponent: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-l'} weight={'medium'}>
-        <p className={s.name}>{data.name}</p>
+        <p className={s.name}>{props.product.name}</p>
       </Typography>
       <div className={s.variants}>
-        {data.variants.map((variant) => (
+        {props.product.variants.map((variant) => (
           <div key={variant.uuid} className={s.variant}>
             <Typography size={'caption-m'} weight={'medium'}>
               <p>{variant.name}</p>

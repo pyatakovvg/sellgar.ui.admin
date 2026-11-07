@@ -1,16 +1,19 @@
 import type { StoreAccountingRecordEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import { Typography, useCellData } from '@sellgar/kit';
+import { Typography } from '@sellgar/kit';
 import React from 'react';
 import s from './default.module.scss';
 
-const ClarificationsComponent: React.FC = () => {
-  const { data } = useCellData<StoreAccountingRecordEntity>();
+interface IProps {
+  record: StoreAccountingRecordEntity;
+}
+
+const ClarificationsComponent: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-m'}>
-        {data.clarifications.length
-          ? data.clarifications.map((item) => (
+        {props.record.clarifications.length
+          ? props.record.clarifications.map((item) => (
               <p key={item.position} className={s.value}>
                 {item.value}
               </p>

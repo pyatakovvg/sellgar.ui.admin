@@ -1,6 +1,6 @@
 import type { StoreProductEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import { Table } from '@sellgar/kit';
+import { Table } from '@sellgar/kit/table';
 import React from 'react';
 import { Name } from './name';
 import { Price } from './price';
@@ -17,35 +17,28 @@ const VariantListComponent: React.FC<IProps> = (props) => (
       surface={'embedded'}
       size={'sm'}
       style={'secondary'}
-      data={{ nodes: props.storeProduct.offers }}
+      data={{ nodes: props.storeProduct.offers, getRowId: (row) => row.uuid }}
+      layout={{ scroll: 'external', stickyHeader: false, virtualization: true }}
       row={{ handlers: { doubleClick: ({ context }) => context.expansion?.toggle() } }}
     >
       {({ Column, Expand }) => (
         <>
-          <Column width={36}>
-            {({ Cell }) => (
-              <Cell>
-                <Visible />
-              </Cell>
-            )}
+          <Column key={'visible'} width={36}>
+            {({ Cell }) => <Cell render={({ row }) => <Visible offer={row} />} />}
           </Column>
-          <Column>
+          <Column key={'name'} minWidth={160}>
             {({ Head, Cell }) => (
               <>
                 <Head label={'Вариант'} />
-                <Cell>
-                  <Name />
-                </Cell>
+                <Cell render={({ row }) => <Name offer={row} />} />
               </>
             )}
           </Column>
-          <Column align={'right'}>
+          <Column key={'price'} minWidth={160} align={'right'}>
             {({ Head, Cell }) => (
               <>
                 <Head label={'Цена'} />
-                <Cell>
-                  <Price />
-                </Cell>
+                <Cell render={({ row }) => <Price offer={row} />} />
               </>
             )}
           </Column>

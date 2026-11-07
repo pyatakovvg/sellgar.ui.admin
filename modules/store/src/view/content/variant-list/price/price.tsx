@@ -1,6 +1,5 @@
 import type { StoreOfferEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
 import { amountFormat } from '@utils/format';
 
@@ -8,9 +7,12 @@ import React from 'react';
 
 import s from './default.module.scss';
 
-const PriceComponent: React.FC = () => {
-  const { data } = Kit.useCellData<StoreOfferEntity>();
-  const currentPrice = data.currentPrice;
+interface IProps {
+  offer: StoreOfferEntity;
+}
+
+const PriceComponent: React.FC<IProps> = (props) => {
+  const currentPrice = props.offer.currentPrice;
   const value = currentPrice ? amountFormat(currentPrice.value, { hundredthsAfterDecimal: true }) : '---';
 
   return (
