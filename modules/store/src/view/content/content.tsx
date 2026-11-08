@@ -24,8 +24,8 @@ export const Content: React.FC = () => {
       <Table
         surface={'standalone'}
         size={'md'}
-        data={{ nodes: loaderData.data, getRowId: (row) => row.uuid }}
-        layout={{ scroll: 'external', stickyHeader: true, virtualization: true, pinning: { reserve: 50 } }}
+        data={{ nodes: loaderData.data }}
+        layout={{ scroll: 'external', stickyHeader: true, virtualization: true }}
         row={{
           handlers: {
             doubleClick: ({ context }) => context.expansion?.toggle(),
@@ -35,10 +35,10 @@ export const Content: React.FC = () => {
       >
         {({ Column, Expand }) => (
           <>
-            <Column key={'visible'} width={24} minWidth={24} pinLeft={true}>
+            <Column key={'visible'} width={'var(--numbers-24)'} minWidth={'var(--numbers-24)'} pinLeft={true}>
               {({ Cell }) => <Cell render={({ row }) => <Visible product={row} />} />}
             </Column>
-            <Column key={'name'} minWidth={240} pinLeft={true}>
+            <Column key={'name'} minWidth={'var(--numbers-240)'} pinLeft={true} resizable={true}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Товар'} />
@@ -46,7 +46,7 @@ export const Content: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'shop'} minWidth={120}>
+            <Column key={'shop'} minWidth={'var(--numbers-120)'}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Магазин'} />
@@ -54,7 +54,7 @@ export const Content: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'variants'} width={140}>
+            <Column key={'variants'} width={'var(--numbers-140)'}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Варианты'} />
@@ -62,7 +62,13 @@ export const Content: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'showcase'} width={160} minWidth={160} pinRight={true}>
+            <Column
+              key={'showcase'}
+              width={'var(--numbers-160)'}
+              minWidth={'var(--numbers-160)'}
+              pinRight={true}
+              resizable={true}
+            >
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Витрина'} />

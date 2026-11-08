@@ -18,7 +18,7 @@ const RecordsComponent: React.FC<IProps> = (props) => {
         surface={'standalone'}
         size={'sm'}
         style={'secondary'}
-        data={{ nodes: props.offer.records, getRowId: (row) => row.uuid }}
+        data={{ nodes: props.offer.records }}
         layout={{ scroll: 'external', virtualization: true, stickyHeader: false }}
         row={{
           handlers: {

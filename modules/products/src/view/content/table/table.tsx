@@ -17,7 +17,7 @@ export const Table: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <TableComponent
-        data={{ nodes: products.items, getRowId: (row) => row.uuid }}
+        data={{ nodes: products.items }}
         layout={{ scroll: 'external', virtualization: true }}
         row={{
           handlers: {

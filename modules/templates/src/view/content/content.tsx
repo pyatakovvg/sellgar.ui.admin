@@ -18,7 +18,7 @@ export const Content: React.FC = () => {
     <div className={s.wrapper}>
       <TableComponent
         size={'lg'}
-        data={{ nodes: templates.items, getRowId: (row) => row.uuid }}
+        data={{ nodes: templates.items }}
         layout={{ scroll: 'external', virtualization: true }}
         row={{ handlers: { click: ({ row }) => void controller.open(row.uuid) } }}
       >

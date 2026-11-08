@@ -20,12 +20,12 @@ const RecordListComponent: React.FC<IProps> = (props) => {
           surface={'embedded'}
           size={'sm'}
           style={'secondary'}
-          data={{ nodes: props.offer.records, getRowId: (row) => row.uuid }}
+          data={{ nodes: props.offer.records }}
           layout={{ scroll: 'external', stickyHeader: false, virtualization: true }}
         >
           {({ Column }) => (
             <>
-              <Column key={'article'} width={220}>
+              <Column key={'article'} width={'var(--numbers-220)'}>
                 {({ Head, Cell }) => (
                   <>
                     <Head label={'Артикул'} />
@@ -33,7 +33,7 @@ const RecordListComponent: React.FC<IProps> = (props) => {
                   </>
                 )}
               </Column>
-              <Column key={'clarifications'} minWidth={140}>
+              <Column key={'clarifications'} minWidth={'var(--numbers-140)'}>
                 {({ Head, Cell }) => (
                   <>
                     <Head label={'Уточнения'} />
@@ -41,7 +41,7 @@ const RecordListComponent: React.FC<IProps> = (props) => {
                   </>
                 )}
               </Column>
-              <Column key={'quantity'} width={96} align={'right'}>
+              <Column key={'quantity'} width={'var(--numbers-96)'} align={'right'}>
                 {({ Head, Cell }) => (
                   <>
                     <Head label={'Остаток'} />
@@ -49,7 +49,7 @@ const RecordListComponent: React.FC<IProps> = (props) => {
                   </>
                 )}
               </Column>
-              <Column key={'reserved'} width={96} align={'right'}>
+              <Column key={'reserved'} width={'var(--numbers-96)'} align={'right'}>
                 {({ Head, Cell }) => (
                   <>
                     <Head label={'Резерв'} />
@@ -57,7 +57,7 @@ const RecordListComponent: React.FC<IProps> = (props) => {
                   </>
                 )}
               </Column>
-              <Column key={'available'} width={96} align={'right'}>
+              <Column key={'available'} width={'var(--numbers-96)'} align={'right'}>
                 {({ Head, Cell }) => (
                   <>
                     <Head label={'Доступно'} />
@@ -65,7 +65,7 @@ const RecordListComponent: React.FC<IProps> = (props) => {
                   </>
                 )}
               </Column>
-              <Column key={'actions'} width={52}>
+              <Column key={'actions'} width={'var(--numbers-52)'}>
                 {({ Cell }) => <Cell render={({ row }) => <Actions record={row} />} />}
               </Column>
             </>

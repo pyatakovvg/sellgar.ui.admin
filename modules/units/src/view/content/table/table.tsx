@@ -20,7 +20,7 @@ const TableView: React.FC = () => {
     <div className={s.wrapper}>
       <TableComponent
         size={'lg'}
-        data={{ nodes: units.items, getRowId: (row) => row.code }}
+        data={{ nodes: units.items }}
         layout={{ scroll: 'external', virtualization: true }}
         row={{
           handlers: {

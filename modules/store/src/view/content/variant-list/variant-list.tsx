@@ -17,16 +17,16 @@ const VariantListComponent: React.FC<IProps> = (props) => (
       surface={'embedded'}
       size={'sm'}
       style={'secondary'}
-      data={{ nodes: props.storeProduct.offers, getRowId: (row) => row.uuid }}
+      data={{ nodes: props.storeProduct.offers }}
       layout={{ scroll: 'external', stickyHeader: false, virtualization: true }}
       row={{ handlers: { doubleClick: ({ context }) => context.expansion?.toggle() } }}
     >
       {({ Column, Expand }) => (
         <>
-          <Column key={'visible'} width={36}>
+          <Column key={'visible'} width={'var(--numbers-36)'}>
             {({ Cell }) => <Cell render={({ row }) => <Visible offer={row} />} />}
           </Column>
-          <Column key={'name'} minWidth={160}>
+          <Column key={'name'} minWidth={'var(--numbers-160)'}>
             {({ Head, Cell }) => (
               <>
                 <Head label={'Вариант'} />
@@ -34,7 +34,7 @@ const VariantListComponent: React.FC<IProps> = (props) => (
               </>
             )}
           </Column>
-          <Column key={'price'} minWidth={160} align={'right'}>
+          <Column key={'price'} minWidth={'var(--numbers-160)'} align={'right'}>
             {({ Head, Cell }) => (
               <>
                 <Head label={'Цена'} />

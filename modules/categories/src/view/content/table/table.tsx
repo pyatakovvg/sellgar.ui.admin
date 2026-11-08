@@ -19,7 +19,7 @@ export const Table: React.FC = () => {
     <div className={s.wrapper}>
       <TableComponent
         size={'md'}
-        data={{ nodes: categories.data, getRowId: (row) => row.uuid }}
+        data={{ nodes: categories.data }}
         layout={{ scroll: 'external', virtualization: true }}
         tree={{ isUse: true, accessor: 'children' }}
         row={{

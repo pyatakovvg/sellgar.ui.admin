@@ -9,7 +9,7 @@
 - Loader списка, table и header держать здесь.
 - Для создания использовать `BrandCreateRoute`; строка таблицы открывает `BrandReviewRoute`.
 - Использовать новый `Table` из `@sellgar/kit/table`: внешний вертикальный scroll owner,
-  виртуализация, стабильный `data.getRowId` по `code`.
+  виртуализация и встроенная идентификация строк по объектам, без `data.getRowId`.
 - Обе колонки автоматические; resize выключен. Ячейки получают `BrandEntity` через
   `Cell.render`, без legacy `useCellData`.
 - Row click является primary edit/open action для brand rows.
