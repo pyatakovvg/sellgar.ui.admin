@@ -1,20 +1,23 @@
 import type { BrandEntity } from '@library/domain';
 import { reactive } from '@sellgar/app/react';
-import * as Kit from '@sellgar/kit';
 import { Typography } from '@sellgar/kit';
 
 import React from 'react';
 
 import s from './default.module.scss';
 
-export const Name: React.FC = reactive(() => {
-  const { data } = Kit.useCellData<BrandEntity>();
+interface IProps {
+  brand: BrandEntity;
+}
 
+const NameComponent: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-l'} weight={'medium'}>
-        <p>{data.name}</p>
+        <p>{props.brand.name}</p>
       </Typography>
     </div>
   );
-});
+};
+
+export const Name = reactive(NameComponent);

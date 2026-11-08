@@ -5,5 +5,9 @@
 - Loader списка, таблица и header принадлежат этому пакету.
 - Создание открывается по `PropertyCreateRoute`, клик строки — по `PropertyReviewRoute`.
 - Фреймы просмотра и редактирования расположены в `frames/property`.
+- Использовать новый `Table` из `@sellgar/kit/table`: внешний вертикальный scroll owner,
+  виртуализация, `data.getRowId` по `code` и размер `lg`.
+- Наименование имеет ширину 256, описание — auto. Resize выключен.
+- Ячейки получают `PropertyEntity` через `Cell.render`, без legacy `useCellData`.
 - Таблица и ячейки реактивны к изменениям `@Entity`/`@EntityCollection`.
 - Столбец описания занимает доступную ширину и переносит длинный текст.

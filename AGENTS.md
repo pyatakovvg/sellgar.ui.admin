@@ -64,7 +64,7 @@
 - Route identifiers приходят в `ControllerArgs<WithParams<...>>['params']`; тип выводить из token через `RouteParams<typeof Token>`.
 - Navigation выполнять через `useNavigate()`/`NavigateServiceInterface` и route token, без строковых URL.
 - Табличное открытие drawer делать через click row, если действие является основным для строки.
-- Для таблиц использовать актуальный компонент `Table` из `@sellgar/kit`.
+- Для таблиц использовать новый компонент `Table` из `@sellgar/kit/table`.
 
 ## Скрипты
 

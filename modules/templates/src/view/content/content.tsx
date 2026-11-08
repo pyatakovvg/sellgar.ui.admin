@@ -1,34 +1,14 @@
-import type { ProductTypeEntity } from '@library/domain';
 import * as App from '@sellgar/app/react';
-import * as Kit from '@sellgar/kit';
-import { Table as TableComponent, Typography } from '@sellgar/kit';
+import { Table as TableComponent } from '@sellgar/kit/table';
 
 import React from 'react';
 
 import { TemplatesControllerInterface } from '../../classes/controller/templates-controller.interface.ts';
 
+import { Name } from './name';
+import { ProductCount } from './product-count';
+
 import s from './content.module.scss';
-
-const NameCell: React.FC = App.reactive(() => {
-  const { data } = Kit.useCellData<ProductTypeEntity>();
-  return (
-    <div className={s.cell}>
-      <Typography size={'caption-l'} weight={'medium'}>
-        <p>{data.name}</p>
-      </Typography>
-    </div>
-  );
-});
-
-const ActiveProductCountCell: React.FC = App.reactive(() => {
-  const { data } = Kit.useCellData<ProductTypeEntity>();
-  return <div className={s.cell}>{data.activeProductCount}</div>;
-});
-
-const ArchivedProductCountCell: React.FC = App.reactive(() => {
-  const { data } = Kit.useCellData<ProductTypeEntity>();
-  return <div className={s.cell}>{data.archivedProductCount}</div>;
-});
 
 export const Content: React.FC = () => {
   const controller = App.useController(TemplatesControllerInterface);
@@ -37,38 +17,34 @@ export const Content: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <TableComponent
-        data={{ nodes: templates.items }}
+        size={'lg'}
+        data={{ nodes: templates.items, getRowId: (row) => row.uuid }}
+        layout={{ scroll: 'external', virtualization: true }}
         row={{ handlers: { click: ({ row }) => void controller.open(row.uuid) } }}
       >
         {({ Column }) => (
           <>
-            <Column>
+            <Column key={'name'} minWidth={280}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Название'} />
-                  <Cell>
-                    <NameCell />
-                  </Cell>
+                  <Cell render={({ row }) => <Name template={row} />} />
                 </>
               )}
             </Column>
-            <Column>
+            <Column key={'active'} width={176}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Активные товары'} />
-                  <Cell>
-                    <ActiveProductCountCell />
-                  </Cell>
+                  <Cell render={({ row }) => <ProductCount template={row} kind={'active'} />} />
                 </>
               )}
             </Column>
-            <Column>
+            <Column key={'archived'} width={176}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Архивные товары'} />
-                  <Cell>
-                    <ArchivedProductCountCell />
-                  </Cell>
+                  <Cell render={({ row }) => <ProductCount template={row} kind={'archived'} />} />
                 </>
               )}
             </Column>

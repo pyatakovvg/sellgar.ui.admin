@@ -1,6 +1,6 @@
 import { UnitReviewRoute } from '@library/route-tokens';
 import * as App from '@sellgar/app/react';
-import { Table as TableComponent } from '@sellgar/kit';
+import { Table as TableComponent } from '@sellgar/kit/table';
 
 import React from 'react';
 
@@ -12,14 +12,16 @@ import { Description } from './description';
 
 import s from './default.module.scss';
 
-export const Table: React.FC = App.reactive(() => {
+const TableView: React.FC = () => {
   const units = App.useLoaderData(UnitControllerInterface);
   const navigate = App.useNavigate();
 
   return (
     <div className={s.wrapper}>
       <TableComponent
-        data={{ nodes: units.items }}
+        size={'lg'}
+        data={{ nodes: units.items, getRowId: (row) => row.code }}
+        layout={{ scroll: 'external', virtualization: true }}
         row={{
           handlers: {
             click: ({ row }) => void navigate.to(UnitReviewRoute, { params: { code: row.code } }),
@@ -28,33 +30,27 @@ export const Table: React.FC = App.reactive(() => {
       >
         {({ Column }) => (
           <>
-            <Column>
+            <Column key={'name'} width={256}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Наименование'} />
-                  <Cell>
-                    <Name />
-                  </Cell>
+                  <Cell render={({ row }) => <Name unit={row} />} />
                 </>
               )}
             </Column>
-            <Column>
+            <Column key={'symbol'} width={120}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Обозначение'} />
-                  <Cell>
-                    <Symbol />
-                  </Cell>
+                  <Cell render={({ row }) => <Symbol unit={row} />} />
                 </>
               )}
             </Column>
-            <Column width={'minmax(0, 1fr)'}>
+            <Column key={'description'}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Описание'} />
-                  <Cell>
-                    <Description />
-                  </Cell>
+                  <Cell render={({ row }) => <Description unit={row} />} />
                 </>
               )}
             </Column>
@@ -63,4 +59,6 @@ export const Table: React.FC = App.reactive(() => {
       </TableComponent>
     </div>
   );
-});
+};
+
+export const Table = App.reactive(TableView);

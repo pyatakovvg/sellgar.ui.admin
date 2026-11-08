@@ -1,6 +1,6 @@
 import { CategoryModifyRoute } from '@library/route-tokens';
 import * as App from '@sellgar/app/react';
-import { Table as TableComponent } from '@sellgar/kit';
+import { Table as TableComponent } from '@sellgar/kit/table';
 
 import React from 'react';
 
@@ -19,7 +19,8 @@ export const Table: React.FC = () => {
     <div className={s.wrapper}>
       <TableComponent
         size={'md'}
-        data={{ nodes: categories.data }}
+        data={{ nodes: categories.data, getRowId: (row) => row.uuid }}
+        layout={{ scroll: 'external', virtualization: true }}
         tree={{ isUse: true, accessor: 'children' }}
         row={{
           handlers: {
@@ -29,23 +30,22 @@ export const Table: React.FC = () => {
       >
         {({ Column }) => (
           <>
-            <Column width={280}>
+            <Column key={'tree'} width={40}>
+              {({ Cell }) => <Cell render={({ node, TreeTrigger }) => (node.hasChildren ? <TreeTrigger /> : null)} />}
+            </Column>
+            <Column key={'name'} width={280}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Наименование'} />
-                  <Cell>
-                    <Name />
-                  </Cell>
+                  <Cell render={({ row, node }) => <Name category={row} depth={node.depth} />} />
                 </>
               )}
             </Column>
-            <Column>
+            <Column key={'description'}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Описание'} />
-                  <Cell>
-                    <Description />
-                  </Cell>
+                  <Cell render={({ row }) => <Description category={row} />} />
                 </>
               )}
             </Column>

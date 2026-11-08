@@ -1,6 +1,7 @@
 import type { StoreAccountingRecordEntity, StoreOfferEntity } from '@library/domain';
 import { reactive, useController } from '@sellgar/app/react';
-import { Table, Typography } from '@sellgar/kit';
+import { Typography } from '@sellgar/kit';
+import { Table } from '@sellgar/kit/table';
 import { Entry } from './entry';
 import { Quantity } from './quantity';
 import React from 'react';
@@ -17,7 +18,8 @@ const RecordsComponent: React.FC<IProps> = (props) => {
         surface={'standalone'}
         size={'sm'}
         style={'secondary'}
-        data={{ nodes: props.offer.records }}
+        data={{ nodes: props.offer.records, getRowId: (row) => row.uuid }}
+        layout={{ scroll: 'external', virtualization: true, stickyHeader: false }}
         row={{
           handlers: {
             click: ({ row }) => void controller.toInventory(props.offer.storeProductUuid, row.uuid),
@@ -26,7 +28,7 @@ const RecordsComponent: React.FC<IProps> = (props) => {
       >
         {({ Column }) => (
           <>
-            <Column width={'minmax(0, 1fr)'}>
+            <Column key={'entry'}>
               {({ Head, Cell }) => (
                 <>
                   <Head
@@ -36,13 +38,11 @@ const RecordsComponent: React.FC<IProps> = (props) => {
                       </Typography>
                     }
                   />
-                  <Cell>
-                    <Entry />
-                  </Cell>
+                  <Cell render={({ row }) => <Entry record={row} />} />
                 </>
               )}
             </Column>
-            <Column width={64} align={'right'}>
+            <Column key={'quantity'} width={64} align={'right'}>
               {({ Head, Cell }) => (
                 <>
                   <Head
@@ -54,13 +54,11 @@ const RecordsComponent: React.FC<IProps> = (props) => {
                       </Typography>
                     }
                   />
-                  <Cell>
-                    <Quantity field={'quantity'} />
-                  </Cell>
+                  <Cell render={({ row }) => <Quantity record={row} field={'quantity'} />} />
                 </>
               )}
             </Column>
-            <Column width={64} align={'right'}>
+            <Column key={'reserved'} width={64} align={'right'}>
               {({ Head, Cell }) => (
                 <>
                   <Head
@@ -72,13 +70,11 @@ const RecordsComponent: React.FC<IProps> = (props) => {
                       </Typography>
                     }
                   />
-                  <Cell>
-                    <Quantity field={'reserved'} />
-                  </Cell>
+                  <Cell render={({ row }) => <Quantity record={row} field={'reserved'} />} />
                 </>
               )}
             </Column>
-            <Column width={64} align={'right'}>
+            <Column key={'available'} width={64} align={'right'}>
               {({ Head, Cell }) => (
                 <>
                   <Head
@@ -90,9 +86,7 @@ const RecordsComponent: React.FC<IProps> = (props) => {
                       </Typography>
                     }
                   />
-                  <Cell>
-                    <Quantity field={'available'} />
-                  </Cell>
+                  <Cell render={({ row }) => <Quantity record={row} field={'available'} />} />
                 </>
               )}
             </Column>

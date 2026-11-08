@@ -1,20 +1,23 @@
 import type { UnitEntity } from '@library/domain';
-import * as Kit from '@sellgar/kit';
+import { reactive } from '@sellgar/app/react';
 import { Typography } from '@sellgar/kit';
 
 import React from 'react';
-import { reactive } from '@sellgar/app/react';
 
 import s from './default.module.scss';
 
-export const Name: React.FC = reactive(() => {
-  const { data } = Kit.useCellData<UnitEntity>();
+interface IProps {
+  unit: UnitEntity;
+}
 
+const NameComponent: React.FC<IProps> = (props) => {
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-l'} weight={'medium'}>
-        <p>{data.name}</p>
+        <p>{props.unit.name}</p>
       </Typography>
     </div>
   );
-});
+};
+
+export const Name = reactive(NameComponent);

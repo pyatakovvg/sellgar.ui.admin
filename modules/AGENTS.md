@@ -11,7 +11,7 @@
 - Module controllers, interfaces и bindings держать в `src/classes`.
 - Loader data читать через `useLoaderData(ControllerInterface)`.
 - Для drawer/modal create-edit workflows использовать frames.
-- Для списковых таблиц использовать текущий `Table` из `@sellgar/kit`.
+- Для списковых таблиц использовать новый `Table` из `@sellgar/kit/table`.
 - Если table row представляет редактируемую сущность, primary open/edit action должен быть на row click.
 
 ## Нельзя

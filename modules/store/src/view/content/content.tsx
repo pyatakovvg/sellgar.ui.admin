@@ -25,7 +25,7 @@ export const Content: React.FC = () => {
         surface={'standalone'}
         size={'md'}
         data={{ nodes: loaderData.data, getRowId: (row) => row.uuid }}
-        layout={{ scroll: 'external', stickyHeader: true, virtualization: true }}
+        layout={{ scroll: 'external', stickyHeader: true, virtualization: true, pinning: { reserve: 50 } }}
         row={{
           handlers: {
             doubleClick: ({ context }) => context.expansion?.toggle(),
@@ -35,10 +35,10 @@ export const Content: React.FC = () => {
       >
         {({ Column, Expand }) => (
           <>
-            <Column key={'visible'} width={24}>
+            <Column key={'visible'} width={24} minWidth={24} pinLeft={true}>
               {({ Cell }) => <Cell render={({ row }) => <Visible product={row} />} />}
             </Column>
-            <Column key={'name'} minWidth={240}>
+            <Column key={'name'} minWidth={240} pinLeft={true}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Товар'} />
@@ -62,7 +62,7 @@ export const Content: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'showcase'} width={160}>
+            <Column key={'showcase'} width={160} minWidth={160} pinRight={true}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Витрина'} />
