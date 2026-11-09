@@ -77,13 +77,7 @@ export const Content: React.FC = () => {
               )}
             </Column>
 
-            <Expand
-              render={({ row }) => (
-                <div className={s.variants}>
-                  <VariantList storeProduct={row} />
-                </div>
-              )}
-            />
+            <Expand render={({ row }) => <VariantList storeProduct={row} />} />
           </>
         )}
       </Table>
