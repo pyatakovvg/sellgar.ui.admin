@@ -21,7 +21,7 @@ export const Table: React.FC = () => {
         size={'md'}
         data={{ nodes: categories.data }}
         layout={{ scroll: 'external', virtualization: true }}
-        tree={{ isUse: true, accessor: 'children' }}
+        tree={{ isUse: true, accessor: (row) => row.children }}
         row={{
           handlers: {
             click: ({ row }) => void navigate.to(CategoryModifyRoute, { params: { uuid: row.uuid } }),
