@@ -14,13 +14,14 @@ import s from './default.module.scss';
 const TableView: React.FC = () => {
   const properties = App.useLoaderData(PropertyControllerInterface);
   const navigate = App.useNavigate();
+  const revalidate = App.useRevalidate();
 
   return (
     <div className={s.wrapper}>
       <TableComponent
+        loading={revalidate.inProcess}
         size={'lg'}
         data={{ nodes: properties.items }}
-        layout={{ scroll: 'external', virtualization: true }}
         row={{
           handlers: {
             click: ({ row }) => void navigate.to(PropertyReviewRoute, { params: { code: row.code } }),
@@ -29,7 +30,7 @@ const TableView: React.FC = () => {
       >
         {({ Column }) => (
           <>
-            <Column key={'name'} width={256}>
+            <Column width={256}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Наименование'} />
@@ -37,7 +38,7 @@ const TableView: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'description'}>
+            <Column>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Описание'} />

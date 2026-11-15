@@ -1,116 +1,94 @@
-import type { CategoryEntity, CategoryServiceInterface, CreateCategoryInput, UpdateCategoryInput } from '@library/domain';
-import type { RevalidateServiceInterface } from '@sellgar/app';
+import type { CategoryServiceInterface } from '@library/domain';
 import type { NavigateServiceInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
 
 import { CategoryModifyController } from '../category-modify.controller.ts';
 
-const createController = () => {
-  const categoryService = {
-    create: vi.fn(),
-    findAll: vi.fn(),
-    findByUuid: vi.fn(),
-    update: vi.fn(),
-  } as unknown as CategoryServiceInterface;
-  const navigateService = {
-    close: vi.fn(),
-  } as unknown as NavigateServiceInterface;
-  const revalidateService = {
-    revalidate: vi.fn(),
-  } as unknown as RevalidateServiceInterface;
-
-  return {
-    categoryService,
-    controller: new CategoryModifyController(categoryService, navigateService, revalidateService),
-    navigateService,
-    revalidateService,
+const setup = () => {
+  const categories = {
+    create: vi.fn().mockResolvedValue({ shopUuid: 'shop' }),
+    update: vi.fn().mockResolvedValue({ shopUuid: 'shop' }),
+    findByUuid: vi.fn().mockResolvedValue({ uuid: 'category', shopUuid: 'shop', version: 2 }),
+    getTree: vi.fn().mockResolvedValue({ shopUuid: 'shop', nodes: [] }),
   };
+  const navigation = { close: vi.fn().mockResolvedValue(undefined) };
+  const controller = new CategoryModifyController(
+    categories as unknown as CategoryServiceInterface,
+    navigation as unknown as NavigateServiceInterface,
+  );
+  return { categories, navigation, controller };
 };
-
-const createPayload = (file: File): CreateCategoryInput => ({
-  code: 'category',
-  name: 'Категория',
-  description: 'Описание',
-  image: { file, alt: null },
-});
+const signal = () => new AbortController().signal;
+const payload = { name: 'Чай', description: null, parentUuid: null };
 
 describe('CategoryModifyController', () => {
-  it('не загружает категорию для create frame', async () => {
-    const fixture = createController();
-
-    await expect(
-      fixture.controller.loader({
-        params: {},
-        params: {},
-        request: new Request('http://localhost/categories'),
-        signal: new AbortController().signal,
-      }),
-    ).resolves.toBeUndefined();
-
-    expect(fixture.categoryService.findByUuid).not.toHaveBeenCalled();
+  it('loads parent choices for the creation shop without fetching a category', async () => {
+    const fixture = setup();
+    await expect(fixture.controller.loader({ params: { shopUuid: 'shop' }, signal: signal() })).resolves.toEqual({
+      shopUuid: 'shop',
+      category: null,
+      parents: [],
+    });
+    expect(fixture.categories.findByUuid).not.toHaveBeenCalled();
+    expect(fixture.categories.getTree).toHaveBeenCalledWith('shop');
   });
 
-  it('загружает категорию по frame props', async () => {
-    const fixture = createController();
-    const category = { uuid: 'c7fd8d23-c843-4d47-8d23-33698a5f034f' } as CategoryEntity;
-    vi.mocked(fixture.categoryService.findByUuid).mockResolvedValue(category);
-
-    await expect(
-      fixture.controller.loader({
-        params: {},
-        params: { uuid: category.uuid },
-        request: new Request('http://localhost/categories'),
-        signal: new AbortController().signal,
-      }),
-    ).resolves.toBe(category);
-
-    expect(fixture.categoryService.findByUuid).toHaveBeenCalledWith(category.uuid);
+  it('derives the editing shop from the category', async () => {
+    const fixture = setup();
+    await fixture.controller.loader({ params: { uuid: 'category', shopUuid: 'another' }, signal: signal() });
+    expect(fixture.categories.getTree).toHaveBeenCalledWith('shop');
   });
 
-  it('закрывает frame по пользовательской команде', async () => {
-    const fixture = createController();
+  it('creates through Store and closes without manually refreshing data', async () => {
+    const fixture = setup();
+    await fixture.controller.action({ params: { shopUuid: 'shop' }, payload, signal: signal() });
+    expect(fixture.categories.create).toHaveBeenCalledWith({
+      ...payload,
+      shopUuid: 'shop',
+      commandId: expect.any(String),
+    });
+    expect(fixture.categories.getTree).not.toHaveBeenCalled();
+    expect(fixture.navigation.close).toHaveBeenCalledOnce();
+  });
 
+  it('sends the route UUID and expected version on edit', async () => {
+    const fixture = setup();
+    await fixture.controller.action({
+      params: { uuid: 'category' },
+      payload: { ...payload, expectedVersion: 2 },
+      signal: signal(),
+    });
+    expect(fixture.categories.update).toHaveBeenCalledWith('category', {
+      ...payload,
+      uuid: 'category',
+      expectedVersion: 2,
+      commandId: expect.any(String),
+    });
+  });
+
+  it('keeps the drawer open and does not refresh after a failed save', async () => {
+    const fixture = setup();
+    fixture.categories.create.mockRejectedValue(new Error('Duplicate name'));
+    await expect(
+      fixture.controller.action({ params: { shopUuid: 'shop' }, payload, signal: signal() }),
+    ).rejects.toThrow('Duplicate name');
+    expect(fixture.navigation.close).not.toHaveBeenCalled();
+    expect(fixture.categories.getTree).not.toHaveBeenCalled();
+  });
+
+  it('rejects missing creation context and missing edit version', async () => {
+    const fixture = setup();
+    await expect(fixture.controller.loader({ params: {}, signal: signal() })).rejects.toThrow('Не выбран магазин');
+    await expect(
+      fixture.controller.action({ params: { uuid: 'category' }, payload, signal: signal() }),
+    ).rejects.toThrow('версия категории');
+    expect(fixture.categories.update).not.toHaveBeenCalled();
+  });
+
+  it('closes without refreshing loaders on cancel', async () => {
+    const fixture = setup();
     await fixture.controller.close();
-
-    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
-  });
-
-  it('передаёт объект формы и File в create без преобразования', async () => {
-    const fixture = createController();
-    const file = new File(['image'], 'category.png', { type: 'image/png' });
-    const payload = createPayload(file);
-
-    await fixture.controller.action({
-      params: {},
-      payload,
-      params: {},
-      request: new Request('http://localhost/categories', { method: 'POST' }),
-      signal: new AbortController().signal,
-    });
-
-    expect(fixture.categoryService.create).toHaveBeenCalledWith(payload);
-    expect(vi.mocked(fixture.categoryService.create).mock.calls[0][0].image?.file).toBe(file);
-    expect(fixture.revalidateService.revalidate).toHaveBeenCalledOnce();
-    expect(fixture.navigateService.close).toHaveBeenCalledOnce();
-  });
-
-  it('передаёт update payload в сервис без преобразования', async () => {
-    const fixture = createController();
-    const payload: UpdateCategoryInput = {
-      ...createPayload(new File(['image'], 'category.png', { type: 'image/png' })),
-      uuid: 'c7fd8d23-c843-4d47-8d23-33698a5f034f',
-      version: 3,
-    };
-
-    await fixture.controller.action({
-      params: {},
-      payload,
-      params: { uuid: payload.uuid },
-      request: new Request('http://localhost/categories', { method: 'POST' }),
-      signal: new AbortController().signal,
-    });
-
-    expect(fixture.categoryService.update).toHaveBeenCalledWith(payload.uuid, payload);
-    expect(fixture.categoryService.create).not.toHaveBeenCalled();
+    expect(fixture.navigation.close).toHaveBeenCalledOnce();
+    expect(fixture.categories.getTree).not.toHaveBeenCalled();
   });
 });

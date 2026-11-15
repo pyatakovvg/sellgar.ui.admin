@@ -1,3 +1,7 @@
+import { CategoryListControllerInterface } from './controller/category-list/category-list-controller.interface.ts';
+import { CategoryListController } from './controller/category-list/category-list.controller.ts';
+import { CategoryOptionsStoreInterface } from './store/category-options/category-options-store.interface.ts';
+import { CategoryOptionsStore } from './store/category-options/category-options.store.ts';
 import { BindingModuleInterface, type BindingRegistryInterface } from '@sellgar/app';
 
 import { CurrencyListControllerInterface } from './controller/currency-list/currency-list-controller.interface.ts';
@@ -13,6 +17,8 @@ import { ProductSearchStore } from './store/product-search/product-search.store.
 
 export class StoreModifyBindings implements BindingModuleInterface {
   register(registry: BindingRegistryInterface): void {
+    registry.bind(CategoryListControllerInterface).to(CategoryListController).inSingletonScope();
+    registry.bind(CategoryOptionsStoreInterface).to(CategoryOptionsStore);
     registry.bind(StoreModifyControllerInterface).to(StoreModifyController);
     registry.bind(ShopListControllerInterface).to(ShopListController);
     registry.bind(ProductListControllerInterface).to(ProductListController);

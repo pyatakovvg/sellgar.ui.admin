@@ -5,14 +5,14 @@ import { CategoryGatewayInterface } from '../data/gateway/category-gateway.inter
 import { CreateCategoryInput } from '../data/gateway/input/create-category.input.ts';
 import { UpdateCategoryInput } from '../data/gateway/input/update-category.input.ts';
 import { CategoryEntity } from '../domain/category.entity.ts';
-import { CategoryResultEntity } from '../domain/category-result.entity.ts';
+import { CategoryTreeEntity } from '../domain/category-tree.entity.ts';
 
 @Injectable()
 export class CategoryService implements CategoryServiceInterface {
   constructor(@Inject(CategoryGatewayInterface) private readonly categoryGateway: CategoryGatewayInterface) {}
 
-  findAll(): Promise<CategoryResultEntity> {
-    return this.categoryGateway.findAll();
+  getTree(shopUuid: string): Promise<CategoryTreeEntity> {
+    return this.categoryGateway.getTree(shopUuid);
   }
 
   findByUuid(uuid: string): Promise<CategoryEntity> {

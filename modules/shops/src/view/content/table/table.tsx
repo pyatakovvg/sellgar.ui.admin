@@ -14,13 +14,14 @@ import s from './default.module.scss';
 export const Table: React.FC = () => {
   const shops = App.useLoaderData(ShopControllerInterface);
   const navigate = App.useNavigate();
+  const revalidate = App.useRevalidate();
 
   return (
     <div className={s.wrapper}>
       <TableComponent
+        loading={revalidate.inProcess}
         size={'lg'}
         data={{ nodes: shops.data }}
-        layout={{ scroll: 'external', virtualization: true }}
         row={{
           handlers: {
             click: ({ row }) => void navigate.to(Tokens.ShopReviewRoute, { params: { uuid: row.uuid } }),
@@ -29,7 +30,7 @@ export const Table: React.FC = () => {
       >
         {({ Column }) => (
           <>
-            <Column key={'name'}>
+            <Column>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Название'} />
@@ -37,7 +38,7 @@ export const Table: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'inn'} width={144}>
+            <Column width={144}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'ИНН'} />

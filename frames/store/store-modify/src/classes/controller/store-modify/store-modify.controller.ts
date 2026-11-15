@@ -1,3 +1,4 @@
+import { CategoryListControllerInterface } from '../category-list/category-list-controller.interface.ts';
 import { StoreServiceInterface, type StoreProductEntity } from '@library/domain';
 
 import { Controller, Inject, NavigationBlockerServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
@@ -15,6 +16,7 @@ export class StoreModifyController implements StoreModifyControllerInterface {
     @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
     @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
     @Inject(NavigationBlockerServiceInterface) private readonly navigationBlocker: NavigationBlockerServiceInterface,
+    @Inject(CategoryListControllerInterface) private readonly categories: CategoryListControllerInterface,
   ) {}
 
   async loader(args: Parameters<StoreModifyControllerInterface['loader']>[0]) {
@@ -22,7 +24,9 @@ export class StoreModifyController implements StoreModifyControllerInterface {
       return void 0;
     }
 
-    return this.storeService.findByUuid(args.params.uuid);
+    const product = await this.storeService.findByUuid(args.params.uuid);
+    await this.categories.load(product.shopUuid);
+    return product;
   }
 
   async action(args: Parameters<StoreModifyControllerInterface['action']>[0]): Promise<StoreProductEntity> {
@@ -37,6 +41,7 @@ export class StoreModifyController implements StoreModifyControllerInterface {
         expectedVersion: args.payload.expectedVersion,
         commandId: input.commandId,
         showing: input.showing,
+        categoryUuids: input.categoryUuids,
         offers: input.offers,
       });
 

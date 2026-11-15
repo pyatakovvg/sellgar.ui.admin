@@ -13,12 +13,13 @@ import s from './default.module.scss';
 export const Table: React.FC = () => {
   const controller = App.useController(ProductControllerInterface);
   const products = App.useLoaderData(ProductControllerInterface);
+  const revalidate = App.useRevalidate();
 
   return (
     <div className={s.wrapper}>
       <TableComponent
+        loading={revalidate.inProcess}
         data={{ nodes: products.items }}
-        layout={{ scroll: 'external', virtualization: true }}
         row={{
           handlers: {
             click: ({ row }) => void controller.open(row.uuid),
@@ -27,7 +28,7 @@ export const Table: React.FC = () => {
       >
         {({ Column }) => (
           <>
-            <Column key={'description'} resizable={true}>
+            <Column resizable={true}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Описание'} />
@@ -35,7 +36,7 @@ export const Table: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'brand'}>
+            <Column>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Бренд'} />

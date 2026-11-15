@@ -3,9 +3,8 @@ import { Button } from '@sellgar/kit';
 
 import React from 'react';
 
-import { CATEGORY_MODIFY_FORM_ID } from '../../../../constants/category-modify.constants.ts';
-
 import { CategoryModifyControllerInterface } from '../../../../classes/controller/category-modify/category-modify-controller.interface.ts';
+import { CATEGORY_MODIFY_FORM_ID } from '../../../../constants/category-modify.constants.ts';
 
 import s from './default.module.scss';
 

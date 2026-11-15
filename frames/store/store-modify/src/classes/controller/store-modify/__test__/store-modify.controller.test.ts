@@ -1,3 +1,4 @@
+import type { CategoryListControllerInterface } from '../../category-list/category-list-controller.interface.ts';
 import type { StoreProductEntity, StoreServiceInterface } from '@library/domain';
 import type { NavigationBlockerServiceInterface, RevalidateServiceInterface } from '@sellgar/app';
 import type { NavigateServiceInterface } from '@sellgar/app';
@@ -9,7 +10,7 @@ import type { StoreModifyActionPayload } from '../store-modify-controller.interf
 import { StoreModifyController } from '../store-modify.controller.ts';
 
 const createController = () => {
-  const result = { uuid: 'store-product' } as StoreProductEntity;
+  const result = { uuid: 'store-product', shopUuid: 'shop' } as StoreProductEntity;
   const storeService = {
     create: vi.fn().mockResolvedValue(result),
     findByUuid: vi.fn(),
@@ -21,8 +22,16 @@ const createController = () => {
     allow: vi.fn(async (navigate: () => Promise<unknown>) => navigate()),
   } as unknown as NavigationBlockerServiceInterface;
 
+  const categories = { load: vi.fn().mockResolvedValue(undefined) };
   return {
-    controller: new StoreModifyController(storeService, navigateService, revalidateService, navigationBlocker),
+    categories,
+    controller: new StoreModifyController(
+      storeService,
+      navigateService,
+      revalidateService,
+      navigationBlocker,
+      categories as unknown as CategoryListControllerInterface,
+    ),
     navigateService,
     result,
     revalidateService,
@@ -33,6 +42,7 @@ const createController = () => {
 
 const payload: StoreModifyActionPayload = {
   shopUuid: 'shop',
+  categoryUuids: ['leaf-one', 'leaf-two'],
   product: { uuid: 'product' },
   showing: true,
   offers: [
@@ -72,6 +82,7 @@ describe('StoreModifyController', () => {
     ).resolves.toBeUndefined();
 
     expect(fixture.storeService.findByUuid).not.toHaveBeenCalled();
+    expect(fixture.categories.load).not.toHaveBeenCalled();
   });
 
   it('загружает складскую позицию по frame props', async () => {
@@ -86,6 +97,7 @@ describe('StoreModifyController', () => {
     ).resolves.toBe(fixture.result);
 
     expect(fixture.storeService.findByUuid).toHaveBeenCalledWith(fixture.result.uuid);
+    expect(fixture.categories.load).toHaveBeenCalledWith(fixture.result.shopUuid);
   });
 
   it('закрывает frame по пользовательской команде', async () => {
@@ -113,6 +125,7 @@ describe('StoreModifyController', () => {
       shopUuid: payload.shopUuid,
       productUuid: payload.product?.uuid,
       showing: true,
+      categoryUuids: payload.categoryUuids,
       offers: payload.offers,
     });
     expect(fixture.revalidateService.revalidate).toHaveBeenCalledOnce();
@@ -133,6 +146,7 @@ describe('StoreModifyController', () => {
       uuid,
       expectedVersion: 5,
       showing: true,
+      categoryUuids: payload.categoryUuids,
       offers: payload.offers,
     });
   });

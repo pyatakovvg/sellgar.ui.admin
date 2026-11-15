@@ -1,6 +1,6 @@
 import { isDateString, isUUID } from 'class-validator';
 
-export type RealtimeChannel = 'offers' | 'products';
+export type RealtimeChannel = 'offers' | 'products' | 'categories';
 
 export interface RealtimeDelivery<TPayload = unknown> {
   readonly channel: RealtimeChannel;
@@ -13,7 +13,7 @@ export interface RealtimeDelivery<TPayload = unknown> {
   readonly sequence: string;
 }
 
-const REALTIME_CHANNELS: readonly RealtimeChannel[] = ['offers', 'products'];
+const REALTIME_CHANNELS: readonly RealtimeChannel[] = ['offers', 'products', 'categories'];
 
 export const parseRealtimeDelivery = (value: unknown): RealtimeDelivery => {
   if (!isRecord(value)) {

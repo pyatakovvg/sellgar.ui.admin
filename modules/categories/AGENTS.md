@@ -1,15 +1,22 @@
-# AGENTS
+# Категории магазина
 
-## Зона ответственности
+`@module/categories` владеет просмотром дерева категорий выбранного магазина.
 
-`@module/categories` владеет route списка категорий.
+- Источник данных — Store: `GET /v2/store/categories/tree?shopUuid=<uuid>`.
+- Loader получает магазины и дерево; выбор магазина хранится в module query `shopUuid`.
+- Контракт — `CategoryTreeEntity { shopUuid, nodes }`, каждый `CategoryNodeEntity`
+  содержит обязательный массив `children`; лист возвращает `[]`.
+- Таблица использует `@sellgar/kit/table`, внешний scroll и виртуализацию.
+  Дерево передаётся через `tree.accessor: (row) => row.children`, изначально раскрыто.
+- Кнопка `Cell.render.TreeTrigger` и отступ по `node.depth` находятся в ячейке имени.
+  У листа сохраняется место кнопки для выравнивания соседей.
+- Loader не подменяет ошибки API демонстрационными данными. Примеры заполняет
+  явный seed Store; в module их нет.
+- Создание открывает `CategoryCreateRoute` с shopUuid выбранного магазина; row click
+  открывает `CategoryModifyRoute` с UUID категории. Кнопка раскрытия не открывает frame.
+- Фрейм использует Store API; после сохранения дерево обновляется.
+  Удаление, отдельная сортировка и привязка товаров пока не подключены.
 
-## Правила
-
-- Loader списка категорий, table и header держать здесь.
-- Для create/edit actions открывать `CategoryModifyFrame`.
-- Использовать `Table` из `@sellgar/kit/table` с внешней прокруткой, виртуализацией
-  и встроенной идентификацией строк по объектам. Описание — auto, resize выключен.
-- Дерево передаётся через `tree.accessor: (row) => row.children`; кнопка ветви — `Cell.render.TreeTrigger`,
-  отступ имени берётся из `node.depth`. Раскрытие не открывает редактор категории.
-- При изменении table cells сохранять отображение category hierarchy.
+Дерево CategoryTreeEntity реактивно по shopUuid. CategoryChangesProvider в providers
+декларации модуля обновляет снимок по событиям store.category.created/updated.
+Фрейм не управляет перезагрузкой таблицы.

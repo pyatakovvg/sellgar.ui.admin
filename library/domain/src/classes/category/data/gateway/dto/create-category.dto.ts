@@ -1,30 +1,15 @@
-import { Expose, Type } from 'class-transformer';
-import { IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-
 import type { CreateCategoryInput } from '../input/create-category.input.ts';
-import { CategoryImageDto } from './category-image.dto.ts';
+import { Expose } from 'class-transformer';
+import { IsUUID } from 'class-validator';
 
-export class CreateCategoryDto implements CreateCategoryInput {
+import { CategoryFieldsDto } from './category-fields.dto';
+
+export class CreateCategoryDto extends CategoryFieldsDto implements CreateCategoryInput {
   @Expose()
   @IsUUID()
-  @IsOptional()
-  parentUuid?: string | null;
+  commandId: string;
 
   @Expose()
-  @IsString()
-  code: string;
-
-  @Expose()
-  @IsString()
-  name: string;
-
-  @Expose()
-  @IsString()
-  description: string;
-
-  @Expose()
-  @ValidateNested()
-  @Type(() => CategoryImageDto)
-  @IsOptional()
-  image?: CategoryImageDto | null;
+  @IsUUID()
+  shopUuid: string;
 }

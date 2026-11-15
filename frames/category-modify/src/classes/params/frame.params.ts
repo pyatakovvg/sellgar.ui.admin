@@ -1,4 +1,6 @@
-import { CategoryModifyRoute } from '@library/route-tokens';
+import type { CategoryCreateRoute, CategoryModifyRoute } from '@library/route-tokens';
 import type { RouteParams } from '@sellgar/app';
 
-export type CategoryModifyFrameParams = Partial<RouteParams<typeof CategoryModifyRoute>>;
+export type CategoryModifyFrameParams = Partial<
+  RouteParams<typeof CategoryModifyRoute> & RouteParams<typeof CategoryCreateRoute>
+>;

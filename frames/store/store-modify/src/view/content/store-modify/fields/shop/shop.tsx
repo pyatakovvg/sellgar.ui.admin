@@ -1,5 +1,7 @@
+import { CategoryListControllerInterface } from '../../../../../classes/controller/category-list/category-list-controller.interface.ts';
+import { StoreModifyControllerInterface } from '../../../../../classes/controller/store-modify/store-modify-controller.interface.ts';
 import { Field, Label, Caption, Select } from '@sellgar/kit';
-import { useLoaderData } from '@sellgar/app/react';
+import { useController, useLoaderData } from '@sellgar/app/react';
 
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -12,8 +14,10 @@ import s from './default.module.scss';
 
 export const Shop: React.FC = () => {
   const shops = useLoaderData(ShopListControllerInterface);
+  const categories = useController(CategoryListControllerInterface);
 
-  const { control } = useFormContext<IFormData>();
+  const product = useLoaderData(StoreModifyControllerInterface);
+  const { control, setValue } = useFormContext<IFormData>();
 
   return (
     <div className={s.wrapper}>
@@ -31,12 +35,16 @@ export const Shop: React.FC = () => {
                   <Field.Content>
                     <Select
                       {...field}
+                      disabled={field.disabled || Boolean(product)}
                       options={shops}
                       optionKey={'uuid'}
                       optionValue={'name'}
                       onBlur={field.onBlur}
                       onChange={(data) => {
+                        if (data === field.value) return;
+                        setValue('categoryUuids', [], { shouldDirty: true, shouldValidate: true });
                         field.onChange(data);
+                        void categories.load(data ?? '');
                       }}
                     />
                   </Field.Content>

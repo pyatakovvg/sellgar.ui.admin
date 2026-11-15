@@ -14,13 +14,14 @@ import s from './default.module.scss';
 const TableComponentView: React.FC = () => {
   const brands = App.useLoaderData(BrandControllerInterface);
   const navigate = App.useNavigate();
+  const revalidate = App.useRevalidate();
 
   return (
     <div className={s.wrapper}>
       <TableComponent
+        loading={revalidate.inProcess}
         size={'md'}
         data={{ nodes: brands.items }}
-        layout={{ scroll: 'external', virtualization: true }}
         row={{
           handlers: {
             click: ({ row }) => void navigate.to(BrandReviewRoute, { params: { code: row.code } }),
@@ -29,7 +30,7 @@ const TableComponentView: React.FC = () => {
       >
         {({ Column }) => (
           <>
-            <Column key={'name'}>
+            <Column>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Наименование'} />
@@ -37,7 +38,7 @@ const TableComponentView: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'description'}>
+            <Column>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Описание'} />

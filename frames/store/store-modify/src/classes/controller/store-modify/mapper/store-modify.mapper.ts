@@ -11,6 +11,7 @@ export class StoreModifyMapper {
     return {
       commandId,
       shopUuid: payload.shopUuid,
+      categoryUuids: payload.categoryUuids,
       productUuid: payload.product.uuid,
       showing: payload.showing,
       offers: payload.offers.map((offer) => ({

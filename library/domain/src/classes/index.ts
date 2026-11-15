@@ -1,7 +1,7 @@
 export { AuthEntity, AuthServiceInterface, SocketTicketEntity } from './auth';
 export { BrandEntity, BrandResultEntity, BrandServiceInterface } from './brand';
 export type { CreateBrandInput, UpdateBrandInput } from './brand';
-export { CategoryEntity, CategoryResultEntity, CategoryServiceInterface } from './category';
+export { CategoryEntity, CategoryNodeEntity, CategoryTreeEntity, CategoryServiceInterface } from './category';
 export type { CreateCategoryInput, UpdateCategoryInput } from './category';
 export { CurrencyEntity, CurrencyResultEntity, CurrencyServiceInterface } from './currency';
 export type { CreateCurrencyInput, UpdateCurrencyInput } from './currency';

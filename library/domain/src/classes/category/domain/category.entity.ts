@@ -1,7 +1,5 @@
-import { Expose, Type } from 'class-transformer';
-import { IsArray, IsDateString, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
-
-import { CategoryImageEntity } from './category-image.entity.ts';
+import { Expose } from 'class-transformer';
+import { IsDateString, IsInt, IsString, IsUUID, MaxLength, Min, MinLength, ValidateIf } from 'class-validator';
 
 export class CategoryEntity {
   @Expose()
@@ -9,44 +7,34 @@ export class CategoryEntity {
   uuid: string;
 
   @Expose()
-  @IsNumber()
+  @IsInt()
+  @Min(1)
   version: number;
 
   @Expose()
   @IsUUID()
-  @IsOptional()
-  parentUuid?: string | null;
+  shopUuid: string;
+
+  @Expose()
+  @ValidateIf((_object, value) => value !== null)
+  @IsUUID()
+  parentUuid: string | null;
 
   @Expose()
   @IsString()
-  code: string;
-
-  @Expose()
-  @IsString()
+  @MinLength(1)
+  @MaxLength(512)
   name: string;
 
   @Expose()
+  @ValidateIf((_object, value) => value !== null)
   @IsString()
-  description: string;
+  description: string | null;
 
   @Expose()
-  @ValidateNested()
-  @Type(() => CategoryImageEntity)
-  @IsOptional()
-  image?: CategoryImageEntity | null;
-
-  @Expose()
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => CategoryEntity)
-  parent?: CategoryEntity;
-
-  @IsArray()
-  @Expose()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => CategoryEntity)
-  children?: CategoryEntity[];
+  @IsInt()
+  @Min(0)
+  sortOrder: number;
 
   @Expose()
   @IsDateString()

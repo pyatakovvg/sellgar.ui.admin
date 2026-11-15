@@ -5,7 +5,7 @@ import { ShopListController } from '../shop-list.controller.ts';
 
 describe('ShopListController', () => {
   it('возвращает магазины из результата предметного сервиса', async () => {
-    const result = { data: [], meta: {} } as ShopResultEntity;
+    const result = { data: [], meta: { totalRows: 0, limit: 200, offset: 0 } } as ShopResultEntity;
     const shopService = { findAll: vi.fn().mockResolvedValue(result) } as unknown as ShopServiceInterface;
     const controller = new ShopListController(shopService);
 

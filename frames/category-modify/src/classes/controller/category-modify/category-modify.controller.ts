@@ -1,38 +1,46 @@
 import { CategoryServiceInterface } from '@library/domain';
-
-import { Controller, Inject, RevalidateServiceInterface } from '@sellgar/app';
-import { NavigateServiceInterface } from '@sellgar/app';
+import { Controller, Inject, NavigateServiceInterface } from '@sellgar/app';
 
 import { CategoryModifyControllerInterface } from './category-modify-controller.interface.ts';
+import { CategoryParentOptionsMapper } from './mapper/category-parent-options.mapper.ts';
 
 @Controller()
 export class CategoryModifyController implements CategoryModifyControllerInterface {
   constructor(
-    @Inject(CategoryServiceInterface) private readonly categoryService: CategoryServiceInterface,
-    @Inject(NavigateServiceInterface) private readonly navigateService: NavigateServiceInterface,
-    @Inject(RevalidateServiceInterface) private readonly revalidateService: RevalidateServiceInterface,
+    @Inject(CategoryServiceInterface) private readonly categories: CategoryServiceInterface,
+    @Inject(NavigateServiceInterface) private readonly navigation: NavigateServiceInterface,
   ) {}
 
-  async loader(args: Parameters<CategoryModifyControllerInterface['loader']>[0]) {
-    if (!args.params.uuid) {
-      return void 0;
-    }
-
-    return this.categoryService.findByUuid(args.params.uuid);
+  async loader({ params }: Parameters<CategoryModifyControllerInterface['loader']>[0]) {
+    const category = params.uuid ? await this.categories.findByUuid(params.uuid) : null;
+    const shopUuid = category?.shopUuid ?? params.shopUuid;
+    if (!shopUuid) throw new Error('Не выбран магазин для категории.');
+    const tree = await this.categories.getTree(shopUuid);
+    return { shopUuid, category, parents: CategoryParentOptionsMapper.map(tree.nodes, category?.uuid) };
   }
 
-  async action(args: Parameters<CategoryModifyControllerInterface['action']>[0]) {
-    if ('uuid' in args.payload) {
-      await this.categoryService.update(args.payload.uuid, args.payload);
+  async action({ params, payload }: Parameters<CategoryModifyControllerInterface['action']>[0]) {
+    const fields = {
+      commandId: crypto.randomUUID(),
+      name: payload.name,
+      description: payload.description,
+      parentUuid: payload.parentUuid,
+    };
+    if (params.uuid) {
+      if (payload.expectedVersion === undefined) throw new Error('Не передана версия категории.');
+      await this.categories.update(params.uuid, {
+        ...fields,
+        uuid: params.uuid,
+        expectedVersion: payload.expectedVersion,
+      });
     } else {
-      await this.categoryService.create(args.payload);
+      if (!params.shopUuid) throw new Error('Не выбран магазин для категории.');
+      await this.categories.create({ ...fields, shopUuid: params.shopUuid });
     }
-
-    await this.revalidateService.revalidate();
-    await this.navigateService.close();
+    await this.navigation.close();
   }
 
-  async close() {
-    await this.navigateService.close();
+  close() {
+    return this.navigation.close();
   }
 }

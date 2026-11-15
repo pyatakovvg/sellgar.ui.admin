@@ -10,3 +10,5 @@
 - Учётные записи используют `@sellgar/kit/table`: `sm`, `secondary`, внешний scroll owner,
   виртуализация, встроенная идентификация строк по объектам; sticky header и resize выключены. Entry — auto.
 - Ячейки `Entry`/`Quantity` сохраняют reactive-границы и получают запись через `Cell.render`.
+
+- Встроенный табличный индикатор получает `loading` из `useRevalidate().inProcess` текущего runtime; до mount карточки загрузку показывает fallback фрейма.

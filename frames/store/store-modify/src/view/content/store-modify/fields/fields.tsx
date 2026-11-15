@@ -1,3 +1,4 @@
+import { Categories } from './categories';
 import type { CurrencyEntity } from '@library/domain';
 
 import React from 'react';
@@ -18,6 +19,9 @@ export const Fields: React.FC<IProps> = (props) => {
       <div className={s.fields}>
         <div className={s.field}>
           <Shop />
+        </div>
+        <div className={s.field}>
+          <Categories />
         </div>
         <div className={s.field}>
           <Showing />

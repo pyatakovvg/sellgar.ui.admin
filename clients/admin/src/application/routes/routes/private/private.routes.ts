@@ -120,7 +120,7 @@ const createCategoryRouting = (): Router => {
   return createModifyRouting([
     new Route({
       token: Tokens.CategoryCreateRoute,
-      address: segments('category'),
+      address: segments('category', 'new', param('shopUuid')),
       load: () => import('@frame/category-modify'),
     }),
     new Route({

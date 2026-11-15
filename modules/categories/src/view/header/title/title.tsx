@@ -10,6 +10,9 @@ export const Title: React.FC = () => {
       <Typography size={'h6'} weight={'semi-bold'}>
         <h2>Категории</h2>
       </Typography>
+      <Typography size={'caption-m'} weight={'medium'}>
+        <p>Дерево категорий магазина</p>
+      </Typography>
     </div>
   );
 };

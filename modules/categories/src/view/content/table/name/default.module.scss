@@ -1,21 +1,10 @@
 .wrapper {
   display: flex;
-  flex-direction: row;
-  flex: 1 0;
+  flex-direction: column;
+  min-width: 0;
   align-items: center;
   color: var(--text-base-primary);
-  overflow: auto;
-}
-
-.indentation {
-  flex: 0 0 var(--numbers-12);
-}
-
-.content {
-  display: flex;
-  flex: 1 0;
-  margin: 0 0 0 var(--numbers-8);
-  overflow: auto;
+  overflow: hidden;
 }
 
 .text {

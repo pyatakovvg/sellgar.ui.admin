@@ -1,6 +1,8 @@
-import type { CreateCategoryInput } from './create-category.input.ts';
-
-export interface UpdateCategoryInput extends CreateCategoryInput {
+export interface UpdateCategoryInput {
+  commandId: string;
   uuid: string;
-  version: number;
+  expectedVersion: number;
+  parentUuid: string | null;
+  name: string;
+  description: string | null;
 }

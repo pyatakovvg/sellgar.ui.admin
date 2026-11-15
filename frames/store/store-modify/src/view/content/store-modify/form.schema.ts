@@ -4,6 +4,7 @@ import type { ProductOption } from './fields/product-offers/product-option.ts';
 
 export interface IFormData {
   shopUuid: string;
+  categoryUuids: string[];
   product: ProductOption | null;
   showing: boolean;
   offers: {
@@ -53,6 +54,7 @@ const recordSchema = yup.object({
 
 export const schema: yup.ObjectSchema<IFormData> = yup.object({
   shopUuid: yup.string().required('Необходимо выбрать'),
+  categoryUuids: yup.array().of(yup.string().uuid().required()).required(),
   product: yup
     .object({
       uuid: yup.string().uuid().required(),

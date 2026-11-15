@@ -13,10 +13,12 @@ import s from './content.module.scss';
 export const Content: React.FC = () => {
   const controller = App.useController(TemplatesControllerInterface);
   const templates = App.useLoaderData(TemplatesControllerInterface);
+  const revalidate = App.useRevalidate();
 
   return (
     <div className={s.wrapper}>
       <TableComponent
+        loading={revalidate.inProcess}
         size={'lg'}
         data={{ nodes: templates.items }}
         layout={{ scroll: 'external', virtualization: true }}
@@ -24,7 +26,7 @@ export const Content: React.FC = () => {
       >
         {({ Column }) => (
           <>
-            <Column key={'name'} minWidth={280}>
+            <Column minWidth={280}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Название'} />
@@ -32,7 +34,7 @@ export const Content: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'active'} width={176}>
+            <Column width={176}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Активные товары'} />
@@ -40,7 +42,7 @@ export const Content: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'archived'} width={176}>
+            <Column width={176}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Архивные товары'} />

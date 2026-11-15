@@ -1,5 +1,5 @@
 import type { StoreAccountingRecordEntity, StoreOfferEntity } from '@library/domain';
-import { reactive, useController } from '@sellgar/app/react';
+import * as App from '@sellgar/app/react';
 import { Typography } from '@sellgar/kit';
 import { Table } from '@sellgar/kit/table';
 import { Entry } from './entry';
@@ -11,10 +11,13 @@ interface IProps {
   offer: StoreOfferEntity;
 }
 const RecordsComponent: React.FC<IProps> = (props) => {
-  const controller = useController(StoreReviewControllerInterface);
+  const controller = App.useController(StoreReviewControllerInterface);
+  const revalidate = App.useRevalidate();
+
   return (
     <div className={s.wrapper}>
       <Table<StoreAccountingRecordEntity>
+        loading={revalidate.inProcess}
         surface={'standalone'}
         size={'sm'}
         style={'secondary'}
@@ -28,7 +31,7 @@ const RecordsComponent: React.FC<IProps> = (props) => {
       >
         {({ Column }) => (
           <>
-            <Column key={'entry'}>
+            <Column>
               {({ Head, Cell }) => (
                 <>
                   <Head
@@ -42,7 +45,7 @@ const RecordsComponent: React.FC<IProps> = (props) => {
                 </>
               )}
             </Column>
-            <Column key={'quantity'} width={64} align={'right'}>
+            <Column width={64} align={'right'}>
               {({ Head, Cell }) => (
                 <>
                   <Head
@@ -58,7 +61,7 @@ const RecordsComponent: React.FC<IProps> = (props) => {
                 </>
               )}
             </Column>
-            <Column key={'reserved'} width={64} align={'right'}>
+            <Column width={64} align={'right'}>
               {({ Head, Cell }) => (
                 <>
                   <Head
@@ -74,7 +77,7 @@ const RecordsComponent: React.FC<IProps> = (props) => {
                 </>
               )}
             </Column>
-            <Column key={'available'} width={64} align={'right'}>
+            <Column width={64} align={'right'}>
               {({ Head, Cell }) => (
                 <>
                   <Head
@@ -96,4 +99,4 @@ const RecordsComponent: React.FC<IProps> = (props) => {
     </div>
   );
 };
-export const Records = reactive(RecordsComponent);
+export const Records = App.reactive(RecordsComponent);

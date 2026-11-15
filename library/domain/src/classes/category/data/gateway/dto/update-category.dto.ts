@@ -1,15 +1,20 @@
-import { Expose } from 'class-transformer';
-import { IsNumber, IsUUID } from 'class-validator';
-
-import { CreateCategoryDto } from './create-category.dto.ts';
 import type { UpdateCategoryInput } from '../input/update-category.input.ts';
+import { Expose } from 'class-transformer';
+import { IsInt, IsUUID, Min } from 'class-validator';
 
-export class UpdateCategoryDto extends CreateCategoryDto implements UpdateCategoryInput {
+import { CategoryFieldsDto } from './category-fields.dto';
+
+export class UpdateCategoryDto extends CategoryFieldsDto implements UpdateCategoryInput {
+  @Expose()
+  @IsUUID()
+  commandId: string;
+
   @Expose()
   @IsUUID()
   uuid: string;
 
   @Expose()
-  @IsNumber()
-  version: number;
+  @IsInt()
+  @Min(1)
+  expectedVersion: number;
 }

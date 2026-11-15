@@ -1,63 +1,40 @@
 import { useLoaderData, useSubmit } from '@sellgar/app/react';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as ReactHookForm from 'react-hook-form';
 
 import { CategoryModifyControllerInterface } from '../../../classes/controller/category-modify/category-modify-controller.interface.ts';
 import { CATEGORY_MODIFY_FORM_ID } from '../../../constants/category-modify.constants.ts';
-
 import { Fields } from './fields';
+import { Error } from './error';
 import { schema, type IFormData } from './form.schema.ts';
 
 import s from './default.module.scss';
 
 export const CategoryModify: React.FC = () => {
-  const category = useLoaderData(CategoryModifyControllerInterface);
+  const { category } = useLoaderData(CategoryModifyControllerInterface);
   const submit = useSubmit(CategoryModifyControllerInterface);
-
-  const methods = useForm<IFormData>({
+  const methods = ReactHookForm.useForm<IFormData>({
     mode: 'onChange',
+    disabled: submit.inProcess,
     defaultValues: {
-      parentUuid: category?.parentUuid ?? undefined,
-      code: category?.code ?? '',
+      parentUuid: category?.parentUuid ?? null,
       name: category?.name ?? '',
       description: category?.description ?? '',
-      image: category?.image ?? null,
     },
     resolver: yupResolver(schema),
   });
-
   const handleSubmit = methods.handleSubmit(async (values) => {
-    const parentUuid = values.parentUuid || undefined;
-
-    if (category) {
-      await submit({
-        uuid: category.uuid,
-        version: category.version,
-        parentUuid,
-        code: values.code,
-        name: values.name,
-        description: values.description,
-        image: values.image,
-      });
-      return;
-    }
-
-    await submit({
-      parentUuid,
-      code: values.code,
-      name: values.name,
-      description: values.description,
-      image: values.image,
-    });
+    await submit({ ...values, description: values.description.trim() || null, expectedVersion: category?.version });
   });
 
   return (
-    <FormProvider {...methods}>
+    <ReactHookForm.FormProvider {...methods}>
       <form id={CATEGORY_MODIFY_FORM_ID} className={s.wrapper} onSubmit={handleSubmit}>
-        <Fields inProcess={submit.inProcess} />
+        <Error />
+        <Fields />
       </form>
-    </FormProvider>
+    </ReactHookForm.FormProvider>
   );
 };

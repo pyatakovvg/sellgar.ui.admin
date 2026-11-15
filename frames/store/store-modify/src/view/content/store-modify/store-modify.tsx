@@ -68,6 +68,7 @@ export const StoreModify: React.FC = () => {
     shouldUnregister: false,
     defaultValues: {
       shopUuid: data?.shopUuid ?? '',
+      categoryUuids: data?.categoryUuids ?? [],
       product: initialProduct ?? null,
       showing: data?.showing ?? false,
       offers: defaultOffers,

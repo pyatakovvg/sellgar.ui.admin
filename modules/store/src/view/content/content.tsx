@@ -18,14 +18,15 @@ import s from './default.module.scss';
 export const Content: React.FC = () => {
   const loaderData = App.useLoaderData(StoreControllerInterface);
   const navigate = App.useNavigate();
+  const revalidate = App.useRevalidate();
 
   return (
     <div className={s.wrapper}>
       <Table
+        loading={revalidate.inProcess}
         surface={'standalone'}
         size={'md'}
         data={{ nodes: loaderData.data }}
-        layout={{ scroll: 'external', stickyHeader: true, virtualization: true }}
         row={{
           handlers: {
             doubleClick: ({ context }) => context.expansion?.toggle(),
@@ -35,10 +36,10 @@ export const Content: React.FC = () => {
       >
         {({ Column, Expand }) => (
           <>
-            <Column key={'visible'} width={'var(--numbers-24)'} minWidth={'var(--numbers-24)'} pinLeft={true}>
+            <Column width={'var(--numbers-24)'} minWidth={'var(--numbers-24)'} pinLeft={true}>
               {({ Cell }) => <Cell render={({ row }) => <Visible product={row} />} />}
             </Column>
-            <Column key={'name'} minWidth={'var(--numbers-240)'} pinLeft={true} resizable={true}>
+            <Column minWidth={'var(--numbers-240)'} pinLeft={true} resizable={true}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Товар'} />
@@ -46,7 +47,7 @@ export const Content: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'shop'} minWidth={'var(--numbers-120)'}>
+            <Column minWidth={'var(--numbers-120)'}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Магазин'} />
@@ -54,7 +55,7 @@ export const Content: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column key={'variants'} width={'var(--numbers-140)'}>
+            <Column width={'var(--numbers-140)'}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Варианты'} />
@@ -62,13 +63,7 @@ export const Content: React.FC = () => {
                 </>
               )}
             </Column>
-            <Column
-              key={'showcase'}
-              width={'var(--numbers-160)'}
-              minWidth={'var(--numbers-160)'}
-              pinRight={true}
-              resizable={true}
-            >
+            <Column width={'var(--numbers-160)'} minWidth={'var(--numbers-160)'} pinRight={true} resizable={true}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Витрина'} />

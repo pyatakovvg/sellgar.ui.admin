@@ -11,37 +11,45 @@ import { Description } from './description';
 
 import s from './default.module.scss';
 
-export const Table: React.FC = () => {
-  const categories = App.useLoaderData(CategoryControllerInterface);
+const TableView: React.FC = () => {
+  const { tree } = App.useLoaderData(CategoryControllerInterface);
+  const revalidate = App.useRevalidate();
   const navigate = App.useNavigate();
+
+  if (!tree) return <p className={s.empty}>Добавьте магазин, чтобы организовать его категории.</p>;
 
   return (
     <div className={s.wrapper}>
       <TableComponent
+        loading={revalidate.inProcess}
         size={'md'}
-        data={{ nodes: categories.data }}
-        layout={{ scroll: 'external', virtualization: true }}
-        tree={{ isUse: true, accessor: (row) => row.children }}
+        data={{ nodes: tree.nodes }}
         row={{
-          handlers: {
-            click: ({ row }) => void navigate.to(CategoryModifyRoute, { params: { uuid: row.uuid } }),
-          },
+          handlers: { click: ({ row }) => void navigate.to(CategoryModifyRoute, { params: { uuid: row.uuid } }) },
         }}
+        tree={{ isUse: true, accessor: (row) => row.children, defaultExpanded: true }}
       >
         {({ Column }) => (
           <>
-            <Column key={'tree'} width={40}>
-              {({ Cell }) => <Cell render={({ node, TreeTrigger }) => (node.hasChildren ? <TreeTrigger /> : null)} />}
-            </Column>
-            <Column key={'name'} width={280}>
+            <Column width={320} minWidth={280} resizable={true}>
               {({ Head, Cell }) => (
                 <>
-                  <Head label={'Наименование'} />
-                  <Cell render={({ row, node }) => <Name category={row} depth={node.depth} />} />
+                  <Head label={'Категория'} />
+                  <Cell
+                    render={({ row, node, TreeTrigger }) => (
+                      <div className={s.name}>
+                        {Array.from({ length: node.depth }, (_, depth) => (
+                          <span key={depth} className={s.indentation} aria-hidden={true} />
+                        ))}
+                        <span className={s.trigger}>{node.hasChildren ? <TreeTrigger /> : null}</span>
+                        <Name category={row} />
+                      </div>
+                    )}
+                  />
                 </>
               )}
             </Column>
-            <Column key={'description'}>
+            <Column maxWidth={340}>
               {({ Head, Cell }) => (
                 <>
                   <Head label={'Описание'} />
@@ -55,3 +63,5 @@ export const Table: React.FC = () => {
     </div>
   );
 };
+
+export const Table = App.reactive(TableView);
