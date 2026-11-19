@@ -24,7 +24,7 @@ export class ShopModifyController implements ShopModifyControllerInterface {
 
   async loader(args: ControllerArgs<WithParams<ShopModifyFrameParams>>) {
     if (!args.params.uuid) {
-      throw new Error('Missing uuid');
+      return undefined;
     }
 
     return await this.shopService.findByUuid(args.params.uuid);
@@ -34,7 +34,11 @@ export class ShopModifyController implements ShopModifyControllerInterface {
     const { uuid } = args.params;
 
     if (!uuid) {
-      throw new Error('Не указан uuid магазина');
+      const shop = await this.shopService.create(ShopFormMapper.toCreateInput(args.payload));
+
+      await this.navigateService.to(Tokens.ShopReviewRoute, { params: { uuid: shop.uuid }, revalidate: true });
+
+      return;
     }
 
     await this.shopService.update(uuid, ShopFormMapper.toUpdateInput(args.payload));
@@ -42,7 +46,13 @@ export class ShopModifyController implements ShopModifyControllerInterface {
     await this.navigateService.to(Tokens.ShopReviewRoute, { params: { uuid }, revalidate: true });
   }
 
-  async toReview(uuid: string) {
+  async toReview(uuid?: string) {
+    if (!uuid) {
+      await this.navigateService.close();
+
+      return;
+    }
+
     await this.navigateService.to(Tokens.ShopReviewRoute, { params: { uuid } });
   }
 }

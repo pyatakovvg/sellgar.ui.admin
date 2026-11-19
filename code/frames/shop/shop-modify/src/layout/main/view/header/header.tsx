@@ -15,9 +15,9 @@ export const Header: React.FC = () => {
   return (
     <div className={s.wrapper}>
       <div className={s.content}>
-        <ArrowLeftLineIcon className={s.back} onClick={() => controller.toReview(data.uuid)} />
+        {data && <ArrowLeftLineIcon className={s.back} onClick={() => controller.toReview(data.uuid)} />}
         <Typography size={'body-m'} weight={'medium'}>
-          <p className={s.label}>Редактирование</p>
+          <p className={s.label}>{data ? 'Редактирование' : 'Создание магазина'}</p>
         </Typography>
       </div>
       <Drawer.Close />

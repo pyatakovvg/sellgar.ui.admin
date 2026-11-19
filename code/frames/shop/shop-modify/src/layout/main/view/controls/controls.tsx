@@ -19,12 +19,12 @@ export const Controls: React.FC = () => {
         type={'button'}
         style={'secondary'}
         disabled={submit.inProcess}
-        onClick={() => void controller.toReview(data.uuid)}
+        onClick={() => void controller.toReview(data?.uuid)}
       >
         Отмена
       </Button>
       <Button type={'submit'} form={SHOP_MODIFY_FORM_ID} inProcess={submit.inProcess}>
-        Сохранить
+        {data ? 'Сохранить' : 'Создать'}
       </Button>
     </div>
   );
