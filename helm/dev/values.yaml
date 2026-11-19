@@ -10,7 +10,7 @@ configmaps:
     data: |
       window.env = {
         NODE_ENV: 'production',
-        GATEWAY_API: 'http://localhost:4020',
-        SOCKET_GATEWAY_API: 'http://localhost:4040',
+        GATEWAY_API: 'http://dev.sellgar.io/api/admin',
+        SOCKET_GATEWAY_API: 'http://dev.sellgar.io',
         CDN_IMAGES_URL: 'http://localhost:8088/images',
       };
