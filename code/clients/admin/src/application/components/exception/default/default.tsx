@@ -13,12 +13,12 @@ export const Default: React.FC<IProps> = (props) => {
     <div className={s.wrapper}>
       <div className={s.header}>
         <Typography size={'h6'} weight={'semi-bold'}>
-          <p>Что-то пошло не так!</p>
+          <p className={s.text}>Что-то пошло не так!</p>
         </Typography>
       </div>
       <div className={s.message}>
         <Typography size={'body-m'} weight={'medium'}>
-          <p>{props.error.message}</p>
+          <p className={s.text}>{props.error.message}</p>
         </Typography>
       </div>
       <div className={s.stack}>

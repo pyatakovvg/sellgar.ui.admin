@@ -19,7 +19,6 @@
   max-width: 100%;
   overflow-wrap: anywhere;
   margin-top: var(--numbers-24);
-  color: var(--color-brown);
 }
 
 .stack {
@@ -45,4 +44,8 @@
   display: block;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
+}
+
+.text {
+  color: var(--text-base-primary);
 }
