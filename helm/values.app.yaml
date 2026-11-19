@@ -5,6 +5,11 @@ env: {}
 
 applicationPort: 8080
 
+podSecurityContext:
+  runAsUser: 101
+  runAsGroup: 101
+  fsGroup: 101
+
 volumeMounts:
   - mountPath: /tmp
     name: cache-volume
