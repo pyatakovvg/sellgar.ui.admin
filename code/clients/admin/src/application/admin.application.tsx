@@ -1,5 +1,6 @@
 import { UseBindings } from '@sellgar/app';
 import {
+  Metadata,
   Application,
   NavigationBlockerFeature,
   NavigationBlockerPresentation,
@@ -24,6 +25,9 @@ import { NavigationBlockerView } from './presentations/navigation-blocker';
 import { createAdminRouter } from './routes';
 import { DrawerShell } from './shells/drawer';
 
+@Metadata({
+  title: import.meta.env['VITE_WEBSITE_NAME'],
+})
 @UseBindings(AdminBindings)
 export class AdminApplication extends Application {
   protected configure(app: ApplicationConfiguratorInterface): void {
