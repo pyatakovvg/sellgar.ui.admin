@@ -1,6 +1,7 @@
+import { createWebRouterBridge } from '@sellgar/app/react';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { createWebRouterBridge } from '@sellgar/app/react';
 
 import { AdminApplication } from './application';
 

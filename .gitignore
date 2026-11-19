@@ -10,8 +10,6 @@ node_modules
 .gradle/
 .cxx/
 
-.env
-
 # Logs
 logs
 *.log
