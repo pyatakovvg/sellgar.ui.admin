@@ -4,7 +4,7 @@
 
 ## Запуск приложения, routes, auth gates
 
-Работать в `clients/admin/src/application`.
+Работать в `code/clients/admin/src/application`.
 
 Примеры:
 
@@ -15,7 +15,7 @@
 
 ## Route screen
 
-Работать в `modules/<feature>`.
+Работать в `code/modules/<feature>`.
 
 Примеры:
 
@@ -26,7 +26,7 @@
 
 ## Drawer workflow
 
-Работать в `frames/<feature>`.
+Работать в `code/frames/<feature>`.
 
 Примеры:
 
@@ -40,7 +40,7 @@
 
 ## Встраиваемый reusable block
 
-Работать в `widgets/<name>`.
+Работать в `code/widgets/<name>`.
 
 Примеры:
 
@@ -51,10 +51,10 @@
 
 ## Общие UI, domain и runtime
 
-- `providers/*` - самостоятельные runtime provider packages `@provider/*`, включая
+- `code/providers/*` - самостоятельные runtime provider packages `@provider/*`, включая
   подписки на realtime изменения товаров и складских позиций.
-- `library/design` - только visual shared wrappers.
-- `library/domain` - entities, repositories, API clients и HTTP helpers.
-- `library/sellgar.app.ui` - runtime changes.
-- `library/route-tokens` - route token contracts.
-- `utils/*` - pure utility functions.
+- `code/library/design` - только visual shared wrappers.
+- `code/library/domain` - entities, repositories, API clients и HTTP helpers.
+- `code/library/sellgar.app.ui` - runtime changes.
+- `code/library/route-tokens` - route token contracts.
+- `code/utils/*` - pure utility functions.

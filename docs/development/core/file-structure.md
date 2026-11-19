@@ -2,13 +2,13 @@
 
 ## Корень
 
-- `clients/admin` - Vite application host.
-- `layouts/*` - layout workspaces.
-- `modules/*` - route-level module workspaces.
-- `frames/*` - nested Drawer frame workspaces.
-- `widgets/*` - embedded widget workspaces.
-- `library/*` - shared libraries.
-- `utils/*` - utility packages.
+- `code/clients/admin` - Vite application host.
+- `code/layouts/*` - layout workspaces.
+- `code/modules/*` - route-level module workspaces.
+- `code/frames/*` - nested Drawer frame workspaces.
+- `code/widgets/*` - embedded widget workspaces.
+- `code/library/*` - shared libraries.
+- `code/utils/*` - utility packages.
 - `docs/*` - project и agent documentation.
 
 ## Module-Пакет
@@ -69,4 +69,4 @@ Widgets использовать только для reusable embedded UI. Не 
 
 ## Library-Пакет
 
-`library/*` packages должны экспортировать стабильную публичную surface из `src/index.ts`. Package boundaries должны быть явными; не импортировать private files другого package.
+`code/library/*` packages должны экспортировать стабильную публичную surface из `src/index.ts`. Package boundaries должны быть явными; не импортировать private files другого package.

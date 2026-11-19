@@ -1,1 +1,0 @@
-export { Primary } from './Primary';

@@ -5,18 +5,18 @@
 ## Область Изменения
 
 - Измененный package владеет behavior.
-- Feature logic не перенесена в `clients/admin`.
+- Feature logic не перенесена в `code/clients/admin`.
 - Изменения shared libraries реально общие и не импортируют feature/domain internals.
 - Documentation changes написаны на русском языке.
 
 ## Runtime
 
-- Routes и nested frame routers зарегистрированы в `clients/admin/src/application/routes`.
+- Routes и nested frame routers зарегистрированы в `code/clients/admin/src/application/routes`.
 - Page data использует module controller loader data.
 - Frame data использует frame controller loader data.
 - Frame loaders читают tokenized route params из `args.params`.
 - Navigation использует `@library/route-tokens`, без строковых URL и `react-router-dom`.
-- Drawer forms живут в `frames/*`, используют единый application shell и не создают отдельный Modal shell.
+- Drawer forms живут в `code/frames/*`, используют единый application shell и не создают отдельный Modal shell.
 
 ## UI
 

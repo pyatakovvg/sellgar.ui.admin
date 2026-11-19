@@ -41,7 +41,7 @@ import { BrandCreateRoute } from '@library/route-tokens';
 import { useNavigate } from '@sellgar/app/react';
 import { AddLineIcon } from '@sellgar/kit/icons';
 
-import s from './header.module.scss';
+import s from './header.module.css';
 ```
 
 ## CSS-Модули
@@ -49,7 +49,7 @@ import s from './header.module.scss';
 Для CSS module import использовать имя `s`:
 
 ```tsx
-import s from './default.module.scss';
+import s from './default.module.css';
 ```
 
 ## Запрещенные patterns

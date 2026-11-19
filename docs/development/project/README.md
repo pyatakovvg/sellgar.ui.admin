@@ -3,8 +3,8 @@
 Правила для ежедневной работы в `sellgar.ui.admin`.
 
 - Текущий source является источником истины.
-- Feature logic держать в `modules/*`, `frames/*` или `widgets/*`.
-- `clients/admin` держать как composition root.
+- Feature logic держать в `code/modules/*`, `code/frames/*` или `code/widgets/*`.
+- `code/clients/admin` держать как composition root.
 - Для UI использовать `@sellgar/kit`, для SVG-иконок - `@sellgar/kit/icons`.
 - Использовать runtime contracts из `@sellgar/app`, React API из `@sellgar/app/react` и tokens из `@library/route-tokens`.
 - Для Drawer forms использовать frames и общий application shell, а не widgets или отдельный Modal shell.

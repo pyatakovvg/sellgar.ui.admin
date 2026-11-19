@@ -4,13 +4,13 @@
 
 Текущий код является источником истины:
 
-- routes: `clients/admin/src/application/admin.application.tsx`;
-- host bindings: `clients/admin/src/application/bindings/admin.bindings.ts`;
+- routes: `code/clients/admin/src/application/admin.application.tsx`;
+- host bindings: `code/clients/admin/src/application/bindings/admin.bindings.ts`;
 - package exports: каждый package `src/index.ts`;
 - package dependencies: каждый package `package.json`;
 - UI contracts: installed types `@sellgar/kit` и локальные usage examples;
-- runtime contracts: `library/sellgar.app.ui/core`, `library/sellgar.app.ui/react` и `library/sellgar.app.ui/docs`;
-- route contracts: `library/route-tokens/src`.
+- runtime contracts: `code/library/sellgar.app.ui/core`, `code/library/sellgar.app.ui/react` и `code/library/sellgar.app.ui/docs`;
+- route contracts: `code/library/route-tokens/src`.
 
 ## Правило документации
 

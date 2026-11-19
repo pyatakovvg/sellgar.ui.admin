@@ -2,28 +2,28 @@
 
 ## Host
 
-`clients/admin` собирает приложение. Он владеет application startup, route tree, policies, initializers и host bindings.
+`code/clients/admin` собирает приложение. Он владеет application startup, route tree, policies, initializers и host bindings.
 
 Он не должен владеть feature tables, forms или mutation flows.
 
 ## Pages
 
-`modules/*` владеют route screens. Page может открыть frame, но frame владеет своей form и mutations.
+`code/modules/*` владеют route screens. Page может открыть frame, но frame владеет своей form и mutations.
 
 ## Frames
 
-`frames/*` владеют nested Drawer workflows. Frame должен быть цельным workflow: controller, loader, view, requests и bindings. Общий shell принадлежит application host.
+`code/frames/*` владеют nested Drawer workflows. Frame должен быть цельным workflow: controller, loader, view, requests и bindings. Общий shell принадлежит application host.
 
 ## Widgets
 
-`widgets/*` - embedded reusable UI. Widgets не заменяют frames.
+`code/widgets/*` - embedded reusable UI. Widgets не заменяют frames.
 
 ## Libraries
 
-- `library/domain` может знать о domain и HTTP.
-- `library/design` должен оставаться visual и domain-free.
-- `library/sellgar.app.ui` владеет runtime behavior и меняется только когда этого требует app-level contract.
-- `library/route-tokens` владеет route token contracts.
+- `code/library/domain` может знать о domain и HTTP.
+- `code/library/design` должен оставаться visual и domain-free.
+- `code/library/sellgar.app.ui` владеет runtime behavior и меняется только когда этого требует app-level contract.
+- `code/library/route-tokens` владеет route token contracts.
 
 ## UI Kit
 

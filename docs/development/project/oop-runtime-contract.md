@@ -30,7 +30,7 @@ Controller loader results читаются во view через `useLoaderData(C
 
 ## Frame и nested routing
 
-Drawer workflows остаются пакетами `frames/*`, но объявляются через единый
+Drawer workflows остаются пакетами `code/frames/*`, но объявляются через единый
 `@Module`; address/token/shell задаются host route graph.
 
 ```tsx
@@ -51,7 +51,7 @@ Loader/action получают tokenized identifiers в `args.params`. Тип pa
 
 Каждый page/frame/widget владеет своим local bindings module. Регистрировать только interfaces, которые нужны этому package.
 
-Host bindings в `clients/admin` предназначены для application-wide services и domain infrastructure.
+Host bindings в `code/clients/admin` предназначены для application-wide services и domain infrastructure.
 
 ## Forms
 

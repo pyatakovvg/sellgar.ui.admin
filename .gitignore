@@ -26,15 +26,15 @@ lerna-debug.log*
 .DS_Store
 
 # Tests
-/coverage
-/.nyc_output
+/code/coverage
+/code/.nyc_output
 
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+/code/.yarn/*
+!/code/.yarn/patches
+!/code/.yarn/plugins
+!/code/.yarn/releases
+!/code/.yarn/sdks
+!/code/.yarn/versions
 
 .project
 .classpath
@@ -54,6 +54,6 @@ storybook-static/
 # next.js
 /.next/
 /out/
-/clients/mobile/public/push.worker.js
+/code/clients/mobile/public/push.worker.js
 
 local.properties

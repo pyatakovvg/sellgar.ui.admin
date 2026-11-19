@@ -2,7 +2,7 @@
 
 ## Корень Композиции
 
-`clients/admin` - единственный host приложения.
+`code/clients/admin` - единственный host приложения.
 
 - `src/main.tsx` подключает `@sellgar/kit/icons.css`, шрифт, тему и глобальные стили.
 - `src/bootstrap.tsx` создает `AdminApplication` с `createWebRouterBridge`, вызывает `compose()`, рендерит view и запускает `initialize()`.
@@ -19,7 +19,7 @@ Host не должен становиться местом для feature UI и�
 - `Application` собирает runtime.
 - `Route` и `Router` задают route tree.
 - `@Module` описывает route-level страницу.
-- `frames/*` описывают nested workflows, но используют единую runtime-декларацию
+- `code/frames/*` описывают nested workflows, но используют единую runtime-декларацию
   `@Module`; route graph задаёт address, lazy load и shell.
 - `@UseBindings` подключает DI bindings к application, page, frame или widget.
 - Policies на route выполняют auth-gating.
@@ -37,24 +37,24 @@ Host не должен становиться местом для feature UI и�
 - `/products` -> `@module/products`;
 - `/products/create` -> `@module/product-modify`;
 - `/products/:uuid` -> `@module/product-modify`;
-- `/store` -> `@module/store` и nested routes `@frame/store-review`/`@frame/store-modify` (в `frames/store/`) и `@frame/store-inventory`;
+- `/store` -> `@module/store` и nested routes `@frame/store-review`/`@frame/store-modify` (в `code/frames/store/`) и `@frame/store-inventory`;
 - `/brands`, `/categories`, `/units`, `/properties` -> list pages и nested create/edit frame routes.
 
 Все nested frame routes отображаются одним application-level `Drawer` shell. Отдельного Modal shell для frames нет.
 
 ## Границы пакетов
 
-- `modules/*` владеют route-level экранами и списками.
-- `frames/*` владеют nested drawer формами и их loader/mutation процессом.
-- `widgets/*` владеют маленькими reusable blocks, которые встраиваются в layout/page/frame.
-- `layouts/*` владеют общим каркасом экрана.
-- `providers/*` — отдельный слой runtime providers. Каждый provider — самостоятельный
+- `code/modules/*` владеют route-level экранами и списками.
+- `code/frames/*` владеют nested drawer формами и их loader/mutation процессом.
+- `code/widgets/*` владеют маленькими reusable blocks, которые встраиваются в layout/page/frame.
+- `code/layouts/*` владеют общим каркасом экрана.
+- `code/providers/*` — отдельный слой runtime providers. Каждый provider — самостоятельный
   пакет `@provider/*`; страницы подключают нужный пакет через `providers: [...]`.
-- `library/domain` владеет domain entities, repositories, API clients и HTTP helper.
-- `library/design` - shared UI wrappers только без domain imports.
-- `library/sellgar.app.ui` - локальный runtime package `@sellgar/app`.
-- `library/route-tokens` - route token contracts.
-- `utils/*` - чистые утилиты.
+- `code/library/domain` владеет domain entities, repositories, API clients и HTTP helper.
+- `code/library/design` - shared UI wrappers только без domain imports.
+- `code/library/sellgar.app.ui` - локальный runtime package `@sellgar/app`.
+- `code/library/route-tokens` - route token contracts.
+- `code/utils/*` - чистые утилиты.
 
 ## Поток Данных
 

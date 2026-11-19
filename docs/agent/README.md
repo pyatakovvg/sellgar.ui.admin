@@ -11,11 +11,11 @@
 
 ## Файлы с высоким сигналом
 
-- Routes: `clients/admin/src/application/admin.application.tsx`.
-- Host bindings: `clients/admin/src/application/bindings/admin.bindings.ts`.
-- Sidebar: `layouts/navigate`.
-- Актуальные примеры frames: `frames/*`.
-- Актуальные примеры таблиц: `modules/brands`, `modules/categories`, `modules/products`, `modules/properties`.
+- Routes: `code/clients/admin/src/application/admin.application.tsx`.
+- Host bindings: `code/clients/admin/src/application/bindings/admin.bindings.ts`.
+- Sidebar: `code/layouts/navigate`.
+- Актуальные примеры frames: `code/frames/*`.
+- Актуальные примеры таблиц: `code/modules/brands`, `code/modules/categories`, `code/modules/products`, `code/modules/properties`.
 
 ## Гигиена документации
 

@@ -8,7 +8,7 @@
 
 - Вся документация пишется на русском языке.
 - Документация должна совпадать с текущими paths и package names репозитория.
-- Использовать `clients/admin`, `modules/*`, `frames/*`, `widgets/*`, `layouts/*`, `features/*`, `providers/*`, `library/*`.
+- Использовать `code/clients/admin`, `code/modules/*`, `code/frames/*`, `code/widgets/*`, `code/layouts/*`, `code/features/*`, `code/providers/*`, `code/library/*`.
 - В примерах использовать `@sellgar/kit`, `@sellgar/app`, `@sellgar/app/react` и `@library/route-tokens`.
 - Не возвращать устаревшие host paths, obsolete feature aliases или старые package names UI-kit.
 - Документация должна быть короткой и операционной.
