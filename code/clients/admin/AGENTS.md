@@ -1,0 +1,31 @@
+# AGENTS
+
+## Зона ответственности
+
+`clients/admin` - host-приложение и composition root.
+
+## Владеет
+
+- Запуск приложения: `src/main.tsx`, `src/bootstrap.tsx`.
+- Композиция runtime: `src/application/admin.application.tsx`.
+- Host-level bindings: `src/application/bindings`.
+- Auth policies маршрутов: `src/application/policies`.
+- Initializers приложения: `src/application/initializers`.
+- Application-level presentations: `src/application/presentations`.
+- Подключение `@feature/service-worker` через `app.features`.
+- Подключение пресета `@feature/service-worker/vite` в `vite.config.ts`; правила
+  регистрации, активации и кеширования принадлежат фиче. Manifest и иконки — приложению.
+- Глобальные стили: `src/styles/index.css`.
+
+## Правила
+
+- Не добавлять сюда feature UI и business logic.
+- Здесь только регистрируются modules и frames; реализация живет в `modules/*` или `frames/*`.
+- Для routing, policies и application composition использовать primitives из `@sellgar/app`.
+- Host bindings ограничивать application-wide/domain infrastructure.
+- Recovery защищённой сессии при 401 принадлежит `RequestExecutor` из
+  `@sellgar/app`. Host application предоставляет только реализацию
+  `SessionExpirationNotifierInterface` через application-wide binding; не
+  подписываться на внутренние runtime errors отдельным initializer.
+- Диалоги host-level user request строить через `UserRequestFeature` и
+  components из `@sellgar/kit`, не через самописные overlays.

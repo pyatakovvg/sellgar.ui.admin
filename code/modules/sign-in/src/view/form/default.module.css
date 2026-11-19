@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.fields {
+  display: block;
+}
+
+.actions {
+  display: block;
+  margin: var(--numbers-24) 0 0;
+}

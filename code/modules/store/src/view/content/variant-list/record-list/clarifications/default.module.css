@@ -1,0 +1,7 @@
+.wrapper {
+  min-width: 0;
+}
+.value {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

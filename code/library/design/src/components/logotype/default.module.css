@@ -1,0 +1,19 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0;
+}
+
+.logo {
+  display: block;
+  border-right: var(--numbers-1) solid var(--color-gray-25);
+  padding: 0 var(--numbers-20) 0 0;
+  margin: 0 var(--numbers-20) 0 0;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0;
+  color: var(--color-black);
+}

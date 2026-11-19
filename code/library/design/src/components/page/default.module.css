@@ -1,0 +1,51 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  gap: var(--numbers-24);
+  padding: var(--numbers-24);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  gap: var(--numbers-12);
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  color: var(--text-base-primary);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.filter {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}

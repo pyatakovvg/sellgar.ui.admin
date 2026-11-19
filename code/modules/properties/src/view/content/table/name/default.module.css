@@ -1,0 +1,15 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+  align-items: baseline;
+}
+
+.name {
+  color: var(--text-base-primary);
+}
+
+.unit {
+  color: var(--text-base-tertiary);
+  margin: 0 0 0 var(--numbers-4);
+}

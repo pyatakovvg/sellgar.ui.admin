@@ -1,0 +1,17 @@
+.wrapper {
+  display: grid;
+  flex: 1 0;
+  grid-template-columns: var(--numbers-280) 1fr;
+  background: var(--background-surface-default);
+  height: 100%;
+  overlay: auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  min-height: 100%;
+  max-width: var(--numbers-1240);
+  margin: 0 auto;
+}

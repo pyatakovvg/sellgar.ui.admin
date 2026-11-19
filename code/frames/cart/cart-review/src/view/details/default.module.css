@@ -1,0 +1,19 @@
+.wrapper {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--numbers-12) var(--numbers-16);
+  margin: 0;
+  font-size: var(--typography-size-caption-l);
+}
+
+.label {
+  color: var(--text-base-secondary);
+}
+
+.value {
+  margin: 0;
+  color: var(--text-base-primary);
+  overflow-wrap: anywhere;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

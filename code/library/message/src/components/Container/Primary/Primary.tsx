@@ -1,0 +1,36 @@
+import { Notification } from '@sellgar/kit';
+
+import React from 'react';
+
+import { useCloseMessage } from '../../../hooks/close-message.hook.ts';
+import { MessageEntity } from '../../../classes/stores/entity/message.entity.ts';
+
+import s from './default.module.css';
+
+interface IProps {
+  push: MessageEntity;
+}
+
+const Content: React.FC<React.PropsWithChildren> = (props) => {
+  if (React.isValidElement(props.children)) {
+    return props.children;
+  }
+  return <p className={s.text}>{props.children}</p>;
+};
+
+export const Primary: React.FC<IProps> = (props) => {
+  const close = useCloseMessage();
+
+  const handleClose = () => {
+    close(props.push.uuid);
+  };
+
+  return (
+    <Notification.Default
+      status={'info'}
+      title={props.push.title}
+      slot={<Content>{props.push.content}</Content>}
+      onClose={handleClose}
+    />
+  );
+};

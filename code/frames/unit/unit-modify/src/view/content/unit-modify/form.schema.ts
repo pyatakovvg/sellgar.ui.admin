@@ -1,0 +1,15 @@
+import * as yup from 'yup';
+
+export interface IFormData {
+  code: string;
+  name: string;
+  symbol: string;
+  description: string;
+}
+
+export const schema: yup.ObjectSchema<IFormData> = yup.object({
+  code: yup.string().required('Необходимо заполнить'),
+  name: yup.string().required('Необходимо заполнить'),
+  symbol: yup.string().required('Необходимо заполнить'),
+  description: yup.string().defined(),
+});

@@ -1,0 +1,23 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  min-height: 0;
+  min-width: 0;
+  gap: var(--numbers-16);
+}
+
+.value {
+  display: block;
+  padding: var(--numbers-8) var(--numbers-12);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-base-primary);
+  font-size: var(--typography-size-caption-l);
+}
+
+.empty {
+  margin: 0;
+  color: var(--text-base-secondary);
+}

@@ -1,0 +1,72 @@
+# Структура Файлов
+
+## Корень
+
+- `code/clients/admin` - Vite application host.
+- `code/layouts/*` - layout workspaces.
+- `code/modules/*` - route-level module workspaces.
+- `code/frames/*` - nested Drawer frame workspaces.
+- `code/widgets/*` - embedded widget workspaces.
+- `code/library/*` - shared libraries.
+- `code/utils/*` - utility packages.
+- `docs/*` - project и agent documentation.
+
+## Module-Пакет
+
+Типовая структура:
+
+```text
+modules/<name>/
+  package.json
+  AGENTS.md
+  src/
+    index.ts
+    module.tsx
+    classes/
+    view/
+    hooks/
+    requests/
+```
+
+Modules использовать для экранов, которые загружаются route.
+
+## Frame-Пакет
+
+Типовая структура:
+
+```text
+frames/<name>/
+  package.json
+  AGENTS.md
+  src/
+    index.ts
+    <name>.frame.tsx
+    classes/
+    view/
+    hooks/
+    requests/
+```
+
+Frames использовать для nested Drawer workflows. Frame владеет controller, loader, form view и mutation hooks; общий shell принадлежит application host.
+
+## Widget-Пакет
+
+Типовая структура:
+
+```text
+widgets/<name>/
+  package.json
+  AGENTS.md
+  src/
+    index.ts
+    widget.tsx
+    classes/
+    view/
+    hooks/
+```
+
+Widgets использовать только для reusable embedded UI. Не использовать widgets как Drawer feature containers.
+
+## Library-Пакет
+
+`code/library/*` packages должны экспортировать стабильную публичную surface из `src/index.ts`. Package boundaries должны быть явными; не импортировать private files другого package.

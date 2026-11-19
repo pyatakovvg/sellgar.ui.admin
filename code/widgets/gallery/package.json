@@ -1,0 +1,36 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@widget/gallery",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@floating-ui/dom": "1.8.0",
+    "@floating-ui/react": "0.27.20",
+    "@react-input/mask": "2.0.4",
+    "@react-input/number-format": "2.0.3",
+    "@tanstack/react-table": "9.3.1",
+    "@tanstack/react-virtual": "3.14.21",
+    "@tiptap/core": "3.32.0",
+    "@tiptap/pm": "3.32.0",
+    "@tiptap/react": "3.32.0",
+    "@tiptap/starter-kit": "3.32.0",
+    "classnames": "2.5.1",
+    "formik": "2.4.9",
+    "moment": "2.31.0",
+    "moment-timezone": "0.6.5",
+    "prosemirror-model": "1.25.12",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-number-format": "5.4.5"
+  },
+  "devDependencies": {
+    "@types/moment": "2.13.0",
+    "@types/moment-timezone": "0.5.30",
+    "@types/react": "19.3.0"
+  }
+}

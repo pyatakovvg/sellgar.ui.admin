@@ -1,0 +1,48 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: var(--numbers-24);
+}
+
+.header {
+  display: block;
+}
+
+.message {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  margin-top: var(--numbers-24);
+  color: var(--color-brown);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
+  margin-top: var(--numbers-32);
+  overflow: auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  overflow: auto;
+}
+
+.code {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

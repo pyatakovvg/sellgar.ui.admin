@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+  flex: 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--numbers-16);
+  padding: var(--numbers-24);
+}
+
+.message {
+  margin: 0;
+  color: var(--text-base-secondary);
+}
