@@ -34,13 +34,22 @@ export class StoreOfferChangesHub implements StoreOfferChangesHubInterface {
   }
 
   subscribe(listener: StoreOfferChangesListener): () => Promise<void> {
-    const subscription = this.connection.subscribeDelivery('store.product.updated', async (value: unknown) => {
-      const payload: StoreProductEntity = plainToInstance(StoreProductEntity, value);
-
-      await validateOrReject(payload);
-      await listener.updated(payload);
+    const created = this.connection.subscribeDelivery('store.product.created', async (value) => {
+      await this.deliver(value, listener.created);
+    });
+    const updated = this.connection.subscribeDelivery('store.product.updated', async (value) => {
+      await this.deliver(value, listener.updated);
     });
 
-    return () => subscription.dispose();
+    return async () => {
+      await Promise.all([created.dispose(), updated.dispose()]);
+    };
+  }
+
+  private async deliver(value: unknown, listener: StoreOfferChangesListener['updated']): Promise<void> {
+    const payload = plainToInstance(StoreProductEntity, value);
+
+    await validateOrReject(payload);
+    await listener(payload);
   }
 }

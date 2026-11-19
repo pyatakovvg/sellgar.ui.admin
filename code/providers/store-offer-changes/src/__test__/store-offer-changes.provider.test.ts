@@ -1,5 +1,11 @@
-import { StoreOfferEntity, StoreProductEntity } from '@library/domain';
+import {
+  StoreAccountingRecordEntity,
+  StoreOfferEntity,
+  StoreProductEntity,
+  StoreProductResultEntity,
+} from '@library/domain';
 import type { ProviderCleanup } from '@sellgar/app';
+import { plainToInstance } from 'class-transformer';
 
 import {
   StoreOfferChangesHubInterface,
@@ -8,6 +14,25 @@ import {
 import { StoreOfferChangesProvider } from '../store-offer-changes.provider.ts';
 
 describe('StoreOfferChangesProvider', () => {
+  it('inserts a created store product into an opened empty collection', async () => {
+    const result = plainToInstance(StoreProductResultEntity, { data: [] });
+    const product = createStoreProduct(
+      '2b2cb51c-21e4-44b5-8b8d-693aa294254f',
+      1,
+      createOffer('039ade94-bf0c-431b-b03a-e1dc2446ef2b', 1, 'New'),
+    );
+    const hub = new TestStoreOfferChangesHub();
+    const provider = new StoreOfferChangesProvider(hub);
+    const dispose = provider.activate();
+    assertProviderCleanup(dispose);
+
+    await hub.emitCreated(product);
+
+    expect(result.data).toHaveLength(1);
+    expect(result.data[0]?.uuid).toBe(product.uuid);
+    await dispose();
+  });
+
   it('updates the store product from the delivered payload', async () => {
     const storeProductUuid = '5b7e713c-f6c6-4450-b1dc-767a7458bf55';
     const offerUuid = '1cbf8861-884b-477a-8057-69355a8be273';
@@ -23,7 +48,7 @@ describe('StoreOfferChangesProvider', () => {
     await hub.emitUpdated(updatedStoreProduct);
 
     expect(openedStoreProduct.version).toBe(5);
-    expect(openedStoreProduct.offers[0]?.article).toBe('After');
+    expect(openedStoreProduct.offers[0]?.records[0]?.article).toBe('After');
 
     await dispose();
   });
@@ -45,6 +70,13 @@ class TestStoreOfferChangesHub extends StoreOfferChangesHubInterface {
     };
   }
 
+  async emitCreated(payload: StoreProductEntity): Promise<void> {
+    if (!this.listener) {
+      throw new Error('Store offer changes listener is not subscribed.');
+    }
+    await this.listener.created(payload);
+  }
+
   async emitUpdated(payload: StoreProductEntity): Promise<void> {
     if (!this.listener) {
       throw new Error('Store offer changes listener is not subscribed.');
@@ -54,7 +86,12 @@ class TestStoreOfferChangesHub extends StoreOfferChangesHubInterface {
 }
 
 const createOffer = (uuid: string, version: number, article: string): StoreOfferEntity => {
-  return Object.assign(new StoreOfferEntity(), { uuid, version, article });
+  const record = Object.assign(new StoreAccountingRecordEntity(), {
+    uuid: '067d7a24-3529-491c-82e0-900474373b5b',
+    version,
+    article,
+  });
+  return Object.assign(new StoreOfferEntity(), { uuid, version, records: [record] });
 };
 
 const createStoreProduct = (uuid: string, version: number, offer: StoreOfferEntity): StoreProductEntity => {
