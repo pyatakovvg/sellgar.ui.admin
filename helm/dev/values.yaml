@@ -12,5 +12,5 @@ configmaps:
         NODE_ENV: 'production',
         GATEWAY_API: 'http://dev.sellgar.io/api/admin',
         SOCKET_GATEWAY_API: 'http://dev.sellgar.io',
-        CDN_IMAGES_URL: 'http://localhost:8088/images',
+        CDN_IMAGES_URL: 'http://dev.sellgar.io/images',
       };
