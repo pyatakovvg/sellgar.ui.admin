@@ -10,8 +10,7 @@
 **/coverage
 **/*.tsbuildinfo*
 **/*.log
-**/.env
-**/.env.*
+!code/clients/admin/.env
 **/.yarn/cache
 **/.yarn/unplugged
 **/.yarn/install-state.gz
