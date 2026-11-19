@@ -165,7 +165,8 @@ def promote(run_id, directory):
         f"- Source: `{manifest['source']['commit']}`\n"
         f"- Master: `{os.environ['GITHUB_SHA']}`\n"
         f"- Approved by manual workflow: `{os.environ['GITHUB_ACTOR']}`\n\n"
-        "Artifact production-release contains the deployment input. Kubernetes rollout is not connected yet."
+        "The next step publishes the production Helm package with this exact image digest. "
+        "Argo CD applies published packages where a production environment is configured."
     )
 
 

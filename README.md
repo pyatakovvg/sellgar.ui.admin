@@ -96,16 +96,16 @@ SPA routes возвращают `index.html`; `config.js` и service worker не
 
 | Событие                                              | Результат                                                                        |
 | ---------------------------------------------------- | -------------------------------------------------------------------------------- |
-| Push в `development`                                 | build → smoke → publish, запись образа для dev                                   |
+| Push в `development`                                 | build → smoke → publish → Helm-пакет → автоматическая синхронизация Argo CD                                   |
 | Push в `release/*`                                   | build → smoke → publish, запись кандидата для stage/prod                         |
 | PR в `development`, `release/*`, `master`            | Проверки без публикации                                                          |
 | Слияние релиза в `master`                            | Автоматического production-выпуска нет                                           |
-| `Release to production` → `Run workflow` из `master` | Проверка кандидата, smoke опубликованного digest, подготовка prod и обратного PR |
+| `Release to production` → `Run workflow` из `master` | Проверка кандидата, smoke digest, публикация prod Helm-пакета и обратный PR |
 
 Для ручного выпуска указывается ID успешной релизной сборки из её Summary.
 Повторной сборки образа нет: результатом становится тот же digest и Artifact
 `production-release` с `release.json` и `image-values.yaml` для deployment.
-После подготовки выпуска открывается PR `master → development`; ветки
+После публикации пакета открывается PR `master → development`; ветки
 и автоматическое слияние workflow не создаёт.
 
 Операционные инструкции, GitHub permissions и точки подключения Kubernetes:
@@ -118,22 +118,16 @@ python3 .github/scripts/smoke-image.py sellgar-admin-ui:local
 python3 -B -m unittest discover -s .github/scripts -p 'test_*.py'
 ```
 
-CI не получает конфигурацию dev/prod и не имеет доступа к Kubernetes.
-Job `configure-env` отсутствует: настройки среды предоставляются при deployment.
-Обновление инфраструктурного репозитория, stage и фактический Kubernetes rollout
-ещё не подключены. Ручной workflow подготавливает разрешённый к выпуску образ,
-а не сообщает об успешном deployment.
+Сборка образа не зависит от среды. После smoke и публикации CI создаёт Helm-пакет
+с проверенным image digest и публичной конфигурацией выбранной среды. Dev-пакет
+публикуется автоматически; prod-пакет — только ручным workflow после проверки кандидата.
+Argo CD забирает новые версии пакетов из GHCR. CI не обращается к Kubernetes и
+не изменяет инфраструктурный Git при каждом выпуске.
 
-Общие Helm values находятся в `helm/values.app.yaml`. В `helm/dev/values.yaml`
-и `helm/prod/values.yaml` блок `configmaps` задаёт содержимое `config.js` каждой
-среды. Общий chart создаёт ConfigMap и монтирует ключ `config.js` в
-`/usr/share/nginx/html/admin/config.js`. Изменение ConfigMap вызывает rolling update.
-Остальные статические файлы остаются в образе. ConfigMap содержит только публичные
-настройки; секреты не могут храниться в файле, который получает браузер.
+Общие values лежат в `helm/values.app.yaml`, параметры и ConfigMap среды — в
+`helm/dev/values.yaml` и `helm/prod/values.yaml`. Общий chart включается в пакет
+из закреплённой версии delivery action. Изменение ConfigMap вызывает rolling update.
+`config.js` содержит только публичные настройки браузера; секреты в него не передаются.
 
-Dev Ingress использует `dev.sellgar.io/admin`. Dev ConfigMap пока сохраняет
-текущие localhost-адреса gateway/CDN для локальной отработки; их заменяют здесь
-при подключении этих сервисов к среде. Production-адреса не заданы, ingress prod
-отключён до настройки домена и TLS. Это подготовленная конфигурация, не deployment.
-Ревизия общего chart, digest образа и включение deployment принадлежат
-`sellgar.infrastructure`; значения из приложения в этот репозиторий не копируются.
+Dev использует `dev.sellgar.io/admin`. Prod ingress отключён до настройки домена,
+TLS и самой production-среды. Публикация prod-пакета сама по себе не создаёт эту среду.

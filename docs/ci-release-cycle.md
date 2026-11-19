@@ -1,129 +1,80 @@
 # CI и выпуск админки
 
 Цикл: `development → release/<version> → master → development`.
-Все jobs выполняются на GitHub-hosted runners. Kubernetes credentials,
-настройки сред и секреты работающих сервисов для сборки не нужны.
+Все jobs работают на GitHub-hosted runners. Kubeconfig и сетевой доступ к кластеру
+не передаются в GitHub. Значения Kubernetes Secrets в Git и Helm-пакеты не входят.
 
-## Автоматический CI
+## Development
 
-`.github/workflows/ci.yml` запускается при push в `development` и `release/*`,
-а также для PR в `development`, `release/*` и `master`.
+Push в `development` выполняет `build → smoke → publish → publish-dev-release`.
+Последний job использует общий delivery action, закреплённый по SHA в
+`sellgar.infrastructure/.github/actions/publish-helm`.
 
-1. `build` забирает код и commits submodules, проверяет release safeguards,
-   собирает образ `linux/amd64` на Node 24 и Nginx 1.30.7. Передаёт образ
-   следующим jobs как Artifact на три дня. Каждый attempt имеет своё имя
-   image Artifact; повторный запуск downstream jobs использует output сборки.
-2. `smoke` загружает образ и сверяет его ID. Проверяет Nginx без root,
-   read-only rootfs, SPA routes, assets, cache headers и внешний `config.js`.
-3. `publish` только при push публикует проверенный образ в GHCR без пересборки.
-   Возвращает `image` (полный адрес с digest), `digest`, `target_environment`.
-   Для `development` назначение — `dev`, для `release/*` — `stage`.
+Он получает `helm/values.app.yaml` и `helm/dev/values.yaml` из source commit образа,
+включает общий chart и закрепляет image digest. После lint/render публикует пакет
+`ghcr.io/pyatakovvg/helm/sellgar-ui-admin-dev:0.<run-id>.<attempt>`.
+Argo CD следит за версиями этого Helm OCI repository и автоматически применяет новый
+пакет. Коммитов в infrastructure на каждый выпуск нет. Изменение конфигурации попадёт
+в кластер вместе с образом только после успешной CI-публикации пакета.
 
-Тег образа: `ghcr.io/<owner>/<repository>:sha-<commit>`. Для deployment
-используется digest; тег не является источником идентичности релиза.
+Неизменяемая версия пакета упорядочена по CI run ID и attempt: старый медленный build
+не заменяет уже опубликованный более новый выпуск. ConfigMap и image digest находятся
+в одном пакете. Digest не определяется по mutable `latest`.
 
-Artifact `release-manifest` хранится 90 дней и содержит:
+Успешный CI означает публикацию проверенных артефактов; здоровье rollout проверяется
+в Argo CD (`Synced`, `Healthy`) и readiness Kubernetes. Публикация не выдаётся за
+подтверждение готовности пода.
 
-- `release.json`: repository, source branch/commit/tree, CI run ID/attempt,
-  назначение и image repository/digest;
-- `image-values.yaml`: только `image.repository` и `image.digest`.
+## Релиз и production
 
-Файлы values записываются в JSON-синтаксисе, совместимом с YAML.
-Manifest не содержит credentials или конфигурацию среды. При истечении срока
-хранения подготовка выпуска завершается ошибкой; нужно подготовить новый
-проверенный кандидат. GHCR image должен сохраняться до завершения жизненного
-цикла релиза и нужного периода rollback.
+Push в `release/*` выполняет build/smoke/publish и сохраняет Artifact
+`release-manifest`. Stage пока не развёрнут; название `stage` в manifest не создаёт среду.
+PR в `development`, `release/*`, `master` выполняет проверки без публикации.
 
-## Проверка релиза и ручная кнопка
+В `master` допускается PR только из `release/*` того же repository. Слияние не запускает
+production автоматически. Для выпуска открыть **Release to production → Run workflow**
+из `master` и указать ID успешной CI-сборки выбранной ветки `release/*`.
 
-1. Создать `release/<version>` от `development` и дождаться успешного CI.
-2. Проверить кандидата на stage, когда среда будет подключена. Любое исправление
-   в release создаёт новую сборку и новый digest; проверяется новый кандидат.
-3. Открыть PR из release в `master`. Проверка принимает только `release/*`
-   из того же репозитория. Сливать через **Create a merge commit**, сохраняя
-   ancestry кандидата; squash/rebase merge для этого перехода не используется.
-4. Открыть **Actions → Release to production → Run workflow**. Выбрать ветку
-   `master`, ввести `release_run_id` из Summary проверенной релизной сборки.
-5. Workflow проверит CI, manifest, ancestry и полное совпадение Git trees
-   релиза и master. Если merge добавил отличия, сначала включить их в release
-   и проверить новый кандидат. Если master продвинулся после запуска workflow,
-   требуется новый ручной запуск.
-6. Workflow скачает образ по digest, проверит source/revision labels и выполнит
-   smoke. Docker build в production workflow отсутствует.
+Workflow проверяет происхождение кандидата, успешность CI, merge в master и полное
+совпадение Git tree. Затем скачивает уже проверенный image digest, проверяет OCI labels,
+повторяет HTTP smoke и повторно проверяет master. Образ не пересобирается.
 
-Ручной `workflow_dispatch` является допуском выпуска и доступен пользователям
-с write access. Workflow должен попасть в default branch, чтобы появилась
-кнопка. `Review deployments` можно дополнительно подключить при доступности
-required reviewers: для приватных repositories на Free/Pro/Team эта защита
-[недоступна](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments#required-reviewers).
-На неё текущий ручной запуск не полагается.
+После проверки публикуется Helm-пакет `ghcr.io/pyatakovvg/helm/sellgar-ui-admin-prod`
+с тем же image digest и `helm/prod/values.yaml` выбранного кандидата. Только ручной
+workflow из master имеет право публиковать prod-пакет. У dev и prod разные OCI repositories.
+Prod Argo CD подключается к своему repository при развёртывании production-среды;
+сейчас prod-кластер не настроен и не затрагивается.
 
-Успешный job `promote` экспортирует Artifact `production-release` на 90 дней
-с production `release.json` и `image-values.yaml`. В записи сохраняются
-исходная сборка, тот же digest, master commit и инициатор ручного запуска.
-Это подготовленный выпуск; обновления работающего приложения пока нет.
+После успешной публикации создаётся или переиспользуется PR `master → development`.
+Автоматическое approve/merge не выполняется. Эта операция означает возврат исходников
+в цикл разработки, а не подтверждение здоровья production rollout.
 
-После подготовки job `back-merge` открывает или переиспользует PR
-`master → development`. При отсутствии новых commits PR не создаётся.
-Слияние выполняется после checks, через merge commit; новые ветки и прямой
-push в development workflow не выполняет.
+## Настройки GitHub и Kubernetes
 
-## Подключение Kubernetes
+- `SUBMODULES_READ_TOKEN`: доступ на чтение приватных вложенных repositories,
+  если им недоступен штатный `GITHUB_TOKEN`. Fork PR не получает этот Secret.
+- Публикация image и chart использует `GITHUB_TOKEN` с `packages: write`
+  только в соответствующих jobs. Для заранее созданного GHCR package repository
+  должен иметь доступ через package Actions access. Production job тоже публикует
+  chart, но не пересобирает образ.
+- Для обратного PR включить **Settings → Actions → General → Workflow permissions →
+  Allow GitHub Actions to create and approve pull requests**. Автоматический approve
+  в workflow не используется. Созданный токеном PR может потребовать запуска checks.
+- Для `master` настроить protection/ruleset: PR и успешные checks без обхода.
+  Workflow проверяет источник PR, но не настраивает защиту ветки.
+- Argo CD repo-server получает отдельную настройку Helm OCI repository с правом
+  чтения GHCR. Это Secret кластера, а не GitHub credential для Kubernetes.
+- `helm/*/values.yaml` содержит только публичную конфигурацию и ссылки на Secrets.
+  `config.js` по-прежнему монтируется ConfigMap в runtime и не встраивается в build.
 
-Сборка и ручная подготовка выпуска уже отдают данные для CD:
-
-| Источник             | Данные для deployment                                                                                        |
-| -------------------- | ------------------------------------------------------------------------------------------------------------ |
-| CI `publish`         | `image`, `digest`, `target_environment`, Artifact `release-manifest`                                         |
-| Production `promote` | `image`, `image_repository`, `image_digest`, `source_commit`, `master_commit`, Artifact `production-release` |
-
-Будущий job `deploy` в production workflow получает outputs через
-`needs: promote` и обновляет `image.repository`/`image.digest` в desired state
-`sellgar.infrastructure` для prod. Argo CD применяет chart и конфигурацию среды.
-После подключения CD job `back-merge` должен зависеть от успешного `deploy`
-с проверкой rollout, а не только от `promote`.
-
-Для dev/stage такой же job добавляется после CI `publish`. Stage опционален;
-его имя в manifest само по себе не создаёт namespace или среду.
-Только job, который реально дождался rollout, может сообщать об успешном deployment.
-
-Общий chart `sellgar.infrastructure/charts/application` использует
-`image.repository@image.digest`. Параметры приложения берутся из
-`helm/values.app.yaml`, затем накладываются `helm/dev/values.yaml` или
-`helm/prod/values.yaml`. Блок `configmaps` среды содержит публичный `config.js`;
-он монтируется в `/usr/share/nginx/html/admin/config.js`.
-Старые образы до перехода на `/admin/` с этими values несовместимы: нужен digest
-новой успешной CI-сборки. Runtime-параметры не передаются в Docker build.
-Доступ к Kubernetes и инфраструктурному репозиторию будет принадлежать CD;
-в данном CI он не настроен.
-
-## Настройки GitHub перед первым запуском
-
-- `SUBMODULES_READ_TOKEN`: чтение приватных вложенных repositories. Штатный
-  `GITHUB_TOKEN` можно использовать только там, где у него есть доступ.
-  Обычные PR из fork этот Secret не получают.
-- GHCR публикация: автоматический `GITHUB_TOKEN`, `packages: write` только
-  у `publish`. Production имеет только чтение package. Если package создан
-  заранее, разрешить этому repository нужный доступ в package Actions access.
-- Для автоматического обратного PR включить **Settings → Actions → General →
-  Workflow permissions → Allow GitHub Actions to create and approve pull requests**.
-  Job запрашивает `pull-requests: write`; автоматическое approve/merge не выполняется.
-  Checks PR, созданного `GITHUB_TOKEN`, могут ожидать **Approve workflows to run**.
-- Для `master` настроить protection/ruleset: только PR и успешные `build`,
-  `smoke`, без обхода проверок. Workflow проверяет source PR, но сам не меняет
-  настройки защиты веток. `development` также следует защищать checks.
-- Все Actions закреплены по commit SHA. Workflow не требует отдельного
-  GHCR PAT, kubeconfig или `.env` со значениями среды.
-
-## Локальная проверка
-
-Из корня repository:
+## Проверки
 
 ```bash
 python3 -B -m unittest discover -s .github/scripts -p 'test_*.py'
 python3 .github/scripts/smoke-image.py sellgar-admin-ui:local
 ```
 
-Тесты safeguards не обращаются к GitHub или Kubernetes. Для проверки workflow
-используется `actionlint`; фактические permissions, загрузка Artifacts между
-GitHub runners и публикация GHCR подтверждаются первым облачным запуском.
+Workflow проверяется `actionlint`. Общий delivery action проверяет эквивалентность
+render прежнему chart: selectors, ConfigMap, Ingress, образ и порядок наложения values.
+Фактическая доставка проверяется облачным CI и последующей автоматической синхронизацией
+Argo CD в dev; запись version/digest в инфраструктурный Git для такой проверки не нужна.
