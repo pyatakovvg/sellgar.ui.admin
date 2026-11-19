@@ -9,7 +9,11 @@
 - Исходники и корень Yarn находятся в `code/`; команды Yarn выполнять из него.
 - Dockerfile и `.dockerignore` находятся в корне; Docker build context — корень.
 - Nginx: `code/clients/admin/nginx/nginx.conf` и `conf.d/default.conf`.
-- CI: `.github/workflows/ci.yml`; Helm chart: `deploy/helm/`.
+- CI: `.github/workflows/ci.yml`.
+- Helm values: `helm/values.app.yaml`, `helm/dev/values.yaml`, `helm/prod/values.yaml`.
+  Общий chart находится в `sellgar.infrastructure/charts/application`.
+  Не создавать собственные Kubernetes templates или каталог `deploy/` в админке.
+  ConfigMap с `config.js` описывается в `configmaps` values соответствующей среды.
 - Документация и Git-конфигурация остаются в корне.
 
 ## Кратко

@@ -1,0 +1,17 @@
+replicas: 2
+
+# Включается после настройки production-домена и TLS.
+ingress:
+  enabled: false
+
+configmaps:
+  - nameOverride: admin-ui-config
+    enabled: true
+    filename: config.js
+    data: |
+      window.env = {
+        NODE_ENV: 'production',
+        GATEWAY_API: '',
+        SOCKET_GATEWAY_API: '',
+        CDN_IMAGES_URL: '',
+      };

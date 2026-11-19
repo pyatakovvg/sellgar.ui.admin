@@ -87,8 +87,13 @@ push в development workflow не выполняет.
 его имя в manifest само по себе не создаёт namespace или среду.
 Только job, который реально дождался rollout, может сообщать об успешном deployment.
 
-Helm chart должен использовать `image.repository@image.digest` и подключать
-публичный `config.js` через ConfigMap в `/usr/share/nginx/html/config.js`.
+Общий chart `sellgar.infrastructure/charts/application` использует
+`image.repository@image.digest`. Параметры приложения берутся из
+`helm/values.app.yaml`, затем накладываются `helm/dev/values.yaml` или
+`helm/prod/values.yaml`. Блок `configmaps` среды содержит публичный `config.js`;
+он монтируется в `/usr/share/nginx/html/admin/config.js`.
+Старые образы до перехода на `/admin/` с этими values несовместимы: нужен digest
+новой успешной CI-сборки. Runtime-параметры не передаются в Docker build.
 Доступ к Kubernetes и инфраструктурному репозиторию будет принадлежать CD;
 в данном CI он не настроен.
 

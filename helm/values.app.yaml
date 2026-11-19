@@ -1,0 +1,53 @@
+image:
+  repository: ghcr.io/pyatakovvg/sellgar.ui.admin
+
+env: {}
+
+applicationPort: 8080
+
+volumeMounts:
+  - mountPath: /tmp
+    name: cache-volume
+  - mountPath: /usr/share/nginx/html/admin/config.js
+    name: config-js
+    subPath: config.js
+    readOnly: true
+
+volumes:
+  - name: cache-volume
+    emptyDir:
+      sizeLimit: 64Mi
+  - name: config-js
+    configMap:
+      name: admin-ui-config
+
+ingress:
+  enabled: true
+  className: traefik
+  path: /admin
+
+probes:
+  startup:
+    httpGet:
+      path: /healthz
+      port: http
+    periodSeconds: 2
+    failureThreshold: 30
+  readiness:
+    httpGet:
+      path: /admin/config.js
+      port: http
+    periodSeconds: 5
+  liveness:
+    httpGet:
+      path: /healthz
+      port: http
+    periodSeconds: 10
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 32Mi
+  limits:
+    cpu: 500m
+    memory: 128Mi

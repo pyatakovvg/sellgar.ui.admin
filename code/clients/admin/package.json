@@ -6,7 +6,7 @@
   "homepage": "/",
   "scripts": {
     "start": "vite --base=/ --force --port=3000",
-    "build": "vite build --base=/",
+    "build": "vite build --base=/admin/",
     "preview": "vite preview --port=3000",
     "generate-pwa-assets": "pwa-assets-generator"
   },

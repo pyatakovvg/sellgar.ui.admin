@@ -9,7 +9,9 @@
 - `Dockerfile` и `.dockerignore` — контейнерная сборка из корня репозитория.
 - `.github/workflows/ci.yml` — сборка образа, smoke-проверка и публикация в GHCR.
 - `.github/workflows/production.yml` — ручная подготовка production-выпуска без пересборки.
-- `deploy/helm/` — место для chart; реализация chart остаётся следующим этапом.
+- `helm/values.app.yaml` — общие настройки запуска: порт, volumes, probes, ingress path.
+- `helm/dev/values.yaml`, `helm/prod/values.yaml` — настройки сред и ConfigMap с `config.js`.
+- Общий chart — `sellgar.infrastructure/charts/application`; templates в приложении нет.
 - `docs/` — документация; `.gitmodules` — пути вложенных библиотек.
 
 ## Стек
@@ -75,6 +77,10 @@ docker build -t sellgar-admin-ui:local .
 docker run --rm -p 127.0.0.1:8080:8080 sellgar-admin-ui:local
 ```
 
+Контейнер обслуживает `/admin/`; `/admin` перенаправляется на `/admin/`.
+Браузерные маршруты, assets и service worker используют этот префикс.
+Локальный Vite dev server продолжает работать от `/` на порту 3000.
+
 Образ собирается на Node 24 и обслуживается Nginx 1.30.7 без root.
 SPA routes возвращают `index.html`; `config.js` и service worker не сохраняются
 в HTTP-кеше, assets с хешами получают длительный cache lifetime.
@@ -118,9 +124,16 @@ Job `configure-env` отсутствует: настройки среды пре
 ещё не подключены. Ручной workflow подготавливает разрешённый к выпуску образ,
 а не сообщает об успешном deployment.
 
-Параметры dev/prod принадлежат `sellgar.infrastructure`. Текущий
-`code/clients/admin/public/config.js` содержит локальные публичные настройки.
-При deployment Helm должен создать ConfigMap с конфигурацией выбранной среды
-и смонтировать его ключ `config.js` в `/usr/share/nginx/html/config.js`.
-Каждый опубликованный образ может запускаться в разных средах; конфигурация,
-доступная браузеру, содержит только публичные параметры.
+Общие Helm values находятся в `helm/values.app.yaml`. В `helm/dev/values.yaml`
+и `helm/prod/values.yaml` блок `configmaps` задаёт содержимое `config.js` каждой
+среды. Общий chart создаёт ConfigMap и монтирует ключ `config.js` в
+`/usr/share/nginx/html/admin/config.js`. Изменение ConfigMap вызывает rolling update.
+Остальные статические файлы остаются в образе. ConfigMap содержит только публичные
+настройки; секреты не могут храниться в файле, который получает браузер.
+
+Dev Ingress использует `dev.sellgar.io/admin`. Dev ConfigMap пока сохраняет
+текущие localhost-адреса gateway/CDN для локальной отработки; их заменяют здесь
+при подключении этих сервисов к среде. Production-адреса не заданы, ingress prod
+отключён до настройки домена и TLS. Это подготовленная конфигурация, не deployment.
+Ревизия общего chart, digest образа и включение deployment принадлежат
+`sellgar.infrastructure`; значения из приложения в этот репозиторий не копируются.
