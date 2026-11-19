@@ -1,5 +1,4 @@
 export interface WriteOffRecordInventoryInput {
-  commandId: string;
   recordUuid: string;
   expectedVersion: number;
   quantity: number;

@@ -5,10 +5,6 @@ import type { AdjustRecordInventoryInput } from '../input/adjust-record-inventor
 export class AdjustRecordInventoryDto implements AdjustRecordInventoryInput {
   @Expose()
   @IsUUID()
-  commandId: string;
-
-  @Expose()
-  @IsUUID()
   recordUuid: string;
 
   @Expose()

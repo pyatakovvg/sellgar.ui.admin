@@ -14,7 +14,6 @@ export class ReceiptInventoryController implements ReceiptInventoryControllerInt
 
   async action(args: Parameters<ReceiptInventoryControllerInterface['action']>[0]): Promise<void> {
     await this.storeService.receiptInventory({
-      commandId: crypto.randomUUID(),
       recordUuid: args.params.recordUuid,
       expectedVersion: args.payload.expectedVersion,
       quantity: args.payload.quantity,

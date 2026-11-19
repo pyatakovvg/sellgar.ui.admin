@@ -1,5 +1,4 @@
 export interface AdjustRecordInventoryInput {
-  commandId: string;
   recordUuid: string;
   expectedVersion: number;
   quantity: number;

@@ -133,7 +133,6 @@ describe('StoreModifyController', () => {
     await expect(fixture.controller.action(actionArgs(payload))).resolves.toBe(fixture.result);
 
     expect(fixture.storeService.create).toHaveBeenCalledWith({
-      commandId: expect.any(String),
       shopUuid: payload.shopUuid,
       productUuid: payload.product?.uuid,
       showing: true,
@@ -154,7 +153,6 @@ describe('StoreModifyController', () => {
     await fixture.controller.action(actionArgs({ ...payload, expectedVersion: 5 }, uuid));
 
     expect(fixture.storeService.update).toHaveBeenCalledWith({
-      commandId: expect.any(String),
       uuid,
       expectedVersion: 5,
       showing: true,

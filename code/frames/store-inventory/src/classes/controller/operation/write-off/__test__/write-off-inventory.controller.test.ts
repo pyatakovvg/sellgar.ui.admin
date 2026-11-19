@@ -21,7 +21,6 @@ describe('WriteOffInventoryController', () => {
     });
 
     expect(storeService.writeOffInventory).toHaveBeenCalledWith({
-      commandId: expect.any(String),
       recordUuid: 'offer',
       expectedVersion: 8,
       quantity: 2,

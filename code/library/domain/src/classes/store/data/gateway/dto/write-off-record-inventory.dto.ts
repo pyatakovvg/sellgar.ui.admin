@@ -5,10 +5,6 @@ import type { WriteOffRecordInventoryInput } from '../input/write-off-record-inv
 export class WriteOffRecordInventoryDto implements WriteOffRecordInventoryInput {
   @Expose()
   @IsUUID()
-  commandId: string;
-
-  @Expose()
-  @IsUUID()
   recordUuid: string;
 
   @Expose()

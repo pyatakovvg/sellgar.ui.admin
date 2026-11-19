@@ -21,7 +21,6 @@ export class CategoryModifyController implements CategoryModifyControllerInterfa
 
   async action({ params, payload }: Parameters<CategoryModifyControllerInterface['action']>[0]) {
     const fields = {
-      commandId: crypto.randomUUID(),
       name: payload.name,
       description: payload.description,
       parentUuid: payload.parentUuid,

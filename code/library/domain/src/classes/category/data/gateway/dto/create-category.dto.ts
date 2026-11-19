@@ -7,9 +7,5 @@ import { CategoryFieldsDto } from './category-fields.dto';
 export class CreateCategoryDto extends CategoryFieldsDto implements CreateCategoryInput {
   @Expose()
   @IsUUID()
-  commandId: string;
-
-  @Expose()
-  @IsUUID()
   shopUuid: string;
 }

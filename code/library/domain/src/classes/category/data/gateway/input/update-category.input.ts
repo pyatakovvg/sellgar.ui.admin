@@ -1,5 +1,4 @@
 export interface UpdateCategoryInput {
-  commandId: string;
   uuid: string;
   expectedVersion: number;
   parentUuid: string | null;

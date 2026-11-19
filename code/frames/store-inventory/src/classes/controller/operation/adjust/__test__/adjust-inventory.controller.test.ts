@@ -21,7 +21,6 @@ describe('AdjustInventoryController', () => {
     });
 
     expect(storeService.adjustInventory).toHaveBeenCalledWith({
-      commandId: expect.any(String),
       recordUuid: 'offer',
       expectedVersion: 3,
       quantity: 12,

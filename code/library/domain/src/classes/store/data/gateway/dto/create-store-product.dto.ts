@@ -15,10 +15,6 @@ export class CreateStoreProductDto implements CreateStoreProductInput {
 
   @Expose()
   @IsUUID()
-  commandId: string;
-
-  @Expose()
-  @IsUUID()
   shopUuid: string;
 
   @Expose()

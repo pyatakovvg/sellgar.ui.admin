@@ -14,7 +14,6 @@ export class AdjustInventoryController implements AdjustInventoryControllerInter
 
   async action(args: Parameters<AdjustInventoryControllerInterface['action']>[0]): Promise<void> {
     await this.storeService.adjustInventory({
-      commandId: crypto.randomUUID(),
       recordUuid: args.params.recordUuid,
       expectedVersion: args.payload.expectedVersion,
       quantity: args.payload.quantity,

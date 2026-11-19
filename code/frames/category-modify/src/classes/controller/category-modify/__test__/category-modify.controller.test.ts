@@ -45,7 +45,6 @@ describe('CategoryModifyController', () => {
     expect(fixture.categories.create).toHaveBeenCalledWith({
       ...payload,
       shopUuid: 'shop',
-      commandId: expect.any(String),
     });
     expect(fixture.categories.getTree).not.toHaveBeenCalled();
     expect(fixture.navigation.close).toHaveBeenCalledOnce();
@@ -62,7 +61,6 @@ describe('CategoryModifyController', () => {
       ...payload,
       uuid: 'category',
       expectedVersion: 2,
-      commandId: expect.any(String),
     });
   });
 

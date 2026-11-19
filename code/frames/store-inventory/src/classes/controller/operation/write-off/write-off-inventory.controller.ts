@@ -14,7 +14,6 @@ export class WriteOffInventoryController implements WriteOffInventoryControllerI
 
   async action(args: Parameters<WriteOffInventoryControllerInterface['action']>[0]): Promise<void> {
     await this.storeService.writeOffInventory({
-      commandId: crypto.randomUUID(),
       recordUuid: args.params.recordUuid,
       expectedVersion: args.payload.expectedVersion,
       quantity: args.payload.quantity,

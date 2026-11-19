@@ -21,7 +21,6 @@ describe('ReceiptInventoryController', () => {
     });
 
     expect(storeService.receiptInventory).toHaveBeenCalledWith({
-      commandId: expect.any(String),
       recordUuid: 'offer',
       expectedVersion: 7,
       quantity: 5,

@@ -1,5 +1,4 @@
 export interface ReceiptRecordInventoryInput {
-  commandId: string;
   recordUuid: string;
   expectedVersion: number;
   quantity: number;

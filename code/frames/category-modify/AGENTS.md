@@ -11,10 +11,12 @@
   ветку, название выбирает её; очистка размещает категорию в корне.
 - Поля формы: name, description, parentUuid. Пустой parentUuid означает корень.
   Code и старый multipart/image-контракт не используются.
-- Create/update используют Store API, commandId и expectedVersion для правки.
+- Create/update используют Store API, expectedVersion для правки.
   Название, описание и смена родителя сохраняются одной транзакцией.
 - После успешного сохранения controller закрывает drawer. Данные таблицы обновляет
   CategoryChangesProvider по socket delivery; фрейм не перезагружает loaders и не
   обновляет дерево вручную. Ошибка остаётся в форме.
 - Форму и связывание react-hook-form держать во view, выбор операции и navigation —
   в controller, обход дерева родителей — в его чистом mapper.
+
+- Внутренний commandId создаёт gateway; frontend его не генерирует и не передаёт.

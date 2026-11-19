@@ -41,11 +41,11 @@ export class StoreModifyController implements StoreModifyControllerInterface {
         throw new Error('Не передана версия товара на складе.');
       }
 
-      const input = StoreModifyMapper.toCreateInput(args.payload, crypto.randomUUID());
+      const input = StoreModifyMapper.toCreateInput(args.payload);
       const result = await this.storeService.update({
         uuid: args.params.uuid,
         expectedVersion: args.payload.expectedVersion,
-        commandId: input.commandId,
+
         showing: input.showing,
         categoryUuids: input.categoryUuids,
         offers: input.offers,
@@ -56,7 +56,7 @@ export class StoreModifyController implements StoreModifyControllerInterface {
       return result;
     }
 
-    const result = await this.storeService.create(StoreModifyMapper.toCreateInput(args.payload, crypto.randomUUID()));
+    const result = await this.storeService.create(StoreModifyMapper.toCreateInput(args.payload));
 
     await this.finish(result.uuid);
 

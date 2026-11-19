@@ -5,10 +5,6 @@ import type { ArchiveStoreProductInput } from '../input/archive-store-product.in
 export class ArchiveStoreProductDto implements ArchiveStoreProductInput {
   @Expose()
   @IsUUID()
-  commandId: string;
-
-  @Expose()
-  @IsUUID()
   uuid: string;
 
   @Expose()

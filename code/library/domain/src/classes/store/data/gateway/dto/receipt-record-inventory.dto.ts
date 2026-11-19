@@ -5,10 +5,6 @@ import type { ReceiptRecordInventoryInput } from '../input/receipt-record-invent
 export class ReceiptRecordInventoryDto implements ReceiptRecordInventoryInput {
   @Expose()
   @IsUUID()
-  commandId: string;
-
-  @Expose()
-  @IsUUID()
   recordUuid: string;
 
   @Expose()

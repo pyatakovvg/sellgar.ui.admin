@@ -11,7 +11,6 @@ export class UpdateStoreProductDto implements UpdateStoreProductInput {
   @IsUUID('all', { each: true })
   categoryUuids?: string[];
 
-  @Expose() @IsUUID() commandId: string;
   @Expose() @IsUUID() uuid: string;
   @Expose() @IsInt() @Min(1) expectedVersion: number;
   @Expose() @IsOptional() @IsBoolean() showing?: boolean;
