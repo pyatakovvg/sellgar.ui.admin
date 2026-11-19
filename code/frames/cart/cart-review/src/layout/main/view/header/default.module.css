@@ -1,0 +1,13 @@
+.wrapper {
+  display: flex;
+  flex: 1 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--numbers-16);
+  padding: var(--numbers-16) var(--numbers-24);
+}
+
+.title {
+  margin: 0;
+  color: var(--text-base-primary);
+}

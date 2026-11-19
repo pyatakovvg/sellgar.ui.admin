@@ -1,0 +1,44 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  justify-content: center;
+  overflow: auto;
+}
+
+.context {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  padding: var(--numbers-32) var(--numbers-24);
+}
+
+.header {
+  display: block;
+  text-align: center;
+  color: var(--text-base-primary);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  margin-top: var(--numbers-16);
+  overflow: auto;
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+
+  & + & {
+    margin-top: var(--numbers-16);
+  }
+}

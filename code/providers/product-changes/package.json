@@ -1,0 +1,21 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@provider/product-changes",
+  "version": "0.0.1",
+  "description": "Синхронизация товаров через Socket.IO",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@library/domain": "0.0.1",
+    "@library/socket-io": "0.0.1",
+    "@sellgar/app": "0.0.1",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.15.1",
+    "reflect-metadata": "0.2.2"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

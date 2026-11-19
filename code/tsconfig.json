@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "types": ["reflect-metadata"],
+
+    "target": "ESNext",
+    "ignoreDeprecations": "6.0",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+
+    /* Bundler mode */
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "strictPropertyInitialization": false,
+    "inlineSources": false,
+    "downlevelIteration": false,
+    "sourceMap": false,
+    "preserveConstEnums": true,
+    "composite": false
+  },
+  "exclude": ["node_modules"],
+}

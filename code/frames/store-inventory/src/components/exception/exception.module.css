@@ -1,0 +1,6 @@
+.wrapper {
+  width: min(var(--numbers-560), calc(100vw - var(--numbers-32)));
+  padding: var(--numbers-24);
+  background: var(--color-background-surface);
+  border-radius: var(--numbers-8);
+}

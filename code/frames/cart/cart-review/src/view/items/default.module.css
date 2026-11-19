@@ -1,0 +1,21 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-12);
+  min-width: 0;
+}
+
+.title,
+.empty {
+  margin: 0;
+  color: var(--text-base-primary);
+}
+
+.value {
+  display: block;
+  padding: var(--numbers-8);
+  color: var(--text-base-primary);
+  font-size: var(--typography-size-caption-m);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

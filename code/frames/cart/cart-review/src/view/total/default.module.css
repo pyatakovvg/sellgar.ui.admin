@@ -1,0 +1,19 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--numbers-12);
+  padding-top: var(--numbers-16);
+  border-top: var(--numbers-1) solid var(--border-base-divider);
+}
+
+.label,
+.value {
+  margin: 0;
+  color: var(--text-base-primary);
+}
+
+.value {
+  font-variant-numeric: tabular-nums;
+}

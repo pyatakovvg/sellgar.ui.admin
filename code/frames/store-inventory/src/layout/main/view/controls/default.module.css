@@ -1,0 +1,8 @@
+.wrapper {
+  min-height: var(--numbers-64);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--numbers-12);
+  padding: var(--numbers-12) var(--numbers-24);
+}

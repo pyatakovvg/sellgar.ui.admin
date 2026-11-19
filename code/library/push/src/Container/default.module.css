@@ -1,0 +1,14 @@
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+}
+
+.push {
+  display: block;
+
+  & + & {
+    margin: var(--numbers-8) 0 0;
+  }
+}

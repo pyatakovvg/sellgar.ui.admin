@@ -1,0 +1,15 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-16);
+  padding: var(--numbers-24) 0;
+}
+
+.title,
+.message {
+  margin: 0;
+}
+
+.message {
+  color: var(--text-base-secondary);
+}

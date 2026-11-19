@@ -1,0 +1,19 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 1 0;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+}
+
+.create {
+  display: flex;
+  flex-direction: row;
+  flex: 0 0 auto;
+}

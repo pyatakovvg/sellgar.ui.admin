@@ -1,0 +1,8 @@
+
+.label {
+  color: var(--text-base-primary);
+}
+
+.value {
+  color: var(--text-base-secondary);
+}

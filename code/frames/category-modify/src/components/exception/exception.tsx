@@ -1,0 +1,19 @@
+import { useException } from '@sellgar/app/react';
+import { Typography } from '@sellgar/kit';
+
+import React from 'react';
+
+import s from './exception.module.css';
+
+export const Exception: React.FC = () => {
+  const error = useException();
+  const message = error instanceof Error ? error.message : 'Не удалось открыть форму категории.';
+
+  return (
+    <div className={s.wrapper}>
+      <Typography size={'body-m'} weight={'medium'}>
+        <p>{message}</p>
+      </Typography>
+    </div>
+  );
+};

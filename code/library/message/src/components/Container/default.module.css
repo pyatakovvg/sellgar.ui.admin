@@ -1,0 +1,17 @@
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0;
+  padding: 0 var(--numbers-24) var(--numbers-24);
+  pointer-events: none;
+}
+
+.message {
+  display: block;
+  pointer-events: none;
+
+  & + & {
+    margin: var(--numbers-8) 0 0;
+  }
+}

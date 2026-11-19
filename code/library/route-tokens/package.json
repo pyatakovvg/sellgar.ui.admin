@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@library/route-tokens",
+  "version": "0.0.1",
+  "description": "Typed route identities for Sellgar Admin",
+  "license": "UNLICENSED",
+  "main": "src/index.ts"
+}

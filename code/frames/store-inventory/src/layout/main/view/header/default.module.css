@@ -1,0 +1,12 @@
+.wrapper {
+  min-height: var(--numbers-56);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--numbers-16);
+  padding: var(--numbers-12) var(--numbers-16) var(--numbers-12) var(--numbers-24);
+}
+
+.label {
+  margin: 0;
+}

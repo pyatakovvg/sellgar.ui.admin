@@ -1,0 +1,23 @@
+.wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--numbers-16);
+  padding: var(--numbers-16);
+  border-radius: var(--measurements-radius-lg);
+  background: var(--background-surface-neutral);
+}
+
+.types {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  gap: var(--numbers-16);
+}
+
+.remove {
+  position: absolute;
+  top: var(--numbers-8);
+  right: var(--numbers-8);
+}

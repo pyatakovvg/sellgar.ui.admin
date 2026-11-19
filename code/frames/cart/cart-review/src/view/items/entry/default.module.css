@@ -1,0 +1,21 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-4);
+  min-width: 0;
+  padding: var(--numbers-8);
+  font-size: var(--typography-size-caption-m);
+  overflow-wrap: anywhere;
+}
+
+.name {
+  margin: 0;
+  color: var(--text-base-primary);
+  font-weight: var(--typography-weight-semi-bold);
+}
+
+.detail,
+.message {
+  margin: 0;
+  color: var(--text-base-secondary);
+}

@@ -1,0 +1,18 @@
+.wrapper,
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-16);
+}
+
+.label {
+  margin: 0;
+  color: var(--text-base-primary);
+}
+
+.value {
+  margin: 0;
+  color: var(--text-base-secondary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

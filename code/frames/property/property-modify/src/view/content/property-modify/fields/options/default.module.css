@@ -1,0 +1,12 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--numbers-12);
+}
+.content,
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--numbers-10);
+}

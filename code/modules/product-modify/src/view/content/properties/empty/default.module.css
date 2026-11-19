@@ -1,0 +1,11 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  align-items: center;
+  justify-content: center;
+  height: var(--numbers-40);
+  border: var(--numbers-1) dashed var(--border-action-normal);
+  border-radius: var(--measurements-radius-md);
+  color: var(--text-base-secondary);
+}

@@ -1,0 +1,25 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--numbers-8);
+}
+
+.label {
+  overflow-wrap: anywhere;
+}
+
+.values {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--numbers-8);
+}
+
+.value {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-width: 0;
+  gap: var(--numbers-8);
+  align-items: flex-start;
+}
