@@ -1,10 +1,10 @@
 import { Router } from '@sellgar/app/react';
 
-import { PublicRoutes } from './routes/public/public.routes.ts';
-import { PrivateRoutes } from './routes/private/private.routes.ts';
+import { privateRoute } from './routes/private';
+import { publicRoute } from './routes/public';
 
 export const createAdminRouter = (): Router => {
   return new Router({
-    routes: [...PrivateRoutes(), ...PublicRoutes()],
+    routes: [privateRoute, publicRoute],
   });
 };

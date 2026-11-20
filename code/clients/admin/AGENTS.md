@@ -22,6 +22,13 @@
 - Не добавлять сюда feature UI и business logic.
 - Здесь только регистрируются modules и frames; реализация живет в `modules/*` или `frames/*`.
 - Для routing, policies и application composition использовать primitives из `@sellgar/app`.
+- Каталоги `src/application/routes` повторяют дерево деклараций: каждый узел
+  содержит `*.route.ts` или `*.routing.ts` и фасад `index.ts`.
+- Дочерние `Route` находятся в `routes/` своего владельца, вложенные `Router` —
+  в его `routing/`. Создавать эти каталоги только при наличии дочерних узлов.
+- Родитель импортирует именованные декларации дочерних узлов через фасады
+  каталогов: `routes: [shopsRoute, productsRoute]`, `routing: [shopRouting]`.
+  Декларации не хранят состояние выполнения; его изоляцией владеет framework runtime.
 - Host bindings ограничивать application-wide/domain infrastructure.
 - Recovery защищённой сессии при 401 принадлежит `RequestExecutor` из
   `@sellgar/app`. Host application предоставляет только реализацию
