@@ -16,6 +16,7 @@ import { RequireAuthenticatedSessionPolicy } from '../../../policies';
 export const PrivateRoutes = (): Route[] => {
   return [
     new Route({
+      defaultTo: Router.firstAvailable(),
       canMatch: [
         RequireAuthenticatedSessionPolicy.configure().onFail(
           Router.redirectTo(Tokens.SignInRoute, {

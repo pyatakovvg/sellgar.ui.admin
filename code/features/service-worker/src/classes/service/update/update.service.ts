@@ -7,7 +7,7 @@ import { ServiceWorkerActivationError } from '../activation/service-worker-activ
 import { ReloadServiceInterface } from '../reload/reload-service.interface.ts';
 import { UpdateServiceInterface } from './update-service.interface.ts';
 
-const UPDATE_CHECK_INTERVAL = 60 * 60 * 1000;
+const UPDATE_CHECK_INTERVAL = 5 * 60 * 1000;
 const UPDATE_REMINDER_INTERVAL = 15 * 60 * 1000;
 
 @Injectable()

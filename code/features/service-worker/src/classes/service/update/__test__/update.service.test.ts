@@ -62,11 +62,12 @@ describe('UpdateService', () => {
     expect(store.status).toBe('available');
   });
 
-  it('проверяет раз в час и учитывает offline', async () => {
+  it('проверяет раз в 5 минут и учитывает offline', async () => {
+    await vi.advanceTimersByTimeAsync(299_999);
     window.dispatchEvent(new Event('online'));
     expect(registration.update).not.toHaveBeenCalled();
     Object.defineProperty(navigator, 'onLine', { configurable: true, value: false });
-    await vi.advanceTimersByTimeAsync(3_600_000);
+    await vi.advanceTimersByTimeAsync(1);
     expect(registration.update).not.toHaveBeenCalled();
     Object.defineProperty(navigator, 'onLine', { configurable: true, value: true });
     window.dispatchEvent(new Event('online'));
@@ -74,6 +75,8 @@ describe('UpdateService', () => {
     expect(registration.update).toHaveBeenCalledOnce();
     document.dispatchEvent(new Event('visibilitychange'));
     expect(registration.update).toHaveBeenCalledOnce();
+    await vi.advanceTimersByTimeAsync(300_000);
+    expect(registration.update).toHaveBeenCalledTimes(2);
   });
 
   it('напоминает через 15 минут и отменяет напоминание при закрытии', async () => {
