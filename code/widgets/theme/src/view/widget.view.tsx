@@ -1,6 +1,5 @@
 import * as App from '@sellgar/app/react';
-import { Button, ButtonGroup, Typography } from '@sellgar/kit';
-import { ShieldUserLineIcon, SunFillIcon, SunLineIcon } from '@sellgar/kit/icons';
+import { Button, ButtonGroup } from '@sellgar/kit';
 
 import React from 'react';
 
@@ -8,8 +7,6 @@ import type { ThemeWidgetProps } from '../classes/controller/theme/dto/theme-wid
 import { ThemeControllerInterface } from '../classes/controller/theme/theme-controller.interface.ts';
 
 import { PreferenceIconFactory } from './preference-icon-factory';
-
-import s from './default.module.css';
 
 const WidgetViewComponent: React.FC = () => {
   const props = App.useWidgetProps<ThemeWidgetProps>();
@@ -30,38 +27,38 @@ const WidgetViewComponent: React.FC = () => {
   }
 
   return (
-    <div className={s.wrapper}>
-      <Typography size={'caption-l'}>
-        <p className={s.title}>Тема:</p>
-      </Typography>
-
-      <ButtonGroup size={'sm'}>
-        <ButtonGroup.Icon
-          disabled={submit.inProcess}
-          isActive={theme.preference === 'system'}
-          leadIcon={<ShieldUserLineIcon />}
-          onClick={() => void submit({ preference: 'system' })}
-        >
-          Системная
-        </ButtonGroup.Icon>
-        <ButtonGroup.Icon
-          disabled={submit.inProcess}
-          isActive={theme.preference === 'light'}
-          leadIcon={<SunLineIcon />}
-          onClick={() => void submit({ preference: 'light' })}
-        >
-          Светлая
-        </ButtonGroup.Icon>
-        <ButtonGroup.Icon
-          disabled={submit.inProcess}
-          isActive={theme.preference === 'dark'}
-          leadIcon={<SunFillIcon />}
-          onClick={() => void submit({ preference: 'dark' })}
-        >
-          Темная
-        </ButtonGroup.Icon>
-      </ButtonGroup>
-    </div>
+    <ButtonGroup size={'xs'} fill={'contain'}>
+      <ButtonGroup.Icon
+        disabled={submit.inProcess}
+        isActive={theme.preference === 'system'}
+        aria-label={'Системная тема'}
+        aria-pressed={theme.preference === 'system'}
+        leadIcon={<PreferenceIconFactory preference={'system'} />}
+        onClick={() => void submit({ preference: 'system' })}
+      >
+        Системная
+      </ButtonGroup.Icon>
+      <ButtonGroup.Icon
+        disabled={submit.inProcess}
+        isActive={theme.preference === 'light'}
+        aria-label={'Светлая тема'}
+        aria-pressed={theme.preference === 'light'}
+        leadIcon={<PreferenceIconFactory preference={'light'} />}
+        onClick={() => void submit({ preference: 'light' })}
+      >
+        Светлая
+      </ButtonGroup.Icon>
+      <ButtonGroup.Icon
+        disabled={submit.inProcess}
+        isActive={theme.preference === 'dark'}
+        aria-label={'Тёмная тема'}
+        aria-pressed={theme.preference === 'dark'}
+        leadIcon={<PreferenceIconFactory preference={'dark'} />}
+        onClick={() => void submit({ preference: 'dark' })}
+      >
+        Темная
+      </ButtonGroup.Icon>
+    </ButtonGroup>
   );
 };
 

@@ -8,8 +8,12 @@ import React from 'react';
 export const Actions: React.FC = () => {
   return (
     <Sidebar.Bottom>
-      <WidgetHost token={ThemeWidget} props={{}} />
-      <WidgetHost token={LogoutWidget} />
+      <Sidebar.Additional>
+        <WidgetHost token={LogoutWidget} />
+      </Sidebar.Additional>
+      <Sidebar.Additional>
+        <WidgetHost token={ThemeWidget} props={{}} />
+      </Sidebar.Additional>
     </Sidebar.Bottom>
   );
 };

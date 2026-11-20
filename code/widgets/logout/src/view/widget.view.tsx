@@ -32,6 +32,7 @@ export const WidgetView: React.FC = () => {
     <div className={s.wrapper}>
       <Button
         style={'secondary'}
+        target={'destructive'}
         size={'sm'}
         disabled={submit.inProcess}
         inProcess={submit.inProcess}

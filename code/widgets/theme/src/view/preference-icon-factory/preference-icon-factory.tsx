@@ -1,4 +1,4 @@
-import { ShieldUserLineIcon, SunFillIcon, SunLineIcon } from '@sellgar/kit/icons';
+import { ComputerLineIcon, MoonLineIcon, SunLineIcon } from '@sellgar/kit/icons';
 
 import React from 'react';
 
@@ -11,10 +11,10 @@ interface IProps {
 export const PreferenceIconFactory: React.FC<IProps> = (props) => {
   switch (props.preference) {
     case 'dark':
-      return <SunFillIcon />;
+      return <MoonLineIcon />;
     case 'light':
       return <SunLineIcon />;
     case 'system':
-      return <ShieldUserLineIcon />;
+      return <ComputerLineIcon />;
   }
 };
