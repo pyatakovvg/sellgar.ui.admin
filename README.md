@@ -77,8 +77,8 @@ docker build -t sellgar-admin-ui:local .
 docker run --rm -p 127.0.0.1:8080:8080 sellgar-admin-ui:local
 ```
 
-Контейнер обслуживает `/admin/`; `/admin` перенаправляется на `/admin/`.
-Браузерные маршруты, assets и service worker используют этот префикс.
+Контейнер обслуживает корень отдельного домена. Браузерные маршруты, assets
+и service worker используют `/`; область действия worker — весь admin origin.
 Локальный Vite dev server продолжает работать от `/` на порту 3000.
 
 Образ собирается на Node 24 и обслуживается Nginx 1.30.7 без root.
@@ -129,5 +129,5 @@ Argo CD забирает новые версии пакетов из GHCR. CI н
 из закреплённой версии delivery action. Изменение ConfigMap вызывает rolling update.
 `config.js` содержит только публичные настройки браузера; секреты в него не передаются.
 
-Dev использует `dev.sellgar.io/admin`. Prod ingress отключён до настройки домена,
+Целевой адрес dev — `https://admin.dev.sellgar.ru/`. Prod ingress отключён до настройки домена,
 TLS и самой production-среды. Публикация prod-пакета сама по себе не создаёт эту среду.

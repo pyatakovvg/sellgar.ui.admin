@@ -14,7 +14,7 @@ FROM nginx:1.30.7-alpine@sha256:bef154735288bc38d99fac41ae63730684bcc661503673a0
 
 COPY code/clients/admin/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY code/clients/admin/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/code/clients/admin/build/ /usr/share/nginx/html/admin/
+COPY --from=builder /app/code/clients/admin/build/ /usr/share/nginx/html/
 
 USER nginx
 

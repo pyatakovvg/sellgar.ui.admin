@@ -50,10 +50,10 @@ export default defineConfig({
     }),
     serviceWorker({
       manifest: {
-        id: '/terminals-management',
+        id: '/',
         lang: 'ru',
-        name: 'Tiyn management terminals',
-        short_name: 'TmT',
+        name: 'Sellgar Admin',
+        short_name: 'Sellgar',
         theme_color: '#ffffff',
         display: 'fullscreen',
         background_color: '#ffffff',

@@ -13,7 +13,7 @@ podSecurityContext:
 volumeMounts:
   - mountPath: /tmp
     name: cache-volume
-  - mountPath: /usr/share/nginx/html/admin/config.js
+  - mountPath: /usr/share/nginx/html/config.js
     name: config-js
     subPath: config.js
     readOnly: true
@@ -29,7 +29,7 @@ volumes:
 ingress:
   enabled: true
   className: traefik
-  path: /admin
+  path: /
 
 probes:
   startup:
@@ -40,7 +40,7 @@ probes:
     failureThreshold: 30
   readiness:
     httpGet:
-      path: /admin/config.js
+      path: /config.js
       port: http
     periodSeconds: 5
   liveness:

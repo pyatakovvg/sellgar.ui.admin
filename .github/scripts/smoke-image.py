@@ -19,10 +19,10 @@ class AssetParser(HTMLParser):
         attributes = dict(attributes)
         source = attributes.get("src") if tag == "script" else attributes.get("href")
 
-        if tag == "script" and source == "/admin/config.js":
+        if tag == "script" and source == "/config.js":
             self.has_config = True
 
-        if tag in {"script", "link"} and source and source.startswith("/admin/assets/"):
+        if tag in {"script", "link"} and source and source.startswith("/assets/"):
             self.assets.add(source)
 
 
@@ -53,7 +53,7 @@ def check_http(base_url, configuration):
 
     while True:
         try:
-            status, headers, index = request(base_url, "/admin/")
+            status, headers, index = request(base_url, "/")
             if status == 200:
                 break
         except (URLError, TimeoutError, ConnectionError):
@@ -67,17 +67,17 @@ def check_http(base_url, configuration):
     status, _, _ = request(base_url, "/healthz")
     require(status == 200, "Health check failed")
 
-    for path in ["/admin/sign-in", "/admin/shops", "/admin/products/smoke-product"]:
+    for path in ["/sign-in", "/shops", "/products/smoke-product"]:
         status, _, body = request(base_url, path)
         require(status == 200 and body == index, f"SPA fallback failed for {path}")
 
-    status, headers, body = request(base_url, "/admin/config.js")
+    status, headers, body = request(base_url, "/config.js")
     require(status == 200 and body == configuration, "Mounted config.js was not served")
     require("no-store" in headers.get("Cache-Control", ""), "config.js must not be cached")
 
     parser = AssetParser()
     parser.feed(index.decode("utf-8"))
-    require(parser.has_config, "index.html does not load /admin/config.js")
+    require(parser.has_config, "index.html does not load /config.js")
     require(bool(parser.assets), "index.html does not reference built assets")
 
     for path in sorted(parser.assets):
@@ -85,10 +85,10 @@ def check_http(base_url, configuration):
         require(status == 200 and body and body != index, f"Built asset is missing: {path}")
         require("immutable" in headers.get("Cache-Control", ""), f"Asset is not cached: {path}")
 
-    status, _, _ = request(base_url, "/admin/assets/smoke-missing-file.js")
+    status, _, _ = request(base_url, "/assets/smoke-missing-file.js")
     require(status == 404, "A missing asset must return 404 instead of index.html")
 
-    status, headers, _ = request(base_url, "/admin/sw.js")
+    status, headers, _ = request(base_url, "/sw.js")
     require(status == 200, "Service worker is missing")
     require("no-store" in headers.get("Cache-Control", ""), "Service worker must not be cached")
 
@@ -120,7 +120,7 @@ def main(image):
             "--publish",
             "127.0.0.1::8080",
             "--mount",
-            f"type=bind,source={config_path},target=/usr/share/nginx/html/admin/config.js,readonly",
+            f"type=bind,source={config_path},target=/usr/share/nginx/html/config.js,readonly",
             image,
         )
 
