@@ -11,3 +11,6 @@ export type { ProductPropertyInput, PropertyValueInput } from './data/gateway/in
 export type { ProductVariantInput } from './data/gateway/input/product-variant.input.ts';
 export type { UpdateProductInput } from './data/gateway/input/update-product.input.ts';
 export type { UpdateVariantInput as UpdateProductVariantInput } from './data/gateway/input/update-variant.input.ts';
+
+export { ProductVariantListEntity } from './domain/product-variant-list.entity.ts';
+export { ProductVariantDetailEntity } from './domain/product-variant-detail.entity.ts';

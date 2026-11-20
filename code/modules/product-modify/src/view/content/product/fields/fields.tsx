@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Properties as PropertiesField } from '../../properties';
+import { ProductProperties as PropertiesField } from '@library/product-form';
 
 import { Name } from './name';
 import { Type } from './type';
@@ -25,7 +25,7 @@ export const Fields: React.FC = () => {
         <Description />
       </div>
       <div className={s.field}>
-        <PropertiesField name={'properties'} label={'Общие свойства товара'} scope={'product'} />
+        <PropertiesField name={'properties'} label={'Общие свойства товара'} />
       </div>
     </div>
   );

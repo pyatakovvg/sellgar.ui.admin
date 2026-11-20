@@ -1549,6 +1549,8 @@ __metadata:
     "@frame/brand-review": "npm:0.0.1"
     "@frame/cart-review": "npm:0.0.1"
     "@frame/category-modify": "npm:0.0.1"
+    "@frame/product-variant-modify": "npm:0.0.1"
+    "@frame/product-variant-review": "npm:0.0.1"
     "@frame/property-modify": "npm:0.0.1"
     "@frame/property-review": "npm:0.0.1"
     "@frame/shop-modify": "npm:0.0.1"
@@ -1568,6 +1570,7 @@ __metadata:
     "@module/categories": "npm:0.0.1"
     "@module/dashboard": "npm:0.0.1"
     "@module/product-modify": "npm:0.0.1"
+    "@module/product-review": "npm:0.0.1"
     "@module/products": "npm:0.0.1"
     "@module/properties": "npm:0.0.1"
     "@module/shops": "npm:0.0.1"
@@ -2307,6 +2310,47 @@ __metadata:
     react-dom: "npm:19.3.1"
     react-hook-form: "npm:7.90.0"
     yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
+"@frame/product-variant-modify@npm:0.0.1, @frame/product-variant-modify@workspace:frames/product-variant-modify":
+  version: 0.0.0-use.local
+  resolution: "@frame/product-variant-modify@workspace:frames/product-variant-modify"
+  dependencies:
+    "@hookform/resolvers": "npm:6.0.0"
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/product-form": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@provider/product-changes": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.1"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    class-transformer: "npm:0.5.1"
+    class-validator: "npm:0.15.1"
+    react: "npm:19.3.1"
+    react-dom: "npm:19.3.1"
+    react-hook-form: "npm:7.90.0"
+    yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
+"@frame/product-variant-review@npm:0.0.1, @frame/product-variant-review@workspace:frames/product-variant-review":
+  version: 0.0.0-use.local
+  resolution: "@frame/product-variant-review@workspace:frames/product-variant-review"
+  dependencies:
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/product-form": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@provider/product-changes": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.1"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.1"
+    react-dom: "npm:19.3.1"
   languageName: unknown
   linkType: soft
 
@@ -3359,6 +3403,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@library/product-form@npm:0.0.1, @library/product-form@workspace:library/product-form":
+  version: 0.0.0-use.local
+  resolution: "@library/product-form@workspace:library/product-form"
+  dependencies:
+    "@library/domain": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.1"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.1"
+    react-hook-form: "npm:7.90.0"
+    yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
 "@library/push@npm:0.0.1, @library/push@workspace:library/push":
   version: 0.0.0-use.local
   resolution: "@library/push@workspace:library/push"
@@ -3459,6 +3517,7 @@ __metadata:
     "@hookform/resolvers": "npm:6.0.0"
     "@library/design": "npm:0.0.1"
     "@library/domain": "npm:0.0.1"
+    "@library/product-form": "npm:0.0.1"
     "@library/route-tokens": "npm:0.0.1"
     "@provider/product-changes": "npm:0.0.1"
     "@sellgar/app": "npm:0.0.1"
@@ -3472,6 +3531,24 @@ __metadata:
     react-dom: "npm:19.3.1"
     react-hook-form: "npm:7.90.0"
     yup: "npm:1.7.1"
+  languageName: unknown
+  linkType: soft
+
+"@module/product-review@npm:0.0.1, @module/product-review@workspace:modules/product-review":
+  version: 0.0.0-use.local
+  resolution: "@module/product-review@workspace:modules/product-review"
+  dependencies:
+    "@library/design": "npm:0.0.1"
+    "@library/domain": "npm:0.0.1"
+    "@library/product-form": "npm:0.0.1"
+    "@library/route-tokens": "npm:0.0.1"
+    "@provider/product-changes": "npm:0.0.1"
+    "@sellgar/app": "npm:0.0.1"
+    "@sellgar/kit": "npm:0.0.1"
+    "@types/react": "npm:19.3.0"
+    "@types/react-dom": "npm:19.3.0"
+    react: "npm:19.3.1"
+    react-dom: "npm:19.3.1"
   languageName: unknown
   linkType: soft
 

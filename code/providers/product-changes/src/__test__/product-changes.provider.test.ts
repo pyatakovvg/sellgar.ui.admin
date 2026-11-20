@@ -1,4 +1,4 @@
-import { ProductEntity, ProductResultEntity } from '@library/domain';
+import { ProductEntity, ProductResultEntity, ProductVariantDetailEntity } from '@library/domain';
 import type { ProviderCleanup } from '@sellgar/app';
 import { plainToInstance } from 'class-transformer';
 
@@ -30,6 +30,30 @@ describe('ProductChangesProvider', () => {
     expect(result.items[0]).toMatchObject({ uuid: createdProduct.uuid, version: 1, name: 'Created' });
     expect(result.items[1]).toMatchObject({ uuid: existingProduct.uuid, version: 4, name: 'Existing' });
 
+    await dispose();
+  });
+
+  it('updates the opened variant and aggregate version directly from a full product event', async () => {
+    const productUuid = 'a438434d-4467-4c00-a61f-299ea4dd204f';
+    const variantUuid = '6067f4db-f8c7-4076-9a02-d31249125c20';
+    const opened = plainToInstance(ProductVariantDetailEntity, {
+      uuid: variantUuid,
+      productUuid,
+      version: 4,
+      name: 'Before',
+    });
+    const product = createProduct(productUuid, 5, 'Product');
+    product.typeUuid = '2f407a03-0532-4519-954b-077c73eb5256';
+    product.typeVersion = 2;
+    product.variants = [{ uuid: variantUuid, name: 'After' }] as ProductEntity['variants'];
+    const hub = new TestProductChangesHub();
+    const provider = new ProductChangesProvider(hub);
+    const dispose = provider.activate();
+    assertProviderCleanup(dispose);
+    await hub.emitUpdated(product);
+    expect(opened.name).toBe('After');
+    expect(opened.version).toBe(5);
+    expect(opened.typeVersion).toBe(2);
     await dispose();
   });
 

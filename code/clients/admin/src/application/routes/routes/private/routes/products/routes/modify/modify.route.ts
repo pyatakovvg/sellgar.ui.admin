@@ -4,6 +4,6 @@ import { Route } from '@sellgar/app/react';
 
 export const productModifyRoute = new Route({
   token: Tokens.ProductModifyRoute,
-  address: segments(param('uuid')),
+  address: segments(param('uuid'), 'edit'),
   load: () => import('@module/product-modify'),
 });

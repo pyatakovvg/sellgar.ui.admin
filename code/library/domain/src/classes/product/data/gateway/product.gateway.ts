@@ -1,3 +1,5 @@
+import { ProductVariantDetailEntity } from '../../domain/product-variant-detail.entity.ts';
+import { ProductVariantListEntity } from '../../domain/product-variant-list.entity.ts';
 import { Inject, Injectable, RequestExecutorInterface } from '@sellgar/app';
 
 import { plainToInstance } from 'class-transformer';
@@ -46,6 +48,36 @@ export class ProductGateway implements ProductGatewayInterface {
     const result = await this.requestExecutor.run({ scope: `product:${uuid}` }, ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
       return request.get(this.config.get('GATEWAY_API') + '/v2/products/' + uuid);
+    });
+    return this.toProduct(result);
+  }
+
+  async findVariants(uuid: string): Promise<ProductVariantListEntity> {
+    const result = await this.requestExecutor.run({ scope: `product:variants:${uuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.get(this.config.get('GATEWAY_API') + `/v2/products/${uuid}/variants`);
+    });
+    const entity = plainToInstance(ProductVariantListEntity, result);
+    await validateOrReject(entity);
+    return entity;
+  }
+
+  async findVariant(uuid: string, variantUuid: string): Promise<ProductVariantDetailEntity> {
+    const result = await this.requestExecutor.run({ scope: `product:variant:${variantUuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.get(this.config.get('GATEWAY_API') + `/v2/products/${uuid}/variants/${variantUuid}`);
+    });
+    const entity = plainToInstance(ProductVariantDetailEntity, result);
+    await validateOrReject(entity);
+    return entity;
+  }
+
+  async restoreVariant(uuid: string, variantUuid: string, version: number): Promise<ProductEntity> {
+    const result = await this.requestExecutor.run({ scope: `product:restore-variant:${variantUuid}` }, ({ signal }) => {
+      const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
+      return request.patch(this.config.get('GATEWAY_API') + `/v2/products/${uuid}/variants/${variantUuid}/restore`, {
+        version,
+      });
     });
     return this.toProduct(result);
   }

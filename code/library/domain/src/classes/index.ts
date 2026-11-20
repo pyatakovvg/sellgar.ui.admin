@@ -29,6 +29,8 @@ export {
   ProductServiceInterface,
   ProductSummaryEntity,
   ProductVariantEntity,
+  ProductVariantDetailEntity,
+  ProductVariantListEntity,
 } from './product';
 export type {
   CreateProductInput,

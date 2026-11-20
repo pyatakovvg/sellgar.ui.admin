@@ -34,3 +34,10 @@ export { PropertyReviewRoute } from './frame/property/property-review.token.ts';
 export { StoreReviewRoute } from './frame/store/store-review.token.ts';
 
 export { CartReviewRoute } from './frame/cart/cart-review.token.ts';
+
+export { ProductReviewRoute } from './screen/product-review.route-token.ts';
+export {
+  ProductVariantCreateRoute,
+  ProductVariantReviewRoute,
+  ProductVariantModifyRoute,
+} from './frame/product-variant.route-token.ts';

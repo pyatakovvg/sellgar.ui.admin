@@ -40,6 +40,8 @@ export {
   ProductTypeServiceInterface,
   ProductSummaryEntity,
   ProductVariantEntity,
+  ProductVariantDetailEntity,
+  ProductVariantListEntity,
   ProductVariantResultEntity,
   ProfileEntity,
   ProfileServiceInterface,

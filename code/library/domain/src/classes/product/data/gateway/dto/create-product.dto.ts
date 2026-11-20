@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { ArrayMinSize, IsArray, IsInt, IsOptional, IsString, IsUUID, Min, ValidateNested } from 'class-validator';
+import { IsArray, IsInt, IsOptional, IsString, IsUUID, Min, ValidateNested } from 'class-validator';
 
 import type { CreateProductInput } from '../input/create-product.input.ts';
 import { ProductPropertyDto } from './product-property.dto.ts';
@@ -37,7 +37,6 @@ export class CreateProductDto implements CreateProductInput {
 
   @Expose()
   @IsArray()
-  @ArrayMinSize(1)
   @ValidateNested({ each: true })
   @Type(() => ProductVariantDto)
   variants: ProductVariantDto[];

@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@library/product-form",
+  "version": "0.0.1",
+  "description": "Общие поля свойств товара и варианта",
+  "author": "Viktor Pyatakov <pyatakov.viktor@gmail.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@library/domain": "0.0.1",
+    "@sellgar/kit": "0.0.1",
+    "react": "19.3.1",
+    "react-hook-form": "7.90.0",
+    "yup": "1.7.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0"
+  }
+}

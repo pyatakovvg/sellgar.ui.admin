@@ -22,6 +22,18 @@ export class ProductService implements ProductServiceInterface {
     return this.productGateway.findByUuid(uuid);
   }
 
+  findVariants(uuid: string) {
+    return this.productGateway.findVariants(uuid);
+  }
+
+  findVariant(uuid: string, variantUuid: string) {
+    return this.productGateway.findVariant(uuid, variantUuid);
+  }
+
+  restoreVariant(uuid: string, variantUuid: string, version: number) {
+    return this.productGateway.restoreVariant(uuid, variantUuid, version);
+  }
+
   update(uuid: string, input: UpdateProductInput): Promise<ProductEntity> {
     return this.productGateway.update(uuid, input);
   }

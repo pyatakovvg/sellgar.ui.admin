@@ -1,4 +1,4 @@
-import { ProductEntity, ProductSummaryEntity } from '@library/domain';
+import { ProductEntity, ProductSummaryEntity, ProductVariantDetailEntity } from '@library/domain';
 import { SocketIOBindings } from '@library/socket-io';
 import { plainToInstance } from 'class-transformer';
 import {
@@ -33,6 +33,15 @@ export class ProductChangesProvider implements ProviderInterface {
       },
       updated: async (payload) => {
         updateEntity(ProductEntity, payload);
+        for (const variant of payload.variants ?? []) {
+          updateEntity(ProductVariantDetailEntity, {
+            ...variant,
+            productUuid: payload.uuid,
+            version: payload.version,
+            typeUuid: payload.typeUuid,
+            typeVersion: payload.typeVersion,
+          });
+        }
         updateEntity(
           ProductSummaryEntity,
           plainToInstance(ProductSummaryEntity, payload, { excludeExtraneousValues: true }),

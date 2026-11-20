@@ -29,7 +29,9 @@ const ModuleViewComponent: React.FC = () => {
 
   React.useEffect(() => {
     form.reset(ProductFormMapper.toFormInput(product));
-  }, [form, product?.uuid, product?.version]);
+  }, [form, product?.uuid]);
+
+  App.useBlocker(form.formState.isDirty);
 
   const handleSubmit = form.handleSubmit(async (input) => {
     const result = await submit(input);

@@ -1,5 +1,5 @@
 import { ProductServiceInterface } from '@library/domain';
-import { ProductCreateRoute, ProductModifyRoute } from '@library/route-tokens';
+import { ProductCreateRoute, ProductReviewRoute } from '@library/route-tokens';
 
 import { Controller, Inject, NavigateServiceInterface, RouteQueryServiceInterface } from '@sellgar/app';
 
@@ -23,6 +23,6 @@ export class ProductController implements ProductControllerInterface {
   }
 
   open(uuid: string): Promise<void> {
-    return this.navigateService.to(ProductModifyRoute, { params: { uuid } });
+    return this.navigateService.to(ProductReviewRoute, { params: { uuid } });
   }
 }

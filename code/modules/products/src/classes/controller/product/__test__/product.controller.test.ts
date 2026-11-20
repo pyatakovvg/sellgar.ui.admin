@@ -1,5 +1,5 @@
 import { type ProductResultEntity, type ProductServiceInterface } from '@library/domain';
-import { ProductCreateRoute, ProductModifyRoute } from '@library/route-tokens';
+import { ProductCreateRoute, ProductReviewRoute } from '@library/route-tokens';
 import type { NavigateServiceInterface, RouteQueryServiceInterface } from '@sellgar/app';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -48,7 +48,7 @@ describe('ProductController', () => {
 
     await fixture.controller.open('product-uuid');
 
-    expect(fixture.navigateService.to).toHaveBeenCalledWith(ProductModifyRoute, {
+    expect(fixture.navigateService.to).toHaveBeenCalledWith(ProductReviewRoute, {
       params: { uuid: 'product-uuid' },
     });
   });

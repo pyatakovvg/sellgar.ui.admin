@@ -23,10 +23,6 @@ export const Type: React.FC = () => {
         shouldValidate: true,
         shouldDirty: true,
       });
-      setValue('variants', ProductFormMapper.createVariantsForType(type, getValues('variants')), {
-        shouldValidate: true,
-        shouldDirty: true,
-      });
     }
   };
 
@@ -37,7 +33,7 @@ export const Type: React.FC = () => {
       render={({ field, fieldState: { error } }) => (
         <Field>
           <Field.Label>
-            <Label label={'Тип товара'} />
+            <Label label={'Шаблон товара'} />
           </Field.Label>
           <Field.Content>
             <Select
