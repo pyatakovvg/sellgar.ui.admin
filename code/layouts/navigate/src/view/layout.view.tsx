@@ -3,7 +3,6 @@ import { LayoutViewProps } from '@sellgar/app/react';
 import React from 'react';
 
 import { Desktop } from './desktop';
-import { Mobile } from './mobile';
 import { useScreenSize } from './hooks/screen-size.hook';
 
 export const LayoutView: React.FC<LayoutViewProps> = (props) => {
@@ -14,6 +13,6 @@ export const LayoutView: React.FC<LayoutViewProps> = (props) => {
   } else if (screenSize.isTablet) {
     return <Desktop {...props} />;
   } else if (screenSize.isMobile) {
-    return <Mobile {...props} />;
+    return <Desktop {...props} />;
   }
 };

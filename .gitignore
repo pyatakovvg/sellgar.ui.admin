@@ -52,6 +52,5 @@ storybook-static/
 # next.js
 /.next/
 /out/
-/code/clients/mobile/public/push.worker.js
 
 local.properties

@@ -32,12 +32,6 @@ export const Navigation: React.FC = () => {
   return (
     <Sidebar.Middle>
       <Sidebar.Block>
-        <Sidebar.Additional>Компания</Sidebar.Additional>
-        <NavigationItem
-          navigation={(navigate) => navigate.to(DashboardRoute)}
-          icon={<Home2LineIcon />}
-          caption={'Главная'}
-        />
         <NavigationItem
           navigation={(navigate) => navigate.to(ShopsRoute)}
           icon={<StoreLineIcon />}
@@ -66,7 +60,6 @@ export const Navigation: React.FC = () => {
       </Sidebar.Block>
 
       <Sidebar.Block>
-        <Sidebar.Additional>Параметры</Sidebar.Additional>
         <NavigationItem
           navigation={(navigate) => navigate.to(BrandsRoute)}
           icon={<CopyrightLineIcon />}

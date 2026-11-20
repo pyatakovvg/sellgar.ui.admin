@@ -27,10 +27,6 @@ export const PrivateRoutes = (): Route[] => {
       layouts: [NavigateLayout],
       routes: [
         new Route({
-          token: Tokens.DashboardRoute,
-          load: () => import('@module/dashboard'),
-        }),
-        new Route({
           token: Tokens.ShopsRoute,
           address: segments('shops'),
           load: () => import('@module/shops'),

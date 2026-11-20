@@ -8,10 +8,6 @@
   "homepage": "",
   "license": "ISC",
   "main": "src/index.ts",
-  "scripts": {
-    "build": "esbuild @library/push/src/workers/push/push.worker.ts --outfile=../../clients/mobile/public/push.worker.js --minify --bundle --format=esm --define:process.env.NODE_ENV='\"production\"'",
-    "start": "esbuild @library/push/src/workers/push/push.worker.ts --outfile=../../clients/mobile/public/push.worker.js --bundle --format=esm --define:process.env.NODE_ENV='\"development\"' --watch"
-  },
   "dependencies": {
     "@sellgar/app": "0.0.1",
     "reflect-metadata": "0.2.2"
