@@ -34,7 +34,6 @@ const ModuleViewComponent: React.FC = () => {
                 <p>{product.description}</p>
               </Typography>
             )}
-            <ProductFields fields={product.properties} />
           </div>
           <div className={s.header}>
             <Typography size={'body-m'} weight={'medium'}>
@@ -45,6 +44,10 @@ const ModuleViewComponent: React.FC = () => {
             </Button>
           </div>
           <Variants />
+          <Typography size={'body-m'} weight={'medium'}>
+            <h2>Общие свойства товара</h2>
+          </Typography>
+          <ProductFields fields={product.properties} />
         </div>
       </Page.Content>
     </Page>

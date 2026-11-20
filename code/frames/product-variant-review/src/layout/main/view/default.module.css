@@ -1,0 +1,16 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--numbers-16);
+  padding: var(--numbers-16) var(--numbers-24);
+  width: 100%;
+  color: var(--text-base-primary);
+}
+.controls {
+  display: flex;
+  gap: var(--numbers-12);
+  justify-content: flex-end;
+  padding: var(--numbers-24) var(--numbers-24) var(--numbers-16);
+  width: 100%;
+}
