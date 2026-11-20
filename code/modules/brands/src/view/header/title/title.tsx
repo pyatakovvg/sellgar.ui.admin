@@ -1,19 +1,13 @@
-import { Typography } from '@sellgar/kit';
-import { CopyrightLineIcon } from '@sellgar/kit/icons';
-
 import React from 'react';
 
-import s from './default.module.css';
+import { CopyrightLineIcon } from '@sellgar/kit/icons';
+
+import { PageTitle } from '@library/design';
 
 export const Title: React.FC = () => {
   return (
-    <div className={s.wrapper}>
-      <div className={s.icon}>
-        <CopyrightLineIcon />
-      </div>
-      <Typography size={'h6'} weight={'semi-bold'}>
-        <h2>Бренды</h2>
-      </Typography>
-    </div>
+    <PageTitle icon={<CopyrightLineIcon />}>
+      <h2>Бренды</h2>
+    </PageTitle>
   );
 };

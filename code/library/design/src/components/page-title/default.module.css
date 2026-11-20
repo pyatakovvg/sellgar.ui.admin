@@ -1,0 +1,29 @@
+.wrapper {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  color: var(--text-base-primary);
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: var(--numbers-12);
+  min-width: 0;
+}
+
+.icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: var(--numbers-24);
+  height: var(--numbers-24);
+  font-size: var(--numbers-24);
+  color: var(--icon-accent-blue-accent);
+}
+
+.description {
+  padding-inline-start: calc(var(--numbers-24) + var(--numbers-12));
+}

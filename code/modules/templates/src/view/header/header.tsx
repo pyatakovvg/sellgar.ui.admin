@@ -1,6 +1,7 @@
 import * as App from '@sellgar/app/react';
-import { Button, Typography } from '@sellgar/kit';
-import { AddLineIcon } from '@sellgar/kit/icons';
+import { Button } from '@sellgar/kit';
+import { AddLineIcon, FileList3LineIcon } from '@sellgar/kit/icons';
+import { PageTitle } from '@library/design';
 
 import React from 'react';
 
@@ -13,9 +14,9 @@ export const Header: React.FC = () => {
 
   return (
     <div className={s.wrapper}>
-      <Typography size={'h6'} weight={'semi-bold'}>
+      <PageTitle icon={<FileList3LineIcon />}>
         <h2>Шаблоны</h2>
-      </Typography>
+      </PageTitle>
       <Button size={'sm'} leadIcon={<AddLineIcon />} onClick={() => void controller.create()}>
         Добавить шаблон
       </Button>

@@ -1,15 +1,13 @@
-import { Typography } from '@sellgar/kit';
-
 import React from 'react';
 
-import s from './default.module.css';
+import { RulerLineIcon } from '@sellgar/kit/icons';
+
+import { PageTitle } from '@library/design';
 
 export const Title: React.FC = () => {
   return (
-    <div className={s.wrapper}>
-      <Typography size={'h6'} weight={'semi-bold'}>
-        <h2>Единица измерения</h2>
-      </Typography>
-    </div>
+    <PageTitle icon={<RulerLineIcon />}>
+      <h2>Единица измерения</h2>
+    </PageTitle>
   );
 };

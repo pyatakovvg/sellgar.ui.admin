@@ -1,15 +1,13 @@
-import { Typography } from '@sellgar/kit';
-
 import React from 'react';
 
-import s from './default.module.css';
+import { StoreLineIcon } from '@sellgar/kit/icons';
+
+import { PageTitle } from '@library/design';
 
 export const Title: React.FC = () => {
   return (
-    <div className={s.wrapper}>
-      <Typography size={'h6'} weight={'semi-bold'}>
-        <h2>Магазины</h2>
-      </Typography>
-    </div>
+    <PageTitle icon={<StoreLineIcon />}>
+      <h2>Магазины</h2>
+    </PageTitle>
   );
 };
