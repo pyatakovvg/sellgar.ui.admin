@@ -55,13 +55,30 @@ export class PropertyGateway implements PropertyGatewayInterface {
   }
 
   async findAll(): Promise<PropertyResultEntity> {
-    const result = await this.requestExecutor.run({ scope: 'properties:list' }, ({ signal }) => {
+    return this.requestExecutor.run({ scope: 'properties:list' }, async ({ signal }) => {
       const request = new HttpRequest({ deviceId: this.deviceService.getUniqueId(), signal });
-      return request.get(this.config.get('GATEWAY_API') + '/v2/properties');
+      const items: PropertyEntity[] = [];
+      let offset = 0;
+      let total: number;
+
+      do {
+        const response = await request.get(this.config.get('GATEWAY_API') + '/v2/properties', {
+          params: { offset },
+        });
+        const page = plainToInstance(PropertyResultEntity, response);
+        await validateOrReject(page);
+
+        if (page.limit <= 0 || (page.items.length === 0 && offset < page.total)) {
+          throw new Error('Property catalogue pagination did not advance.');
+        }
+
+        items.push(...page.items);
+        total = page.total;
+        offset += page.limit;
+      } while (offset < total);
+
+      return plainToInstance(PropertyResultEntity, { items, total, limit: items.length, offset: 0 });
     });
-    const entity = plainToInstance(PropertyResultEntity, result);
-    await validateOrReject(entity);
-    return entity;
   }
 
   async createOption(code: string, version: number, option: PropertyOptionInput): Promise<PropertyEntity> {
