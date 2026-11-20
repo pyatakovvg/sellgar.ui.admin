@@ -13,6 +13,7 @@ interface IProps {
 }
 const VariantListComponent: React.FC<IProps> = (props) => {
   const revalidate = App.useRevalidate();
+  const offers = props.storeProduct.offers.filter((offer) => offer.variantSnapshot?.status !== 'archived');
 
   return (
     <div className={s.wrapper}>
@@ -21,7 +22,7 @@ const VariantListComponent: React.FC<IProps> = (props) => {
         surface={'embedded'}
         size={'sm'}
         style={'secondary'}
-        data={{ nodes: props.storeProduct.offers }}
+        data={{ nodes: offers }}
         layout={{ stickyHeader: false }}
         row={{ handlers: { doubleClick: ({ context }) => context.expansion?.toggle() } }}
       >

@@ -24,23 +24,14 @@ export const StoreModify: React.FC = () => {
       return undefined;
     }
 
-    const variants = new Map(
-      data.offers.map((offer) => [
-        offer.variantUuid,
-        { uuid: offer.variantUuid, name: offer.variantSnapshot?.name ?? 'Не синхронизирован' },
-      ]),
-    );
-
-    for (const variant of context.product.variants) {
-      if (variant.status === 'active' || variants.has(variant.uuid)) {
-        variants.set(variant.uuid, { uuid: variant.uuid, name: variant.name });
-      }
-    }
+    const variants = context.product.variants
+      .filter((variant) => variant.status === 'active')
+      .map((variant) => ({ uuid: variant.uuid, name: variant.name }));
 
     return {
       uuid: data.productUuid,
       name: context.product.name,
-      variants: [...variants.values()],
+      variants,
     };
   }, [context, data]);
 

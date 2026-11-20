@@ -9,9 +9,11 @@ const OffersComponent: React.FC = () => {
   return (
     <section className={s.wrapper}>
       <Divider type={'label-center'} label={'Варианты'} />
-      {data.offers.map((offer) => (
-        <Offer key={offer.uuid} offer={offer} />
-      ))}
+      {data.offers
+        .filter((offer) => offer.variantSnapshot?.status !== 'archived')
+        .map((offer) => (
+          <Offer key={offer.uuid} offer={offer} />
+        ))}
     </section>
   );
 };

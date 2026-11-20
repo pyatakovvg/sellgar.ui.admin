@@ -23,10 +23,12 @@ interface IProps {
 }
 
 const VariantsComponent: React.FC<IProps> = (props) => {
+  const offers = props.product.offers.filter((offer) => offer.variantSnapshot?.status !== 'archived');
+
   return (
     <div className={s.wrapper}>
       <Typography size={'caption-m'} weight={'medium'}>
-        <p className={s.value}>{formatVariantCount(props.product.offers.length)}</p>
+        <p className={s.value}>{formatVariantCount(offers.length)}</p>
       </Typography>
     </div>
   );

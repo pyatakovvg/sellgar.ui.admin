@@ -7,9 +7,11 @@ import { ProductReviewControllerInterface } from '../../classes/controller/produ
 const VariantsComponent: React.FC = () => {
   const product = App.useLoaderData(ProductReviewControllerInterface);
   const controller = App.useController(ProductReviewControllerInterface);
+  const variants = product.variants.filter((variant) => variant.status !== 'archived');
+
   return (
     <Table
-      data={{ nodes: product.variants }}
+      data={{ nodes: variants }}
       row={{ handlers: { click: ({ row }) => void controller.openVariant(product.uuid, row.uuid) } }}
     >
       {({ Column }) => (

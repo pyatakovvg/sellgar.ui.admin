@@ -18,7 +18,18 @@ const ProductFieldComponent: React.FC<IProps> = (props) => {
   const { control } = useFormContext<IFormData>();
   const controller = useController(ProductListControllerInterface);
   const product = useWatch({ control, name: 'product' });
-  const options = [...(product ? [product] : []), ...controller.options.filter((item) => item.uuid !== product?.uuid)];
+  const options = [
+    ...(product ? [product] : []),
+    ...controller.options
+      .filter((item) => item.uuid !== product?.uuid)
+      .map((item) => ({
+        uuid: item.uuid,
+        name: item.name,
+        variants: item.variants
+          .filter((variant) => variant.status === 'active')
+          .map((variant) => ({ uuid: variant.uuid, name: variant.name })),
+      })),
+  ];
 
   return (
     <div className={s.wrapper}>
