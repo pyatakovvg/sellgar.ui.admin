@@ -16,7 +16,7 @@ export const Individual: React.FC = () => {
       <InfoLine
         label={
           <Typography size={'caption-m'} weight={'semi-bold'}>
-            <p className={s.title}>ФИО:</p>
+            <p className={s.label}>ФИО:</p>
           </Typography>
         }
         value={
@@ -28,7 +28,7 @@ export const Individual: React.FC = () => {
       <InfoLine
         label={
           <Typography size={'caption-m'} weight={'semi-bold'}>
-            <p className={s.title}>ОГРНИП:</p>
+            <p className={s.label}>ОГРНИП:</p>
           </Typography>
         }
         value={
@@ -40,7 +40,7 @@ export const Individual: React.FC = () => {
       <InfoLine
         label={
           <Typography size={'caption-m'} weight={'semi-bold'}>
-            <p className={s.title}>Регистрирующий орган:</p>
+            <p className={s.label}>Регистрирующий орган:</p>
           </Typography>
         }
         value={
@@ -52,7 +52,7 @@ export const Individual: React.FC = () => {
       <InfoLine
         label={
           <Typography size={'caption-m'} weight={'semi-bold'}>
-            <p className={s.title}>ИНН:</p>
+            <p className={s.label}>ИНН:</p>
           </Typography>
         }
         value={
@@ -64,7 +64,7 @@ export const Individual: React.FC = () => {
       <InfoLine
         label={
           <Typography size={'caption-m'} weight={'semi-bold'}>
-            <p className={s.title}>Адрес:</p>
+            <p className={s.label}>Адрес:</p>
           </Typography>
         }
         value={
@@ -76,7 +76,7 @@ export const Individual: React.FC = () => {
       <InfoLine
         label={
           <Typography size={'caption-m'} weight={'semi-bold'}>
-            <p className={s.title}>E-mail:</p>
+            <p className={s.label}>E-mail:</p>
           </Typography>
         }
         value={
@@ -88,7 +88,7 @@ export const Individual: React.FC = () => {
       <InfoLine
         label={
           <Typography size={'caption-m'} weight={'semi-bold'}>
-            <p className={s.title}>Телефон:</p>
+            <p className={s.label}>Телефон:</p>
           </Typography>
         }
         value={
