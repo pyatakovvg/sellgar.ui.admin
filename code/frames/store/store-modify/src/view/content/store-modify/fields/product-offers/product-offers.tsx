@@ -28,12 +28,10 @@ export const ProductOffers: React.FC<IProps> = (props) => {
       replace(
         (nextProduct?.variants ?? []).map((variant) => ({
           variantUuid: variant.uuid,
-          currentPrice: {
-            value: '',
-            currencyCode: defaultCurrencyCode,
-          },
           showing: false,
-          records: [{ article: '', clarifications: [] }],
+          records: [
+            { article: '', currentPrice: { value: '', currencyCode: defaultCurrencyCode }, clarifications: [] },
+          ],
         })),
       );
       clearErrors('offers');

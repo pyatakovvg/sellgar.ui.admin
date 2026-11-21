@@ -1,5 +1,5 @@
 import type { CurrencyEntity } from '@library/domain';
-import { Badge, Caption, Checkbox, Field, InputAmount2, Label, Select, TabMenu, Typography } from '@sellgar/kit';
+import { Badge, Caption, Checkbox, Field, Label, TabMenu, Typography } from '@sellgar/kit';
 
 import React from 'react';
 import { Controller, type FieldArrayWithId, useFormContext } from 'react-hook-form';
@@ -49,12 +49,7 @@ export const OffersTabs: React.FC<IProps> = (props) => {
             {props.fields.map((offer, index) => {
               const variant = variantByUuid.get(offer.variantUuid);
               const offerError = errors.offers?.[index];
-              const hasErrors = !!(
-                offerError?.currentPrice?.value ||
-                offerError?.currentPrice?.currencyCode ||
-                offerError?.showing ||
-                offerError?.records
-              );
+              const hasErrors = !!(offerError?.showing || offerError?.records);
 
               return (
                 <TabMenu.Tab
@@ -71,68 +66,6 @@ export const OffersTabs: React.FC<IProps> = (props) => {
           return (
             <TabMenu.Content key={offer.id} name={offer.variantUuid}>
               <div className={s.fields}>
-                <Field>
-                  <Field.Label>
-                    <Label label={'Цена'} />
-                  </Field.Label>
-                  <Field.Content>
-                    <div className={s.price}>
-                      <div className={s['price-field']}>
-                        <Controller
-                          name={`offers.${index}.currentPrice.value`}
-                          control={control}
-                          render={({ field, fieldState: { error } }) => {
-                            return (
-                              <Field>
-                                <Field.Content>
-                                  <InputAmount2
-                                    {...field}
-                                    aria-label={'Сумма'}
-                                    target={error?.message ? 'destructive' : undefined}
-                                    value={field.value ? Number(field.value) : undefined}
-                                  />
-                                </Field.Content>
-                                {!!error?.message && (
-                                  <Field.Caption>
-                                    <Caption state={'destructive'} caption={error.message} />
-                                  </Field.Caption>
-                                )}
-                              </Field>
-                            );
-                          }}
-                        />
-                      </div>
-                      <div className={s['price-field']}>
-                        <Controller
-                          name={`offers.${index}.currentPrice.currencyCode`}
-                          control={control}
-                          render={({ field, fieldState: { error } }) => {
-                            return (
-                              <Field>
-                                <Field.Content>
-                                  <Select
-                                    {...field}
-                                    aria-label={'Валюта'}
-                                    options={props.currencies}
-                                    optionKey={'code'}
-                                    optionValue={'code'}
-                                    onBlur={field.onBlur}
-                                    onChange={(value) => field.onChange(value ?? '')}
-                                  />
-                                </Field.Content>
-                                {!!error?.message && (
-                                  <Field.Caption>
-                                    <Caption state={'destructive'} caption={error.message} />
-                                  </Field.Caption>
-                                )}
-                              </Field>
-                            );
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </Field.Content>
-                </Field>
                 <Controller
                   name={`offers.${index}.showing`}
                   control={control}
@@ -156,7 +89,7 @@ export const OffersTabs: React.FC<IProps> = (props) => {
                     );
                   }}
                 />
-                <Records index={index} />
+                <Records index={index} currencies={props.currencies} />
               </div>
             </TabMenu.Content>
           );

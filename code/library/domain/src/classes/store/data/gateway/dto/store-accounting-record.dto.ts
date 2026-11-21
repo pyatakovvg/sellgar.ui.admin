@@ -1,3 +1,4 @@
+import { PriceDto } from './price.dto.ts';
 import { Expose, Transform, Type } from 'class-transformer';
 import {
   IsArray,
@@ -15,6 +16,12 @@ import type { StoreAccountingRecordInput } from '../input/store-accounting-recor
 import { StoreRecordClarificationDto } from './store-record-clarification.dto.ts';
 
 export class StoreAccountingRecordDto implements StoreAccountingRecordInput {
+  @Expose()
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PriceDto)
+  currentPrice?: PriceDto;
+
   @Expose()
   @IsOptional()
   @IsUUID()

@@ -45,6 +45,24 @@ const RecordsComponent: React.FC<IProps> = (props) => {
                 </>
               )}
             </Column>
+            <Column align={'right'}>
+              {({ Head, Cell }) => (
+                <>
+                  <Head label={'Цена'} />
+                  <Cell
+                    render={({ row }) => (
+                      <Typography size={'caption-m'} weight={'medium'}>
+                        <span>
+                          {row.currentPrice
+                            ? `${row.currentPrice.value} ${row.currentPrice.currency.value}`
+                            : 'Не указана'}
+                        </span>
+                      </Typography>
+                    )}
+                  />
+                </>
+              )}
+            </Column>
             <Column width={64} align={'right'}>
               {({ Head, Cell }) => (
                 <>

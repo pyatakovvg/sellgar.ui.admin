@@ -1,3 +1,4 @@
+import type { CurrencyEntity } from '@library/domain';
 import React from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -11,6 +12,7 @@ import { Record } from './record';
 
 interface IProps {
   index: number;
+  currencies: CurrencyEntity[];
 }
 
 export const Records: React.FC<IProps> = (props) => {
@@ -28,6 +30,7 @@ export const Records: React.FC<IProps> = (props) => {
       {records.fields.map((record, index) => (
         <Record
           key={record.id}
+          currencies={props.currencies}
           record={record}
           offerIndex={props.index}
           index={index}
@@ -45,7 +48,13 @@ export const Records: React.FC<IProps> = (props) => {
         size={'sm'}
         style={'secondary'}
         disabled={submit.inProcess}
-        onClick={() => records.append({ article: '', clarifications: [] })}
+        onClick={() =>
+          records.append({
+            article: '',
+            currentPrice: { value: '', currencyCode: props.currencies[0]?.code ?? '' },
+            clarifications: [],
+          })
+        }
       >
         Добавить учетную запись
       </Button>

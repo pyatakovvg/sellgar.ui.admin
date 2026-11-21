@@ -16,7 +16,7 @@ import { StoreOfferStatus } from './store-offer-status.enum.ts';
 
 import { StoreVariantSnapshotEntity } from './store-variant-snapshot.entity.ts';
 
-import { StorePriceHistoryEntity } from './store-price-history.entity.ts';
+import { StorePriceRangeEntity } from './store-price-range.entity.ts';
 
 import { StoreAccountingRecordEntity } from './store-accounting-record.entity.ts';
 
@@ -56,17 +56,11 @@ export class StoreOfferEntity {
   @Type(() => StoreVariantSnapshotEntity)
   variantSnapshot?: StoreVariantSnapshotEntity | null;
 
-  @IsArray()
-  @Expose()
-  @ValidateNested({ each: true })
-  @Type(() => StorePriceHistoryEntity)
-  prices: StorePriceHistoryEntity[];
-
   @Expose()
   @IsOptional()
   @ValidateNested()
-  @Type(() => StorePriceHistoryEntity)
-  currentPrice?: StorePriceHistoryEntity | null;
+  @Type(() => StorePriceRangeEntity)
+  priceRange?: StorePriceRangeEntity | null;
 
   @Expose()
   @IsArray()

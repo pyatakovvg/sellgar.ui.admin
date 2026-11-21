@@ -58,7 +58,7 @@ const payload: StoreModifyActionPayload = {
   offers: [
     {
       variantUuid: 'variant',
-      currentPrice: { value: '100.00', currencyCode: 'RUB' },
+      records: [{ currentPrice: { value: '100.00', currencyCode: 'RUB' }, article: '', clarifications: [] }],
       showing: true,
     },
   ],
@@ -137,7 +137,20 @@ describe('StoreModifyController', () => {
       productUuid: payload.product?.uuid,
       showing: true,
       categoryUuids: payload.categoryUuids,
-      offers: payload.offers,
+      offers: [
+        {
+          ...payload.offers[0],
+          records: [
+            {
+              uuid: undefined,
+              article: undefined,
+              order: 0,
+              currentPrice: payload.offers[0].records![0].currentPrice,
+              clarifications: [],
+            },
+          ],
+        },
+      ],
     });
     expect(fixture.revalidateService.revalidate).toHaveBeenCalledOnce();
     expect(fixture.navigationBlocker.allow).toHaveBeenCalledOnce();
@@ -157,7 +170,20 @@ describe('StoreModifyController', () => {
       expectedVersion: 5,
       showing: true,
       categoryUuids: payload.categoryUuids,
-      offers: payload.offers,
+      offers: [
+        {
+          ...payload.offers[0],
+          records: [
+            {
+              uuid: undefined,
+              article: undefined,
+              order: 0,
+              currentPrice: payload.offers[0].records![0].currentPrice,
+              clarifications: [],
+            },
+          ],
+        },
+      ],
     });
   });
 
@@ -170,8 +196,12 @@ describe('StoreModifyController', () => {
           {
             ...payload.offers[0],
             records: [
-              { article: ' S-01 ', clarifications: [{ value: ' S евростандарт ' }] },
-              { article: '', clarifications: [] },
+              {
+                currentPrice: { value: '100.00', currencyCode: 'RUB' },
+                article: ' S-01 ',
+                clarifications: [{ value: ' S евростандарт ' }],
+              },
+              { currentPrice: { value: '200.00', currencyCode: 'RUB' }, article: '', clarifications: [] },
             ],
           },
         ],
@@ -182,8 +212,20 @@ describe('StoreModifyController', () => {
         offers: [
           expect.objectContaining({
             records: [
-              { article: 'S-01', uuid: undefined, order: 0, clarifications: [{ value: 'S евростандарт' }] },
-              { article: undefined, uuid: undefined, order: 1, clarifications: [] },
+              {
+                currentPrice: { value: '100.00', currencyCode: 'RUB' },
+                article: 'S-01',
+                uuid: undefined,
+                order: 0,
+                clarifications: [{ value: 'S евростандарт' }],
+              },
+              {
+                currentPrice: { value: '200.00', currencyCode: 'RUB' },
+                article: undefined,
+                uuid: undefined,
+                order: 1,
+                clarifications: [],
+              },
             ],
           }),
         ],
@@ -202,7 +244,14 @@ describe('StoreModifyController', () => {
             {
               ...payload.offers[0],
               uuid: 'offer-uuid',
-              records: [{ uuid: 'record-uuid', article: 'S-02', clarifications: [] }],
+              records: [
+                {
+                  currentPrice: { value: '100.00', currencyCode: 'RUB' },
+                  uuid: 'record-uuid',
+                  article: 'S-02',
+                  clarifications: [],
+                },
+              ],
             },
           ],
         },
@@ -214,7 +263,15 @@ describe('StoreModifyController', () => {
         offers: [
           expect.objectContaining({
             uuid: 'offer-uuid',
-            records: [{ uuid: 'record-uuid', article: 'S-02', order: 0, clarifications: [] }],
+            records: [
+              {
+                currentPrice: { value: '100.00', currencyCode: 'RUB' },
+                uuid: 'record-uuid',
+                article: 'S-02',
+                order: 0,
+                clarifications: [],
+              },
+            ],
           }),
         ],
       }),
@@ -233,9 +290,24 @@ describe('StoreModifyController', () => {
               ...payload.offers[0],
               uuid: 'offer-uuid',
               records: [
-                { uuid: 'small-uuid', article: 'S', clarifications: [{ value: 'S' }] },
-                { uuid: 'medium-uuid', article: 'M', clarifications: [{ value: 'M' }] },
-                { uuid: 'large-uuid', article: 'L', clarifications: [{ value: 'L' }] },
+                {
+                  currentPrice: { value: '100.00', currencyCode: 'RUB' },
+                  uuid: 'small-uuid',
+                  article: 'S',
+                  clarifications: [{ value: 'S' }],
+                },
+                {
+                  currentPrice: { value: '100.00', currencyCode: 'RUB' },
+                  uuid: 'medium-uuid',
+                  article: 'M',
+                  clarifications: [{ value: 'M' }],
+                },
+                {
+                  currentPrice: { value: '100.00', currencyCode: 'RUB' },
+                  uuid: 'large-uuid',
+                  article: 'L',
+                  clarifications: [{ value: 'L' }],
+                },
               ],
             },
           ],

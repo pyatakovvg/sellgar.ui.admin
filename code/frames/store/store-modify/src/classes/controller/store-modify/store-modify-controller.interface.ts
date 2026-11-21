@@ -12,14 +12,15 @@ export interface StoreModifyActionPayload {
   offers: {
     uuid?: string;
     variantUuid: string;
-    currentPrice: {
-      value: string;
-      currencyCode: string;
-    };
     showing: boolean;
     records?: {
       uuid?: string;
       article: string;
+      currentPrice: {
+        value: string;
+        currencyCode: string;
+      };
+
       clarifications: { value: string }[];
     }[];
   }[];

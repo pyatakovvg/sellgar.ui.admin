@@ -6,13 +6,16 @@ import { Button, Caption, Field, Input, Label, Textarea, Typography } from '@sel
 import { ArrowDownLineIcon, ArrowUpLineIcon, DeleteBin2LineIcon, StockLineIcon } from '@sellgar/kit/icons';
 
 import { InfoLine } from '@library/design';
+import type { CurrencyEntity } from '@library/domain';
 import { StoreInventoryRoute } from '@library/route-tokens';
 
 import { StoreModifyControllerInterface } from '../../../../../../../../classes/controller/store-modify/store-modify-controller.interface.ts';
 import type { IFormData } from '../../../../../form.schema.ts';
+import { Price } from './price';
 import s from './default.module.css';
 
 interface IProps {
+  currencies: CurrencyEntity[];
   record: FieldArrayWithId<IFormData, `offers.${number}.records`, 'id'>;
   offerIndex: number;
   index: number;
@@ -98,6 +101,7 @@ export const Record: React.FC<IProps> = (props) => {
           </Field>
         )}
       />
+      <Price offerIndex={props.offerIndex} index={props.index} currencies={props.currencies} />
       <div className={s.clarifications}>
         {clarifications.fields.map((clarification, index) => (
           <div className={s.clarification} key={clarification.id}>
@@ -156,7 +160,19 @@ export const Record: React.FC<IProps> = (props) => {
             { label: 'Резерв', value: storedRecord.inventory.reserved },
             { label: 'Доступно', value: storedRecord.inventory.available },
           ].map((line) => (
-            <InfoLine key={line.label} label={line.label} value={String(line.value)} />
+            <InfoLine
+              key={line.label}
+              label={
+                <Typography size={'caption-m'} weight={'regular'}>
+                  <span>{line.label}</span>
+                </Typography>
+              }
+              value={
+                <Typography size={'caption-m'} weight={'medium'}>
+                  <span>{line.value}</span>
+                </Typography>
+              }
+            />
           ))}
           <Button
             type={'button'}

@@ -9,8 +9,16 @@ export class StorePriceHistoryEntity {
   uuid: string;
 
   @Expose()
+  @IsUUID()
+  recordUuid: string;
+
+  @Expose()
   @IsString()
   value: string;
+
+  @Expose()
+  @IsString()
+  currencyCode: string;
 
   @Expose()
   @ValidateNested()

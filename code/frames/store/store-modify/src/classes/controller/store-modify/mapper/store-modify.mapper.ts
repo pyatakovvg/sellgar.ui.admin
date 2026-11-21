@@ -16,11 +16,11 @@ export class StoreModifyMapper {
       offers: payload.offers.map((offer) => ({
         uuid: offer.uuid,
         variantUuid: offer.variantUuid,
-        currentPrice: offer.currentPrice,
         showing: offer.showing,
         records: offer.records?.map((record, order) => ({
           order,
           uuid: record.uuid,
+          currentPrice: record.currentPrice,
           article: record.article.trim() || undefined,
           clarifications: record.clarifications.map((clarification) => ({ value: clarification.value.trim() })),
         })),

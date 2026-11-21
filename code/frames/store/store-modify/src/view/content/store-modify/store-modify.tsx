@@ -49,16 +49,16 @@ export const StoreModify: React.FC = () => {
       return {
         uuid: offer?.uuid,
         variantUuid: variant.uuid,
-        currentPrice: {
-          value: offer?.currentPrice?.value ?? '',
-          currencyCode: offer?.currentPrice?.currency.code ?? defaultCurrencyCode,
-        },
         showing: offer?.showing ?? false,
         records: offer?.records.map((record) => ({
           uuid: record.uuid,
           article: record.article,
+          currentPrice: {
+            value: record.currentPrice?.value ?? '',
+            currencyCode: record.currentPrice?.currencyCode ?? defaultCurrencyCode,
+          },
           clarifications: record.clarifications.map((clarification) => ({ value: clarification.value })),
-        })) ?? [{ article: '', clarifications: [] }],
+        })) ?? [{ article: '', currentPrice: { value: '', currencyCode: defaultCurrencyCode }, clarifications: [] }],
       };
     });
   }, [data, defaultCurrencyCode, initialProduct]);
