@@ -14,10 +14,10 @@ export const ProductFields: React.FC<IProps> = (props) => {
     <dl className={s.wrapper}>
       {fields.map((field) => (
         <div key={field.propertyCode} className={s.field}>
-          <Typography size={'caption-m'}>
+          <Typography size={'caption-m'} weight={'regular'}>
             <dt>{field.propertyName}</dt>
           </Typography>
-          <Typography size={'body-s'}>
+          <Typography size={'caption-m'} weight={'medium'}>
             <dd>
               {field.values
                 .map(({ value }) =>
